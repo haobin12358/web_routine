@@ -1,0 +1,258 @@
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../../styles/common";
+  .m-index{
+    width: 100%;
+    background-color: #fff;
+  }
+
+</style>
+<template>
+  <view class="m-index">
+    <swiper
+            indicator-dots="{{indicatorDots}}"
+            autoplay="{{autoplay}}"
+            interval="{{interval}}"
+            duration="{{duration}}"
+    >
+      <block wx:for="{{scroll_data}}" wx:key="item">
+        <swiper-item>
+          <image src="{{item.loadpic_pic}}" @tap="imgTap({{item.loadpic_url}})" class="slide-image" style="width: 750rpx;height: 300rpx;" />
+        </swiper-item>
+      </block>
+    </swiper>
+
+  </view>
+</template>
+
+<script >
+  import wepy from 'wepy';
+  import api from '../../api/api';
+  import tip from '../../utils/tip';
+
+
+  export default class IndexIndex extends wepy.page {
+    config = {
+      navigationBarTitleText: '大行星',
+        enablePullDownRefresh:true
+    }
+    components = {
+
+    }
+    data = {
+        medical_data:[],
+        science_data:[],
+        scroll_data: [
+        ],
+        indicatorDots: true,
+        autoplay: false,
+        interval: 3000,
+        duration: 1000,
+       work_list:[],
+        toView: 'red',
+        scrollTop: 100,
+        page_info:{cur_page:0, page_size: 3, total_items: 2, total_pages: 1},
+        show_tel:false,
+        tel_data:[],
+        show_search:false,
+        title_data:[],
+        search_value:''
+    }
+      getScroll() {
+          let that = this;
+          tip.loading();
+          wx.request({
+              url: api.get_loadpic_list,
+              data: {
+              },
+              header: {
+                  'content-type': 'application/json' // 默认值
+              },
+              success: function(res) {
+                  that.scroll_data = res.data.data;
+                  that.$apply();
+                  tip.loaded();
+              },
+              error:function (error) {
+                  tip.loaded();
+              }
+          })
+      }
+      getMedicalList() {
+          let that = this;
+          tip.loading();
+          wx.request({
+              url: api.get_medical_list,
+              data: {
+                  use_type: 0,
+                  page_num: 1,
+                  page_size:that.page_info.page_size,
+                  medical_name:''
+              },
+              header: {
+                  'content-type': 'application/json' // 默认值
+              },
+              success: function(res) {
+                  that.medical_data = res.data.data;
+                  that.$apply();
+                  tip.loaded();
+              },
+              error:function (error) {
+                  tip.loaded();
+              }
+          })
+      }
+      getMedicalName(name) {
+          let that = this;
+          tip.loading();
+          wx.request({
+              url: api.get_medical_list,
+              data: {
+                  use_type: 0,
+                  page_num: 1,
+                  page_size:5,
+                  medical_name:name
+              },
+              header: {
+                  'content-type': 'application/json' // 默认值
+              },
+              success: function(res) {
+                  that.title_data = res.data.data;
+                  that.$apply();
+                  tip.loaded();
+              },
+              error:function (error) {
+                  tip.loaded();
+              }
+          })
+      }
+      getScienceList() {
+          let that = this;
+          tip.loading();
+          wx.request({
+              url: api.get_science_list, //仅为示例，并非真实的接口地址
+              data: {
+                  use_type: 1,
+                  page_num: 1,
+                  page_size:that.page_info.page_size
+              },
+              header: {
+                  'content-type': 'application/json' // 默认值
+              },
+              success: function(res) {
+                  that.science_data = res.data.data;
+                  that.$apply();
+                  tip.loaded();
+              },
+              error:function (error) {
+                  tip.loaded();
+              }
+          })
+      }
+      getTel(){
+          let that = this;
+          tip.loading();
+          wx.request({
+              url: api.get_custom_list,
+              data: {
+              },
+              header: {
+                  'content-type': 'application/json' // 默认值
+              },
+              success: function(res) {
+                  that.tel_data = res.data.data;
+                  that.$apply();
+                  tip.loaded();
+              },
+              error:function (error) {
+                  tip.loaded();
+              }
+          })
+      }
+      onLoad(options){
+        // this.getMedicalList();
+        // this.getScienceList();
+        // this.getScroll();
+        // this.getTel();
+      }
+    methods = {
+        changeRoute(){
+            wx.navigateTo({
+                url: '/pages/index/physicalList'
+            });
+        },
+        goKnowledge(){
+            wx.switchTab({
+                url: '/pages/knowledge/index'
+            });
+        },
+        detailTap(item){
+          wx.navigateTo({
+            url: '/pages/index/detail?medical_id=' +item.medical_id
+          });
+        },
+        goDetail(item){
+            wx.navigateTo({
+                url: '/pages/knowledge/article?science_id='+item.science_id
+            });
+        },
+        goPhysical(){
+            wx.switchTab({
+                url: '/pages/physical/index'
+            });
+        },
+        goQuestionnaire(){
+            this.show_tel = true;
+        },
+        goCard(){
+            wx.navigateTo({
+                url: '/pages/index/card'
+            });
+        },
+        cancelTel(){
+            this.show_tel = false;
+        },
+        call(item){
+            wx.makePhoneCall({
+                phoneNumber: item.custom_telphone // 仅为示例，并非真实的电话号码
+            })
+        },
+        upper(e) {
+            console.log(e)
+        },
+        lower(e) {
+            console.log(e)
+        },
+        scroll(e) {
+            console.log(e)
+        },
+        showSearch(){
+            this.show_search = true;
+        },
+        searchBlur(e){
+            this.getMedicalName(e.detail.value)
+        },
+        confirm(e){
+            wx.navigateTo({
+                url: '/pages/index/physicalList?medical_name='+e.detail.value
+            });
+        },
+        titleTap(item){
+            wx.navigateTo({
+                url: '/pages/index/physicalList?medical_name='+ item.medical_name
+            });
+        },
+        closeText(){
+            this.search_value = ''
+        },
+        cancelSearch(){
+            this.search_value = '';
+            this.show_search = false;
+        },
+        imgTap(item){
+            wx.navigateTo({
+                url: item
+            })
+        }
+    }
+  }
+</script>

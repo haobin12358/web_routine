@@ -1,0 +1,309 @@
+<style scoped lang="less" rel="stylesheet/less">
+    @import "../../styles/common.less";
+.m-personal{
+    .m-avatar-content{
+        width: 100%;
+        height:200rpx;
+        background:linear-gradient(90deg,rgba(255,123,131,1) 0%,rgba(193,0,13,1) 100%);
+        .content{
+            width: 100%;
+            height:200rpx;
+            .flex-row(flex-start);
+            font-size: 30rpx;
+            color: #fff;
+            position: relative;
+            .avatar{
+                width: 150rpx;
+                height: 150rpx;
+                border-radius: 50%;
+                border: 2px solid #fff;
+                margin: 0 25rpx;
+            }
+            .m-icon-set{
+                position: absolute;
+                top: 20rpx;
+                right: 20rpx;
+                width: 36rpx;
+                height: 36rpx;
+            }
+        }
+    }
+    .m-personal-content{
+        .m-content-title{
+            width: 720rpx;
+            height: 35rpx;
+            line-height: 35rpx;
+            margin-top: 30rpx;
+            margin-bottom: 30rpx;
+            .flex-row(space-between);
+            font-size: 24rpx;
+            .m-icon-title{
+                width: 24rpx;
+                height: 24rpx;
+                margin-right: 25rpx;
+            }
+            .m-title-name{
+                font-size: 30rpx;
+                font-weight: bold;
+                margin-left: 40rpx;
+                color: #000;
+            }
+            .m-icon-more{
+                width: 24rpx;
+                height:24rpx;
+            }
+            &.m-white{
+                height: 100rpx;
+                margin-bottom: 20rpx;
+                background-color: #fff;
+                padding-right: 25rpx;
+            }
+        }
+    }
+    .m-tel-modal{
+        position: fixed;
+        top:0;
+        bottom:0;
+        left:0;
+        right:0;
+        width: 100%;
+        height:100vh;
+        background-color: rgba(0,0,0,0.2);
+        z-index: 1001;
+        .m-modal-state{
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            .m-tel-content{
+                width: 100%;
+                background-color: #fff;
+                margin-bottom: 20rpx;
+                .m-tel{
+                    padding: 20rpx 0;
+                    border-bottom: 1px solid #D9D9D9;
+                }
+            }
+            .m-btn{
+                padding: 20rpx 0;
+                background-color: #fff;
+            }
+        }
+    }
+}
+</style>
+
+<template>
+    <view class="m-personal">
+        <view class="m-avatar-content">
+            <view class="content">
+                <image class="avatar" src="{{user_info.user_icon}}" />
+                <view class="name">{{user_info.user_name}}</view>
+                <!--<image src="../../images/icon-set.png" class="m-icon-set"></image>-->
+            </view>
+        </view>
+        <view class="m-personal-content">
+            <view class="m-content-title " @tap="changeRoute">
+                <view class="m-title-name">
+                    <image src="../../images/icon-car.png" class="m-icon-title"></image>
+                    <span>订单状态</span></view>
+                <view >
+                    <image src="../../images/icon-more.png" class="m-icon-more"></image>
+                </view>
+            </view>
+            <view class="m-content-title m-white" @tap="goCar">
+                <view class="m-title-name">
+                    <image src="../../images/icon-car.png" class="m-icon-title"></image>
+                    <span>购物车</span></view>
+                <view @tap="goCoupon">
+                    <image src="../../images/icon-more.png" class="m-icon-more"></image>
+                </view>
+            </view>
+            <view class="m-content-title m-white"  @tap="goCoupon">
+                <view class="m-title-name">
+                    <image src="../../images/icon-card.png" class="m-icon-title"></image>
+                    <span>满减券</span></view>
+                <view>
+                    <image src="../../images/icon-more.png" class="m-icon-more"></image>
+                </view>
+            </view>
+            <view class="m-content-title m-white" @tap="telPhone">
+                <view class="m-title-name">
+                    <image src="../../images/icon-service.png" class="m-icon-title"></image>
+                    <span>联系客服 </span></view>
+                <view>
+                    <image src="../../images/icon-more.png" class="m-icon-more"></image>
+                </view>
+            </view>
+
+
+        </view>
+        <view class="m-tel-modal" wx:if="{{show_tel}}">
+            <view class="m-modal-state">
+                <view class="m-tel-content">
+                    <view class="m-tel" @tap="call({{item}})" wx:for="{{tel_data}}" wx:for-index="index" wx:key="index"  wx:for-item="item">{{item.custom_telphone}}</view>
+                </view>
+                <view class="m-btn" @tap="cancelTel">取消</view>
+            </view>
+        </view>
+    </view>
+</template>
+<script >
+    import wepy from 'wepy';
+    import tip from '../../utils/tip';
+    import api from '../../api/api';
+    export default class personalIndex extends wepy.page{
+        config = {
+            navigationBarTitleText: '我的'
+        }
+        data = {
+            order_icon:[{
+                    icon:'../../images/icon-send.png',
+                    name:'已寄出',
+                    url:'',
+                    num:0
+                },
+                {
+                    icon:'../../images/icon-receive.png',
+                    name:'已收到',
+                    url:'',
+                    num:2
+                },
+                {
+                    icon:'../../images/icon-analyze-doing.png',
+                    name:'分析中',
+                    url:'',
+                    num:0
+                },
+                {
+                    icon:'../../images/icon-analyze-deno.png',
+                    name:'分析毕',
+                    url:'',
+                    num:0
+                },
+                {
+                    icon:'../../images/icon-done.png',
+                    name:'已完成',
+                    url:'',
+                    num:0
+                }
+            ],
+            user_info: {},
+            show_tel:false,
+            tel_data:[]
+        }
+        getTel(){
+            let that = this;
+            tip.loading();
+            wx.request({
+                url: api.get_custom_list,
+                data: {
+                },
+                header: {
+                    'content-type': 'application/json' // 默认值
+                },
+                success: function(res) {
+                    that.tel_data = res.data.data;
+                    that.$apply();
+                    tip.loaded();
+                },
+                error:function (error) {
+                    tip.loaded();
+                }
+            })
+        }
+        getuserInfo(token) {
+            let that = this;
+            tip.loading();
+            wx.request({
+                url: api.get_user_info, //仅为示例，并非真实的接口地址
+                data: {
+                    token: token
+                },
+                header: {
+                    'content-type': 'application/json' // 默认值
+                },
+                success: function(res) {
+                    that.user_info = res.data.data;
+                    that.$apply();
+                    tip.loaded();
+                },
+                error:function (error) {
+                    tip.loaded();
+                }
+            })
+        }
+        getOrderInfo(token) {
+            let that = this;
+            tip.loading();
+            wx.request({
+                url: api.get_order_count_user, //仅为示例，并非真实的接口地址
+                data: {
+                    token: token
+                },
+                header: {
+                    'content-type': 'application/json' // 默认值
+                },
+                success: function(res) {
+                    let arr = [].concat(that.order_icon);
+                    for(let i=0;i<arr.length;i++){
+                        arr[i].num = res.data.data['type_'+i]
+                        console.log(res.data.data['type_'+i],i)
+                    }
+                    that.order_icon = [].concat(arr);
+                    that.$apply();
+                    tip.loaded();
+                },
+                error:function (error) {
+                    tip.loaded();
+                }
+            })
+        }
+        onLoad(){
+            var _this = this;
+            wx.getStorage({
+                key: 'token',
+                success: function(res){
+                    _this.getuserInfo(res.data);
+                    _this.getOrderInfo(res.data);
+                }
+            });
+            this.getTel();
+        }
+        methods = {
+            goCoupon(){
+                wx.navigateTo({
+                    url: '/pages/personal/coupons'
+                })
+            },
+            goCar(){
+                wx.navigateTo({
+                    url: '/pages/personal/car'
+                })
+            },
+            goWork(){
+                wx.switchTab({
+                    url: '/pages/work/index'
+                })
+            },
+            changeRoute(){
+                wx.navigateTo({
+                    url: '/pages/personal/orderList'
+                });
+            },
+            cancelTel(){
+                this.show_tel = false;
+            },
+            call(item){
+                wx.makePhoneCall({
+                    phoneNumber: item.custom_telphone // 仅为示例，并非真实的电话号码
+                })
+            },
+            telPhone(){
+                this.show_tel = true;
+            }
+        }
+
+    }
+</script>
