@@ -43,6 +43,11 @@
                     font-size: 24rpx;
                     margin: 10rpx 0 30rpx;
                 }
+                .m-one-activity-user{
+                    font-size: 24rpx;
+                    font-weight: 300;
+                    margin: 10rpx 0 30rpx;
+                }
                 .m-one-activity-status{
                     width: 387rpx;
                     .flex-row(space-between);
@@ -52,6 +57,11 @@
                         font-size: 32rpx;
                         color: #EB0000;
                         font-weight: 500;
+                    }
+                    .m-grey{
+                        color: @grey-color;
+                        font-size: 24rpx;
+                        font-weight: 300;
                     }
                     .m-status{
                         &.active{
@@ -117,6 +127,18 @@
                    </view>
                    <view class="m-one-activity-status">
                        <span class="m-price">¥ 222</span>
+                       <span class="m-status cancel ">组队中</span>
+                   </view>
+               </view>
+           </view>
+<!--我报名的-->
+           <view class="m-one-activity">
+               <img src="" class="m-activity-img" alt="">
+               <view class="m-one-activity-info">
+                   <view class="m-one-activity-title">西湖-富春江-千岛湖-新安江江</view>
+                   <view class="m-one-activity-user">组织者：某某某</view>
+                   <view class="m-one-activity-status">
+                       <span class="m-grey">¥ 222</span>
                        <span class="m-status cancel ">组队中</span>
                    </view>
                </view>
