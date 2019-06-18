@@ -1,0 +1,145 @@
+<style scoped lang="less" rel="stylesheet/less">
+    @import "../../styles/common";
+.m-manageActivity{
+    .m-nav{
+        .flex-row(space-around);
+        padding: 20rpx 0;
+        border-bottom: 1px solid @border-color;
+        li{
+            width: 50%;
+            text-align: center;
+            color: #666666;
+            .m-border-back{
+                color: #000;
+            }
+        }
+    }
+    .m-activity-list{
+        .m-one-activity{
+            padding: 10rpx 20rpx;
+            border-bottom: 1px solid @border-color;
+            .flex-row(flex-start);
+            .m-activity-img{
+                display: block;
+                width: 288rpx;
+                height: 160rpx;
+                margin-right: 34rpx;
+            }
+            .m-one-activity-info{
+                .m-one-activity-title{
+                    width: 387rpx;
+                    height: 40rpx;
+                    line-height: 40rpx;
+                    font-size: 28rpx;
+                    font-weight: 500;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                }
+                .m-one-activity-time{
+                    width: 387rpx;
+                    .flex-row(space-between);
+                    color: @grey-color;
+                    font-size: 24rpx;
+                    margin: 10rpx 0 30rpx;
+                }
+                .m-one-activity-status{
+                    width: 387rpx;
+                    .flex-row(space-between);
+                    font-size: 28rpx;
+                    font-weight: 400;
+                    .m-price{
+                        font-size: 32rpx;
+                        color: #EB0000;
+                        font-weight: 500;
+                    }
+                    .m-status{
+                        &.active{
+                            color: #FFCE00;
+                        }
+                        &.cancel{
+                            color: @grey-color;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+</style>
+<template>
+    <view class="m-manageActivity">
+       <ul class="m-nav">
+           <li>
+<!--                class="m-border-back"-->
+               <span  class="m-border-back">1231</span>
+           </li>
+           <li>
+               <span>1231</span>
+           </li>
+       </ul>
+       <view class="m-activity-list">
+          <view class="m-one-activity">
+              <img src="" class="m-activity-img" alt="">
+              <view class="m-one-activity-info">
+                  <view class="m-one-activity-title">西湖-富春江-千岛湖-新安江江</view>
+                  <view class="m-one-activity-time">
+                      <span>6/4-6/7</span>
+                      <span>报名人数：3/20</span>
+                  </view>
+                  <view class="m-one-activity-status">
+                      <span class="m-price">¥ 222</span>
+                      <span class="m-status active ">组队中</span>
+                  </view>
+              </view>
+          </view>
+           <view class="m-one-activity">
+               <img src="" class="m-activity-img" alt="">
+               <view class="m-one-activity-info">
+                   <view class="m-one-activity-title">西湖-富春江-千岛湖-新安江江</view>
+                   <view class="m-one-activity-time">
+                       <span>6/4-6/7</span>
+                       <span>报名人数：3/20</span>
+                   </view>
+                   <view class="m-one-activity-status">
+                       <span class="m-price">¥ 222</span>
+                       <span class="m-status ">组队中</span>
+                   </view>
+               </view>
+           </view>
+           <view class="m-one-activity">
+               <img src="" class="m-activity-img" alt="">
+               <view class="m-one-activity-info">
+                   <view class="m-one-activity-title">西湖-富春江-千岛湖-新安江江</view>
+                   <view class="m-one-activity-time">
+                       <span>6/4-6/7</span>
+                       <span>报名人数：3/20</span>
+                   </view>
+                   <view class="m-one-activity-status">
+                       <span class="m-price">¥ 222</span>
+                       <span class="m-status cancel ">组队中</span>
+                   </view>
+               </view>
+           </view>
+       </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+
+    export default class IndexIndex extends wepy.page {
+        config = {
+            navigationBarTitleText: '管理活动',
+            enablePullDownRefresh: true
+        }
+        components = {}
+        data = {}
+
+        onLoad(options) {
+
+        }
+
+        methods = {}
+    }
+</script>

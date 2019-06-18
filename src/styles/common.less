@@ -1,7 +1,10 @@
-@common-color:#D8000D;
+@common-color:#FFCE00;
 @score-grey:#eee;
+@grey-color:#C1C1C1;
+@border-color:#F2F2F2;
 @main-font-color: #5D677D;
 @tab-active-color: #6698FF;
+
 input,textarea{
     font-size: 28rpx;
     color: #000;
@@ -20,4 +23,18 @@ input,textarea{
 }
 .m-red{
     color: #D8000D;
+}
+.m-border-back{
+    position: relative;
+}
+.m-border-back:before{
+    position: absolute;
+    content: '';
+    width: 100%;
+    height: 50%;
+    background-color: #FFCE00;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    color: #000;
 }

@@ -1,0 +1,29 @@
+<style scoped lang="less" rel="stylesheet/less">
+
+
+</style>
+<template>
+    <view>
+     出游
+
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+
+    export default class IndexIndex extends wepy.page {
+        config = {
+            navigationBarTitleText: '',
+            enablePullDownRefresh: true
+        }
+        components = {}
+        data = {}
+
+        onLoad(options) {
+
+        }
+
+        methods = {}
+    }
+</script>

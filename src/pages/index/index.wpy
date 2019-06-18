@@ -4,7 +4,22 @@
     width: 100%;
     background-color: #fff;
   }
+  .m-index-content{
+    background-color: #fff;
+    .m-icon-list{
+      ul{
+        .flex-row(flex-start);
+        flex-wrap: wrap;
+        li{
+          .m-index-icon{
+            display: inline-block;
+            width: 112rpx;
 
+          }
+        }
+      }
+    }
+  }
 </style>
 <template>
   <view class="m-index">
@@ -16,11 +31,30 @@
     >
       <block wx:for="{{scroll_data}}" wx:key="item">
         <swiper-item>
-          <image src="{{item.loadpic_pic}}" @tap="imgTap({{item.loadpic_url}})" class="slide-image" style="width: 750rpx;height: 300rpx;" />
+          <image src="{{item.loadpic_pic}}"  class="slide-image" style="width: 750rpx;height: 400rpx;" />
         </swiper-item>
       </block>
     </swiper>
-
+    <view class="m-index-content">
+      <ul class="m-icon-list">
+        <li>
+          <p><img src="" class="m-index-icon" alt=""></p>
+          <p>发起活动</p>
+        </li>
+        <li>
+          <p><img src="" class="m-index-icon" alt=""></p>
+          <p>发起活动</p>
+        </li>
+        <li>
+          <p><img src="" class="m-index-icon" alt=""></p>
+          <p>发起活动</p>
+        </li>
+        <li>
+          <p><img src="" class="m-index-icon" alt=""></p>
+          <p>发起活动</p>
+        </li>
+      </ul>
+    </view>
   </view>
 </template>
 
@@ -39,23 +73,12 @@
 
     }
     data = {
-        medical_data:[],
-        science_data:[],
-        scroll_data: [
-        ],
+        scroll_data: [],
         indicatorDots: true,
         autoplay: false,
         interval: 3000,
         duration: 1000,
-       work_list:[],
-        toView: 'red',
-        scrollTop: 100,
-        page_info:{cur_page:0, page_size: 3, total_items: 2, total_pages: 1},
-        show_tel:false,
-        tel_data:[],
-        show_search:false,
-        title_data:[],
-        search_value:''
+
     }
       getScroll() {
           let that = this;
