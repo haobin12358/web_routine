@@ -1,29 +1,229 @@
 <style scoped lang="less" rel="stylesheet/less">
-
+    @import "../../styles/common";
+    .m-travel{
+        .m-icon-list{
+          .flex-row(space-around);
+          padding: 20rpx 0 10rpx;
+          li{
+              color: #C1C1C1;
+              padding: 0 80rpx;
+              border-right: 1px solid @border-color;
+              &.active{
+                  color: #000;
+              }
+              &:last-child{
+                  border-right: none;
+              }
+          }
+          .m-icon-img{
+              width: 80rpx;
+              height: 80rpx;
+          }
+          .m-icon-name{
+              width: 80rpx;
+              text-align: center;
+          }
+      }
+        .m-nav-list{
+           .flex-row(space-around);
+            padding: 30rpx 0 20rpx;
+            li{
+                color: #666666;
+                font-size: 24rpx;
+                &.active{
+                    color: @common-color;
+                }
+            }
+        }
+        .m-travel-list{
+            padding-bottom: 40rpx;
+            .m-one-travel{
+                padding: 10rpx 20rpx;
+                border-bottom: 1px solid @border-color;
+                .flex-row(flex-start);
+                .m-travel-img{
+                    display: inline-block;
+                    width: 288rpx;
+                    height: 160rpx;
+                    margin-right: 34rpx;
+                }
+                .m-one-travel-text{
+                    height: 160rpx;
+                    .flex(column,space-between,flex-start);
+                    .m-title{
+                        width: 387rpx;
+                        height: 40rpx;
+                        line-height: 40rpx;
+                        font-size: 28rpx;
+                        font-weight: 500;
+                        overflow: hidden;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                    }
+                    .m-price-time{
+                        width: 387rpx;
+                        .flex-row(space-between);
+                        .m-price{
+                            color: #EB0000;
+                            font-size: 32rpx;
+                            font-weight: 500;
+                        }
+                    }
+                    .m-more-text{
+                        color: @common-color;
+                        .flex-row(flex-end);
+                    }
+                    .m-grey{
+                        color: #C1C1C1;
+                        font-size: 24rpx;
+                    }
+                    .m-user-title{
+                        .flex-row(space-between);
+                        width: 387rpx;
+                        .m-user-name{
+                            width: 287rpx;
+                            height: 40rpx;
+                            line-height: 40rpx;
+                            font-size: 28rpx;
+                            font-weight: 500;
+                            overflow: hidden;
+                            white-space: nowrap;
+                            text-overflow: ellipsis;
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 </style>
 <template>
-    <view>
-     出游
-
+    <view class="m-travel">
+        <swiper
+                indicator-dots="{{indicatorDots}}"
+                autoplay="{{autoplay}}"
+                interval="{{interval}}"
+                duration="{{duration}}"
+        >
+            <block wx:for="{{scroll_data}}" wx:key="item">
+                <swiper-item>
+                    <image src="{{item.loadpic_pic}}"  class="slide-image" style="width: 750rpx;height: 300rpx;" />
+                </swiper-item>
+            </block>
+        </swiper>
+       <ul class="m-icon-list">
+           <li class="{{item.value == select_icon.value ? 'active':''}}"  wx:for="{{icon_list}}" wx:key="{{index}}" @tap="iconClick({{item}})">
+               <image src="../../images/travel/{{item.value == select_icon.value ? item.active_icon:item.icon}}.png" class="m-icon-img"></image>
+               <view class="m-icon-name">{{item.name}}</view>
+           </li>
+       </ul>
+        <ul class="m-nav-list">
+            <li class="active">
+                <span>杭州</span>
+                <image src="../../images/common/icon-down-solid-active.png" class="m-down-solid"></image>
+            </li>
+            <li>
+                <span>杭州</span>
+                <image src="../../images/common/icon-down-solid.png" class="m-down-solid"></image>
+            </li>
+            <li>
+                <span>杭州</span>
+                <image src="../../images/common/icon-down-solid.png" class="m-down-solid"></image>
+            </li>
+        </ul>
+        <view class="m-travel-list">
+            <view class="m-one-travel">
+                <image src="" class="m-travel-img"></image>
+                <view class="m-one-travel-text">
+                    <view class="m-title">西湖-富春江-千岛湖-新安江讲讲江</view>
+                    <view class="m-price-time">
+                        <span class="m-price">¥ 168</span>
+                        <span class="m-grey">6/10-6/12</span>
+                    </view>
+                </view>
+            </view>
+            <view class="m-one-travel">
+                <image src="" class="m-travel-img"></image>
+                <view class="m-one-travel-text">
+                    <view class="m-title">西湖-富春江-千岛湖-新安江讲讲江</view>
+                    <view class="m-price-time">
+                        <span class="m-grey">浙江省·杭州市</span>
+                        <view class="m-more-text">
+                            <span>攻略 26</span>
+                            <image src="../../images/common/icon-more-active.png" class="m-icon-more-active"></image>
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <view class="m-one-travel">
+                <image src="" class="m-travel-img"></image>
+                <view class="m-one-travel-text">
+                    <view class="m-user-title">
+                        <span class="m-user-name">西湖-富春江-千岛湖-新安江讲讲江</span>
+                        <span class="m-grey">工龄5年</span>
+                    </view>
+                    <view class="m-price-time">
+                        <span class="m-grey">浙江省·杭州市</span>
+                        <view class="m-common">4.8分</view>
+                    </view>
+                </view>
+            </view>
+        </view>
     </view>
 </template>
 
 <script>
     import wepy from 'wepy';
 
-    export default class IndexIndex extends wepy.page {
+    export default class travelIndex extends wepy.page {
         config = {
             navigationBarTitleText: '',
             enablePullDownRefresh: true
         }
         components = {}
-        data = {}
+        data = {
+            scroll_data: [],
+            indicatorDots: true,
+            autoplay: false,
+            interval: 3000,
+            duration: 1000,
+            icon_list:[
+                {
+                    name:'景区',
+                    icon:'icon-area',
+                    active_icon:'icon-area-active',
+                    value:'景区'
+                },
+                {
+                    name:'跟团',
+                    icon:'icon-group',
+                    active_icon:'icon-group-active',
+                    value:'跟团'
+                },
+                {
+                    name:'导游',
+                    icon:'icon-guide',
+                    active_icon:'icon-guide-active',
+                    value:'导游'
+                }
+            ],
+            select_icon:{
+                name:'景区',
+                icon:'../../images/travel/icon-area.png',
+                active_icon:'../../images/common/icon-area-active.png',
+                value:'景区'
+            },
+
+        }
 
         onLoad(options) {
 
         }
 
-        methods = {}
+        methods = {
+            iconClick(item){
+                this.select_icon = item;
+            }
+        }
     }
 </script>
