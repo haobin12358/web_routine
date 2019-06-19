@@ -3,23 +3,73 @@
   .m-index{
     width: 100%;
     background-color: #fff;
-  }
-  .m-index-content{
-    background-color: #fff;
-    .m-icon-list{
-      ul{
+    .m-top-icon{
+      .flex-row(space-around);
+      padding: 20rpx 0;
+      .m-top-one-icon{
+        position: relative;
+        width: 340rpx;
+        height: 210rpx;
+        border-radius: 20rpx;
+        .m-icon-bg{
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 340rpx;
+          height: 210rpx;
+          border-radius: 20rpx;
+        }
+        .m-icon-info{
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 340rpx;
+          height: 210rpx;
+          background: rgba(0,0,0,0.4);
+          border-radius: 20rpx;
+          .flex-col(center);
+          color: #fff;
+          font-size: 32rpx;
+          font-weight: 500;
+          .m-icon-top{
+            display: block;
+            width: 112rpx;
+            height: 112rpx;
+            margin-bottom: 10rpx;
+          }
+        }
+      }
+    }
+    .m-index-content{
+      background-color: #fff;
+      .m-icon-list{
         .flex-row(flex-start);
         flex-wrap: wrap;
+        padding: 20rpx 60rpx;
         li{
+          margin-right: 66rpx;
+          margin-bottom: 38rpx;
+          .flex-col(center);
+          &:nth-child(4){
+            margin-right: 0;
+          }
+          &:nth-child(2){
+            margin-right: 103rpx;
+          }
+          &:nth-child(6){
+            margin-right: 103rpx;
+          }
           .m-index-icon{
-            display: inline-block;
-            width: 112rpx;
-
+            display: block;
+            width: 90rpx;
+            height: 90rpx;
+            margin-bottom: 20rpx;
           }
         }
       }
     }
   }
+
 </style>
 <template>
   <view class="m-index">
@@ -35,23 +85,51 @@
         </swiper-item>
       </block>
     </swiper>
+    <view class="m-top-icon">
+      <view class="m-top-one-icon">
+        <image src="../../images/index/index-bg1.png" class="m-icon-bg"></image>
+        <view class="m-icon-info">
+          <image src="../../images/index/index-initiate.png" class="m-icon-top"></image>
+          <view>发起活动</view>
+        </view>
+      </view>
+      <view class="m-top-one-icon">
+        <image src="../../images/index/index-bg2.png" class="m-icon-bg"></image>
+        <view class="m-icon-info">
+          <image src="../../images/index/index-manage.png" class="m-icon-top"></image>
+          <view>管理活动</view>
+        </view>
+      </view>
+    </view>
     <view class="m-index-content">
       <ul class="m-icon-list">
         <li>
-          <p><img src="" class="m-index-icon" alt=""></p>
-          <p>发起活动</p>
+          <p><image src="../../images/index/index-team-sign.png" class="m-index-icon" alt="" /></p>
+          <p>团队签到</p>
         </li>
         <li>
-          <p><img src="" class="m-index-icon" alt=""></p>
-          <p>发起活动</p>
+          <p><image src="../../images/index/index-add-team.png" class="m-index-icon" alt="" /></p>
+          <p>进入团队</p>
         </li>
         <li>
-          <p><img src="" class="m-index-icon" alt=""></p>
-          <p>发起活动</p>
+          <p><image src="../../images/index/index-tel.png" class="m-index-icon" alt="" /></p>
+          <p>一键求救</p>
         </li>
         <li>
-          <p><img src="" class="m-index-icon" alt=""></p>
-          <p>发起活动</p>
+          <p><image src="../../images/index/index-find.png" class="m-index-icon" alt="" /></p>
+          <p>找厕所</p>
+        </li>
+        <li>
+          <p><image src="../../images/index/index-chat.png" class="m-index-icon" alt="" /></p>
+          <p>聊天室</p>
+        </li>
+        <li>
+          <p><image src="../../images/index/index-time.png" class="m-index-icon" alt="" /></p>
+          <p>时光记录</p>
+        </li>
+        <li>
+          <p><image src="../../images/index/index-gather.png" class="m-index-icon" alt="" /></p>
+          <p>集合点</p>
         </li>
       </ul>
     </view>
