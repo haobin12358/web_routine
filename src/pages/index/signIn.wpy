@@ -1,0 +1,122 @@
+<style scoped lang="less" rel="stylesheet/less">
+    @import "../../styles/common";
+
+    .m-signIn{
+        .m-signIn-code{
+            text-align: center;
+            padding: 20rpx 0 0;
+            .m-code-box{
+                .flex-row(space-around);
+                margin: 20rpx 0;
+                span{
+                    display: inline-block;
+                    padding: 0 80rpx;
+                    border-right: 1px solid @border-color;
+                    font-size: 36rpx;
+                    &:last-child{
+                        border-right: none;
+                    }
+                }
+            }
+        }
+        .m-code-item{
+            border-top: 10rpx solid #F4F4F4;
+            .m-code-one{
+                padding: 20rpx 30rpx;
+                border-bottom: 1px solid @border-color;
+                .flex(row,space-between,flex-start);
+                .m-code-user{
+                    .flex(row,flex-start,flex-start);
+                }
+                .m-user-head{
+                    display: inline-block;
+                    width: 80rpx;
+                    height: 80rpx;
+                }
+                .m-user-name{
+                    font-weight: 600;
+                    margin: 0 20rpx;
+                }
+                .m-user-label{
+                    padding: 0 10rpx;
+                    border: 1px solid @common-color;
+                    color: @common-color;
+                    font-size: 20rpx;
+                }
+                .m-grey{
+                    color: #C1C1C1;
+                }
+                .m-code-btn{
+                    padding: 8rpx 27rpx;
+                    border-radius: 30rpx;
+                    background-color: @common-color;
+                }
+            }
+        }
+    }
+
+</style>
+<template>
+    <view class="m-signIn">
+       <view class="m-signIn-code">
+           <p>签到码</p>
+           <view class="m-code-box">
+               <span>1</span>
+               <span>1</span>
+               <span>1</span>
+               <span>1</span>
+           </view>
+       </view>
+        <view class="m-code-item">
+            <view class="m-code-one">
+                <span>已签到</span>
+                <span>
+                    <span class="m-common">3</span>/6
+                </span>
+            </view>
+            <view class="m-code-one">
+                <view class="m-code-user">
+                    <image src="" class="m-user-head"></image>
+                    <span class="m-user-name">西瓜呱呱</span>
+                    <span class="m-user-label">游客</span>
+                </view>
+               <span class="m-grey">19:20</span>
+            </view>
+
+        </view>
+        <view class="m-code-item">
+            <view class="m-code-one">
+                <span class="m-grey">未签到</span>
+                <span class="m-code-btn">一键提醒</span>
+            </view>
+            <view class="m-code-one">
+                <view class="m-code-user">
+                    <image src="" class="m-user-head"></image>
+                    <span class="m-user-name">西瓜呱呱</span>
+                    <span class="m-user-label">游客</span>
+                </view>
+<!--                <span class="m-grey">19:20</span>-->
+            </view>
+
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+
+    export default class signIn extends wepy.page {
+        config = {
+            navigationBarTitleText: '',
+            enablePullDownRefresh: true
+        }
+        components = {}
+        data = {}
+
+        onLoad(options) {
+
+        }
+
+        methods = {}
+    }
+</script>
