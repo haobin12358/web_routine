@@ -1,6 +1,49 @@
 <style scoped lang="less" rel="stylesheet/less">
     @import "../../styles/common.less";
 .m-personal{
+    .m-icon{
+        display: inline-block;
+        width: 30rpx;
+        height: 30rpx;
+    }
+    .m-personal-top{
+        padding: 30rpx 70rpx 40rpx;
+        .flex-row(flex-start);
+        /*border-bottom: 10rpx solid #f4f4f4;*/
+        .m-user-avator{
+            display: inline-block;
+            width: 150rpx;
+            height: 150rpx;
+            border-radius: 50%;
+            margin-right: 30rpx;
+        }
+        .m-user-info{
+            width: 430rpx;
+            .m-user-name{
+                font-size: 36rpx;
+                font-weight: 500;
+                margin-right: 20rpx;
+            }
+            .m-user-label{
+                display: inline-block;
+                padding: 0 10rpx;
+                border: 1px solid @common-color;
+                color: @common-color;
+                font-size: 20rpx;
+            }
+        }
+    }
+    .m-personal-item{
+        border-top: 10rpx solid #f4f4f4;
+        li{
+            padding: 30rpx 65rpx;
+            border-bottom: 1px solid @border-color;
+            .flex-row(space-between);
+            .m-icon{
+                margin-right: 20rpx;
+            }
+        }
+    }
     .m-tel-modal{
         position: fixed;
         top:0;
@@ -37,49 +80,72 @@
 
 <template>
     <view class="m-personal">
-        <view class="m-avatar-content">
-            <view class="content">
-                <image class="avatar" src="{{user_info.user_icon}}" />
-                <view class="name">{{user_info.user_name}}</view>
-                <!--<image src="../../images/icon-set.png" class="m-icon-set"></image>-->
+        <view class="m-personal-top">
+            <image src="" class="m-user-avator"></image>
+            <view class="m-user-info">
+                <view class="m-flex-between">
+                    <view class="m-flex-start">
+                        <span class="m-user-name">居居女孩</span>
+                        <image src="../../images/personal/icon-women.png" class="m-icon"></image>
+                    </view>
+                   <image src="../../images/personal/icon-code.png" class="m-icon"></image>
+                </view>
+                <view>
+                    <span class="m-user-label">游客</span>
+                </view>
+                <view class="m-flex-end">
+                    <span class="m-grey">主页</span>
+                    <image src="../../images/common/icon-more.png" class="m-icon-more"></image>
+                </view>
             </view>
         </view>
-        <view class="m-personal-content">
-            <view class="m-content-title " @tap="changeRoute">
-                <view class="m-title-name">
-                    <image src="../../images/icon-car.png" class="m-icon-title"></image>
-                    <span>订单状态</span></view>
-                <view >
-                    <image src="../../images/icon-more.png" class="m-icon-more"></image>
-                </view>
-            </view>
-            <view class="m-content-title m-white" @tap="goCar">
-                <view class="m-title-name">
-                    <image src="../../images/icon-car.png" class="m-icon-title"></image>
-                    <span>购物车</span></view>
-                <view @tap="goCoupon">
-                    <image src="../../images/icon-more.png" class="m-icon-more"></image>
-                </view>
-            </view>
-            <view class="m-content-title m-white"  @tap="goCoupon">
-                <view class="m-title-name">
-                    <image src="../../images/icon-card.png" class="m-icon-title"></image>
-                    <span>满减券</span></view>
-                <view>
-                    <image src="../../images/icon-more.png" class="m-icon-more"></image>
-                </view>
-            </view>
-            <view class="m-content-title m-white" @tap="telPhone">
-                <view class="m-title-name">
-                    <image src="../../images/icon-service.png" class="m-icon-title"></image>
-                    <span>联系客服 </span></view>
-                <view>
-                    <image src="../../images/icon-more.png" class="m-icon-more"></image>
-                </view>
-            </view>
 
-
+        <view class="m-personal-item">
+            <ul >
+                <li>
+                    <view class="m-flex-start">
+                        <image src="../../images/personal/icon-info.png" class="m-icon"></image>
+                        <span>个人信息</span>
+                    </view>
+                </li>
+                <li>
+                    <view class="m-flex-start">
+                        <image src="../../images/personal/icon-wallet.png" class="m-icon"></image>
+                        <span>我的钱包</span>
+                    </view>
+                    <span class="m-grey">¥199.90</span>
+                </li>
+                <li>
+                    <view class="m-flex-start">
+                        <image src="../../images/personal/icon-task.png" class="m-icon"></image>
+                        <span>任务中心</span>
+                    </view>
+                </li>
+                <li>
+                    <view class="m-flex-start">
+                        <image src="../../images/personal/icon-history.png" class="m-icon"></image>
+                        <span>历史团队</span>
+                    </view>
+                </li>
+            </ul>
         </view>
+        <view class="m-personal-item">
+            <ul >
+                <li>
+                    <view class="m-flex-start">
+                        <image src="../../images/personal/icon-service.png" class="m-icon"></image>
+                        <span>客服中心</span>
+                    </view>
+                </li>
+                <li>
+                    <view class="m-flex-start">
+                        <image src="../../images/personal/icon-guide.png" class="m-icon"></image>
+                        <span>导游认证</span>
+                    </view>
+                </li>
+            </ul>
+        </view>
+
         <view class="m-tel-modal" wx:if="{{show_tel}}">
             <view class="m-modal-state">
                 <view class="m-tel-content">
