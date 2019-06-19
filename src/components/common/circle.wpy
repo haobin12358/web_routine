@@ -1,0 +1,111 @@
+<style scoped lang="less" rel="stylesheet/less">
+    @import "../../styles/common";
+    .m-one-circle{
+        padding: 20rpx 30rpx;
+        border-bottom: 1px solid @border-color;
+        .m-one-circle-title{
+            .flex-row(space-between);
+            padding-bottom: 10rpx;
+            .m-user-head{
+                display: inline-block;
+                width: 60rpx;
+                height: 60rpx;
+            }
+            .m-user-name{
+                font-size: 28rpx;
+                font-weight: 600;
+                /*line-height: 40rpx;*/
+                margin: 0 20rpx;
+            }
+            .m-user-label{
+                display: inline-block;
+                border: 1px solid @common-color;
+                padding: 0 10rpx;
+                color: @common-color;
+                font-size: 20rpx;
+            }
+            .m-circle-label{
+                display: inline-block;
+                padding: 0 10rpx;
+                background-color: @common-color;
+                font-size: 20rpx;
+            }
+        }
+        .m-info{
+            font-weight: 600;
+            line-height: 56rpx;
+        }
+        .m-text{
+            line-height: 56rpx;
+            text-align: left;
+            .m-topic{
+                color: #006FCE;
+            }
+        }
+        .m-one-img{
+            display: block;
+            width: 690rpx;
+            height: 388rpx;
+            margin-bottom: 10rpx;
+        }
+        .m-loc-box{
+            .flex-row(flex-start);
+            font-size: 24rpx;
+            line-height: 33rpx;
+            .m-icon-loc{
+                display: inline-block;
+                width: 40rpx;
+                height: 40rpx;
+                margin-right: 10rpx;
+            }
+        }
+    }
+
+</style>
+<template>
+    <view class="m-one-circle">
+        <view class="m-one-circle-title">
+            <view class="m-flex-start">
+                <image src="" class="m-user-head"></image>
+                <span class="m-user-name">123</span>
+                <span class="m-user-label">会员</span>
+            </view>
+            <view class="m-circle-label">游记</view>
+        </view>
+        <view class="m-info">杭州-富阳</view>
+        <view class="m-text">
+                        <span class="m-topic">
+                            #去热带的岛屿游泳#
+                        </span>
+            攻略测评打赏,榜单场景内容推荐
+            网红打卡自由主题圈子活动游记攻略测评打赏榜单场景,
+            内容推荐网红打卡自由主题圈子活动游记攻略测评
+        </view>
+        <image src="" class="m-one-img" ></image>
+        <view class="m-info">杭州-富阳</view>
+        <view class="m-info">杭州-富阳</view>
+        <view class="m-loc-box">
+            <image src="../../images/common/icon-loc.png" class="m-icon-loc"></image>
+            <span>杭州·杭州西湖风景名胜区</span>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+
+    export default class IndexIndex extends wepy.page {
+        config = {
+            navigationBarTitleText: '',
+            enablePullDownRefresh: true
+        }
+        components = {}
+        data = {}
+
+        onLoad(options) {
+
+        }
+
+        methods = {}
+    }
+</script>

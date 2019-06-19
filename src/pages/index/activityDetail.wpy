@@ -1,0 +1,122 @@
+<style scoped lang="less" rel="stylesheet/less">
+    @import "../../styles/common";
+    .m-activityDetail{
+        .m-activityDetail-info{
+         li{
+             padding: 20rpx 30rpx;
+             border-bottom: 1px solid @border-color;
+             .flex-row(space-between);
+             .m-label{
+                 color: @grey-color;
+                 width: 112rpx;
+                 text-align: center;
+                 .flex-col(space-between);
+                 .m-line{
+                     color: @common-color;
+                 }
+             }
+             .m-info-text{
+                 width: 230rpx;
+                 .flex-col(space-between);
+                 .m-line{
+                     color: @common-color;
+                 }
+             }
+             &.m-no-flex{
+                 display: flex;
+                 flex-flow: column;
+                 justify-content: flex-start;
+                 align-items: flex-start;
+             }
+             .m-detail-text{
+                 text-indent: 2em;
+                 line-height: 56rpx;
+                 font-size: 24rpx;
+             }
+             .m-open{
+                 width: 100%;
+                text-align: center;
+                 color: @grey-color;
+             }
+         }
+     }
+        .m-activity-circle{
+           .m-activity-circle-h3{
+               font-size: 32rpx;
+               padding: 14rpx 30rpx 0;
+           }
+            .m-circle-content{
+                padding-bottom: 20rpx;
+
+            }
+        }
+    }
+
+</style>
+<template>
+    <view class="m-activityDetail">
+       <ul class="m-activityDetail-info">
+           <li>
+             <view class="m-label">
+                 <p>开始时间</p>
+                 <p class="m-line">|</p>
+                 <p>开始时间</p>
+             </view>
+               <view class="m-info-text">
+                   <p>2019/06/11 09:00</p>
+                   <p class="m-line">|</p>
+                   <p>2019/06/11 09:00</p>
+               </view>
+           </li>
+           <li>
+               <view class="m-label">参与人数</view>
+               <view class="m-flex-end">
+                   <span>
+                       <span class="m-common">3</span>/10
+                   </span>
+                   <image src="../../images/common/icon-right.png" class="m-icon-more" alt="" />
+               </view>
+           </li>
+           <li class="m-no-flex">
+               <view class="m-label">活动详情</view>
+               <view class="m-detail-text">
+                   活动详情活动详情活动详情活动详情活动详情活动详情活动详情活动详情活动详情活动详情活动详情活动详情活动详情活动详情活动详情活动详情活动详情活动活动详情活动详情活动详情…
+               </view>
+
+               <view class="m-open">
+                   <span>点击展开</span>
+                   <image src="../../images/common/icon-down.png" class="m-icon-down" alt="" />
+               </view>
+           </li>
+       </ul>
+        <div class="m-activity-circle">
+            <h3 class="m-activity-circle-h3">
+                <span class="m-border-back">团队广场</span>
+            </h3>
+            <view class="m-circle-content">
+                <circle></circle>
+            </view>
+        </div>
+
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import circle from '../../components/common/circle';
+
+    export default class ActivityDetail extends wepy.page {
+        config = {
+            navigationBarTitleText: '管理活动',
+            enablePullDownRefresh: true
+        }
+        components = {circle}
+        data = {}
+
+        onLoad(options) {
+
+        }
+
+        methods = {}
+    }
+</script>
