@@ -1,0 +1,229 @@
+<style scoped lang="less" rel="stylesheet/less">
+    @import "../../styles/common";
+
+    .m-editActivity{
+        padding-bottom: 100rpx;
+      .m-alert-text{
+          padding: 15rpx 30rpx;
+          background-color: @common-color;
+          .flex-row(space-between);
+          font-size: 24rpx;
+          .m-alert-btn{
+              display: inline-block;
+              padding: 0 24rpx;
+              border: 1px solid #000;
+          }
+      }
+        .m-edit-item{
+            border-bottom: 10rpx solid #F4F4F4;
+            ul{
+                li{
+                    width: 100%;
+                    box-sizing: border-box;
+                    .flex-row(space-between);
+                    padding: 20rpx 30rpx;
+                    border-bottom: 1px solid @border-color;
+                    .m-small-img{
+                        display: inline-block;
+                        width: 88rpx;
+                        height: 50rpx;
+                        background-color: #F5F5F5;
+                    }
+                    input{
+                        text-align: right;
+                        &.m-textalign-left{
+                            text-align: left;
+                        }
+                    }
+                    &.m-no-flex{
+                        .flex(column,flex-start,flex-start);
+                        .m-block-box{
+                            .flex-row(flex-start);
+                            flex-wrap: wrap;
+                            span{
+                                display: inline-block;
+                                width: 180rpx;
+                                height: 60rpx;
+                                line-height: 60rpx;
+                                border: 1px solid @common-color;
+                                text-align: center;
+                                margin: 20rpx 40rpx 10rpx 0;
+                                &.active{
+                                    background-color: @common-color;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .m-agree-radio{
+            width: 100%;
+            text-align: center;
+            padding: 10rpx;
+            font-size: 20rpx;
+            span{
+                color: #006FCE;
+            }
+        }
+        .m-foot-btn{
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 750rpx;
+            z-index: 10;
+            span{
+                display: inline-block;
+                width: 371rpx;
+                border: 1px solid @common-color;
+                font-size: 30rpx;
+                font-weight: 400;
+                padding: 28rpx 0;
+                text-align: center;
+                background-color: #fff;
+                &.active{
+                    background-color: @common-color;
+                }
+            }
+        }
+    }
+
+</style>
+<template>
+    <view class="m-editActivity">
+      <view class="m-alert-text">
+          <span>使用电脑版www.bigxingxing.com输入更方便</span>
+          <span class="m-alert-btn">草稿箱</span>
+      </view>
+
+        <view class="m-edit-item">
+            <ul>
+                <li>
+                    <span class="m-grey">基本信息</span>
+                </li>
+                <li>
+                    <span class="m-edit-label">开始时间</span>
+                    <span class="m-flex-end">
+                        <span>2019/06/11 09:00</span>
+                        <image src="../../images/common/icon-more.png" class="m-icon-more"></image>
+                    </span>
+                </li>
+                <li>
+                    <span class="m-edit-label">结束时间</span>
+                    <span class="m-flex-end">
+                        <span>2019/06/11 09:00</span>
+                        <image src="../../images/common/icon-more.png" class="m-icon-more"></image>
+                    </span>
+                </li>
+                <li>
+                    <span class="m-edit-label">活动地点</span>
+                    <input placeholder="填写活动地点（至少一个）" />
+                </li>
+                <li>
+                    <span class="m-edit-label">活动封面</span>
+                    <span class="m-flex-end">
+                        <image src="" class="m-small-img"></image>
+                        <image src="../../images/common/icon-more.png" class="m-icon-more"></image>
+                    </span>
+                </li>
+            </ul>
+        </view>
+        <view class="m-edit-item">
+            <ul>
+                <li>
+                    <span class="m-grey">报名信息</span>
+                </li>
+                <li>
+                    <span class="m-edit-label">团队最大承载人数</span>
+                    <span class="m-flex-end">
+                       <input placeholder="填写人数" />
+                    </span>
+                </li>
+                <li>
+                    <span class="m-edit-label">活动费用</span>
+                    <span class="m-flex-end">
+                        <span>0</span>
+                        <image src="../../images/common/icon-more.png" class="m-icon-more"></image>
+                    </span>
+                </li>
+                <li>
+                    <span class="m-edit-label">活动保险</span>
+                    <span class="m-flex-end">
+                        <span class="m-grey">未设置</span>
+                        <image src="../../images/common/icon-more.png" class="m-icon-more"></image>
+                    </span>
+                </li>
+                <li class="m-no-flex">
+                    <view class="m-edit-label">报名填写项</view>
+                    <view class="m-block-box">
+                        <span class="active">姓名</span>
+                        <span class="active">性别</span>
+                        <span >性别</span>
+                        <span >性别</span>
+                        <span >性别</span>
+                        <span >+</span>
+                    </view>
+                </li>
+            </ul>
+        </view>
+        <view class="m-edit-item">
+            <ul>
+                <li>
+                    <span class="m-grey">旅行推荐信息</span>
+                </li>
+                <li>
+                    <span class="m-edit-label">推荐携带物品</span>
+                    <span class="m-flex-end">
+                        <span class="m-grey">可多选</span>
+                        <image src="../../images/common/icon-more.png" class="m-icon-more"></image>
+                    </span>
+                </li>
+                <li>
+                    <span class="m-edit-label">行程介绍推文</span>
+                    <span class="m-flex-end">
+                        <span class="m-grey">点击收起</span>
+                        <image src="../../images/common/icon-up.png" class="m-icon-down"></image>
+                    </span>
+                </li>
+                <li>
+                    <input placeholder="请输入活动主题" class="m-textalign-left"/>
+                    <span class="m-edit-label m-grey">不超过30字</span>
+                </li>
+                <li class="m-no-flex">
+                    <edit></edit>
+                </li>
+            </ul>
+        </view>
+        <view class="m-agree-radio">
+            <checkbox value="" checked="" color="#FFCE00" />我同意<span>大行星平台服务协议</span>
+        </view>
+      <view class="m-foot-btn">
+          <span>保存草稿</span>
+          <span class="active">立即发布</span>
+      </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import edit from '../../components/common/edit';
+
+    export default class editActivity extends wepy.page {
+        config = {
+            navigationBarTitleText: '',
+            enablePullDownRefresh: true
+        }
+        components = {edit}
+        data = {
+
+        }
+
+        onLoad(options) {
+
+        }
+
+        methods = {
+
+        }
+    }
+</script>
