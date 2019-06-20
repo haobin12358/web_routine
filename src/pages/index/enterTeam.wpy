@@ -1,0 +1,118 @@
+<style scoped lang="less" rel="stylesheet/less">
+    @import "../../styles/common";
+.m-enterTeam{
+    .m-notice{
+        border-bottom: 10rpx solid #F4F4F4;
+    }
+    .m-bd-bottom{
+        padding: 20rpx 30rpx;
+        border-bottom: 1px solid @border-color;
+    }
+    .m-map-box{
+        .m-map{
+            width: 750rpx;
+            height: 563rpx;
+        }
+    }
+    .m-circle-box{
+        .m-border-back{
+            font-size: 32rpx;
+            font-weight: 500;
+        }
+    }
+}
+</style>
+<template>
+    <view class="m-enterTeam">
+        <view class="m-notice">
+            <view class="m-bd-bottom m-flex-between">
+                <span class="m-grey">群公告</span>
+                <view class="m-grey m-flex-end">
+                    <span>查看更多</span>
+                    <image src="../../images/common/icon-more.png" class="m-icon-more"></image>
+                </view>
+            </view>
+            <view class="m-bd-bottom">
+                <view>
+                    群公告内容群公告内容群公告内容群公告内容群公告内容群公告内容群公告内容群公告内容群公告内容。
+                </view>
+                <view class="m-grey">
+                    2019/06/05 19:20
+                </view>
+            </view>
+            <view class="m-bd-bottom">
+                <view>
+                    群公告内容群公告内容群公告内容群公告内容群公告内容群公告内容群公告内容群公告内容群公告内容。
+                </view>
+                <view class="m-grey">
+                    2019/06/05 19:20
+                </view>
+            </view>
+        </view>
+        <view class="m-map-box">
+            <view class="m-grey m-bd-bottom">成员位置</view>
+            <view class="m-map">
+                <map id="map" longitude="113.324520" latitude="23.099994" scale="14" controls="{{controls}}" bindcontroltap="controltap" markers="{{markers}}" bindmarkertap="markertap" polyline="{{polyline}}" bindregionchange="regionchange" show-location style="width: 100%; height: 560rpx;"></map>
+            </view>
+        </view>
+
+        <view class="m-circle-box">
+            <view class="m-bd-bottom">
+                <span class="m-border-back">团队广场</span>
+            </view>
+            <circle></circle>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import circle from '../../components/common/circle';
+
+    export default class enterTeam extends wepy.page {
+        config = {
+            navigationBarTitleText: '进入团队',
+            enablePullDownRefresh: true
+        }
+        components = {circle}
+        data = {
+            markers: [{
+                iconPath: "/images/common/icon-loc-mark.png",
+                id: 0,
+                latitude: 23.099994,
+                longitude: 113.324520,
+                width: 50,
+                height: 50
+            }],
+            polyline: [{
+                points: [{
+                    longitude: 113.3245211,
+                    latitude: 23.10229
+                }, {
+                    longitude: 113.324520,
+                    latitude: 23.21229
+                }],
+                color:"#FF0000DD",
+                width: 2,
+                dottedLine: true
+            }],
+            controls: [{
+                id: 1,
+                iconPath: '/images/common/icon-loc-mark.png',
+                position: {
+                    left: 0,
+                    top: 300 - 50,
+                    width: 50,
+                    height: 50
+                },
+                clickable: true
+            }]
+        }
+
+        onLoad(options) {
+
+        }
+
+        methods = {}
+    }
+</script>

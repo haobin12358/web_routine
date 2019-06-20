@@ -86,14 +86,14 @@
       </block>
     </swiper>
     <view class="m-top-icon">
-      <view class="m-top-one-icon">
+      <view class="m-top-one-icon" @tap="changeRoute('/pages/index/editActivity')">
         <image src="../../images/index/index-bg1.png" class="m-icon-bg"></image>
         <view class="m-icon-info">
           <image src="../../images/index/index-initiate.png" class="m-icon-top"></image>
           <view>发起活动</view>
         </view>
       </view>
-      <view class="m-top-one-icon">
+      <view class="m-top-one-icon" @tap="changeRoute('/pages/index/manageActivity')">
         <image src="../../images/index/index-bg2.png" class="m-icon-bg"></image>
         <view class="m-icon-info">
           <image src="../../images/index/index-manage.png" class="m-icon-top"></image>
@@ -103,11 +103,11 @@
     </view>
     <view class="m-index-content">
       <ul class="m-icon-list">
-        <li>
+        <li  @tap="changeRoute('/pages/index/signIn')">
           <p><image src="../../images/index/index-team-sign.png" class="m-index-icon" alt="" /></p>
           <p>团队签到</p>
         </li>
-        <li>
+        <li  @tap="changeRoute('/pages/index/enterTeam')">
           <p><image src="../../images/index/index-add-team.png" class="m-index-icon" alt="" /></p>
           <p>进入团队</p>
         </li>
@@ -276,9 +276,9 @@
         // this.getTel();
       }
     methods = {
-        changeRoute(){
+        changeRoute(v){
             wx.navigateTo({
-                url: '/pages/index/physicalList'
+                url: v
             });
         },
         goKnowledge(){
