@@ -30,7 +30,7 @@ page{
   export default class extends wepy.app {
     config = {
       pages: [
-          'pages/index/enterTeam',
+
           'pages/index/index',
           'pages/personal/index',
           'pages/travel/index',
@@ -39,6 +39,8 @@ page{
           'pages/index/lookActivity',
           'pages/index/signIn',
           'pages/index/editActivity',
+          'pages/index/enterTeam',
+          'pages/index/joinNum',
       ],
       window: {
         backgroundTextStyle: 'light',
@@ -84,12 +86,6 @@ page{
     }
 
 
-      onLaunch() {
-          // wx.setStorage({
-          //     'key':'token',
-          //     'data':'ZDk5ODBiNzgtMzM2MC0xMWU5LTk0NjAtNTgwMGUzMTE5ZDRhIzIwMTktMDItMTggMTc6Mzc6NDc='
-          // });
-      }
 
 
 

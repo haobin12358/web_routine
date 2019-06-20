@@ -42,23 +42,21 @@
     }
     .m-index-content{
       background-color: #fff;
+      .flex-row(space-between);
+      padding: 20rpx 30rpx;
       .m-icon-list{
-        .flex-row(flex-start);
-        flex-wrap: wrap;
-        padding: 20rpx 60rpx;
+        /*width: 50%;*/
+        box-sizing: border-box;
+        .flex-row(space-around);
+        &:nth-child(2n){
+          margin-left: 20rpx;
+        }
+        /*padding: 20rpx 0;*/
         li{
           margin-right: 66rpx;
           margin-bottom: 38rpx;
+          width: 120rpx;
           .flex-col(center);
-          &:nth-child(4){
-            margin-right: 0;
-          }
-          &:nth-child(2){
-            margin-right: 103rpx;
-          }
-          &:nth-child(6){
-            margin-right: 103rpx;
-          }
           .m-index-icon{
             display: block;
             width: 90rpx;
@@ -111,6 +109,8 @@
           <p><image src="../../images/index/index-add-team.png" class="m-index-icon" alt="" /></p>
           <p>进入团队</p>
         </li>
+      </ul>
+      <ul class="m-icon-list">
         <li>
           <p><image src="../../images/index/index-tel.png" class="m-index-icon" alt="" /></p>
           <p>一键求救</p>
@@ -119,6 +119,10 @@
           <p><image src="../../images/index/index-find.png" class="m-index-icon" alt="" /></p>
           <p>找厕所</p>
         </li>
+      </ul>
+    </view>
+    <view class="m-index-content">
+      <ul class="m-icon-list">
         <li>
           <p><image src="../../images/index/index-chat.png" class="m-index-icon" alt="" /></p>
           <p>聊天室</p>
@@ -127,10 +131,13 @@
           <p><image src="../../images/index/index-time.png" class="m-index-icon" alt="" /></p>
           <p>时光记录</p>
         </li>
+      </ul>
+      <ul class="m-icon-list">
         <li>
           <p><image src="../../images/index/index-gather.png" class="m-index-icon" alt="" /></p>
           <p>集合点</p>
         </li>
+        <li></li>
       </ul>
     </view>
   </view>

@@ -28,21 +28,7 @@
                 .m-code-user{
                     .flex(row,flex-start,flex-start);
                 }
-                .m-user-head{
-                    display: inline-block;
-                    width: 80rpx;
-                    height: 80rpx;
-                }
-                .m-user-name{
-                    font-weight: 600;
-                    margin: 0 20rpx;
-                }
-                .m-user-label{
-                    padding: 0 10rpx;
-                    border: 1px solid @common-color;
-                    color: @common-color;
-                    font-size: 20rpx;
-                }
+
                 .m-grey{
                     color: #C1C1C1;
                 }

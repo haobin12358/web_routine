@@ -1,0 +1,96 @@
+<style scoped lang="less" rel="stylesheet/less">
+    @import "../../styles/common.less";
+.m-joinNum{
+    .m-icon{
+        display: inline-block;
+        width: 40rpx;
+        height: 40rpx;
+        margin-left: 30rpx;
+    }
+    .m-one-person{
+        padding: 20rpx 30rpx;
+        border-bottom: 1px solid @border-color;
+        .m-user-box{
+            .flex(row,flex-start,flex-start);
+            .m-user-head{
+                display: inline-block;
+                width: 80rpx;
+                height: 80rpx;
+                border-radius: 50%;
+            }
+            .m-user-name{
+                display: inline-block;
+                margin: 0 20rpx;
+                font-weight: 500;
+                max-width: 280rpx;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+            .m-user-label{
+                display: inline-block;
+                padding: 0 10rpx;
+                border: 1px solid @common-color;
+                color: @common-color;
+            }
+        }
+    }
+}
+
+</style>
+<template>
+    <view class="m-joinNum">
+        <view class="m-one-person m-flex-between">
+            <view class="m-user-box">
+                <image class="m-user-head"></image>
+                <span class="m-user-name">榴莲哟哟</span>
+                <span class="m-user-label">游客</span>
+            </view>
+            <view>
+                <image src="../../images/index/icon-chat.png" class="m-icon"></image>
+                <image src="../../images/index/icon-add-look-active.png" class="m-icon"></image>
+            </view>
+        </view>
+        <view class="m-one-person m-flex-between">
+            <view class="m-user-box">
+                <image class="m-user-head"></image>
+                <span class="m-user-name">榴莲哟哟</span>
+                <span class="m-user-label">游客</span>
+            </view>
+            <view>
+                <image src="../../images/index/icon-chat.png" class="m-icon"></image>
+                <image src="../../images/index/icon-look-done.png" class="m-icon"></image>
+            </view>
+        </view>
+        <view class="m-one-person m-flex-between">
+            <view class="m-user-box">
+                <image class="m-user-head"></image>
+                <span class="m-user-name">榴莲哟哟</span>
+                <span class="m-user-label">游客</span>
+            </view>
+            <view>
+                <image src="../../images/index/icon-chat.png" class="m-icon"></image>
+                <image src="../../images/index/icon-look-gather.png" class="m-icon"></image>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+
+    export default class joinNum extends wepy.page {
+        config = {
+            navigationBarTitleText: '参与人数',
+            enablePullDownRefresh: true
+        }
+        components = {}
+        data = {}
+
+        onLoad(options) {
+
+        }
+
+        methods = {}
+    }
+</script>

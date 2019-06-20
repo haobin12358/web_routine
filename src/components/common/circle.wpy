@@ -6,24 +6,6 @@
         .m-one-circle-title{
             .flex-row(space-between);
             padding-bottom: 10rpx;
-            .m-user-head{
-                display: inline-block;
-                width: 60rpx;
-                height: 60rpx;
-            }
-            .m-user-name{
-                font-size: 28rpx;
-                font-weight: 600;
-                /*line-height: 40rpx;*/
-                margin: 0 20rpx;
-            }
-            .m-user-label{
-                display: inline-block;
-                border: 1px solid @common-color;
-                padding: 0 10rpx;
-                color: @common-color;
-                font-size: 20rpx;
-            }
             .m-circle-label{
                 display: inline-block;
                 padding: 0 10rpx;
@@ -94,7 +76,7 @@
 <script>
     import wepy from 'wepy';
 
-    export default class IndexIndex extends wepy.page {
+    export default class circle extends wepy.page {
         config = {
             navigationBarTitleText: '',
             enablePullDownRefresh: true

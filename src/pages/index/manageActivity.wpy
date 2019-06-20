@@ -90,7 +90,7 @@
        </ul>
        <view class="m-activity-list">
           <view class="m-one-activity">
-              <img src="" class="m-activity-img" alt="">
+              <image src="" class="m-activity-img" alt=""></image>
               <view class="m-one-activity-info">
                   <view class="m-one-activity-title">西湖-富春江-千岛湖-新安江江</view>
                   <view class="m-one-activity-time">
@@ -104,7 +104,7 @@
               </view>
           </view>
            <view class="m-one-activity">
-               <img src="" class="m-activity-img" alt="">
+               <image src="" class="m-activity-img" alt=""></image>
                <view class="m-one-activity-info">
                    <view class="m-one-activity-title">西湖-富春江-千岛湖-新安江江</view>
                    <view class="m-one-activity-time">
@@ -118,7 +118,7 @@
                </view>
            </view>
            <view class="m-one-activity">
-               <img src="" class="m-activity-img" alt="">
+               <image src="" class="m-activity-img" alt=""></image>
                <view class="m-one-activity-info">
                    <view class="m-one-activity-title">西湖-富春江-千岛湖-新安江江</view>
                    <view class="m-one-activity-time">
@@ -133,7 +133,7 @@
            </view>
 <!--我报名的-->
            <view class="m-one-activity">
-               <img src="" class="m-activity-img" alt="">
+               <image src="" class="m-activity-img" alt=""></image>
                <view class="m-one-activity-info">
                    <view class="m-one-activity-title">西湖-富春江-千岛湖-新安江江</view>
                    <view class="m-one-activity-user">组织者：某某某</view>
@@ -150,7 +150,7 @@
 <script>
     import wepy from 'wepy';
 
-    export default class IndexIndex extends wepy.page {
+    export default class manageActivity extends wepy.page {
         config = {
             navigationBarTitleText: '管理活动',
             enablePullDownRefresh: true
