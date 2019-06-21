@@ -67,7 +67,9 @@
       }
     }
   }
-
+button{
+  opacity: 0;
+}
 </style>
 <template>
   <view class="m-index">
@@ -140,6 +142,7 @@
         <li></li>
       </ul>
     </view>
+<!--    <button open-type='getUserInfo' bindgetuserinfo='doLogin' id="doLogin">微信登录</button>-->
   </view>
 </template>
 
@@ -277,15 +280,38 @@
               }
           })
       }
-      onLoad(options){
+    doLogin(e){
+      console.log('asdsada')
+      wx.login({
+        success: function(res){
+          console.log(res)
+          //获取登录临时凭证
+          var code = res.code;
+          //调用后端接口 获取微信的session_key 和 openID
+          wx.request({
+            url: 'http://localhost:8080/wxLogin?code='+code,
+            method:"post",
+            success: function (resule){
+              console.log(resule);
+            }
+          })
+        }
+      })
+    }
+
+    onLoad(options){
         // this.getMedicalList();
         // this.getScienceList();
         // this.getScroll();
         // this.getTel();
 
+        this.doLogin();
+      }
+      onShow(){
 
       }
     methods = {
+
         changeRoute(v){
             wx.navigateTo({
                 url: v

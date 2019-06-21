@@ -84,7 +84,7 @@
                     <image src="../../images/common/icon-cut.png" class="m-cut-add-icon" @tap="cutCost({{index}})"></image>
                     <view class="m-row-box">
                         <view class="m-one-cost-row">
-                            <span>费用名称</span>
+                            <span>{{cost_name}}名称</span>
                             <input type="text" class="m-tr" placeholder="20字以内">
                         </view>
                         <view class="m-one-cost-row">
@@ -92,11 +92,11 @@
                             <input type="text" class="m-tr" placeholder="有人报名后不能修改">
                         </view>
                         <view class="m-one-cost-row m-detail">
-                            <span>费用说明</span>
+                            <span>{{cost_name}}说明</span>
                             <textarea  placeholder="20字以内"></textarea>
                         </view>
                         <view class="m-one-cost-row " wx:if="{{show_radio}}">
-                           <span class="m-mr"> 是否必选</span>  <radio value="" checked="" color="#FFCE00"/>
+                           <span class="m-mr"> 是否为必要保险</span>     <switch bindchange="switchChange" color="#FFCE00"/>
                         </view>
                     </view>
                 </view>
@@ -121,14 +121,14 @@
         components = {}
         data = {
             show_radio:false,
-            cost_list:[
-
-            ]
+            cost_list:[],
+            cost_name:'费用'
         }
 
         onLoad(options) {
             if(options.from){
                 this.show_radio = true;
+                this.cost_name = '保险'
             }
         }
 
@@ -152,6 +152,9 @@
                         }
                     }
                 })
+
+            },
+            switchChange(){
 
             }
         }

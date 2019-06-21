@@ -1,0 +1,82 @@
+<style scoped lang="less" rel="stylesheet/less">
+    @import "../../styles/common.less";
+    .m-rallyPoint{
+       .m-map{
+
+       }
+    }
+
+</style>
+<template>
+    <view class="m-rallyPoint">
+        <view class="m-map">
+            <map id="map" longitude="113.324520" latitude="23.099994" scale="14" controls="{{controls}}"  bindtap="onMapTap" markers="{{markers}}"  polyline="{{polyline}}" show-location style="width: 100%; height: 100vh;"></map>
+        </view>
+
+
+        <view class="m-foot-btn m-one cancel">发起集合</view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+
+    export default class rallyPoint extends wepy.page {
+        config = {
+            navigationBarTitleText: '集合点',
+            enablePullDownRefresh: true
+        }
+        components = {}
+        data = {
+            markers: [{
+                iconPath: "/images/common/icon-loc-mark.png",
+                id: 0,
+                latitude: 23.099994,
+                longitude: 113.324520,
+                width: 50,
+                height: 50
+            }],
+            polyline: [{
+                points: [{
+                    longitude: 113.3245211,
+                    latitude: 23.10229
+                }, {
+                    longitude: 113.324520,
+                    latitude: 23.21229
+                }],
+                color:"#FF0000DD",
+                width: 2,
+                dottedLine: true
+            }],
+            controls: [{
+                id: 1,
+                iconPath: '/images/common/icon-loc-mark.png',
+                position: {
+                    left: 0,
+                    top: 300 - 50,
+                    width: 50,
+                    height: 50
+                },
+                clickable: true
+            }]
+        }
+
+        onLoad(options) {
+
+        }
+
+        methods = {
+            //点击地图获取地理位置
+            onMapTap(e){
+                wx.chooseLocation({
+                    success:function (res) {
+                        console.log(res)
+                    },
+                    error:function (res) {
+                        console.log(res,'error')
+                    }
+                })
+            }
+        }
+    }
+</script>

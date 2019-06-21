@@ -114,7 +114,7 @@ input,textarea{
 
 //底部保存按钮
 
-.m-foot-btn{
+.m-foot-btn.m-one{
     position: fixed;
     bottom: 0;
     left: 0;
@@ -125,4 +125,19 @@ input,textarea{
     font-size: 30rpx;
     font-weight: 500;
     text-align: center;
+    &.cancel{
+        background-color: #D3D3D3;
+        color: #ADADAD;
+    }
+}
+
+//修改默认组件的大小
+radio {
+    transform:scale(0.7);
+}
+checkbox {
+    transform:scale(0.7);
+}
+switch {
+    transform:scale(0.7);
 }
