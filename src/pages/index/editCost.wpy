@@ -1,0 +1,159 @@
+<style scoped lang="less" rel="stylesheet/less">
+    @import "../../styles/common";
+.m-editCost{
+    .m-title{
+        padding: 20rpx 30rpx;
+    }
+    .m-one-cost{
+        border-top: 1px solid @border-color;
+        display: -webkit-box;
+        /*display: box;*/
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        -webkit-box-orient:horizontal;
+        box-orient:horizontal;
+        /*width: 750rpx;*/
+        padding: 0!important;
+        .m-cost-info{
+            width: 750rpx;
+            .flex-row(flex-start);
+            border-bottom: 1px solid @border-color;
+        }
+        .m-row-box{
+            width: 686rpx;
+            .m-one-cost-row{
+                padding: 20rpx 30rpx 20rpx 0;
+                border-bottom: 1px solid @border-color;
+                .flex-row(space-between);
+                &:last-child{
+                    border-bottom: none;
+                }
+                input.m-tr{
+                    text-align: right;
+                }
+                textarea{
+                    width: 460rpx;
+                    height: 100rpx;
+                    text-align: left;
+                    margin-left: 30rpx;
+                    padding: 10rpx;
+                    box-sizing: border-box;
+                }
+                &.m-detail{
+                    .flex(row,flex-start,flex-start);
+                }
+                &.m-radio{
+                    .flex(row,flex-start,center);
+                }
+            }
+        }
+        .m-delete-btn{
+            width: 144rpx;
+            height: 422rpx;
+            line-height: 422rpx;
+            background-color: #D83A3A;
+            font-size: 30rpx;
+            font-weight: 500;
+            text-align: center;
+            color: #fff;
+        }
+    }
+    .m-cut-add-icon{
+        display: inline-block;
+        width: 30rpx;
+        height: 30rpx;
+        margin: 0 20rpx;
+    }
+    .m-add-box{
+        padding: 20rpx 0;
+        border-bottom: 10rpx solid #F4F4F4;
+    }
+    /* 隐藏下方的滚动条 */
+    .m-one-cost::-webkit-scrollbar {
+        background-color: transparent;
+    }
+}
+
+</style>
+<template>
+    <view class="m-editCost">
+        <view class="m-title m-grey">费用明细</view>
+        <view class="m-one-cost " wx:for="{{cost_list}}">
+                <view class="m-cost-info">
+                    <image src="../../images/common/icon-cut.png" class="m-cut-add-icon" @tap="cutCost({{index}})"></image>
+                    <view class="m-row-box">
+                        <view class="m-one-cost-row">
+                            <span>费用名称</span>
+                            <input type="text" class="m-tr" placeholder="20字以内">
+                        </view>
+                        <view class="m-one-cost-row">
+                            <span>金额</span>
+                            <input type="text" class="m-tr" placeholder="有人报名后不能修改">
+                        </view>
+                        <view class="m-one-cost-row m-detail">
+                            <span>费用说明</span>
+                            <textarea  placeholder="20字以内"></textarea>
+                        </view>
+                        <view class="m-one-cost-row " wx:if="{{show_radio}}">
+                           <span class="m-mr"> 是否必选</span>  <radio value="" checked="" color="#FFCE00"/>
+                        </view>
+                    </view>
+                </view>
+<!--                <view class="m-delete-btn">删除</view>-->
+            </view>
+        <view class="m-flex-start m-add-box">
+            <image src="../../images/common/icon-add.png" class="m-cut-add-icon" @tap="addCost"></image>
+            <span>添加费用</span>
+        </view>
+        <view class="m-foot-btn m-one">保存</view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+
+    export default class editCost extends wepy.page {
+        config = {
+            navigationBarTitleText: '活动费用',
+            enablePullDownRefresh: true
+        }
+        components = {}
+        data = {
+            show_radio:false,
+            cost_list:[
+
+            ]
+        }
+
+        onLoad(options) {
+            if(options.from){
+                this.show_radio = true;
+            }
+        }
+
+        methods = {
+            //添加费用
+            addCost(){
+                this.cost_list.push({});
+            },
+            //删除费用
+            cutCost(index){
+                let that = this;
+                wx.showModal({
+                    title: '提示',
+                    content: '确认删除此费用吗？',
+                    success (res) {
+                        if (res.confirm) {
+                           that.cost_list.splice(index,1);
+                           that.$apply();
+                        } else if (res.cancel) {
+                            console.log('用户点击取消')
+                        }
+                    }
+                })
+
+            }
+        }
+    }
+</script>

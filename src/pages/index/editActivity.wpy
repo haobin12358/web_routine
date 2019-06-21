@@ -141,14 +141,14 @@
                 </li>
                 <li>
                     <span class="m-edit-label">活动费用</span>
-                    <span class="m-flex-end">
+                    <span class="m-flex-end" @tap="changeRoute('/pages/index/editCost')">
                         <span>0</span>
                         <image src="../../images/common/icon-more.png" class="m-icon-more"></image>
                     </span>
                 </li>
                 <li>
                     <span class="m-edit-label">活动保险</span>
-                    <span class="m-flex-end">
+                    <span class="m-flex-end" @tap="changeRoute('/pages/index/editCost?from=insurance')">
                         <span class="m-grey">未设置</span>
                         <image src="../../images/common/icon-more.png" class="m-icon-more"></image>
                     </span>
@@ -223,7 +223,11 @@
         }
 
         methods = {
-
+            changeRoute(v){
+                wx.navigateTo({
+                    url: v
+                });
+            }
         }
     }
 </script>

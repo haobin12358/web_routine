@@ -14,6 +14,18 @@
             }
         }
     }
+    .m-search-box{
+        .flex-row(space-around);
+        color: #666;
+        font-size: 24rpx;
+        padding: 30rpx 0;
+        .m-time-btn{
+            .flex-row(center);
+            padding: 2px 20rpx;
+            background-color: #F5F5F5;
+            border-radius: 30rpx;
+        }
+    }
     .m-activity-list{
         .m-one-activity{
             padding: 10rpx 20rpx;
@@ -82,14 +94,25 @@
        <ul class="m-nav">
            <li>
 <!--                class="m-border-back"-->
-               <span  class="m-border-back">1231</span>
+               <span  class="m-border-back">我创建的</span>
            </li>
            <li>
-               <span>1231</span>
+               <span>我报名的</span>
            </li>
        </ul>
+
+        <view class="m-search-box">
+            <view class="m-time-btn">
+                <span>日期</span>
+                <image src="../../images/common/icon-down-solid.png" class="m-down-solid"></image>
+            </view>
+            <view class="m-flex-end">
+                <span>状态</span>
+                <image src="../../images/common/icon-down-solid.png" class="m-down-solid"></image>
+            </view>
+        </view>
        <view class="m-activity-list">
-          <view class="m-one-activity">
+          <view class="m-one-activity" @tap="changeRoute('/pages/index/activityDetail')">
               <image src="" class="m-activity-img" alt=""></image>
               <view class="m-one-activity-info">
                   <view class="m-one-activity-title">西湖-富春江-千岛湖-新安江江</view>
@@ -103,7 +126,7 @@
                   </view>
               </view>
           </view>
-           <view class="m-one-activity">
+           <view class="m-one-activity" @tap="changeRoute('/pages/index/lookActivity')">
                <image src="" class="m-activity-img" alt=""></image>
                <view class="m-one-activity-info">
                    <view class="m-one-activity-title">西湖-富春江-千岛湖-新安江江</view>
@@ -162,6 +185,12 @@
 
         }
 
-        methods = {}
+        methods = {
+            changeRoute(v){
+                wx.navigateTo({
+                    url: v
+                });
+            },
+        }
     }
 </script>

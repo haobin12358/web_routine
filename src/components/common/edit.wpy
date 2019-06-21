@@ -4,10 +4,10 @@
     .iconfont {
         display: inline-block;
         padding: 8px 8px;
-        width: 24px;
-        height: 24px;
+        width: 28rpx;
+        height: 28rpx;
         cursor: pointer;
-        font-size: 28rpx;
+        /*font-size: 28rpx;*/
     }
 
     .toolbar {
@@ -15,6 +15,10 @@
         /* border: 1px solid #ccc; */
         border-bottom: 0;
         font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+        display: flex;
+        flex-flow: row;
+        justify-content: flex-start;
+        align-items: center;
     }
 
 
@@ -44,7 +48,7 @@
             <i class="iconfont icon-outdent" data-name="indent" data-value="-1"></i>
             <i class="iconfont icon-indent" data-name="indent" data-value="+1"></i>
             <i class="iconfont icon-charutupian" bindtap="insertImage"></i>
-            <span class="iconfont icon-charutupian" bindtap="insertImage"></span>
+            <image src="../../images/common/icon-video.png" class="iconfont icon-video" bindtap="insertVideo"></image>
         </view>
         <editor
                 id="editor"
@@ -98,6 +102,24 @@
                 this.editorCtx.format(name, value)
             },
             insertImage() {
+                const that = this
+                wx.chooseImage({
+                    count: 1,
+                    success: function () {
+                        that.editorCtx.insertImage({
+                            src: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1543767268337&di=5a3bbfaeb30149b2afd33a3c7aaa4ead&imgtype=0&src=http%3A%2F%2Fimg02.tooopen.com%2Fimages%2F20151031%2Ftooopen_sy_147004931368.jpg',
+                            data: {
+                                id: 'abcd',
+                                role: 'god'
+                            },
+                            success: function () {
+                                console.log('insert image success')
+                            }
+                        })
+                    }
+                })
+            },
+            insertVideo(){
                 const that = this
                 wx.chooseImage({
                     count: 1,

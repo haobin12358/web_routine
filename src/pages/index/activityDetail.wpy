@@ -70,7 +70,7 @@
            </li>
            <li>
                <view class="m-label">参与人数</view>
-               <view class="m-flex-end">
+               <view class="m-flex-end" @tap="changeRoute('/pages/index/joinNum')">
                    <span>
                        <span class="m-common">3</span>/10
                    </span>
@@ -117,6 +117,12 @@
 
         }
 
-        methods = {}
+        methods = {
+            changeRoute(v){
+                wx.navigateTo({
+                    url: v
+                });
+            },
+        }
     }
 </script>

@@ -41,6 +41,8 @@ page{
           'pages/index/editActivity',
           'pages/index/enterTeam',
           'pages/index/joinNum',
+          'pages/index/editCost',
+
       ],
       window: {
         backgroundTextStyle: 'light',

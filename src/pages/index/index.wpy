@@ -85,16 +85,16 @@
     </swiper>
     <view class="m-top-icon">
       <view class="m-top-one-icon" @tap="changeRoute('/pages/index/editActivity')">
-        <image src="../../images/index/index-bg1.png" class="m-icon-bg"></image>
+        <image src="{{img_src}}index/index-bg1.png" class="m-icon-bg"></image>
         <view class="m-icon-info">
-          <image src="../../images/index/index-initiate.png" class="m-icon-top"></image>
+          <image src="{{img_src}}index/index-initiate.png" class="m-icon-top"></image>
           <view>发起活动</view>
         </view>
       </view>
       <view class="m-top-one-icon" @tap="changeRoute('/pages/index/manageActivity')">
-        <image src="../../images/index/index-bg2.png" class="m-icon-bg"></image>
+        <image src="{{img_src}}index/index-bg2.png" class="m-icon-bg"></image>
         <view class="m-icon-info">
-          <image src="../../images/index/index-manage.png" class="m-icon-top"></image>
+          <image src="{{img_src}}index/index-manage.png" class="m-icon-top"></image>
           <view>管理活动</view>
         </view>
       </view>
@@ -102,16 +102,16 @@
     <view class="m-index-content">
       <ul class="m-icon-list">
         <li  @tap="changeRoute('/pages/index/signIn')">
-          <p><image src="../../images/index/index-team-sign.png" class="m-index-icon" alt="" /></p>
+          <p><image src="{{img_src}}index/index-team-sign.png" class="m-index-icon" alt="" /></p>
           <p>团队签到</p>
         </li>
         <li  @tap="changeRoute('/pages/index/enterTeam')">
-          <p><image src="../../images/index/index-add-team.png" class="m-index-icon" alt="" /></p>
+          <p><image src="{{img_src}}/index/index-add-team.png" class="m-index-icon" alt="" /></p>
           <p>进入团队</p>
         </li>
       </ul>
       <ul class="m-icon-list">
-        <li>
+        <li @tap="getCell">
           <p><image src="../../images/index/index-tel.png" class="m-index-icon" alt="" /></p>
           <p>一键求救</p>
         </li>
@@ -158,6 +158,7 @@
 
     }
     data = {
+       img_src:api.img_src,
         scroll_data: [],
         indicatorDots: true,
         autoplay: false,
@@ -281,6 +282,8 @@
         // this.getScienceList();
         // this.getScroll();
         // this.getTel();
+
+
       }
     methods = {
         changeRoute(v){
@@ -293,35 +296,21 @@
                 url: '/pages/knowledge/index'
             });
         },
-        detailTap(item){
-          wx.navigateTo({
-            url: '/pages/index/detail?medical_id=' +item.medical_id
-          });
-        },
-        goDetail(item){
-            wx.navigateTo({
-                url: '/pages/knowledge/article?science_id='+item.science_id
-            });
-        },
-        goPhysical(){
-            wx.switchTab({
-                url: '/pages/physical/index'
-            });
-        },
-        goQuestionnaire(){
-            this.show_tel = true;
-        },
-        goCard(){
-            wx.navigateTo({
-                url: '/pages/index/card'
-            });
-        },
-        cancelTel(){
-            this.show_tel = false;
+        getCell(){
+          let that = this;
+          wx.showActionSheet({
+            itemList: ['17774012962'],
+            success (res) {
+              that.call('17774012962');
+            },
+            fail (res) {
+              console.log(res.errMsg)
+            }
+          })
         },
         call(item){
             wx.makePhoneCall({
-                phoneNumber: item.custom_telphone // 仅为示例，并非真实的电话号码
+                phoneNumber: item
             })
         },
         upper(e) {
