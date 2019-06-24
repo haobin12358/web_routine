@@ -110,7 +110,6 @@
                                         console.log(res)
                                         //获取登录临时凭证
                                         var code = res.code;
-                                        wx.setStorageSync('code',res.code);
                                         //调用后端接口 获取微信的session_key 和 openID
                                         wx.request({
                                             url: api.login,
@@ -124,6 +123,7 @@
                                                     key:"token",
                                                     data:resule.data.data.token
                                                 });
+                                                wx.setStorageSync('session_key',resule.data.data.session_key);
                                                 wx.setStorageSync('token', resule.data.data.token);
                                                 if(resule.data.binded_phone){
                                                     wx.switchTab({
@@ -185,7 +185,7 @@
                             iv:e.detail.iv
                         },
                         token:wx.getStorageSync('token'),
-                        code:wx.getStorageSync('code')
+                        session_key:wx.getStorageSync('session_key')
                     },
                     success: function (resule){
                         if(resule.data.status == 200){

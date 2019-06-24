@@ -30,7 +30,7 @@ page{
   export default class extends wepy.app {
     config = {
       pages: [
-
+          'pages/personal/login',
           'pages/index/index',
           'pages/personal/index',
           'pages/travel/index',
@@ -44,7 +44,7 @@ page{
           'pages/index/editCost',
           'pages/index/rallyPoint',
           'pages/index/timePicker',
-          'pages/personal/login',
+
       ],
         permission: {
             "scope.userLocation": {
