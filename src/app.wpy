@@ -30,7 +30,7 @@ page{
   export default class extends wepy.app {
     config = {
       pages: [
-          'pages/index/rallyPoint',
+
           'pages/index/index',
           'pages/personal/index',
           'pages/travel/index',
@@ -42,6 +42,7 @@ page{
           'pages/index/enterTeam',
           'pages/index/joinNum',
           'pages/index/editCost',
+          'pages/index/rallyPoint',
 
       ],
       window: {
@@ -73,12 +74,11 @@ page{
             "iconPath": "images/bottom/bottom-person.png",
             "selectedIconPath": "images/bottom/bottom-person-active.png"
           }]
-      }
+      },
     }
 
-    globalData = {
-      sess_key: '122233',
-
+    data = {
+        show_login:false
     }
 
     constructor () {

@@ -66,10 +66,47 @@
         }
       }
     }
+    .m-login-modal{
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      width: 100%;
+      height: 100vh;
+      background-color: rgba(0,0,0,0.1);
+      z-index: 100;
+      .m-login-state{
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: #fff;
+        .m-login-info{
+          padding: 70rpx 56rpx;
+          font-size: 30rpx;
+          font-weight: 500;
+          .m-login-logo{
+            display: inline-block;
+            width: 90rpx;
+            height: 90rpx;
+            margin-right: 20rpx;
+          }
+          .m-grey{
+            margin: 20rpx;
+            font-size: 28rpx;
+            font-weight: 400;
+          }
+        }
+        button{
+          background-color: @common-color;
+          color: #fff;
+          border: none;
+          border-radius: 0;
+        }
+      }
+    }
   }
-button{
-  opacity: 0;
-}
 </style>
 <template>
   <view class="m-index">
@@ -142,7 +179,21 @@ button{
         <li></li>
       </ul>
     </view>
-<!--    <button open-type='getUserInfo' bindgetuserinfo='doLogin' id="doLogin">微信登录</button>-->
+
+    <view class="m-login-modal" wx:if="{{show_login}}">
+      <view class="m-login-state">
+
+        <view class="m-login-info">
+          <view class="m-flex-start">
+            <image src="" class="m-login-logo"></image>
+            <span>欢迎加入XXXXXXXX平台</span>
+          </view>
+          <view class="m-grey">为提供优质的服务，需要获取您的公开信息（昵称、头像、定位等）</view>
+        </view>
+        <button open-type='getUserInfo' bindgetuserinfo='doLogin' id="doLogin">微信登录</button>
+      </view>
+    </view>
+
   </view>
 </template>
 
@@ -167,28 +218,9 @@ button{
         autoplay: false,
         interval: 3000,
         duration: 1000,
+        show_login:false
 
     }
-      getScroll() {
-          let that = this;
-          tip.loading();
-          wx.request({
-              url: api.get_loadpic_list,
-              data: {
-              },
-              header: {
-                  'content-type': 'application/json' // 默认值
-              },
-              success: function(res) {
-                  that.scroll_data = res.data.data;
-                  that.$apply();
-                  tip.loaded();
-              },
-              error:function (error) {
-                  tip.loaded();
-              }
-          })
-      }
       getMedicalList() {
           let that = this;
           tip.loading();
@@ -205,53 +237,6 @@ button{
               },
               success: function(res) {
                   that.medical_data = res.data.data;
-                  that.$apply();
-                  tip.loaded();
-              },
-              error:function (error) {
-                  tip.loaded();
-              }
-          })
-      }
-      getMedicalName(name) {
-          let that = this;
-          tip.loading();
-          wx.request({
-              url: api.get_medical_list,
-              data: {
-                  use_type: 0,
-                  page_num: 1,
-                  page_size:5,
-                  medical_name:name
-              },
-              header: {
-                  'content-type': 'application/json' // 默认值
-              },
-              success: function(res) {
-                  that.title_data = res.data.data;
-                  that.$apply();
-                  tip.loaded();
-              },
-              error:function (error) {
-                  tip.loaded();
-              }
-          })
-      }
-      getScienceList() {
-          let that = this;
-          tip.loading();
-          wx.request({
-              url: api.get_science_list, //仅为示例，并非真实的接口地址
-              data: {
-                  use_type: 1,
-                  page_num: 1,
-                  page_size:that.page_info.page_size
-              },
-              header: {
-                  'content-type': 'application/json' // 默认值
-              },
-              success: function(res) {
-                  that.science_data = res.data.data;
                   that.$apply();
                   tip.loaded();
               },
@@ -280,24 +265,51 @@ button{
               }
           })
       }
-    doLogin(e){
-      console.log('asdsada')
-      wx.login({
-        success: function(res){
-          console.log(res)
-          //获取登录临时凭证
-          var code = res.code;
-          //调用后端接口 获取微信的session_key 和 openID
-          wx.request({
-            url: 'http://localhost:8080/wxLogin?code='+code,
-            method:"post",
-            success: function (resule){
-              console.log(resule);
+      doLogin(e){
+        let that = this;
+        wx.getSetting({
+          success(res) {
+            if (res.authSetting['scope.userInfo']) {
+              wx.getUserInfo({
+                success: function(resData) {
+                  console.log(res,'dsddfs');
+                  wx.login({
+                    success: function(res){
+                      console.log(res)
+                      //获取登录临时凭证
+                      var code = res.code;
+                      //调用后端接口 获取微信的session_key 和 openID
+                      wx.request({
+                        url: 'https://play.bigxingxing.com/api/v2/user/mp_login',
+                        method:"post",
+                        data:{
+                          code:code,
+                          info:resData
+                        },
+                        success: function (resule){
+                          console.log(resule);
+                          wx.setStorage({
+                            key:"token",
+                            data:resule.token
+                          })
+                        }
+                      })
+                    }
+                  })
+
+                },
+                error:function (error) {
+                  console.log(error,'adsa')
+                }
+              })
+            }else{
+              that.show_login = true;
+              that.$apply();
             }
-          })
-        }
-      })
-    }
+          }
+        })
+
+      }
 
     onLoad(options){
         // this.getMedicalList();
@@ -305,7 +317,10 @@ button{
         // this.getScroll();
         // this.getTel();
 
-        this.doLogin();
+        //
+        if(!wx.getStorageSync('token')){
+          this.doLogin();
+        }
       }
       onShow(){
 
