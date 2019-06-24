@@ -26,6 +26,7 @@
          color: #fff;
          border: none;
          border-radius: 0;
+         line-height: 90rpx;
      }
      .m-modal{
          position: fixed;
@@ -56,7 +57,11 @@
                  margin-bottom: 20rpx;
              }
              button{
+                 width: 250rpx;
                  margin-top: 30rpx;
+                 &.cancel{
+                     background-color: #c1c1c1;
+                 }
              }
          }
      }
@@ -78,7 +83,11 @@
            <view class="m-modal-state">
                <image src="" class="m-login-log"></image>
                <view class="m-grey">为了更优质的服务，需要获取您的手机号</view>
-               <button open-type='getPhoneNumber' bindgetphonenumber='getPhoneNumber' >确认授权</button>
+               <view class="m-flex-between">
+                   <button @tap="cancelTel" class="cancel">拒绝</button>
+                   <button open-type='getPhoneNumber' bindgetphonenumber='getPhoneNumber' >确认授权</button>
+               </view>
+
            </view>
        </view>
     </view>
@@ -125,7 +134,7 @@
                                                 });
                                                 wx.setStorageSync('session_key',resule.data.data.session_key);
                                                 wx.setStorageSync('token', resule.data.data.token);
-                                                if(resule.data.binded_phone){
+                                                if(resule.data.data.binded_phone){
                                                     wx.switchTab({
                                                         url: '/pages/index/index'
                                                     });
@@ -176,7 +185,7 @@
                 console.log(e)
                 let that = this;
                 wx.request({
-                    url: api.bind_phone,
+                    url: api.bind_phone + '?token=' +wx.getStorageSync('token'),
                     method:"post",
                     data:{
                         phonenumber:{
@@ -184,7 +193,6 @@
                             cloudID:e.detail.cloudID,
                             iv:e.detail.iv
                         },
-                        token:wx.getStorageSync('token'),
                         session_key:wx.getStorageSync('session_key')
                     },
                     success: function (resule){
@@ -203,6 +211,11 @@
 
                     }
                 })
+            },
+            cancelTel(){
+                wx.switchTab({
+                    url: '/pages/index/index'
+                });
             }
         }
     }
