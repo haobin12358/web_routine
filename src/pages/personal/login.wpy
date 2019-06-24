@@ -1,0 +1,209 @@
+<style scoped lang="less" rel="stylesheet/less">
+     @import "../../styles/common";
+    .m-login-state{
+        width: 100%;
+        background-color: #fff;
+        .m-login-info{
+            padding: 70rpx 56rpx;
+            font-size: 30rpx;
+            font-weight: 500;
+            .m-login-logo{
+                display: inline-block;
+                width: 90rpx;
+                height: 90rpx;
+                margin-right: 20rpx;
+            }
+            .m-grey{
+                margin: 20rpx;
+                font-size: 28rpx;
+                font-weight: 400;
+            }
+        }
+
+    }
+     button{
+         background-color: @common-color;
+         color: #fff;
+         border: none;
+         border-radius: 0;
+     }
+     .m-modal{
+         position: fixed;
+         top:0;
+         left: 0;
+         right: 0;
+         bottom: 0;
+         width: 100%;
+         height: 100vh;
+         background-color: rgba(0,0,0,0.3);
+         .m-modal-state{
+             position: absolute;
+             top: 0;
+             left: 0;
+             right: 0;
+             bottom: 0;
+             width: 600rpx;
+             margin:  auto;
+             background-color: #fff;
+             height: 400rpx;
+             padding: 40rpx;
+             box-sizing: border-box;
+             text-align: center;
+             .m-login-log{
+                 display: inline-block;
+                 width: 90rpx;
+                 height: 90rpx;
+                 margin-bottom: 20rpx;
+             }
+             button{
+                 margin-top: 30rpx;
+             }
+         }
+     }
+
+</style>
+<template>
+    <view>
+        <view class="m-login-state">
+            <view class="m-login-info">
+                <view class="m-flex-start">
+                    <image src="" class="m-login-logo"></image>
+                    <span>欢迎加入XXXXXXXX平台</span>
+                </view>
+                <view class="m-grey">为提供优质的服务，需要获取您的公开信息（昵称、头像等）</view>
+            </view>
+            <button open-type='getUserInfo' bindgetuserinfo='doLogin' id="doLogin">微信登录</button>
+        </view>
+       <view class="m-modal" wx:if="{{show_tel}}">
+           <view class="m-modal-state">
+               <image src="" class="m-login-log"></image>
+               <view class="m-grey">为了更优质的服务，需要获取您的手机号</view>
+               <button open-type='getPhoneNumber' bindgetphonenumber='getPhoneNumber' >确认授权</button>
+           </view>
+       </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import api from '../../api/api';
+    export default class login extends wepy.page {
+        config = {
+            navigationBarTitleText: '',
+            enablePullDownRefresh: true
+        }
+        components = {}
+        data = {
+            show_tel:false
+        }
+        doLogin(e){
+            let that = this;
+            wx.getSetting({
+                success(res) {
+
+                    if (res.authSetting['scope.userInfo']) {
+                        wx.getUserInfo({
+                            success: function(resData) {
+                                console.log(res,'dsddfs');
+                                wx.login({
+                                    success: function(res){
+                                        console.log(res)
+                                        //获取登录临时凭证
+                                        var code = res.code;
+                                        wx.setStorageSync('code',res.code);
+                                        //调用后端接口 获取微信的session_key 和 openID
+                                        wx.request({
+                                            url: api.login,
+                                            method:"post",
+                                            data:{
+                                                code:code,
+                                                info:resData
+                                            },
+                                            success: function (resule){
+                                                wx.setStorage({
+                                                    key:"token",
+                                                    data:resule.data.data.token
+                                                });
+                                                wx.setStorageSync('token', resule.data.data.token);
+                                                if(resule.data.binded_phone){
+                                                    wx.switchTab({
+                                                        url: '/pages/index/index'
+                                                    });
+                                                }else{
+                                                    that.show_tel = true;
+                                                    that.$apply();
+                                                }
+
+                                            }
+                                        })
+                                    }
+                                })
+
+                            },
+                            fail:function (error) {
+                                wx.showModal({
+                                    title: '警告',
+                                    content: '您点击了拒绝授权,将无法正常显示个人信息,点击确定重新获取授权。',
+                                    success (res) {
+                                        if (res.confirm) {
+                                           that.doLogin();
+                                        } else if (res.cancel) {
+                                            console.log('用户点击取消')
+                                        }
+                                    }
+                                })
+
+                            }
+                        })
+                    }else{
+
+                    }
+                },
+                fail(){
+                    // console.log('sdfsdfs')
+                }
+            })
+
+        }
+        onLoad(options) {
+            if(!wx.getStorageSync('token')){
+                this.doLogin();
+            }
+        }
+
+        methods = {
+            getPhoneNumber(e){
+                console.log(e)
+                let that = this;
+                wx.request({
+                    url: api.bind_phone,
+                    method:"post",
+                    data:{
+                        phonenumber:{
+                            encryptedData:e.detail.encryptedData,
+                            cloudID:e.detail.cloudID,
+                            iv:e.detail.iv
+                        },
+                        token:wx.getStorageSync('token'),
+                        code:wx.getStorageSync('code')
+                    },
+                    success: function (resule){
+                        if(resule.data.status == 200){
+                            wx.switchTab({
+                                url: '/pages/index/index'
+                            });
+                        }else{
+                            wx.showToast({
+                                title: resule.data.message,
+                                icon: 'none',
+                                duration: 2000
+                            })
+                            that.$apply();
+                        }
+
+                    }
+                })
+            }
+        }
+    }
+</script>

@@ -43,7 +43,8 @@ page{
           'pages/index/joinNum',
           'pages/index/editCost',
           'pages/index/rallyPoint',
-
+          'pages/index/timePicker',
+          'pages/personal/login',
       ],
         permission: {
             "scope.userLocation": {

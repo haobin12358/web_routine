@@ -66,46 +66,6 @@
         }
       }
     }
-    .m-login-modal{
-      position: fixed;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
-      width: 100%;
-      height: 100vh;
-      background-color: rgba(0,0,0,0.1);
-      z-index: 100;
-      .m-login-state{
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background-color: #fff;
-        .m-login-info{
-          padding: 70rpx 56rpx;
-          font-size: 30rpx;
-          font-weight: 500;
-          .m-login-logo{
-            display: inline-block;
-            width: 90rpx;
-            height: 90rpx;
-            margin-right: 20rpx;
-          }
-          .m-grey{
-            margin: 20rpx;
-            font-size: 28rpx;
-            font-weight: 400;
-          }
-        }
-        button{
-          background-color: @common-color;
-          color: #fff;
-          border: none;
-          border-radius: 0;
-        }
-      }
-    }
   }
 </style>
 <template>
@@ -180,19 +140,6 @@
       </ul>
     </view>
 
-    <view class="m-login-modal" wx:if="{{show_login}}">
-      <view class="m-login-state">
-
-        <view class="m-login-info">
-          <view class="m-flex-start">
-            <image src="" class="m-login-logo"></image>
-            <span>欢迎加入XXXXXXXX平台</span>
-          </view>
-          <view class="m-grey">为提供优质的服务，需要获取您的公开信息（昵称、头像、定位等）</view>
-        </view>
-        <button open-type='getUserInfo' bindgetuserinfo='doLogin' id="doLogin">微信登录</button>
-      </view>
-    </view>
 
   </view>
 </template>
@@ -218,7 +165,7 @@
         autoplay: false,
         interval: 3000,
         duration: 1000,
-        show_login:false
+
 
     }
       getMedicalList() {
@@ -265,64 +212,6 @@
               }
           })
       }
-      doLogin(e){
-        let that = this;
-        wx.getSetting({
-          success(res) {
-            console.log(res)
-            // if(!res.authSetting['scope.userLocation']){
-            //   wx.authorize({
-            //     scope: 'scope.userLocation',
-            //     success () {
-            //       // 用户已经同意小程序使用录音功能，后续调用 wx.startRecord 接口不会弹窗询问
-            //       // wx.startRecord()
-            //     }
-            //   })
-            // }
-
-            if (res.authSetting['scope.userInfo']) {
-              wx.getUserInfo({
-                success: function(resData) {
-                  console.log(res,'dsddfs');
-                  wx.login({
-                    success: function(res){
-                      console.log(res)
-                      //获取登录临时凭证
-                      var code = res.code;
-                      //调用后端接口 获取微信的session_key 和 openID
-                      wx.request({
-                        url: 'https://play.bigxingxing.com/api/v2/user/mp_login',
-                        method:"post",
-                        data:{
-                          code:code,
-                          info:resData
-                        },
-                        success: function (resule){
-                          console.log(resule);
-                          that.show_login = false;
-                          that.$apply();
-                          wx.setStorage({
-                            key:"token",
-                            data:resule.token
-                          })
-                        }
-                      })
-                    }
-                  })
-
-                },
-                error:function (error) {
-                  console.log(error,'adsa')
-                }
-              })
-            }else{
-              that.show_login = true;
-              that.$apply();
-            }
-          }
-        })
-
-      }
 
     onLoad(options){
         // this.getMedicalList();
@@ -330,9 +219,7 @@
         // this.getScroll();
         // this.getTel();
         //
-        if(!wx.getStorageSync('token')){
-          this.doLogin();
-        }
+
       }
       onShow(){
 
