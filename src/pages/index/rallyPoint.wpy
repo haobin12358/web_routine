@@ -4,6 +4,14 @@
        .m-map{
 
        }
+        .m-foot-btn{
+            height: 10vh;
+            line-height: 10vh;
+            .m-btn{
+                height: 9.6vh;
+                line-height: 9.6vh;
+            }
+        }
     }
 
 </style>
@@ -19,9 +27,22 @@
                  markers="{{markers}}"
                  polyline="{{polyline}}"
                  show-location
-                 style="width: 100%; height: 100vh;"></map>
+                 style="width: 100%; height: 90vh;"></map>
         </view>
-        <cover-view class="m-foot-btn m-one cancel">发起集合</cover-view>
+        <cover-view class="m-foot-btn m-one cancel" wx:if="{{!select_loc}}">发起集合</cover-view>
+
+        <view>
+            <picker mode="time" value="{{time}}" start="09:01" end="21:01" bindchange="bindTimeChange">
+<!--                <view class="picker">-->
+<!--                    当前选择: {{time}}-->
+<!--                </view>-->
+                <cover-view class="m-foot-btn m-two " wx:if="{{select_loc }}">
+                    <cover-view class="m-btn">选择时间</cover-view>
+                    <cover-view class="m-btn {{select_loc && select_time?'active':'cancel'}}" @tap.stop="doSubmit">发起集合</cover-view>
+                </cover-view>
+            </picker>
+        </view>
+
 
     </view>
 </template>
@@ -38,14 +59,7 @@
         data = {
             longitude:null,
             latitude:null,
-            markers: [{
-                iconPath: "/images/common/icon-loc-mark.png",
-                id: 0,
-                latitude: 23.099994,
-                longitude: 113.324520,
-                width: 50,
-                height: 50
-            }],
+            markers: [],
             polyline: [{
                 points: [{
                     longitude: 113.3245211,
@@ -58,17 +72,10 @@
                 width: 2,
                 dottedLine: true
             }],
-            controls: [{
-                id: 1,
-                iconPath: '/images/common/icon-loc-mark.png',
-                position: {
-                    left: 0,
-                    top: 300 - 50,
-                    width: 50,
-                    height: 50
-                },
-                clickable: true
-            }]
+            controls: [],
+            time: '12:01',
+            select_loc:null,
+            select_time:null
         }
 
         getLocation(){
@@ -91,14 +98,43 @@
         methods = {
             //点击地图获取地理位置
             onMapTap(e){
+                let that  = this;
                 wx.chooseLocation({
                     success:function (res) {
                         console.log(res)
+                        that.select_loc = res;
+                        that.latitude = res.latitude;
+                        that.longitude = res.longitude;
+                        that.markers = [
+                            {
+                                iconPath: "/images/common/icon-loc-mark.png",
+                                id: 0,
+                                latitude: res.latitude,
+                                longitude: res.longitude,
+                                width: 45,
+                                height: 45,
+                                callout:{
+                                    content:that.time,
+                                    display:'ALWAYS',
+                                    padding:10
+                                }
+                            }
+                        ]
+                        that.$apply();
                     },
                     error:function (res) {
                         console.log(res,'error')
                     }
                 })
+            },
+            bindTimeChange: function(e) {
+                console.log('picker发送选择改变，携带值为', e.detail.value)
+                this.time = e.detail.value;
+                this.markers[0].callout.content = this.time;
+                this.select_time = e.detail.value;
+            },
+            doSubmit(){
+
             }
         }
     }

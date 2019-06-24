@@ -131,6 +131,37 @@ input,textarea{
         color: #ADADAD;
     }
 }
+.m-foot-btn.m-two{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 750rpx;
+    height: 98rpx;
+    line-height: 98rpx;
+    background-color: #fff;
+    font-size: 30rpx;
+    font-weight: 500;
+    text-align: center;
+    z-index: 100;
+    .flex-row(center);
+    .m-btn{
+        width: 372rpx;
+        height: 98rpx;
+        line-height: 98rpx;
+        border: 1px solid @common-color;
+        color: @common-color;
+        &.active{
+            background-color: @common-color;
+            color: #000;
+        }
+        &.cancel{
+            background-color: #D3D3D3;
+            color: #ADADAD;
+            border-color: #D3D3D3;
+        }
+    }
+
+}
 
 //修改默认组件的大小
 radio {

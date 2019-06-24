@@ -171,7 +171,7 @@
           <p>时光记录</p>
         </li>
       </ul>
-      <ul class="m-icon-list">
+      <ul class="m-icon-list" @tap="changeRoute('/pages/index/rallyPoint')">
         <li>
           <p><image src="../../images/index/index-gather.png" class="m-index-icon" alt="" /></p>
           <p>集合点</p>
@@ -269,6 +269,17 @@
         let that = this;
         wx.getSetting({
           success(res) {
+            console.log(res)
+            // if(!res.authSetting['scope.userLocation']){
+            //   wx.authorize({
+            //     scope: 'scope.userLocation',
+            //     success () {
+            //       // 用户已经同意小程序使用录音功能，后续调用 wx.startRecord 接口不会弹窗询问
+            //       // wx.startRecord()
+            //     }
+            //   })
+            // }
+
             if (res.authSetting['scope.userInfo']) {
               wx.getUserInfo({
                 success: function(resData) {
@@ -288,6 +299,8 @@
                         },
                         success: function (resule){
                           console.log(resule);
+                          that.show_login = false;
+                          that.$apply();
                           wx.setStorage({
                             key:"token",
                             data:resule.token
@@ -316,7 +329,6 @@
         // this.getScienceList();
         // this.getScroll();
         // this.getTel();
-
         //
         if(!wx.getStorageSync('token')){
           this.doLogin();
