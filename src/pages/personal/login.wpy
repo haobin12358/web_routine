@@ -105,82 +105,145 @@
         data = {
             show_tel:false
         }
-        doLogin(e){
-            let that = this;
-            wx.getSetting({
-                success(res) {
 
-                    if (res.authSetting['scope.userInfo']) {
-                        wx.getUserInfo({
-                            success: function(resData) {
-                                console.log(res,'dsddfs');
-                                wx.login({
-                                    success: function(res){
-                                        console.log(res)
-                                        //获取登录临时凭证
-                                        var code = res.code;
-                                        //调用后端接口 获取微信的session_key 和 openID
-                                        wx.request({
-                                            url: api.login,
-                                            method:"post",
-                                            data:{
-                                                code:code,
-                                                info:resData
-                                            },
-                                            success: function (resule){
-                                                wx.setStorage({
-                                                    key:"token",
-                                                    data:resule.data.data.token
-                                                });
-                                                wx.setStorageSync('session_key',resule.data.data.session_key);
-                                                wx.setStorageSync('token', resule.data.data.token);
-                                                if(resule.data.data.binded_phone){
+        getLogin(code){
+            let that = this;
+            wx.getUserInfo({
+                success: function(resData) {
+                    wx.request({
+                        url: api.login,
+                        method:"post",
+                        data:{
+                            code:code,
+                            info:resData
+                        },
+                        success: function (resule){
+                            wx.setStorage({
+                                key:"token",
+                                data:resule.data.data.token
+                            });
+                            wx.setStorageSync('session_key',resule.data.data.session_key);
+                            wx.setStorageSync('token', resule.data.data.token);
+                            if(resule.data.data.binded_phone){
+                                wx.switchTab({
+                                    url: '/pages/index/index'
+                                });
+                            }else{
+                                that.show_tel = true;
+                                that.$apply();
+                            }
+
+                        },fail:function (res) {
+                            wx.showModal({
+                                title:'警告',
+                                cancelText:'不授权',
+                                confirmText:'授权',
+                                confirmColor:'#FFCE00',
+                                content:'若不授权微信登录，则无法正常显示您的信息',
+                                success:function (resdata) {
+                                    if(resdata.confirm){
+                                        console.log('用户点击的授权');
+                                        wx.openSetting({
+                                            success:function (res) {
+                                                if(res.authSetting['scope.userInfo']){
+                                                    wx.login({
+                                                        success:function(resLogin){
+                                                            that.getLogin(resLogin.code);
+                                                        }
+                                                    })
+                                                }else{
+                                                    console.log('再次不允许');
                                                     wx.switchTab({
                                                         url: '/pages/index/index'
                                                     });
-                                                }else{
-                                                    that.show_tel = true;
-                                                    that.$apply();
                                                 }
-
                                             }
                                         })
+                                    }else if(resdata.cancel){
+                                        console.log('弹出框用户点击取消');
+                                        wx.switchTab({
+                                            url: '/pages/index/index'
+                                        });
                                     }
-                                })
-
-                            },
-                            fail:function (error) {
-                                wx.showModal({
-                                    title: '警告',
-                                    content: '您点击了拒绝授权,将无法正常显示个人信息,点击确定重新获取授权。',
-                                    success (res) {
-                                        if (res.confirm) {
-                                           that.doLogin();
-                                        } else if (res.cancel) {
-                                            console.log('用户点击取消')
-                                        }
-                                    }
-                                })
-
-                            }
-                        })
-                    }else{
-
-                    }
-                },
-                fail(){
-                    // console.log('sdfsdfs')
+                                }
+                            })
+                        }
+                    })
                 }
             })
-
         }
+
         onLoad(options) {
+            let that = this;
             if(!wx.getStorageSync('token')){
-                this.doLogin();
+                wx.getSetting({
+                    success(res) {
+                        if (res.authSetting['scope.userInfo']) {
+                            wx.login({
+                                success: function(res){
+                                    console.log(res)
+                                    //获取登录临时凭证
+                                    var code = res.code;
+                                    //调用后端接口 获取微信的session_key 和 openID
+                                    that.getLogin(code);
+                                }
+                            })
+                        }
+                    }
+                })
+            }else{
+                wx.switchTab({
+                    url: '/pages/index/index'
+                });
             }
         }
 
         methods = {
+            doLogin(e){
+                let that = this;
+                wx.getSetting({
+                    success(res) {
+                        if (res.authSetting['scope.userInfo']) {
+                            wx.authorize({
+                                scope:'scope.userInfo',
+                                success: function(resData) {
+                                    console.log(res,'dsddfs');
+                                    wx.login({
+                                        success: function(res){
+                                            console.log(res)
+                                            //获取登录临时凭证
+                                            var code = res.code;
+                                            //调用后端接口 获取微信的session_key 和 openID
+                                            that.getLogin(code);
+
+                                        }
+                                    })
+
+                                },
+                                fail:function (error) {
+
+
+                                }
+                            })
+                        }else{
+                            wx.login({
+                                success: function(res){
+                                    console.log(res)
+                                    //获取登录临时凭证
+                                    var code = res.code;
+                                    //调用后端接口 获取微信的session_key 和 openID
+                                    that.getLogin(code);
+
+                                }
+                            })
+                        }
+                    },
+                    fail(){
+                        // console.log('sdfsdfs')
+                    }
+                })
+
+            },
             getPhoneNumber(e){
                 console.log(e)
                 let that = this;
