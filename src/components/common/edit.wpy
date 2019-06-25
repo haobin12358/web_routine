@@ -67,12 +67,15 @@
 <script>
     import wepy from 'wepy';
 
-    export default class IndexIndex extends wepy.page {
+    export default class edit extends wepy.component {
         config = {
             navigationBarTitleText: '',
             enablePullDownRefresh: true
         }
         components = {}
+        props={
+
+        }
         data = {
             readOnly:false,
             placeholder:'活动详情，可详细介绍活动值得参加的特点，以及行程，\n' +
@@ -80,7 +83,6 @@
         }
 
         onLoad(options) {
-
         }
 
         methods = {

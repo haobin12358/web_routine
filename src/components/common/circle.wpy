@@ -76,16 +76,18 @@
 <script>
     import wepy from 'wepy';
 
-    export default class circle extends wepy.page {
-        config = {
-            navigationBarTitleText: '',
-            enablePullDownRefresh: true
+    export default class Circle extends wepy.component {
+        props ={
+            item:{
+                type:Object,
+                default:{}
+            }
         }
         components = {}
         data = {}
 
         onLoad(options) {
-
+            console.log(this.item,'asdasd')
         }
 
         methods = {}

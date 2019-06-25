@@ -1,0 +1,42 @@
+<style  lang="less" rel="stylesheet/less">
+    @import "../../styles/common.less";
+    .m-scenicDetail{
+        .m-scenicDetail-intro{
+            padding: 20rpx 30rpx;
+            border-bottom: 10rpx solid #F4F4F4;
+            .m-title{
+                font-size: 32rpx;
+                font-weight: 500;
+                padding-bottom: 20rpx;
+            }
+        }
+    }
+
+</style>
+<template>
+    <view class="m-scenicDetail">
+        <view class="m-scenicDetail-intro">
+            <view class="m-title">西湖景区</view>
+        </view>
+
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+
+    export default class scenicDetail extends wepy.page {
+        config = {
+            navigationBarTitleText: '',
+            enablePullDownRefresh: true
+        }
+        components = {}
+        data = {}
+
+        onLoad(options) {
+
+        }
+
+        methods = {}
+    }
+</script>

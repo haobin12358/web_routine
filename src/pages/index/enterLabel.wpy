@@ -1,0 +1,47 @@
+<style scoped lang="less" rel="stylesheet/less">
+.m-enterLabel{
+    padding: 20rpx 40rpx;
+    border-bottom: 1px solid #F2F2F2;
+}
+
+</style>
+<template>
+    <view>
+        <view class="m-enterLabel">
+            <input type="text" value="{{label}}" @change="inputChange" placeholder="输入报名填写项，4字以内">
+        </view>
+        <view class="m-foot-btn m-one" @tap="saveLabel">保存</view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+
+    export default class enterLabel extends wepy.page {
+        config = {
+            navigationBarTitleText: '',
+            enablePullDownRefresh: true
+        }
+        components = {}
+        data = {
+            label:''
+        }
+
+        onLoad(options) {
+
+        }
+
+        methods = {
+            saveLabel(){
+
+                wx.navigateTo({
+                    url: '/pages/index/editActivity?label=' + this.data.label
+                })
+            },
+            inputChange(e){
+                this.label = e.detail.value;
+                this.$apply();
+            }
+        }
+    }
+</script>

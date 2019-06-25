@@ -94,7 +94,7 @@
                 <span class="m-border-back">团队广场</span>
             </h3>
             <view class="m-circle-content">
-                <circle></circle>
+                <circle :item.sync="myitem"></circle>
             </view>
         </div>
 
@@ -103,15 +103,21 @@
 
 <script>
     import wepy from 'wepy';
-    import circle from '../../components/common/circle';
+    import Circle from '../../components/common/circle';
 
     export default class ActivityDetail extends wepy.page {
         config = {
             navigationBarTitleText: '管理活动',
             enablePullDownRefresh: true
         }
-        components = {circle}
-        data = {}
+        components = {
+            circle:Circle
+        }
+        data = {
+            myitem:{
+                name:'123'
+            }
+        }
 
         onLoad(options) {
 

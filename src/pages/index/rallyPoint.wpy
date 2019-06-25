@@ -93,6 +93,10 @@
 
         onLoad(options) {
             this.getLocation();
+            //初始时间
+            let date = new Date();
+            this.time = (date.getHours()>9? date.getHours(): '0'+date.getHours()) +':' +(date.getMinutes()>9? date.getMinutes(): '0'+date.getMinutes());
+            this.$apply();
         }
 
         methods = {

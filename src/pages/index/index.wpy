@@ -139,8 +139,6 @@
         <li></li>
       </ul>
     </view>
-
-
   </view>
 </template>
 
@@ -149,6 +147,7 @@
   import api from '../../api/api';
   import tip from '../../utils/tip';
 
+  import Counter from '../../components/common/timePicker'
 
   export default class IndexIndex extends wepy.page {
     config = {
@@ -156,10 +155,11 @@
         enablePullDownRefresh:true
     }
     components = {
-
+      counter : Counter
     }
     data = {
-       img_src:api.img_src,
+        mynum:'2019-06-27 12:22',
+        img_src:api.img_src,
         scroll_data: [],
         indicatorDots: true,
         autoplay: false,
