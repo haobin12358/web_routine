@@ -31,12 +31,11 @@ page{
     config = {
       pages: [
 
-          'pages/travel/scenicDetail',
-          'pages/index/index',
           'pages/personal/login',
+          'pages/index/index',
+
 
           'pages/personal/index',
-          'pages/travel/index',
           'pages/index/manageActivity',
           'pages/index/activityDetail',
           'pages/index/lookActivity',
@@ -47,8 +46,8 @@ page{
           'pages/index/joinNum',
           'pages/index/editCost',
           'pages/index/rallyPoint',
-
-
+          'pages/travel/index',
+          'pages/travel/scenicDetail',
       ],
         permission: {
             "scope.userLocation": {

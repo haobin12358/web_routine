@@ -132,7 +132,7 @@
             </li>
         </ul>
         <view class="m-travel-list">
-            <view class="m-one-travel">
+            <view class="m-one-travel" @tap="changeRoute('/pages/travel/scenicDetail')">
                 <image src="" class="m-travel-img"></image>
                 <view class="m-one-travel-text">
                     <view class="m-title">西湖-富春江-千岛湖-新安江讲讲江</view>
@@ -223,6 +223,11 @@
         methods = {
             iconClick(item){
                 this.select_icon = item;
+            },
+            changeRoute(v){
+                wx.navigateTo({
+                    url: v
+                });
             }
         }
     }

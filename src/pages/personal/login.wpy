@@ -263,6 +263,7 @@
                             wx.switchTab({
                                 url: '/pages/index/index'
                             });
+                            wx.setStorageSync('token', resule.data.data.token);
                         }else{
                             wx.showToast({
                                 title: resule.data.message,
