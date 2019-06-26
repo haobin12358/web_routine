@@ -30,3 +30,7 @@
         http.js//请求封装
       app.wpy
 
+
+
+wepy组件之间传值只能是整个数据，不能是某个对象或数组中的一个值；
+wepy组件是wepy.component

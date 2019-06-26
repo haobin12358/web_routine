@@ -9,6 +9,9 @@ const api2 = 'https://play.bigxingxing.com/api/v2/' ;
 const login = api2+'user/mp_login';//登录
 const bind_phone = api2 +'user/bind_phone';//获取手机号
 
+const set_cost = api2 + 'play/set_cost';  //创建费用
+const set_insurance = api2 +'play/set_insurance'; //创建保险
+
 
 
 
@@ -16,6 +19,6 @@ const bind_phone = api2 +'user/bind_phone';//获取手机号
 const img_src = 'https://play.bigxingxing.com/icon/';
 //评价
 module.exports = {
-  img_src,login,bind_phone
+  img_src,login,bind_phone,set_cost,set_insurance
 
 }

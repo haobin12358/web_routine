@@ -79,24 +79,24 @@
 <template>
     <view class="m-editCost">
         <view class="m-title m-grey">费用明细</view>
-        <view class="m-one-cost " wx:for="{{cost_list}}">
+        <view class="m-one-cost " wx:for="{{cost_list}}" wx:key="{{index}}" wx:if="{{!item.delete}}">
                 <view class="m-cost-info">
                     <image src="../../images/common/icon-cut.png" class="m-cut-add-icon" @tap="cutCost({{index}})"></image>
                     <view class="m-row-box">
                         <view class="m-one-cost-row">
                             <span>{{cost_name}}名称</span>
-                            <input type="text" class="m-tr" placeholder="20字以内">
+                            <input type="text" class="m-tr" value="{{cost_name == '费用' ? item.cosname:item.inname}}" bindinput="nameInput" data-name="{{index}}" placeholder="20字以内">
                         </view>
                         <view class="m-one-cost-row">
                             <span>金额</span>
-                            <input type="text" class="m-tr" placeholder="有人报名后不能修改">
+                            <input type="number" value="{{cost_name == '费用' ? item.cossubtotal : item.incost}}" class="m-tr" bindinput="moneyInput" data-name="{{index}}" placeholder="有人报名后不能修改">
                         </view>
                         <view class="m-one-cost-row m-detail">
                             <span>{{cost_name}}说明</span>
-                            <textarea  placeholder="20字以内"></textarea>
+                            <textarea  placeholder="20字以内" value="{{cost_name == '费用' ? item.cosdetail :item.incontent}}" bindinput="detailInput" data-name="{{index}}"></textarea>
                         </view>
                         <view class="m-one-cost-row " wx:if="{{show_radio}}">
-                           <span class="m-mr"> 是否为必要保险</span>     <switch bindchange="switchChange" color="#FFCE00"/>
+                           <span class="m-mr"> 是否为必要保险</span>     <switch value="{{item.intype}}" data-name="{{index}}" bindchange="switchChange" color="#FFCE00"/>
                         </view>
                     </view>
                 </view>
@@ -106,12 +106,13 @@
             <image src="../../images/common/icon-add.png" class="m-cut-add-icon" @tap="addCost"></image>
             <span>添加费用</span>
         </view>
-        <view class="m-foot-btn m-one">保存</view>
+        <view class="m-foot-btn m-one" @tap="saveCost">保存</view>
     </view>
 </template>
 
 <script>
     import wepy from 'wepy';
+    import api from '../../api/api';
 
     export default class editCost extends wepy.page {
         config = {
@@ -122,20 +123,100 @@
         data = {
             show_radio:false,
             cost_list:[],
-            cost_name:'费用'
+            cost_name:'费用',
+            form_data:null
         }
 
+        setCost(){
+            let that = this;
+            wx.request({
+                url: api.set_cost + '?token=' +wx.getStorageSync('token'),
+                method:"post",
+                data:{
+                    costs:that.cost_list
+                },
+                success: function (resule){
+                    if(resule.data.status == 200){
+                        console.log(resule)
+                        wx.navigateTo({
+                            url: '/pages/index/editActivity?cost_list=' +JSON.stringify(that.cost_list)
+                        });
+                    }else{
+                        wx.showToast({
+                            title: resule.data.message,
+                            icon: 'none',
+                            duration: 2000
+                        })
+                        that.$apply();
+                    }
+
+                }
+            })
+        }
+        setInsurance(){
+            let that = this;
+            for(let i in this.cost_list){
+                if(this.cost_list[i].intype){
+                    this.cost_list[i].intype = 1;
+                }else{
+                    this.cost_list[i].intype = 0;
+                }
+            }
+            wx.request({
+                url: api.set_insurance + '?token=' +wx.getStorageSync('token'),
+                method:"post",
+                data:{
+                    costs:that.cost_list
+                },
+                success: function (resule){
+                    if(resule.data.status == 200){
+                        console.log(resule)
+                        wx.navigateTo({
+                            url: '/pages/index/editActivity?insurances_list=' + +JSON.stringify(that.cost_list)
+                        });
+                    }else{
+                        wx.showToast({
+                            title: resule.data.message,
+                            icon: 'none',
+                            duration: 2000
+                        })
+                        that.$apply();
+                    }
+
+                }
+            })
+        }
         onLoad(options) {
             if(options.from){
                 this.show_radio = true;
                 this.cost_name = '保险'
+            }
+            if(options.formdata){
+                this.form_data = JSON.parse(options.formdata);
             }
         }
 
         methods = {
             //添加费用
             addCost(){
-                this.cost_list.push({});
+                if(this.cost_name == '费用'){
+                    this.cost_list.push({
+                        cosid:'',
+                        cosname:'',
+                        cosdetail:'',
+                        cossubtotal:'',
+                        delete:false
+                    });
+                }else{
+                    this.cost_list.push({
+                        inid:'',
+                        inname:'',
+                        incontent:'',
+                        incost:'',
+                        intype:false,
+                        delete:false
+                    });
+                }
             },
             //删除费用
             cutCost(index){
@@ -145,7 +226,8 @@
                     content: '确认删除此费用吗？',
                     success (res) {
                         if (res.confirm) {
-                           that.cost_list.splice(index,1);
+                           // that.cost_list.splice(index,1);
+                           that.cost_list[index].delete = true;
                            that.$apply();
                         } else if (res.cancel) {
                             console.log('用户点击取消')
@@ -154,8 +236,47 @@
                 })
 
             },
-            switchChange(){
+            saveCost(){
+                if(this.cost_name == '费用'){
+                    this.setCost();
+                }else{
+                    this.setInsurance();
+                }
+            },
+            nameInput(e){
+             console.log(e)
+                let index = e.currentTarget.dataset.name;
+             if(this.cost_name == '费用'){
+                 this.cost_list[index].cosname = e.detail.value;
+             }else{
+                 this.cost_list[index].inname = e.detail.value;
+             }
+                this.$apply();
 
+            },
+            moneyInput(e){
+                let index = e.currentTarget.dataset.name;
+                let value =parseFloat(e.detail.value);
+                if(this.cost_name == '费用'){
+                    this.cost_list[index].cossubtotal = value;
+                }else{
+                    this.cost_list[index].incost = value;
+                }
+                this.$apply();
+            },
+            detailInput(e){
+                let index = e.currentTarget.dataset.name;
+                if(this.cost_name == '费用'){
+                    this.cost_list[index].cosdetail = e.detail.value;
+                }else{
+                    this.cost_list[index].incontent = e.detail.value;
+                }
+                this.$apply();
+            },
+            switchChange(e){
+                let index = e.currentTarget.dataset.name;
+                this.cost_list[index].intype = e.detail.value;
+                this.$apply();
             }
         }
     }

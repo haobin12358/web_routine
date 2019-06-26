@@ -48,7 +48,7 @@
             <i class="iconfont icon-outdent" data-name="indent" data-value="-1"></i>
             <i class="iconfont icon-indent" data-name="indent" data-value="+1"></i>
             <i class="iconfont icon-charutupian" bindtap="insertImage"></i>
-            <image src="../../images/common/icon-video.png" class="iconfont icon-video" bindtap="insertVideo"></image>
+<!--            <image src="../../images/common/icon-video.png" class="iconfont icon-video" bindtap="insertVideo"></image>-->
         </view>
         <editor
                 id="editor"
@@ -58,6 +58,7 @@
                 showImgToolbar
                 showImgResize
                 bindstatuschange="onStatusChange"
+                bindblur="onEditorChange"
                 read-only="{{readOnly}}"
                 bindready="onEditorReady">
         </editor>
@@ -67,14 +68,12 @@
 <script>
     import wepy from 'wepy';
 
-    export default class edit extends wepy.component {
-        config = {
-            navigationBarTitleText: '',
-            enablePullDownRefresh: true
-        }
-        components = {}
+    export default class Edit extends wepy.component {
         props={
-
+          context:{
+              type:String,
+              default:''
+          }
         }
         data = {
             readOnly:false,
@@ -83,8 +82,14 @@
         }
 
         onLoad(options) {
+            console.log(this.context,'adsasda')
         }
-
+        events = {
+            'index-broadcast': (...args) => {
+                let $event = args[args.length - 1]
+                console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`)
+            }
+        }
         methods = {
             readOnlyChange() {
                 this.setData({
@@ -94,8 +99,14 @@
             onEditorReady() {
                 const that = this
                 wx.createSelectorQuery().select('#editor').context(function (res) {
+                    console.log(res)
                     that.editorCtx = res.context
-                }).exec()
+                    that.editorCtx.setContents({
+                        html:that.context
+                    })
+                }).exec();
+                console.log(that.context,'sgdsrgdgr')
+
             },
             format(e) {
                 let { name, value } = e.target.dataset
@@ -107,8 +118,32 @@
                 const that = this
                 wx.chooseImage({
                     count: 1,
-                    success: function () {
+                    sizeType: ['original', 'compressed'],
+                    sourceType: ['album', 'camera'],
+                    success (res) {
+                        // tempFilePath可以作为img标签的src属性显示图片
+                        const tempFilePaths = res.tempFilePaths;
+                        console.log(res)
                         that.editorCtx.insertImage({
+                            src: res.tempFilePaths[0],
+                            data: {
+                                id: '',
+                                role: ''
+                            },
+                            success: function () {
+                                console.log('insert image success')
+                            }
+                        })
+                        that.$apply();
+                    }
+                })
+            },
+            insertVideo(){
+                const that = this
+                wx.chooseImage({
+                    count: 1,
+                    success: function () {
+                        that.editorCtx.insertVideo({
                             src: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1543767268337&di=5a3bbfaeb30149b2afd33a3c7aaa4ead&imgtype=0&src=http%3A%2F%2Fimg02.tooopen.com%2Fimages%2F20151031%2Ftooopen_sy_147004931368.jpg',
                             data: {
                                 id: 'abcd',
@@ -121,23 +156,9 @@
                     }
                 })
             },
-            insertVideo(){
-                const that = this
-                wx.chooseImage({
-                    count: 1,
-                    success: function () {
-                        that.editorCtx.insertImage({
-                            src: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1543767268337&di=5a3bbfaeb30149b2afd33a3c7aaa4ead&imgtype=0&src=http%3A%2F%2Fimg02.tooopen.com%2Fimages%2F20151031%2Ftooopen_sy_147004931368.jpg',
-                            data: {
-                                id: 'abcd',
-                                role: 'god'
-                            },
-                            success: function () {
-                                console.log('insert image success')
-                            }
-                        })
-                    }
-                })
+            onEditorChange(e){
+                this.$emit('editorChange',e.detail.html);
+                this.$apply();
             }
         }
     }

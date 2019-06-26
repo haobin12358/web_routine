@@ -67,7 +67,7 @@
     props = {
       num: {
         type: [Number, String],
-        default: 50
+        default: ''
       }
     }
 
@@ -120,6 +120,7 @@
      }
      const index = this.data.multiIndex;
      this.select_value = this.data.multiArray[0][index[0]] + '-' + this.data.multiArray[1][index[1]] + '-' + this.data.multiArray[2][index[2]] + ' ' +  this.data.multiArray[3][index[3]] + ':' + this.data.multiArray[4][index[4]];
+     this.$emit('bindMultiPickerChange',this.select_value);
      this.$apply();
    }
     methods = {
