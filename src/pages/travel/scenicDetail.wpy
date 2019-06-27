@@ -9,6 +9,10 @@
                 font-weight: 500;
                 padding-bottom: 20rpx;
             }
+            .m-info{
+                padding: 20rpx 30rpx;
+                line-height: 52rpx;
+            }
         }
         .m-recommend-item{
             border-bottom: 10rpx solid #F4F4F4;
@@ -24,8 +28,19 @@
                 padding: 20rpx 30rpx;
                 border-bottom: 1px solid @border-color;
                 .flex-row(flex-start);
+                overflow: auto;
+                position: relative;
+                .m-recommend-label{
+                    position: absolute;
+                    padding: 0 10rpx;
+                    font-size: 20rpx;
+                    height: 32rpx;
+                    line-height: 32rpx;
+                    top: 4rpx;
+                    background-color: @common-color;
+                    z-index: 1;
+                }
                 .m-recommend-img-box{
-                    position: relative;
                     width: 288rpx;
                     height: 161rpx;
                     flex-shrink: 0;
@@ -35,15 +50,6 @@
                         display: block;
                         width: 288rpx;
                         height: 161rpx;
-                    }
-                    .m-recommend-label{
-                        position: absolute;
-                        padding: 0 10rpx;
-                        font-size: 20rpx;
-                        height: 32rpx;
-                        line-height: 32rpx;
-                        top: -16rpx;
-                        background-color: @common-color;
                     }
                 }
                 .m-recommend-text{
@@ -85,8 +91,11 @@
 <template>
     <view class="m-scenicDetail">
         <view class="m-scenicDetail-intro">
-            <view class="m-title">西湖景区</view>
-            <view></view>
+            <view class="m-title">{{scenic_name}}</view>
+            <view class="m-info">
+                <htmlParser :parserName.sync="name1" :parserContent.sync="content1" />
+                <template id="wxParse" data="{{wxParseData:htmlParserName2.nodes}}"></template>
+            </view>
         </view>
         <view class="m-recommend-item">
             <view class="m-recommend-title">
@@ -168,16 +177,54 @@
 
 <script>
     import wepy from 'wepy';
-
+    import htmlParser from '../../components/common/htmlParser';
+    import WxParse from '../../wxParse/wxParse';
+    import tip from '../../utils/tip';
+    import api from '../../api/api';
     export default class scenicDetail extends wepy.page {
         config = {
             navigationBarTitleText: '',
             enablePullDownRefresh: true
         }
-        components = {}
-        data = {}
-
+        components = {
+            htmlParser:htmlParser
+        }
+        data = {
+            name1:'htmlParserName1',
+            content1:"",
+            scenic_name:''
+        }
+        getDetail(id){
+            let that = this;
+            tip.loading();
+            wx.request({
+                url: api.scenicspot_get,
+                data: {
+                    sspid:id,
+                    token:wx.getStorageSync('token')
+                },
+                header: {
+                    'content-type': 'application/json' // 默认值
+                },
+                success: function(res) {
+                    that.scenic_name = res.data.data.sspname;
+                    that.content1 = res.data.data.sspcontent;
+                    WxParse.wxParse('htmlParserName2','html',res.data.data.sspcontent,that,0);
+                    that.$invoke('htmlParser', 'htmlParserNotice');
+                    that.$apply();
+                    tip.loaded();
+                },
+                error:function (error) {
+                    tip.loaded();
+                }
+            })
+        }
         onLoad(options) {
+            let that = this;
+            // WxParse.wxParse('htmlParserName1','html',"<p style='font-size: 32rpx;padding: 30rpx 0;'>1231242</p>",that,0);
+            if(options.sspid){
+                this.getDetail(options.sspid)
+            }
 
         }
 

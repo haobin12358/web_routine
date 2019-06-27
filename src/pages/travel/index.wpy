@@ -132,13 +132,16 @@
             </li>
         </ul>
         <view class="m-travel-list">
-            <view class="m-one-travel" @tap="changeRoute('/pages/travel/scenicDetail')">
-                <image src="" class="m-travel-img"></image>
+            <view class="m-one-travel" wx:for="{{scenic_data}}" wx:key="index"  @tap="changeRoute('/pages/travel/scenicDetail?sspid={{item.sspid}}')">
+                <image src="{{item.sspmainimg}}" class="m-travel-img"></image>
                 <view class="m-one-travel-text">
-                    <view class="m-title">西湖-富春江-千岛湖-新安江讲讲江</view>
+                    <view class="m-title">{{item.sspname}}</view>
                     <view class="m-price-time">
-                        <span class="m-price">¥ 168</span>
-                        <span class="m-grey">6/10-6/12</span>
+                        <span class="m-grey">{{item.ssparea}}</span>
+                        <view class="m-more-text">
+                            <span>攻略 26</span>
+                            <image src="../../images/common/icon-more-active.png" class="m-icon-more-active"></image>
+                        </view>
                     </view>
                 </view>
             </view>
@@ -147,11 +150,9 @@
                 <view class="m-one-travel-text">
                     <view class="m-title">西湖-富春江-千岛湖-新安江讲讲江</view>
                     <view class="m-price-time">
-                        <span class="m-grey">浙江省·杭州市</span>
-                        <view class="m-more-text">
-                            <span>攻略 26</span>
-                            <image src="../../images/common/icon-more-active.png" class="m-icon-more-active"></image>
-                        </view>
+                        <span class="m-price">¥199</span>
+                        <span class="m-grey">6/10-6/12</span>
+
                     </view>
                 </view>
             </view>
@@ -174,6 +175,8 @@
 
 <script>
     import wepy from 'wepy';
+    import tip from '../../utils/tip';
+    import api from '../../api/api';
 
     export default class travelIndex extends wepy.page {
         config = {
@@ -213,11 +216,37 @@
                 active_icon:'../../images/common/icon-area-active.png',
                 value:'景区'
             },
-
+            scenic_data:[],
+            page_info:{
+                page_num: 1,
+                page_size: 10
+            }
         }
 
+        getScenic(){
+            let that = this;
+            tip.loading();
+            wx.request({
+                url: api.scenicspot_list + '?token=' +wx.getStorageSync('token'),
+                data: {
+                    page_num: 1,
+                    page_size:that.page_info.page_size,
+                },
+                header: {
+                    'content-type': 'application/json' // 默认值
+                },
+                success: function(res) {
+                    that.scenic_data = res.data.data;
+                    that.$apply();
+                    tip.loaded();
+                },
+                error:function (error) {
+                    tip.loaded();
+                }
+            })
+        }
         onLoad(options) {
-
+            this.getScenic();
         }
 
         methods = {

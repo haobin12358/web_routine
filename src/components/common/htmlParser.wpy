@@ -32,7 +32,14 @@
             }
         };
         data = {
-            htmlParserTpl: {}
+            htmlParserTpl: {},
+            content:''
+        };
+        watch = {
+            content (newValue, oldValue) {
+                console.log(newValue,oldValue,'asdad')
+               this.htmlParse();
+            }
         };
         events = {
             'htmlParser-broadcast': ($event, ...args) => {
@@ -43,7 +50,7 @@
                 this.htmlParse();
             }
         };
-        async onLoad(){
+         onLoad(){
             this.htmlParse();
         };
         wxParseImgLoad(image){
@@ -59,8 +66,11 @@
              * 5.imagePadding为当图片自适应是左右的单一padding(默认为0,可选)
              */
             try{
+                console.log(this.parserName)
                 WxParse.wxParse(this.parserName , this.parserType, this.parserContent || this.props.parserContent.default, this,this.parserPadding);
                 this.htmlParserTpl = this[this.parserName];
+                console.log( this ,'ddddd')
+                this.$apply();
             }catch (e){
                 console.warn("kinerHtmlParser:","没有任何内容需要转换",e);
             }
