@@ -112,6 +112,7 @@
 
 <script>
     import wepy from 'wepy';
+    import tip from '../../utils/tip';
     import api from '../../api/api';
 
     export default class editCost extends wepy.page {
@@ -124,7 +125,8 @@
             show_radio:false,
             cost_list:[],
             cost_name:'费用',
-            form_data:null
+            form_data:null,
+            all_data:null
         }
 
         setCost(){
@@ -137,9 +139,10 @@
                 },
                 success: function (resule){
                     if(resule.data.status == 200){
-                        console.log(resule)
+                        that.all_data.form_data.costs = resule.data.data;
+                        that.all_data.cost_list = that.cost_list;
                         wx.navigateTo({
-                            url: '/pages/index/editActivity?cost_list=' +JSON.stringify(that.cost_list)
+                            url: '/pages/index/editActivity?data=' + JSON.stringify(that.all_data)
                         });
                     }else{
                         wx.showToast({
@@ -162,17 +165,19 @@
                     this.cost_list[i].intype = 0;
                 }
             }
+
             wx.request({
                 url: api.set_insurance + '?token=' +wx.getStorageSync('token'),
                 method:"post",
                 data:{
-                    costs:that.cost_list
+                    insurance:that.cost_list
                 },
                 success: function (resule){
                     if(resule.data.status == 200){
-                        console.log(resule)
+                        that.all_data.form_data.insurances = resule.data.data;
+                        that.all_data.insurances_list = that.cost_list;
                         wx.navigateTo({
-                            url: '/pages/index/editActivity?insurances_list=' + +JSON.stringify(that.cost_list)
+                            url: '/pages/index/editActivity?data=' + JSON.stringify(that.all_data)
                         });
                     }else{
                         wx.showToast({
@@ -187,13 +192,20 @@
             })
         }
         onLoad(options) {
-            if(options.from){
+            if(options.from == 'insurance'){
                 this.show_radio = true;
                 this.cost_name = '保险'
             }
-            if(options.formdata){
-                this.form_data = JSON.parse(options.formdata);
+            // if(options.cost_list){
+            //     this.cost_list = JSON.parse(options.cost_list);
+            //
+            // }
+            if(options.data){
+                this.all_data = JSON.parse(options.data);
+
             }
+            this.$apply();
+            console.log(this.form_data,this.cost_list)
         }
 
         methods = {

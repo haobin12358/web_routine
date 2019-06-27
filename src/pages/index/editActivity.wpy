@@ -66,6 +66,7 @@
             text-align: center;
             padding: 10rpx;
             font-size: 20rpx;
+            .flex-row(center);
             span{
                 color: #006FCE;
             }
@@ -120,9 +121,19 @@
                         <image src="../../images/common/icon-more.png" class="m-icon-more"></image>
                     </span>
                 </li>
-                <li>
-                    <span class="m-edit-label">活动地点</span>
-                    <input placeholder="填写活动地点（至少一个）" />
+<!--                <li>-->
+<!--                    <span class="m-edit-label">活动地点</span>-->
+<!--                    <input placeholder="填写活动地点（至少一个）" />-->
+<!--                </li>-->
+                <li class="m-no-flex">
+                    <view class="m-flex-title">
+                        <span class="m-edit-label">活动地点</span>
+                        <span class="m-grey">（可多选,至少一个）</span>
+                    </view>
+                    <view class="m-block-box">
+                        <span class="{{item.active? 'active':''}}"  wx:for="{{location_list}}" @tap="labelTap({{index}},'location_list')" wx:key="{{index}}">{{item.name}}</span>
+                        <span @tap="changeRoute('/pages/index/enterLabel','location')">+</span>
+                    </view>
                 </li>
                 <li>
                     <span class="m-edit-label">活动封面</span>
@@ -146,15 +157,15 @@
                 </li>
                 <li>
                     <span class="m-edit-label">活动费用</span>
-                    <span class="m-flex-end" @tap="changeRoute('/pages/index/editCost?&cost_list={{JSON.stringify(cost_list)}}&formdata={{JSON.stringify(form_data)}}')">
-                        <span>0</span>
+                    <span class="m-flex-end" @tap="changeRoute('/pages/index/editCost')">
+                        <span class="m-grey">{{cost_list.length?cost_list.length:'未设置'}}</span>
                         <image src="../../images/common/icon-more.png" class="m-icon-more"></image>
                     </span>
                 </li>
                 <li>
                     <span class="m-edit-label">活动保险</span>
-                    <span class="m-flex-end" @tap="changeRoute('/pages/index/editCost?from=insurance&cost_list={{JSON.stringify(insurances_list)}}&formdata={{JSON.stringify(form_data)}}')">
-                        <span class="m-grey">未设置</span>
+                    <span class="m-flex-end" @tap="changeRoute('/pages/index/editCost','insurance')">
+                        <span class="m-grey">{{insurances_list.length?insurances_list.length:'未设置'}}</span>
                         <image src="../../images/common/icon-more.png" class="m-icon-more"></image>
                     </span>
                 </li>
@@ -164,12 +175,8 @@
                         <span class="m-grey">（可多选）</span>
                     </view>
                     <view class="m-block-box">
-                        <span class="active">昵称</span>
-                        <span class="active">手机号</span>
-                        <span >性别</span>
-                        <span >真实姓名</span>
-                        <span >身份证号</span>
-                        <span @tap="changeRoute('/pages/index/enterLabel')">+</span>
+                        <span class="{{item.active? 'active':''}}"  wx:for="{{enter_list}}" @tap="labelTap({{index}},'enter_list')" wx:key="{{index}}">{{item.name}}</span>
+                        <span @tap="changeRoute('/pages/index/enterLabel','enter')">+</span>
                     </view>
                 </li>
             </ul>
@@ -179,12 +186,15 @@
                 <li>
                     <span class="m-grey">旅行推荐信息</span>
                 </li>
-                <li>
-                    <span class="m-edit-label">推荐携带物品</span>
-                    <span class="m-flex-end">
-                        <span class="m-grey">可多选</span>
-                        <image src="../../images/common/icon-more.png" class="m-icon-more"></image>
-                    </span>
+                <li class="m-no-flex">
+                    <view class="m-flex-title">
+                        <span class="m-edit-label">推荐携带物品</span>
+                        <span class="m-grey">（可多选）</span>
+                    </view>
+                    <view class="m-block-box">
+                        <span class="{{item.active? 'active':''}}"  wx:for="{{recommend_list}}" @tap="labelTap({{index}},'recommend_list')" wx:key="{{index}}">{{item.name}}</span>
+                        <span @tap="changeRoute('/pages/index/enterLabel','recommend')">+</span>
+                    </view>
                 </li>
                 <li>
                     <span class="m-edit-label">行程介绍推文</span>
@@ -207,11 +217,15 @@
             </ul>
         </view>
         <view class="m-agree-radio">
-            <checkbox value="" checked="" color="#FFCE00" />我同意<span>大行星平台服务协议</span>
+            <checkbox-group bindchange="checkboxChange">
+                <label class="checkbox" >
+                    <checkbox value="{{agree}}" color="#FFCE00" checked="{{agree}}"/>
+                </label>
+            </checkbox-group>我同意<span>大行星平台服务协议</span>
         </view>
       <view class="m-foot-btn">
-          <span>保存草稿</span>
-          <span class="active">立即发布</span>
+          <span @tap="saveDraft">保存草稿</span>
+          <span class="active" @tap="submitAll">立即发布</span>
       </view>
     </view>
 </template>
@@ -219,7 +233,9 @@
 <script>
     import wepy from 'wepy';
     import Edit from '../../components/common/edit';
-    import Time from '../../components/common/timePicker'
+    import Time from '../../components/common/timePicker';
+    import tip from '../../utils/tip';
+    import api from '../../api/api';
     export default class editActivity extends wepy.page {
         config = {
             navigationBarTitleText: '',
@@ -232,21 +248,19 @@
         }
         data = {
             show_detail:false,
-            startTime:'2019-06-26 12:25',
-            start:['2019-06-26 12:25'],
             plstarttime:'',
             plendtime:'',
-            plcontent:'<p>12312321</p>',
+            plcontent:'',
             form_data:{
-                plstarttime:'2019-06-26 12:25',
+                plstarttime:'',
                 plendtime:'',
-                pllocation:'',
+                pllocation:[],
                 plnum:'',
                 plid:'',
                 plimg:'',
                 pltitle:'',
-                plcontent:'<p><br></p>',
-                plproducts:'',
+                plcontent:'',
+                plproducts:[],
                 plstatus:'',
                 delete:false,
                 costs:[],
@@ -254,16 +268,185 @@
                 playrequires:[]
             },
             cost_list:[],
-            insurances_list:[]
+            insurances_list:[],
+            enter_list:[
+                {
+                    name:'昵称',
+                    active:true
+                },
+                {
+                    name:'手机号',
+                    active:true
+                },
+                {
+                    name:'性别',
+                    active:true
+                },
+                {
+                    name:'真实姓名',
+                    active:true
+                },
+                {
+                    name:'身份证号',
+                    active:true
+                }
+            ],
+            recommend_list:[],
+            location_list:[],
+            agree:false
+        }
+        //获取费用
+        getCost(){
+            let that = this;
+            wx.request({
+                url: api.get_cost + '?token=' +wx.getStorageSync('token'),
+                data: {
+                    plid: that.form_data.plid
+                },
+                header: {
+                    'content-type': 'application/json' // 默认值
+                },
+                success: function(res) {
+                    that.cost_list = res.data.data;
+                    that.$apply();
+                },
+                error:function (error) {
+
+                }
+            })
+        }
+        //获取保险
+        getInsureance(){
+            let that = this;
+            wx.request({
+                url: api.get_insurance + '?token=' +wx.getStorageSync('token'),
+                data: {
+                    plid: that.form_data.plid
+                },
+                header: {
+                    'content-type': 'application/json' // 默认值
+                },
+                success: function(res) {
+                    that.insurances_list = res.data.data;
+                    that.$apply();
+                },
+                error:function (error) {
+
+                }
+            })
+        }
+        getPlay(){
+            let that = this;
+            wx.request({
+                url: api.get_play + '?token=' +wx.getStorageSync('token'),
+                data: {
+                    plid: that.form_data.plid
+                },
+                header: {
+                    'content-type': 'application/json' // 默认值
+                },
+                success: function(res) {
+                    let data = res.data.data;
+                    this.plstarttime =data.plstarttime;
+                    this.plendtime = data.plendtime;
+                    this.plcontent = data.plcontent;
+                    this.form_data = data;
+                    let enter_list =[],recommend_list=[],location_list=[];
+
+                    for(let i in data.pllocation){
+                        location_list.push({
+                            name:data.pllocation[i],
+                            active:true
+                        })
+                    }
+                    for(let i in data.plproducts){
+                        recommend_list.push({
+                            name:data.plproducts[i],
+                            active:true
+                        })
+                    }
+                    for(let i in data.enter_list){
+                        enter_list.push({
+                            name:data.enter_list[i],
+                            active:true
+                        })
+                    }
+                    this.enter_list = enter_list;
+                    this.recommend_list =recommend_list;
+                    this.location_list= location_list;
+                    that.$apply();
+                },
+                error:function (error) {
+
+                }
+            })
+        }
+        postData(status){
+            let that = this;
+            tip.loading();
+            let enter = [],location = [],recommend=[];
+            for(let i in that.enter_list){
+                if(that.enter_list[i].active){
+                    enter.push(that.enter_list[i].name)
+                }
+            }
+            for(let i in that.location_list){
+                if(that.location_list[i].active){
+                    location.push(that.location_list[i].name)
+                }
+            }
+            for(let i in that.recommend_list){
+                if(that.recommend_list[i].active){
+                    recommend.push(that.recommend_list[i].name)
+                }
+            }
+            that.form_data.pllocation = location;
+            that.form_data.plproducts = recommend;
+            that.form_data.playrequires = enter;
+            that.form_data.plstatus = status;
+            wx.request({
+                url: api.set_play + '?token=' +wx.getStorageSync('token'),
+                method:"post",
+                data:that.form_data,
+                success: function (resule){
+                    tip.loaded();
+                    if(resule.data.status == 200){
+                        wx.navigateTo({
+                            url: '/pages/index/manageActivity'
+                        });
+                    }else{
+                        wx.showToast({
+                            title: resule.data.message,
+                            icon: 'none',
+                            duration: 2000
+                        })
+                        that.$apply();
+                    }
+
+                }
+            })
         }
 
          onLoad(options) {
-            console.log(options)
-             if(options.cost_list){
-                 this.cost_list = JSON.parse(options.cost_list);
+             if(options.plid){
+                 this.getPlay();
+                 this.getCost();
+                 this.getInsureance();
              }
-             if(options.insurances_list){
-                 this.insurances_list = JSON.parse(options.insurances_list);
+             let data;
+             if(options.data){
+                 data = JSON.parse(options.data);
+                 this.show_detail = data.show_detail;
+                 this.plstarttime =data.plstarttime;
+                 this.plendtime = data.plendtime;
+                 this.plcontent = data.plcontent;
+                 this.form_data = data.form_data;
+                 this.cost_list = data.cost_list;
+                 this.insurances_list = data.insurances_list;
+                 this.enter_list = data.enter_list;
+                 this.recommend_list =data.recommend_list;
+                 this.location_list= data.location_list;
+                 this.agree = data.agree;
              }
 
              this.$apply();
@@ -271,18 +454,30 @@
 
         methods = {
             //路由
-            changeRoute(v){
-                wx.navigateTo({
-                    url: v
-                });
+            changeRoute(v,from){
+                let that = this;
+                if(from){
+                    wx.navigateTo({
+                        url: v + `?from=${from}&data=${JSON.stringify(that.data)}`
+                    });
+                }else{
+                    wx.navigateTo({
+                        url: v + `?data=${JSON.stringify(that.data)}`
+                    });
+                }
+
             },
             //选择开始时间
             bindMultiPickerChangeStart(e,evt){
-                console.log(e,evt)
+                this.form_data.plstarttime = e;
+                this.plstarttime = e;
+                this.$apply();
             },
             //选择结束时间
             bindMultiPickerChangeEnd(e,evt){
-                console.log(e,evt)
+                this.form_data.plendtime = e;
+                this.plendtime = e;
+                this.$apply();
             },
             //展开授权
             showDetail(){
@@ -305,15 +500,34 @@
                     }
                 })
             },
+            labelTap(index,name){
+                this[name][index].active = !this[name][index].active;
+                this.$apply();
+            },
             onEditorChange(e){
-                console.log(e);
                 this.form_data.plcontent = e;
+                this.plcontent = e;
                 this.$apply();
             },
             inputChange(e){
                 let name = e.currentTarget.dataset.name;
                 this.form_data[name] = e.detail.value;
                 this.$apply();
+            },
+            checkboxChange(e){
+                this.agree = e.detail.value[0];
+                this.$apply();
+            },
+            //立即发布
+            submitAll(){
+                if(this.agree){
+
+                   this.postData(1);
+                }
+
+            },
+            saveDraft(){
+                this.postData(0);
             }
         }
     }

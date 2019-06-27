@@ -8,7 +8,7 @@
 <template>
     <view>
         <view class="m-enterLabel">
-            <input type="text" value="{{label}}" @change="inputChange" placeholder="输入报名填写项，4字以内">
+            <input type="text" value="{{label}}" @change="inputChange" placeholder="{{placeholder}}">
         </view>
         <view class="m-foot-btn m-one" @tap="saveLabel">保存</view>
     </view>
@@ -24,19 +24,88 @@
         }
         components = {}
         data = {
-            label:''
+            label:'',
+            enter_list:[],
+            form_data:null,
+            from:'',
+            location_list:[],
+            all_data:null,
+            placeholder:''
         }
 
         onLoad(options) {
+            // if(options.formdata){
+            //     this.form_data = JSON.parse(options.formdata);
+            // }
+            if(options.data){
+                this.all_data = JSON.parse(options.data);
+            }
+            // console.log(this.all_data)
+            if(options.from){
+                this.from = options.from;
+                switch (options.from) {
+                    case 'enter':
+                        this.placeholder = '输入报名填写项，4字以内';
+                        break;
+                    case 'recommend':
+                        this.placeholder = '输入推荐携带物品，建议5个以内';
+                        break;
+                    case 'location':
+                        this.placeholder = '输入一个活动地点';
+                        break;
 
+                }
+            }
+
+            this.$apply();
         }
 
         methods = {
             saveLabel(){
+                let that = this;
+                switch (this.from) {
+                    case 'enter':
 
-                wx.navigateTo({
-                    url: '/pages/index/editActivity?label=' + this.data.label
-                })
+                        this.all_data.enter_list.push({
+                            name:this.label,
+                            active:true
+                        });
+                        // wx.navigateTo({
+                        //     url: '/pages/index/editActivity?enter_list=' + JSON.stringify(that.enter_list) + '&form_data='+JSON.stringify(that.form_data)
+                        // });
+                        wx.navigateTo({
+                            url: '/pages/index/editActivity?data='+JSON.stringify(that.all_data)
+                        });
+                        break;
+                    case 'recommend':
+
+                        this.all_data.recommend_list.push({
+                            name:this.label,
+                            active:true
+                        });
+                        // wx.navigateTo({
+                        //     url: '/pages/index/editActivity?recommend_list=' + JSON.stringify(that.recommend_list) + '&form_data='+JSON.stringify(that.form_data)
+                        // });
+                        wx.navigateTo({
+                            url: '/pages/index/editActivity?data='+JSON.stringify(that.all_data)
+                        });
+                        break;
+                    case 'location':
+
+                        this.all_data.location_list.push({
+                            name:this.label,
+                            active:true
+                        });
+                        // wx.navigateTo({
+                        //     url: '/pages/index/editActivity?location_list=' + JSON.stringify(that.location_list) + '&form_data='+JSON.stringify(that.form_data)
+                        // });
+                        wx.navigateTo({
+                            url: '/pages/index/editActivity?data='+JSON.stringify(that.all_data)
+                        });
+                        break;
+
+                }
+
             },
             inputChange(e){
                 this.label = e.detail.value;
