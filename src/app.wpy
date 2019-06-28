@@ -31,7 +31,6 @@ page{
   export default class extends wepy.app {
     config = {
       pages: [
-          'pages/index/rallyPoint',
           'pages/personal/login',
           'pages/index/index',
           'pages/index/manageActivity',
@@ -45,7 +44,7 @@ page{
           'pages/index/enterLabel',
           'pages/index/enterTeam',
           'pages/index/joinNum',
-
+          'pages/index/rallyPoint',
           'pages/travel/scenicDetail',
       ],
         permission: {

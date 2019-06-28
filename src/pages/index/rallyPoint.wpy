@@ -124,7 +124,7 @@
                     if(data.gather_location){
                         that.markers = [
                             {
-                                iconPath: "/images/common/icon-loc-mark.png",
+                                iconPath: "/images/index/icon-point.png",
                                 id: 0,
                                 latitude: data.gather_location.latitude,
                                 longitude: data.gather_location.longitude,
@@ -195,7 +195,7 @@
                         that.longitude = res.longitude;
                         that.markers = [
                             {
-                                iconPath: "/images/common/icon-loc-mark.png",
+                                iconPath: "/images/index/icon-point.png",
                                 id: 0,
                                 latitude: res.latitude,
                                 longitude: res.longitude,
