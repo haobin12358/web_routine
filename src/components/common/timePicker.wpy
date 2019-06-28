@@ -75,7 +75,7 @@
     data = {
       select_value: '',
       multiArray: [years, months, days, hours, minutes],
-      multiIndex: [0, 9, 16, 10, 17],
+      multiIndex: [],
       choose_year: '',
     }
     events = {

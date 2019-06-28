@@ -137,6 +137,7 @@
                                 }
                             }
                         ]
+                        that.select_loc = null;
                     }
                     that.$apply();
                     tip.loaded();
