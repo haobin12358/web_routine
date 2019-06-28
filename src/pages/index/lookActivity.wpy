@@ -183,7 +183,7 @@
                <li wx:if="{{detail.plstatus == 1 || detail.plstatus == 2}}">
                    <image src="../../images/index/icon-close-active.png" class="m-icon-img" @tap="closePlay"></image>
                </li>
-               <li wx:if="{{detail.plstatus == 4}}">
+               <li wx:if="{{detail.plstatus == 3}}">
                    <image src="../../images/index/icon-close.png" class="m-icon-img"></image>
                </li>
                <li wx:if="{{detail.plstatus == 0}}">

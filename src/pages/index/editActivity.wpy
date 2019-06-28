@@ -424,7 +424,7 @@
                             });
                         }else if(status == 1){
                             wx.navigateTo({
-                                url: '/pages/index/lookActivity?plid' + resule.data
+                                url: '/pages/index/lookActivity?plid=' + resule.data.data
                             });
                         }
 
