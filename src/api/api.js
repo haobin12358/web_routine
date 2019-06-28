@@ -15,6 +15,8 @@ const set_insurance = api2 +'play/set_insurance'; //创建保险
 const get_insurance = api2 +'play/get_insurance';//获取费用
 const set_play = api2 +'play/set_play';//创建活动
 const get_play = api2 +'play/get_play';//获取活动
+const get_play_list = api2 +'play/get_play_list';//获取所有活动列表
+
 
 const scenicspot_list = api2 +'scenicspot/list';//获取景区list
 const scenicspot_get = api2 +'scenicspot/get';//获取景区详情
@@ -27,6 +29,7 @@ const scenicspot_get = api2 +'scenicspot/get';//获取景区详情
 const img_src = 'https://play.bigxingxing.com/icon/';
 //评价
 module.exports = {
-  img_src,login,bind_phone,set_cost,set_insurance,scenicspot_list,scenicspot_get,set_play,get_cost,get_insurance,get_play
+  img_src,login,bind_phone,set_cost,set_insurance,scenicspot_list,scenicspot_get,set_play,get_cost,get_insurance,get_play,
+    get_play_list
 
 }

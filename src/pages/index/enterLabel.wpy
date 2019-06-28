@@ -38,7 +38,7 @@
             //     this.form_data = JSON.parse(options.formdata);
             // }
             if(options.data){
-                this.all_data = JSON.parse(options.data);
+                this.all_data = JSON.parse(decodeURIComponent(options.data));
             }
             // console.log(this.all_data)
             if(options.from){
@@ -74,7 +74,7 @@
                         //     url: '/pages/index/editActivity?enter_list=' + JSON.stringify(that.enter_list) + '&form_data='+JSON.stringify(that.form_data)
                         // });
                         wx.navigateTo({
-                            url: '/pages/index/editActivity?data='+JSON.stringify(that.all_data)
+                            url: '/pages/index/editActivity?data='+encodeURIComponent(JSON.stringify(that.all_data))
                         });
                         break;
                     case 'recommend':
@@ -87,7 +87,7 @@
                         //     url: '/pages/index/editActivity?recommend_list=' + JSON.stringify(that.recommend_list) + '&form_data='+JSON.stringify(that.form_data)
                         // });
                         wx.navigateTo({
-                            url: '/pages/index/editActivity?data='+JSON.stringify(that.all_data)
+                            url: '/pages/index/editActivity?data='+encodeURIComponent(JSON.stringify(that.all_data))
                         });
                         break;
                     case 'location':
@@ -100,7 +100,7 @@
                         //     url: '/pages/index/editActivity?location_list=' + JSON.stringify(that.location_list) + '&form_data='+JSON.stringify(that.form_data)
                         // });
                         wx.navigateTo({
-                            url: '/pages/index/editActivity?data='+JSON.stringify(that.all_data)
+                            url: '/pages/index/editActivity?data='+encodeURIComponent(JSON.stringify(that.all_data))
                         });
                         break;
 

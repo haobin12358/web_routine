@@ -92,105 +92,178 @@
 <template>
     <view class="m-manageActivity">
        <ul class="m-nav">
-           <li>
+           <li wx:for="{{nav_list}}" wx:key="{{index}}">
 <!--                class="m-border-back"-->
-               <span  class="m-border-back">我创建的</span>
-           </li>
-           <li>
-               <span>我报名的</span>
+               <span  class="{{item.value == select_value.value ? 'm-border-back':''}}" @tap="navClick({{index}})">{{item.name}}</span>
            </li>
        </ul>
 
         <view class="m-search-box">
-            <view class="m-time-btn">
-                <span>日期</span>
-                <image src="../../images/common/icon-down-solid.png" class="m-down-solid"></image>
-            </view>
-            <view class="m-flex-end">
-                <span>状态</span>
-                <image src="../../images/common/icon-down-solid.png" class="m-down-solid"></image>
-            </view>
+            <picker mode="date" value="{{createtime}}" start="2018-09-01"  bindchange="bindDateChange">
+                <view class="m-time-btn">
+                    <span>{{createtime || '日期'}}</span>
+                    <image src="../../images/common/icon-down-solid.png" class="m-down-solid"></image>
+                </view>
+            </picker>
+            <picker bindchange="bindPickerChange" value="{{index}}" range-key="name" range="{{array}}">
+                <view class="m-flex-end">
+                    <span>{{array[index].name}}</span>
+                    <image src="../../images/common/icon-down-solid.png" class="m-down-solid"></image>
+                </view>
+            </picker>
+
         </view>
        <view class="m-activity-list">
-          <view class="m-one-activity" @tap="changeRoute('/pages/index/activityDetail')">
-              <image src="" class="m-activity-img" alt=""></image>
-              <view class="m-one-activity-info">
-                  <view class="m-one-activity-title">西湖-富春江-千岛湖-新安江江</view>
-                  <view class="m-one-activity-time">
-                      <span>6/4-6/7</span>
-                      <span>报名人数：3/20</span>
-                  </view>
-                  <view class="m-one-activity-status">
-                      <span class="m-price">¥ 222</span>
-                      <span class="m-status active ">组队中</span>
+           <view class="m-no-data" wx:if="{{data_list.length == 0}}">暂无数据</view>
+           <view wx:if="{{select_value.value == 0 }}">
+               <view class="m-one-activity" @tap="changeRoute('/pages/index/lookActivity',{{item}})" wx:for="{{data_list}}" wx:key="{{index}}">
+                   <image src="{{item.plimg}}" class="m-activity-img" alt=""></image>
+                   <view class="m-one-activity-info">
+                       <view class="m-one-activity-title">{{item.plname}}</view>
+                       <view class="m-one-activity-time">
+                           <span>{{item.time}}</span>
+                           <span>报名人数：{{item.enternum}}/{{item.plnum}}</span>
+                       </view>
+                       <view class="m-one-activity-status">
+                           <span class="m-price">¥ {{item.playsum}}</span>
+                           <span class=" {{item.plstatus == 4?'m-status cancel':(item.plstatus == 3?'active m-status':'m-status')}} ">{{item.plstatus_zh}}</span>
+                       </view>
+                   </view>
+               </view>
+           </view>
+          <view wx:else>
+              <!--我报名的-->
+              <view class="m-one-activity" @tap="changeRoute('/pages/index/activityDetail',{{item}})" wx:for="{{data_list}}" wx:key="{{index}}">
+                  <image src="{{item.plimg}}" class="m-activity-img" alt=""></image>
+                  <view class="m-one-activity-info">
+                      <view class="m-one-activity-title">{{item.plname}}</view>
+                      <view class="m-one-activity-user">组织者：{{item.plcreate}}</view>
+                      <view class="m-one-activity-status">
+                          <span class="m-grey">¥ {{item.playsum}}</span>
+                          <span class=" {{item.plstatus == 4?'m-status cancel':(item.plstatus == 3?'active m-status':'m-status')}} ">{{item.plstatus_zh}}</span>
+                      </view>
                   </view>
               </view>
           </view>
-           <view class="m-one-activity" @tap="changeRoute('/pages/index/lookActivity')">
-               <image src="" class="m-activity-img" alt=""></image>
-               <view class="m-one-activity-info">
-                   <view class="m-one-activity-title">西湖-富春江-千岛湖-新安江江</view>
-                   <view class="m-one-activity-time">
-                       <span>6/4-6/7</span>
-                       <span>报名人数：3/20</span>
-                   </view>
-                   <view class="m-one-activity-status">
-                       <span class="m-price">¥ 222</span>
-                       <span class="m-status ">组队中</span>
-                   </view>
-               </view>
-           </view>
-           <view class="m-one-activity">
-               <image src="" class="m-activity-img" alt=""></image>
-               <view class="m-one-activity-info">
-                   <view class="m-one-activity-title">西湖-富春江-千岛湖-新安江江</view>
-                   <view class="m-one-activity-time">
-                       <span>6/4-6/7</span>
-                       <span>报名人数：3/20</span>
-                   </view>
-                   <view class="m-one-activity-status">
-                       <span class="m-price">¥ 222</span>
-                       <span class="m-status cancel ">组队中</span>
-                   </view>
-               </view>
-           </view>
-<!--我报名的-->
-           <view class="m-one-activity">
-               <image src="" class="m-activity-img" alt=""></image>
-               <view class="m-one-activity-info">
-                   <view class="m-one-activity-title">西湖-富春江-千岛湖-新安江江</view>
-                   <view class="m-one-activity-user">组织者：某某某</view>
-                   <view class="m-one-activity-status">
-                       <span class="m-grey">¥ 222</span>
-                       <span class="m-status cancel ">组队中</span>
-                   </view>
-               </view>
-           </view>
        </view>
     </view>
 </template>
 
 <script>
     import wepy from 'wepy';
-
+    import tip from '../../utils/tip';
+    import api from '../../api/api';
     export default class manageActivity extends wepy.page {
         config = {
             navigationBarTitleText: '管理活动',
             enablePullDownRefresh: true
         }
         components = {}
-        data = {}
-
+        data = {
+            plstatus:'',
+            createtime:'',
+            data_list:[],
+            nav_list:[
+                {
+                    name:'我创建的',
+                    value:0
+                },
+                {
+                    name:'我报名的',
+                    value:1
+                }
+            ],
+            select_value:{
+                name:'我创建的',
+                value:0
+            },
+            page_info:{
+                page_size: 10,
+                page_num: 1
+            },
+            array: [
+                {
+                    id: -1,
+                    name: '全部'
+                },
+                {
+                    id: 0,
+                    name: '草稿'
+                },
+                {
+                    id: 1,
+                    name: '组队中'
+                },
+                {
+                    id: 2,
+                    name: '活动中'
+                },
+                {
+                    id: 3,
+                    name: '已关闭'
+                }
+            ],
+            index:0
+        }
+        getData(){
+            let that = this;
+            tip.loading();
+            wx.request({
+                url: api.get_play_list + '?token=' +wx.getStorageSync('token'),
+                data: {
+                    page_num: that.page_info.page_num,
+                    page_size:that.page_info.page_size,
+                    playtype:that.select_value.value,
+                    createtime: that.createtime,
+                    plstatus: that.plstatus
+                },
+                header: {
+                    'content-type': 'application/json' // 默认值
+                },
+                success: function(res) {
+                    let data = res.data.data;
+                    let time = '';
+                    for(let i in data){
+                        data[i].time = data[i].plstarttime.slice(5,7) +'/' + data[i].plstarttime.slice(8,10) + '-' + data[i].plendtime.slice(5,7) +'/' + data[i].plendtime.slice(8,10)
+                    }
+                    that.data_list = res.data.data;
+                    that.$apply();
+                    tip.loaded();
+                },
+                error:function (error) {
+                    tip.loaded();
+                }
+            })
+        }
         onLoad(options) {
-
+            this.getData();
         }
 
         methods = {
-            changeRoute(v){
+            changeRoute(v,item){
                 wx.navigateTo({
-                    url: v
+                    url: v + '?plid=' +item.plid
                 });
             },
+            navClick(index){
+                this.select_value = this.nav_list[index];
+                this.page_info.page_num = 1;
+                this.$apply();
+                this.getData();
+            },
+            bindDateChange(e){
+                this.createtime = e.detail.value;
+                this.page_info.page_num = 1;
+                this.getData();
+            },
+            bindPickerChange(e){
+                console.log(e)
+                this.index = e.detail.value;
+                this.plstatus = this.array[this.index].id;
+                this.page_info.page_num = 1;
+                // this.$apply();
+                this.getData();
+            }
         }
     }
 </script>

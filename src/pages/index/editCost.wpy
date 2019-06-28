@@ -142,7 +142,7 @@
                         that.all_data.form_data.costs = resule.data.data;
                         that.all_data.cost_list = that.cost_list;
                         wx.navigateTo({
-                            url: '/pages/index/editActivity?data=' + JSON.stringify(that.all_data)
+                            url: '/pages/index/editActivity?data=' + encodeURIComponent(JSON.stringify(that.all_data))
                         });
                     }else{
                         wx.showToast({
@@ -177,7 +177,7 @@
                         that.all_data.form_data.insurances = resule.data.data;
                         that.all_data.insurances_list = that.cost_list;
                         wx.navigateTo({
-                            url: '/pages/index/editActivity?data=' + JSON.stringify(that.all_data)
+                            url: '/pages/index/editActivity?data=' + encodeURIComponent(JSON.stringify(that.all_data))
                         });
                     }else{
                         wx.showToast({
@@ -192,20 +192,25 @@
             })
         }
         onLoad(options) {
-            if(options.from == 'insurance'){
-                this.show_radio = true;
-                this.cost_name = '保险'
-            }
+
             // if(options.cost_list){
             //     this.cost_list = JSON.parse(options.cost_list);
             //
             // }
             if(options.data){
-                this.all_data = JSON.parse(options.data);
+                this.all_data = JSON.parse(decodeURIComponent(options.data));
+                if(options.from == 'insurance'){
+                    this.show_radio = true;
+                    this.cost_name = '保险';
+                    this.cost_list =  this.all_data.insurances_list;
+                }else{
+                    this.cost_list =  this.all_data.cost_list;
+                }
 
             }
+
             this.$apply();
-            console.log(this.form_data,this.cost_list)
+
         }
 
         methods = {

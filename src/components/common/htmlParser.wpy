@@ -42,6 +42,7 @@
         };
         events = {
             'htmlParser-broadcast': ($event, ...args) => {
+
             },
         };
         methods = {

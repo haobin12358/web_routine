@@ -82,15 +82,20 @@
         }
 
         onLoad(options) {
-            console.log(this.context,'adsasda')
+
         }
         events = {
-            'index-broadcast': (...args) => {
-                let $event = args[args.length - 1]
-                console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`)
+            'index-broadcast': (value) => {
+                this.context = value;
             }
         }
         methods = {
+            editNotice(){
+                const that = this
+                // that.editorCtx.setContents({
+                //     html:that.context
+                // })
+            },
             readOnlyChange() {
                 this.setData({
                     readOnly: !this.data.readOnly

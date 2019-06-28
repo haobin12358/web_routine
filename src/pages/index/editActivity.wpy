@@ -106,7 +106,7 @@
                 <li>
                     <span class="m-grey">基本信息</span>
                 </li>
-                <li>
+                <li  wx:if="{{plstarttime}}">
                     <span class="m-edit-label">开始时间</span>
                     <span class="m-flex-end">
                         <time :num.sync="plstarttime" @bindMultiPickerChange.user="bindMultiPickerChangeStart"></time>
@@ -114,7 +114,7 @@
                         <image src="../../images/common/icon-more.png" class="m-icon-more"></image>
                     </span>
                 </li>
-                <li>
+                <li  wx:if="{{plendtime}}">
                     <span class="m-edit-label">结束时间</span>
                     <span class="m-flex-end">
                         <time2 :num.sync="plendtime"  @bindMultiPickerChange.user="bindMultiPickerChangeEnd"></time2>
@@ -157,7 +157,7 @@
                 </li>
                 <li>
                     <span class="m-edit-label">活动费用</span>
-                    <span class="m-flex-end" @tap="changeRoute('/pages/index/editCost')">
+                    <span class="m-flex-end" @tap="changeRoute('/pages/index/editCost','cost')">
                         <span class="m-grey">{{cost_list.length?cost_list.length:'未设置'}}</span>
                         <image src="../../images/common/icon-more.png" class="m-icon-more"></image>
                     </span>
@@ -221,7 +221,7 @@
                 <label class="checkbox" >
                     <checkbox value="{{agree}}" color="#FFCE00" checked="{{agree}}"/>
                 </label>
-            </checkbox-group>我同意<span>大行星平台服务协议</span>
+            </checkbox-group>我同意<span> 旗行平台服务协议</span>
         </view>
       <view class="m-foot-btn">
           <span @tap="saveDraft">保存草稿</span>
@@ -296,12 +296,12 @@
             agree:false
         }
         //获取费用
-        getCost(){
+        getCost(id){
             let that = this;
             wx.request({
                 url: api.get_cost + '?token=' +wx.getStorageSync('token'),
                 data: {
-                    plid: that.form_data.plid
+                    plid: id
                 },
                 header: {
                     'content-type': 'application/json' // 默认值
@@ -316,12 +316,12 @@
             })
         }
         //获取保险
-        getInsureance(){
+        getInsureance(id){
             let that = this;
             wx.request({
                 url: api.get_insurance + '?token=' +wx.getStorageSync('token'),
                 data: {
-                    plid: that.form_data.plid
+                    plid: id
                 },
                 header: {
                     'content-type': 'application/json' // 默认值
@@ -335,22 +335,28 @@
                 }
             })
         }
-        getPlay(){
+         getPlay(id){
             let that = this;
             wx.request({
                 url: api.get_play + '?token=' +wx.getStorageSync('token'),
                 data: {
-                    plid: that.form_data.plid
+                    plid: id
                 },
                 header: {
                     'content-type': 'application/json' // 默认值
                 },
                 success: function(res) {
                     let data = res.data.data;
-                    this.plstarttime =data.plstarttime;
-                    this.plendtime = data.plendtime;
-                    this.plcontent = data.plcontent;
-                    this.form_data = data;
+
+                    that.plstarttime =data.plstarttime;
+                    that.plendtime = data.plendtime;
+                    that.plcontent = data.plcontent;
+                    that.$broadcast('eventName', data);
+                    that.$invoke('time','numNotice');
+                    that.$invoke('time2','numNotice');
+                    // that.$invoke('edit','editNotice');
+                    that.$broadcast('index-broadcast', data.plcontent);
+                    that.form_data = data;
                     let enter_list =[],recommend_list=[],location_list=[];
 
                     for(let i in data.pllocation){
@@ -365,15 +371,16 @@
                             active:true
                         })
                     }
-                    for(let i in data.enter_list){
+                    for(let i in data.playrequires){
                         enter_list.push({
-                            name:data.enter_list[i],
+                            name:data.playrequires[i],
                             active:true
                         })
                     }
-                    this.enter_list = enter_list;
-                    this.recommend_list =recommend_list;
-                    this.location_list= location_list;
+                    that.enter_list = enter_list;
+                    that.recommend_list =recommend_list;
+                    that.location_list= location_list;
+
                     that.$apply();
                 },
                 error:function (error) {
@@ -411,9 +418,16 @@
                 success: function (resule){
                     tip.loaded();
                     if(resule.data.status == 200){
-                        wx.navigateTo({
-                            url: '/pages/index/manageActivity'
-                        });
+                        if(status == 0){
+                            wx.navigateTo({
+                                url: '/pages/index/manageActivity'
+                            });
+                        }else if(status == 1){
+                            wx.navigateTo({
+                                url: '/pages/index/lookActivity?plid' + resule.data
+                            });
+                        }
+
                     }else{
                         wx.showToast({
                             title: resule.data.message,
@@ -428,25 +442,27 @@
         }
 
          onLoad(options) {
-             if(options.plid){
-                 this.getPlay();
-                 this.getCost();
-                 this.getInsureance();
-             }
              let data;
              if(options.data){
-                 data = JSON.parse(options.data);
+                 data = JSON.parse(decodeURIComponent(options.data));
                  this.show_detail = data.show_detail;
                  this.plstarttime =data.plstarttime;
                  this.plendtime = data.plendtime;
                  this.plcontent = data.plcontent;
                  this.form_data = data.form_data;
+                 data.form_data.plcontent = this.plcontent;
                  this.cost_list = data.cost_list;
                  this.insurances_list = data.insurances_list;
                  this.enter_list = data.enter_list;
                  this.recommend_list =data.recommend_list;
                  this.location_list= data.location_list;
                  this.agree = data.agree;
+             }
+
+             if(options.plid){
+                 this.getPlay(options.plid);
+                 this.getCost(options.plid);
+                 this.getInsureance(options.plid);
              }
 
              this.$apply();
@@ -458,7 +474,7 @@
                 let that = this;
                 if(from){
                     wx.navigateTo({
-                        url: v + `?from=${from}&data=${JSON.stringify(that.data)}`
+                        url: v + `?from=${from}&data=${encodeURIComponent(JSON.stringify(that.data))}`
                     });
                 }else{
                     wx.navigateTo({
@@ -523,6 +539,8 @@
                 if(this.agree){
 
                    this.postData(1);
+                }else{
+                    tip.error('请先同意旗行服务平台协议');
                 }
 
             },

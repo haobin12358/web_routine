@@ -67,7 +67,8 @@
     props = {
       num: {
         type: [Number, String],
-        default: ''
+        default: '',
+        twoWay:true
       }
     }
 
@@ -78,52 +79,66 @@
       choose_year: '',
     }
     events = {
-      'index-broadcast': (...args) => {
-        let $event = args[args.length - 1]
-        console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`)
+      'eventName': (value) => {
+        console.log(value,this);
+        if(this.name == 'time'){
+          this.num = value.plstarttime
+        }
+        if(this.name == 'time2'){
+          this.num = value.plendtime
+        }
+        // this.initTime(new Date(this.num))
+
       }
     }
 
+    initTime(time){
+      this.data.choose_year = date.getFullYear();
 
+      //初始时间
+      for(let i in this.data.multiArray[0]){
+        if(date.getFullYear() == this.data.multiArray[0][i]){
+          this.data.multiIndex[0] = Number(i);
+        }
+      }
+      for(let i in this.data.multiArray[1]){
+        if((date.getMonth() +1) == this.data.multiArray[1][i]){
+          this.data.multiIndex[1] = Number(i);
+        }
+      }
+      for(let i in this.data.multiArray[2]){
+        if(date.getDate() == this.data.multiArray[2][i]){
+          this.data.multiIndex[2] = Number(i);
+        }
+      }
+      for(let i in this.data.multiArray[3]){
+        if(date.getHours() == this.data.multiArray[3][i]){
+          this.data.multiIndex[3] = Number(i);
+        }
+      }
+      for(let i in this.data.multiArray[4]){
+        if(date.getMinutes() == this.data.multiArray[4][i]){
+          this.data.multiIndex[4] = Number(i);
+        }
+      }
+      const index = this.data.multiIndex;
+      this.select_value = this.data.multiArray[0][index[0]] + '-' + this.data.multiArray[1][index[1]] + '-' + this.data.multiArray[2][index[2]] + ' ' +  this.data.multiArray[3][index[3]] + ':' + this.data.multiArray[4][index[4]];
+      this.$emit('bindMultiPickerChange',this.select_value);
+      this.$apply();
+    }
    onLoad(){
-      console.log(this.num,'asdasda')
+
      if(this.num){
        date = new Date(this.num);
      }
-     this.data.choose_year = date.getFullYear();
+     this.initTime(date)
 
-     //初始时间
-     for(let i in this.data.multiArray[0]){
-       if(date.getFullYear() == this.data.multiArray[0][i]){
-         this.data.multiIndex[0] = Number(i);
-       }
-     }
-     for(let i in this.data.multiArray[1]){
-       if((date.getMonth() +1) == this.data.multiArray[1][i]){
-         this.data.multiIndex[1] = Number(i);
-       }
-     }
-     for(let i in this.data.multiArray[2]){
-       if(date.getDate() == this.data.multiArray[2][i]){
-         this.data.multiIndex[2] = Number(i);
-       }
-     }
-     for(let i in this.data.multiArray[3]){
-       if(date.getHours() == this.data.multiArray[3][i]){
-         this.data.multiIndex[3] = Number(i);
-       }
-     }
-     for(let i in this.data.multiArray[4]){
-       if(date.getMinutes() == this.data.multiArray[4][i]){
-         this.data.multiIndex[4] = Number(i);
-       }
-     }
-     const index = this.data.multiIndex;
-     this.select_value = this.data.multiArray[0][index[0]] + '-' + this.data.multiArray[1][index[1]] + '-' + this.data.multiArray[2][index[2]] + ' ' +  this.data.multiArray[3][index[3]] + ':' + this.data.multiArray[4][index[4]];
-     this.$emit('bindMultiPickerChange',this.select_value);
-     this.$apply();
    }
     methods = {
+      numNotice(){
+        date = new Date(this.num)
+        this.initTime()
+      },
       bindMultiPickerChange: function(e) {
         // console.log('picker发送选择改变，携带值为', e.detail.value)
         this.data.multiIndex = e.detail.value;
