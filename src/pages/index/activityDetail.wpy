@@ -17,7 +17,7 @@
                  }
              }
              .m-info-text{
-                 width: 230rpx;
+                 width: 300rpx;
                  .flex-col(space-between);
                  .m-line{
                      color: @common-color;
@@ -62,32 +62,36 @@
              <view class="m-label">
                  <p>开始时间</p>
                  <p class="m-line">|</p>
-                 <p>开始时间</p>
+                 <p>结束时间</p>
              </view>
                <view class="m-info-text">
-                   <p>2019/06/11 09:00</p>
+                   <p>{{detail.plstarttime}}</p>
                    <p class="m-line">|</p>
-                   <p>2019/06/11 09:00</p>
+                   <p>{{detail.plendtime}}</p>
                </view>
            </li>
            <li>
                <view class="m-label">参与人数</view>
                <view class="m-flex-end" @tap="changeRoute('/pages/index/joinNum')">
                    <span>
-                       <span class="m-common">3</span>/10
+                       <span class="m-common">{{detail.enternum}}</span>/{{detail.plnum}}
                    </span>
                    <image src="../../images/common/icon-right.png" class="m-icon-more" alt="" />
                </view>
            </li>
            <li class="m-no-flex">
                <view class="m-label">活动详情</view>
-               <view class="m-detail-text">
-                   活动详情活动详情活动详情活动详情活动详情活动详情活动详情活动详情活动详情活动详情活动详情活动详情活动详情活动详情活动详情活动详情活动详情活动活动详情活动详情活动详情…
+               <view class="m-info m-detail-text" wx:if="{{show_open}}">
+                   <htmlParser :parserName.sync="name1" :parserContent.sync="content1" />
+                   <template id="wxParse" data="{{wxParseData:htmlParserName2.nodes}}"></template>
                </view>
-
-               <view class="m-open">
+               <view class="m-open" wx:if="{{!show_open}}" @tap="openClick(true)">
                    <span>点击展开</span>
                    <image src="../../images/common/icon-down.png" class="m-icon-down" alt="" />
+               </view>
+               <view class="m-open" wx:if="{{show_open}}"  @tap="openClick(false)">
+                   <span>点击收起</span>
+                   <image src="../../images/common/icon-up.png" class="m-icon-down" alt="" />
                </view>
            </li>
        </ul>
@@ -95,9 +99,10 @@
             <h3 class="m-activity-circle-h3">
                 <span class="m-border-back">团队广场</span>
             </h3>
-            <view class="m-circle-content">
-                <circle :item.sync="myitem"></circle>
-            </view>
+<!--            <view class="m-circle-content">-->
+<!--                <circle ></circle>-->
+<!--            </view>-->
+            <view class="m-no-data">暂无信息</view>
         </view>
 
     </view>
@@ -106,23 +111,60 @@
 <script>
     import wepy from 'wepy';
     import Circle from '../../components/common/circle';
-
+    import tip from '../../utils/tip';
+    import api from '../../api/api';
+    import htmlParser from '../../components/common/htmlParser';
+    import WxParse from '../../wxParse/wxParse';
     export default class ActivityDetail extends wepy.page {
         config = {
-            navigationBarTitleText: '管理活动',
+            navigationBarTitleText: '我报名的',
             enablePullDownRefresh: true
         }
-        components = {
-            circle:Circle
-        }
+        components = {circle:Circle,    htmlParser:htmlParser}
         data = {
-            myitem:{
-                name:'123'
-            }
+            detail:null,
+            name1:'htmlParserName1',
+            detail_info:null,
+            content1:"",
+            show_open:false,
+            plid:'0d85db48-9bd6-11e9-8e38-0242ac110002'
         }
+        getDetail(id){
+            let that = this;
+            tip.loading();
+            wx.request({
+                url: api.get_play + '?token=' +wx.getStorageSync('token'),
+                data: {
+                    plid:id || that.plid
+                },
+                header: {
+                    'content-type': 'application/json' // 默认值
+                },
+                success: function(res) {
+                    let data = res.data.data;
+                    that.detail_info = data;
 
+                    data.time = data.plstarttime.slice(0,7) +'/' + data.plstarttime.slice(8,10) + '-' + data.plendtime.slice(5,7) +'/' + data.plendtime.slice(8,10)
+                    data.pllocation = data.pllocation.join('-');
+                    data.plproducts = data.plproducts.join('、');
+                    that.content1 = res.data.data.plcontent;
+                    that.detail = data;
+                    WxParse.wxParse('htmlParserName2','html',res.data.data.plcontent,that,0);
+                    that.$invoke('htmlParser', 'htmlParserNotice');
+                    that.$apply();
+                    tip.loaded();
+                },
+                error:function (error) {
+                    tip.loaded();
+                }
+            })
+        }
         onLoad(options) {
+            if(options.plid){
+                this.plid = options.plid;
 
+            }
+            this.getDetail(this.plid);
         }
 
         methods = {
@@ -130,6 +172,15 @@
                 wx.navigateTo({
                     url: v
                 });
+            },
+            openClick(bool){
+                if(bool == 'false'){
+                    this.show_open = false;
+                }else{
+                    this.show_open = bool;
+                }
+
+                this.$apply();
             },
         }
     }
