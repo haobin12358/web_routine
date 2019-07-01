@@ -114,7 +114,7 @@
           <p><image src="../../images/index/index-tel.png" class="m-index-icon" alt="" /></p>
           <p>一键求救</p>
         </li>
-        <li>
+        <li  @tap="changeRoute('/pages/index/enterPage')">
           <p><image src="../../images/index/index-find.png" class="m-index-icon" alt="" /></p>
           <p>找厕所</p>
         </li>

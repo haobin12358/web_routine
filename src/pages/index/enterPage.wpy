@@ -1,0 +1,189 @@
+<style scoped lang="less" rel="stylesheet/less">
+    @import "../../styles/common";
+    .m-enterPage{
+        padding-bottom: 100rpx;
+        .m-item-box{
+            .m-item-one{
+                padding: 20rpx 30rpx;
+                border-bottom: 1px solid @border-color;
+                .flex-row(space-between);
+                input{
+                    text-align: right;
+                }
+                .m-label{
+                    flex-shrink: 0;
+                    margin-right: 20rpx;
+                }
+            }
+        }
+    }
+
+</style>
+<template>
+    <view class="m-enterPage">
+        <view class="m-item-box">
+            <view class="m-item-one m-grey">填写报名信息</view>
+            <view class="m-item-one" wx:for="{{label_list}}" wx:key="{{index}}">
+                <span class="m-label">{{item.prename}}</span>
+                <input type="text" value="{{item.value}}" data-name="{{index}}" @change="inputChange" placeholder="{{'请填写'+ item.prename}}" />
+            </view>
+
+            <view class="m-item-one">
+                <span class="m-label">保险</span>
+                <checkbox-group bindchange="checkboxChange">
+                    <label class="checkbox" wx:for="{{insurances_list}}" wx:key="index">
+                        <view>
+                            <checkbox value="{{item.inid}}" checked="{{item.checked}}" color="#FFCE00"/>{{item.inname}}:¥{{item.incost}}
+                        </view>
+
+                    </label>
+                </checkbox-group>
+            </view>
+        </view>
+        <view class="m-foot-btn m-one" @tap="submitEnter">支付费用</view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import tip from '../../utils/tip';
+    import api from '../../api/api';
+    export default class enterPage extends wepy.page {
+        config = {
+            navigationBarTitleText: '报名',
+            enablePullDownRefresh: true
+        }
+        components = {}
+        data = {
+            plid:'0d85db48-9bd6-11e9-8e38-0242ac110002',
+            label_list:[],
+            insurances_list: [],
+            insurances:[]
+        }
+        getInsurance(){
+            let that = this;
+            wx.request({
+                url: api.get_insurance + '?token=' +wx.getStorageSync('token'),
+                data: {
+                    plid: that.plid
+                },
+                header: {
+                    'content-type': 'application/json' // 默认值
+                },
+                success: function(res) {
+                    that.insurances_list = res.data.data;
+                    that.$apply();
+                },
+                error:function (error) {
+
+                }
+            })
+        }
+        getLabel(){
+            let that = this;
+            wx.request({
+                url: api.get_playrequire + '?token=' +wx.getStorageSync('token'),
+                data: {
+                    plid: that.plid
+                },
+                header: {
+                    'content-type': 'application/json' // 默认值
+                },
+                success: function(res) {
+                    let data = res.data.data;
+                    let _arr = [];
+                    for(let i=0;i<data.length;i++){
+                        _arr.push({
+                            preid:data[i].preid,
+                            prename:data[i].prename,
+                            value:''
+                        })
+                    }
+
+                    that.label_list = _arr;
+                    that.$apply();
+                },
+                error:function (error) {
+
+                }
+            })
+        }
+        postData(){
+            let that = this;
+            tip.loading();
+            wx.request({
+                url: api.play_join + '?token=' +wx.getStorageSync('token'),
+                method:"post",
+                data:{
+                    plid:that.plid,
+                    insurances:that.insurances,
+                    elvalue:that.label_list,
+                    elid:''
+                },
+                success: function (resule){
+                    tip.loaded();
+                    if(resule.data.status == 200){
+                        let params = resule.data.data.args;
+                        wx.requestPayment({
+                            timeStamp: params.timeStamp,
+                            nonceStr: params.nonceStr,
+                            package: params.package,
+                            signType: params.signType,
+                            paySign: params.sign,
+                            success (res) {
+                                wx.showToast({
+                                    title: '报名成功',
+                                    icon: 'none',
+                                    duration: 2000
+                                });
+                                wx.navigateTo({
+                                    url: '/pages/index/manageActivity'
+                                });
+                            },
+                            fail (res) {
+                                wx.showToast({
+                                    title: '支付失败，请稍后再试',
+                                    icon: 'none',
+                                    duration: 2000
+                                })
+                            }
+                        })
+
+                    }else{
+                        wx.showToast({
+                            title: resule.data.message,
+                            icon: 'none',
+                            duration: 2000
+                        })
+                        that.$apply();
+                    }
+
+                }
+            })
+        }
+
+        onLoad(options) {
+            if(options.id){
+                this.plid= options.id;
+            }
+            this.$apply();
+            this.getInsurance();
+            this.getLabel();
+        }
+
+        methods = {
+            checkboxChange: function(e) {
+                this.insurances = e.detail.value;
+                this.$apply();
+            },
+            inputChange(e){
+                let index = e.currentTarget.dataset.name;
+                this.label_list[index].value = e.detail.value;
+                this.$apply();
+            },
+            submitEnter(){
+                this.postData();
+            }
+        }
+    }
+</script>

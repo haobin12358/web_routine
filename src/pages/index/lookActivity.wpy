@@ -18,6 +18,12 @@
             .m-name-title{
                 margin-bottom: 25rpx;
             }
+            .m-name{
+                max-width: 300rpx;
+                overflow: hidden;
+                text-overflow:ellipsis;
+                white-space: nowrap;
+            }
         }
         .m-scheduling-img{
             display: block;
@@ -39,7 +45,7 @@
                     }
                 }
                 .m-info-text{
-                    width: 270rpx;
+                    width: 300rpx;
                     .flex-col(space-between);
                     .m-line{
                         color: @common-color;
@@ -119,9 +125,9 @@
                 <span class="m-scheduling-name">{{detail.plname}}</span>
                 <span class="m-price">¥ {{detail.playsum}}</span>
             </view>
-            <view class="m-flex-between">
+            <view class="m-flex-between ">
                 <span>出游时间：{{detail.time}}</span>
-                <span>组织者：{{detail.plcreate}}</span>
+                <span class="m-name">组织者：{{detail.plcreate}}</span>
             </view>
         </view>
         <image src="{{detail.plimg}}" class="m-scheduling-img"></image>
@@ -175,7 +181,8 @@
             </view>
         </view>
        <view class="m-scheduling-foot">
-           <ul class="m-icon-list">
+           <view class="m-scheduling-btn" wx:if="{{detail.joinstatus}}" @tap="toEnter('/pages/index/enterPage')">我要报名</view>
+           <ul class="m-icon-list" wx:if="{{detail.editstatus}}">
                <li wx:if="{{detail.plstatus == 2}}">
                    <image src="../../images/index/icon-sign-in-active.png" class="m-icon-img"></image>
                </li>
@@ -204,7 +211,7 @@
                    <button class="m-share-btn"  open-type="share" ><image src="../../images/index/icon-share-active.png" class="m-icon-img"></image></button>
                </li>
            </ul>
-           <view class="m-scheduling-btn">我要报名</view>
+
        </view>
     </view>
 </template>
@@ -218,7 +225,7 @@
     import WxParse from '../../wxParse/wxParse';
     export default class lookActivity extends wepy.page {
         config = {
-            navigationBarTitleText: '我创建的',
+            navigationBarTitleText: '',
             enablePullDownRefresh: true
         }
         components = {circle:circle,    htmlParser:htmlParser}
@@ -228,7 +235,7 @@
             detail_info:null,
             content1:"",
             show_open:false,
-            plid:''
+            plid:'0d85db48-9bd6-11e9-8e38-0242ac110002'
         }
 
         getDetail(id){
@@ -237,7 +244,7 @@
             wx.request({
                 url: api.get_play + '?token=' +wx.getStorageSync('token'),
                 data: {
-                    plid:id
+                    plid:id || that.plid
                 },
                 header: {
                     'content-type': 'application/json' // 默认值
@@ -245,6 +252,18 @@
                 success: function(res) {
                     let data = res.data.data;
                     that.detail_info = data;
+
+                    console.log(that)
+
+                    if(data.joinstatus){
+                        wx.setNavigationBarTitle({
+                            title: '活动报名'
+                        })
+                    }else{
+                        wx.setNavigationBarTitle({
+                            title: '我创建的'
+                        })
+                    }
 
                     data.time = data.plstarttime.slice(0,7) +'/' + data.plstarttime.slice(8,10) + '-' + data.plendtime.slice(5,7) +'/' + data.plendtime.slice(8,10)
                     data.pllocation = data.pllocation.join('-');
@@ -296,7 +315,7 @@
             }
             return {
                 title: '转发',
-                path: '/pages/index/activityDetail?plid=' + this.plid,
+                path: '/pages/index/lookActivity?plid=' + this.plid,
                 success: function (res) {
                     console.log('成功', res)
                 }
@@ -305,8 +324,9 @@
         onLoad(options) {
             if(options.plid){
                 this.plid = options.plid;
-                this.getDetail(options.plid);
+
             }
+            this.getDetail(this.plid);
             wx.showShareMenu({
                 withShareTicket: true
             })
@@ -321,6 +341,13 @@
                 }
 
                 this.$apply();
+            },
+            //报名
+            toEnter(v){
+                let that = this;
+                wx.navigateTo({
+                    url: v + '?plid=' +that.plid
+                });
             },
             //编辑
             editTap(){
