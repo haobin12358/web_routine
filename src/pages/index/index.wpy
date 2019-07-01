@@ -168,50 +168,7 @@
 
 
     }
-      getMedicalList() {
-          let that = this;
-          tip.loading();
-          wx.request({
-              url: api.get_medical_list,
-              data: {
-                  use_type: 0,
-                  page_num: 1,
-                  page_size:that.page_info.page_size,
-                  medical_name:''
-              },
-              header: {
-                  'content-type': 'application/json' // 默认值
-              },
-              success: function(res) {
-                  that.medical_data = res.data.data;
-                  that.$apply();
-                  tip.loaded();
-              },
-              error:function (error) {
-                  tip.loaded();
-              }
-          })
-      }
-      getTel(){
-          let that = this;
-          tip.loading();
-          wx.request({
-              url: api.get_custom_list,
-              data: {
-              },
-              header: {
-                  'content-type': 'application/json' // 默认值
-              },
-              success: function(res) {
-                  that.tel_data = res.data.data;
-                  that.$apply();
-                  tip.loaded();
-              },
-              error:function (error) {
-                  tip.loaded();
-              }
-          })
-      }
+
 
     onLoad(options){
         // this.getMedicalList();
@@ -231,11 +188,7 @@
                 url: v
             });
         },
-        goKnowledge(){
-            wx.switchTab({
-                url: '/pages/knowledge/index'
-            });
-        },
+
         getCell(){
           let that = this;
           wx.showActionSheet({
@@ -262,34 +215,7 @@
         scroll(e) {
             console.log(e)
         },
-        showSearch(){
-            this.show_search = true;
-        },
-        searchBlur(e){
-            this.getMedicalName(e.detail.value)
-        },
-        confirm(e){
-            wx.navigateTo({
-                url: '/pages/index/physicalList?medical_name='+e.detail.value
-            });
-        },
-        titleTap(item){
-            wx.navigateTo({
-                url: '/pages/index/physicalList?medical_name='+ item.medical_name
-            });
-        },
-        closeText(){
-            this.search_value = ''
-        },
-        cancelSearch(){
-            this.search_value = '';
-            this.show_search = false;
-        },
-        imgTap(item){
-            wx.navigateTo({
-                url: item
-            })
-        }
+
     }
   }
 </script>

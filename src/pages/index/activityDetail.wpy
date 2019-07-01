@@ -1,6 +1,7 @@
 <style scoped lang="less" rel="stylesheet/less">
     @import "../../styles/common";
     .m-activityDetail{
+        padding-bottom: 100rpx;
         .m-activityDetail-info{
          li{
              padding: 20rpx 30rpx;
@@ -50,14 +51,7 @@
 
             }
         }
-        .m-scheduling-btn{
-            padding: 30rpx 0;
-            width: 750rpx;
-            background-color: @common-color;
-            font-size: 30rpx;
-            font-weight: 500;
-            text-align: center;
-        }
+
     }
 
 </style>
@@ -105,7 +99,7 @@
                 <circle :item.sync="myitem"></circle>
             </view>
         </view>
-       <view class="m-scheduling-btn">我要报名</view>
+
     </view>
 </template>
 

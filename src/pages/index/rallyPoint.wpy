@@ -25,6 +25,7 @@
                  controls="{{controls}}"
                  bindtap="onMapTap"
                  markers="{{markers}}"
+                 include-points
                  polyline="{{polyline}}"
                  show-location
                  style="width: 100%; height: 90vh;"></map>
@@ -37,6 +38,7 @@
                  controls="{{controls}}"
                  markers="{{markers}}"
                  polyline="{{polyline}}"
+                 include-points
                  show-location
                  style="width: 100%; height: 90vh;"></map>
         </view>
@@ -89,7 +91,9 @@
             select_loc:null,
             select_time:null,
             can_post:false,
-            button_show:'发起集合'
+            button_show:'发起集合',
+            mapCtx:null,
+            allpoint:[]
         }
 
         getLocation(){
@@ -99,6 +103,10 @@
                 success (res) {
                     that.latitude = res.latitude;
                     that.longitude = res.longitude;
+                    that.allpoint.push({
+                        latitude:res.latitude,
+                        longitude:res.longitude
+                    });
                     that.getPoint();
                    that.$apply();
                 }
@@ -121,6 +129,10 @@
                     let data = res.data.data;
                     that.can_post = data.can_post;
                     that.button_show = data.button_name;
+                    that.allpoint.push({
+                        latitude:that.latitude,
+                        longitude:that.longitude
+                    });
                     if(data.gather_location){
                         that.markers = [
                             {
@@ -137,6 +149,14 @@
                                 }
                             }
                         ]
+                        that.allpoint.push({
+                            latitude:data.gather_location.latitude,
+                            longitude:data.gather_location.longitude
+                        });
+                        that.mapCtx.includePoints({
+                            padding: [80, 50, 80, 50],
+                            points: that.allpoint
+                        })
                         that.select_loc = null;
                     }
                     that.$apply();
@@ -181,6 +201,7 @@
             //初始时间
             let date = new Date();
             this.time = (date.getHours()>9? date.getHours(): '0'+date.getHours()) +':' +(date.getMinutes()>9? date.getMinutes(): '0'+date.getMinutes());
+            this.mapCtx = wx.createMapContext('map'); // map为地图的id
             this.$apply();
         }
 

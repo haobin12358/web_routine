@@ -31,6 +31,7 @@ page{
   export default class extends wepy.app {
     config = {
       pages: [
+
           'pages/personal/login',
           'pages/index/index',
           'pages/index/manageActivity',
@@ -38,8 +39,8 @@ page{
           'pages/index/editActivity',
           'pages/index/editCost',
           'pages/personal/index',
-          'pages/index/activityDetail',
           'pages/index/lookActivity',
+          'pages/index/activityDetail',
           'pages/index/signIn',
           'pages/index/enterLabel',
           'pages/index/enterTeam',

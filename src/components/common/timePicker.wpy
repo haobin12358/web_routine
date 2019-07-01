@@ -149,7 +149,7 @@
         const day = this.data.multiArray[2][index[2]];
         const hour = this.data.multiArray[3][index[3]];
         const minute = this.data.multiArray[4][index[4]];
-        // console.log(`${year}-${month}-${day}-${hour}-${minute}`);
+        // console.log(`${year}-${month}-${day}-$  {hour}-${minute}`);
         this.select_value = year + '-' + month + '-' + day + ' ' + hour + ':' + minute;
         // console.log(this.data.time);
         this.$emit('bindMultiPickerChange',this.select_value);

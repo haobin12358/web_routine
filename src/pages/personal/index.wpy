@@ -165,91 +165,9 @@
             show_tel:false,
             tel_data:[]
         }
-        getTel(){
-            let that = this;
-            tip.loading();
-            wx.request({
-                url: api.get_custom_list,
-                data: {
-                },
-                header: {
-                    'content-type': 'application/json' // 默认值
-                },
-                success: function(res) {
-                    that.tel_data = res.data.data;
-                    that.$apply();
-                    tip.loaded();
-                },
-                error:function (error) {
-                    tip.loaded();
-                }
-            })
-        }
-        getuserInfo(token) {
-            let that = this;
-            tip.loading();
-            wx.request({
-                url: api.get_user_info, //仅为示例，并非真实的接口地址
-                data: {
-                    token: token
-                },
-                header: {
-                    'content-type': 'application/json' // 默认值
-                },
-                success: function(res) {
-                    that.user_info = res.data.data;
-                    that.$apply();
-                    tip.loaded();
-                },
-                error:function (error) {
-                    tip.loaded();
-                }
-            })
-        }
-        getOrderInfo(token) {
-            let that = this;
-            tip.loading();
-            wx.request({
-                url: api.get_order_count_user, //仅为示例，并非真实的接口地址
-                data: {
-                    token: token
-                },
-                header: {
-                    'content-type': 'application/json' // 默认值
-                },
-                success: function(res) {
-                    let arr = [].concat(that.order_icon);
-                    for(let i=0;i<arr.length;i++){
-                        arr[i].num = res.data.data['type_'+i]
-                        console.log(res.data.data['type_'+i],i)
-                    }
-                    that.order_icon = [].concat(arr);
-                    that.$apply();
-                    tip.loaded();
-                },
-                error:function (error) {
-                    tip.loaded();
-                }
-            })
-        }
         onLoad(){
         }
         methods = {
-            goCoupon(){
-                wx.navigateTo({
-                    url: '/pages/personal/coupons'
-                })
-            },
-            goCar(){
-                wx.navigateTo({
-                    url: '/pages/personal/car'
-                })
-            },
-            goWork(){
-                wx.switchTab({
-                    url: '/pages/work/index'
-                })
-            },
             changeRoute(){
                 wx.navigateTo({
                     url: '/pages/personal/orderList'
@@ -263,9 +181,7 @@
                     phoneNumber: item.custom_telphone // 仅为示例，并非真实的电话号码
                 })
             },
-            telPhone(){
-                this.show_tel = true;
-            }
+
         }
 
     }

@@ -204,24 +204,13 @@
                 wx.getSetting({
                     success(res) {
                         if (res.authSetting['scope.userInfo']) {
-                            wx.authorize({
-                                scope:'scope.userInfo',
-                                success: function(resData) {
-                                    console.log(res,'dsddfs');
-                                    wx.login({
-                                        success: function(res){
-                                            console.log(res)
-                                            //获取登录临时凭证
-                                            var code = res.code;
-                                            //调用后端接口 获取微信的session_key 和 openID
-                                            that.getLogin(code);
-
-                                        }
-                                    })
-
-                                },
-                                fail:function (error) {
-
+                            wx.login({
+                                success: function(res){
+                                    console.log(res)
+                                    //获取登录临时凭证
+                                    var code = res.code;
+                                    //调用后端接口 获取微信的session_key 和 openID
+                                    that.getLogin(code);
 
                                 }
                             })

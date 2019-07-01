@@ -8,7 +8,7 @@
 <template>
     <view>
         <view class="m-enterLabel">
-            <input type="text" value="{{label}}" @change="inputChange" placeholder="{{placeholder}}">
+            <input type="text" value="{{label}}" @change="inputChange" placeholder="{{placeholder}}" />
         </view>
         <view class="m-foot-btn m-one" @tap="saveLabel">保存</view>
     </view>

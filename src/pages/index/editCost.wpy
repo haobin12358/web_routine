@@ -85,15 +85,15 @@
                     <view class="m-row-box">
                         <view class="m-one-cost-row">
                             <span>{{cost_name}}名称</span>
-                            <input type="text" class="m-tr" value="{{cost_name == '费用' ? item.cosname:item.inname}}" bindinput="nameInput" data-name="{{index}}" placeholder="20字以内">
+                            <input type="text" class="m-tr" value="{{cost_name == '费用' ? item.cosname:item.inname}}" bindinput="nameInput" data-name="{{index}}" placeholder="20字以内" />
                         </view>
                         <view class="m-one-cost-row">
                             <span>金额</span>
-                            <input type="number" value="{{cost_name == '费用' ? item.cossubtotal : item.incost}}" class="m-tr" bindinput="moneyInput" data-name="{{index}}" placeholder="有人报名后不能修改">
+                            <input type="number" value="{{cost_name == '费用' ? item.cossubtotal : item.incost}}" class="m-tr" bindinput="moneyInput" data-name="{{index}}" placeholder="有人报名后不能修改" />
                         </view>
                         <view class="m-one-cost-row m-detail">
                             <span>{{cost_name}}说明</span>
-                            <textarea  placeholder="20字以内" value="{{cost_name == '费用' ? item.cosdetail :item.incontent}}" bindinput="detailInput" data-name="{{index}}"></textarea>
+                            <textarea  placeholder="20字以内" value="{{cost_name == '费用' ? item.cosdetail :item.incontent}}" bindinput="detailInput" data-name="{{index}}" />
                         </view>
                         <view class="m-one-cost-row " wx:if="{{show_radio}}">
                            <span class="m-mr"> 是否为必要保险</span>     <switch value="{{item.intype}}" data-name="{{index}}" bindchange="switchChange" color="#FFCE00"/>

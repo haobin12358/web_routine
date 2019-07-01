@@ -1,6 +1,4 @@
-import {
-    wxRequest
-} from '../utils/http';
+
 
 const api2 = 'https://play.bigxingxing.com/api/v2/' ;
 

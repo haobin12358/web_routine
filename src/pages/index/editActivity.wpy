@@ -359,19 +359,19 @@
                     that.form_data = data;
                     let enter_list =[],recommend_list=[],location_list=[];
 
-                    for(let i in data.pllocation){
+                    for(let i = 0; i<data.pllocation.length;i++){
                         location_list.push({
                             name:data.pllocation[i],
                             active:true
                         })
                     }
-                    for(let i in data.plproducts){
+                    for(let i = 0; i<data.plproducts.length;i++){
                         recommend_list.push({
                             name:data.plproducts[i],
                             active:true
                         })
                     }
-                    for(let i in data.playrequires){
+                    for(let i = 0; i<data.playrequires.length;i++){
                         enter_list.push({
                             name:data.playrequires[i],
                             active:true
@@ -392,17 +392,17 @@
             let that = this;
             tip.loading();
             let enter = [],location = [],recommend=[];
-            for(let i in that.enter_list){
+            for(let i = 0; i<that.enter_list.length;i++){
                 if(that.enter_list[i].active){
                     enter.push(that.enter_list[i].name)
                 }
             }
-            for(let i in that.location_list){
+            for(let i = 0; i<that.location_list.length;i++){
                 if(that.location_list[i].active){
                     location.push(that.location_list[i].name)
                 }
             }
-            for(let i in that.recommend_list){
+            for(let i = 0; i<that.recommend_list.length;i++){
                 if(that.recommend_list[i].active){
                     recommend.push(that.recommend_list[i].name)
                 }
