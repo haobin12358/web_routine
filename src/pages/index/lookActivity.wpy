@@ -189,7 +189,7 @@
                <li wx:else>
                    <image src="../../images/index/icon-sign-in.png" class="m-icon-img"></image>
                </li>
-               <li wx:if="{{detail.plstatus == 1 || detail.plstatus == 2}}">
+               <li wx:if="{{detail.plstatus == 1 || detail.plstatus == 2}}" @tap="editNotice">
                    <image src="../../images/index/icon-broad-active.png" class="m-icon-img"></image>
                </li>
                <li wx:else>
@@ -391,6 +391,13 @@
                     }
                 })
             },
+        //  活动公告
+          editNotice(){
+            let that = this;
+            wx.navigateTo({
+              url: '/pages/index/setNotice' + '?plid=' +that.plid
+            });
+          }
         }
     }
 </script>

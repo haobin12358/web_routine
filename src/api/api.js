@@ -29,7 +29,8 @@ const scenicspot_get = api2 +'scenicspot/get';//获取景区详情
 
 
 
-const img_src = 'https://play.bigxingxing.com/icon/';
+// const img_src = 'https://play.bigxingxing.com/icon/';
+const img_src = '../../images/';
 //评价
 module.exports = {
   img_src,login,bind_phone,set_cost,set_insurance,scenicspot_list,scenicspot_get,set_play,get_cost,get_insurance,get_play,

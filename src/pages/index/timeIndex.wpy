@@ -1,0 +1,66 @@
+<style scoped lang="less" rel="stylesheet/less">
+
+  .m-timeIndex{
+    text-align: center;
+    font-size: 28rpx;
+    .m-title{
+      padding: 40rpx 0 0;
+    }
+    .m-time-icon-box{
+      height: 70vh;
+      display: flex;
+      flex-flow: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 120rpx;
+      .m-icon{
+        display: inline-block;
+        width: 180rpx;
+        height: 180rpx;
+      }
+    }
+  }
+
+</style>
+<template>
+    <view class="m-timeIndex">
+      <view class="m-grey m-title">先选择时光记录的类型哦</view>
+      <view class="m-time-icon-box">
+        <view class="m-one-icon">
+          <image src="{{img_src}}index/time-travel-notes.png" class="m-icon"></image>
+          <view>游记</view>
+        </view>
+        <view class="m-one-icon">
+          <image src="{{img_src}}index/time-strategy.png" class="m-icon"></image>
+          <view>攻略</view>
+        </view>
+        <view class="m-one-icon">
+          <image src="{{img_src}}index/time-jot.png" class="m-icon"></image>
+          <view>随记</view>
+        </view>
+      </view>
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import api from '../../api/api';
+
+  export default class timeIndex extends wepy.page {
+    config = {
+      navigationBarTitleText: '时光记录'
+    };
+    components = {};
+    data = {
+      img_src:api.img_src
+    };
+
+    onLoad(options) {
+
+    }
+
+    methods = {
+
+    };
+  }
+</script>

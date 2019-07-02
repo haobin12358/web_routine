@@ -1,0 +1,53 @@
+<style scoped lang="less" rel="stylesheet/less">
+  .m-enterLabel{
+    padding: 20rpx 40rpx;
+    border-bottom: 1px solid #F2F2F2;
+    font-size: 28rpx;
+  }
+
+</style>
+<template>
+    <view  class="m-setNotice">
+      <view class="m-enterLabel">
+        <input type="text" value="{{label}}" @change="inputChange" placeholder="{{placeholder}}" />
+      </view>
+      <view class="m-foot-btn m-one" @tap="saveLabel">发布公告</view>
+
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class setNotice extends wepy.page {
+    config = {
+      navigationBarTitleText: '活动公告',
+      enablePullDownRefresh: true
+    };
+    components = {};
+    data = {
+      label:'',
+      all_data:null,
+      placeholder:'请输入公告内容',
+      plid:''
+    };
+
+    onLoad(options) {
+      if(options.plid){
+        this.plid = options.plid;
+      }
+    }
+
+    methods = {
+      saveLabel(){
+        let that = this;
+
+
+      },
+      inputChange(e){
+        this.label = e.detail.value;
+        this.$apply();
+      }
+    };
+  }
+</script>

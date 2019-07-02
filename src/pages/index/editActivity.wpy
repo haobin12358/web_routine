@@ -3,17 +3,6 @@
 
     .m-editActivity{
         padding-bottom: 100rpx;
-      .m-alert-text{
-          padding: 15rpx 30rpx;
-          background-color: @common-color;
-          .flex-row(space-between);
-          font-size: 24rpx;
-          .m-alert-btn{
-              display: inline-block;
-              padding: 0 24rpx;
-              border: 1px solid #000;
-          }
-      }
         .m-edit-item{
             border-bottom: 10rpx solid #F4F4F4;
             ul{
