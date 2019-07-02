@@ -7,9 +7,9 @@ module.exports = {
   cliLogs: !prod,
   build: {
     web: {
-      htmlTemplate: path.join('src', 'index.wpy.template.html'),
-      htmlOutput: path.join('web', 'index.wpy.html'),
-      jsOutput: path.join('web', 'index.wpy.js')
+      htmlTemplate: path.join('src', 'index.template.html'),
+      htmlOutput: path.join('web', 'index.html'),
+      jsOutput: path.join('web', 'index.js')
     }
   },
   resolve: {
@@ -17,7 +17,7 @@ module.exports = {
       counter: path.join(__dirname, 'src/components/counter'),
       '@': path.join(__dirname, 'src')
     },
-    aliasFields: ['wepy'],
+    aliasFields: ['wepy', 'weapp'],
     modules: ['node_modules']
   },
   compilers: {
@@ -37,7 +37,6 @@ module.exports = {
         'transform-decorators-legacy',
         'transform-object-rest-spread',
         'transform-export-extensions',
-        'syntax-export-extensions'
       ]
     }
   },

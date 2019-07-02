@@ -98,7 +98,7 @@
     import api from '../../api/api';
     export default class login extends wepy.page {
         config = {
-            navigationBarTitleText: '',
+            navigationBarTitleText: '登录',
             enablePullDownRefresh: true
         }
         components = {}
@@ -118,55 +118,65 @@
                             info:resData
                         },
                         success: function (resule){
+                          if(resule.data.status == 200){
                             wx.setStorage({
-                                key:"token",
-                                data:resule.data.data.token
+                              key:"token",
+                              data:resule.data.data.token
                             });
                             wx.setStorageSync('session_key',resule.data.data.session_key);
                             wx.setStorageSync('token', resule.data.data.token);
                             if(resule.data.data.binded_phone){
-                                wx.switchTab({
-                                    url: '/pages/index/index'
-                                });
+                              wx.switchTab({
+                                url: '/pages/index/index'
+                              });
                             }else{
-                                that.show_tel = true;
-                                that.$apply();
+                              that.show_tel = true;
+                              that.$apply();
                             }
+                          }else{
+                            wx.showToast({
+                              title: resule.data.message,
+                              icon: "none",
+                              mask: true,
+                              duration: 500
+                            });
+                          }
+
 
                         },fail:function (res) {
-                            wx.showModal({
-                                title:'警告',
-                                cancelText:'不授权',
-                                confirmText:'授权',
-                                confirmColor:'#FFCE00',
-                                content:'若不授权微信登录，则无法正常显示您的信息',
-                                success:function (resdata) {
-                                    if(resdata.confirm){
-                                        console.log('用户点击的授权');
-                                        wx.openSetting({
-                                            success:function (res) {
-                                                if(res.authSetting['scope.userInfo']){
-                                                    wx.login({
-                                                        success:function(resLogin){
-                                                            that.getLogin(resLogin.code);
-                                                        }
-                                                    })
-                                                }else{
-                                                    console.log('再次不允许');
-                                                    wx.switchTab({
-                                                        url: '/pages/index/index'
-                                                    });
-                                                }
-                                            }
-                                        })
-                                    }else if(resdata.cancel){
-                                        console.log('弹出框用户点击取消');
-                                        wx.switchTab({
-                                            url: '/pages/index/index'
-                                        });
-                                    }
-                                }
-                            })
+                            // wx.showModal({
+                            //     title:'警告',
+                            //     cancelText:'不授权',
+                            //     confirmText:'授权',
+                            //     confirmColor:'#FFCE00',
+                            //     content:'若不授权微信登录，则无法正常显示您的信息',
+                            //     success:function (resdata) {
+                            //         if(resdata.confirm){
+                            //             console.log('用户点击的授权');
+                            //             wx.openSetting({
+                            //                 success:function (res) {
+                            //                     if(res.authSetting['scope.userInfo']){
+                            //                         wx.login({
+                            //                             success:function(resLogin){
+                            //                                 that.getLogin(resLogin.code);
+                            //                             }
+                            //                         })
+                            //                     }else{
+                            //                         console.log('再次不允许');
+                            //                         wx.switchTab({
+                            //                             url: '/pages/index/index'
+                            //                         });
+                            //                     }
+                            //                 }
+                            //             })
+                            //         }else if(resdata.cancel){
+                            //             console.log('弹出框用户点击取消');
+                            //             wx.switchTab({
+                            //                 url: '/pages/index/index'
+                            //             });
+                            //         }
+                            //     }
+                            // })
                         }
                     })
                 }

@@ -132,7 +132,7 @@
             </li>
         </ul>
         <view class="m-travel-list">
-            <view class="m-one-travel" wx:for="{{scenic_data}}" wx:key="index"  @tap="changeRoute('/pages/travel/scenicDetail?sspid={{item.sspid}}')">
+            <view class="m-one-travel" wx:for="{{scenic_data}}" wx:key="{{index}}"  @tap="changeRoute('/pages/travel/scenicDetail',{{item}})">
                 <image src="{{item.sspmainimg}}" class="m-travel-img"></image>
                 <view class="m-one-travel-text">
                     <view class="m-title">{{item.sspname}}</view>
@@ -253,9 +253,9 @@
             iconClick(item){
                 this.select_icon = item;
             },
-            changeRoute(v){
+            changeRoute(v,item){
                 wx.navigateTo({
-                    url: v
+                    url: v+'?sspid=' + item.sspid
                 });
             }
         }

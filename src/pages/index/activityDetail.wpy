@@ -83,7 +83,7 @@
                <view class="m-label">活动详情</view>
                <view class="m-info m-detail-text" wx:if="{{show_open}}">
                    <htmlParser :parserName.sync="name1" :parserContent.sync="content1" />
-                   <template id="wxParse" data="{{wxParseData:htmlParserName2.nodes}}"></template>
+<!--                   <template id="wxParse" data="{{wxParseData:htmlParserName2.nodes}}"></template>-->
                </view>
                <view class="m-open" wx:if="{{!show_open}}" @tap="openClick(true)">
                    <span>点击展开</span>
@@ -149,9 +149,10 @@
                     data.plproducts = data.plproducts.join('、');
                     that.content1 = res.data.data.plcontent;
                     that.detail = data;
-                    WxParse.wxParse('htmlParserName2','html',res.data.data.plcontent,that,0);
-                    that.$invoke('htmlParser', 'htmlParserNotice');
+                    // WxParse.wxParse('htmlParserName2','html',res.data.data.plcontent,that,0);
                     that.$apply();
+                    that.$invoke('htmlParser', 'htmlParserNotice');
+
                     tip.loaded();
                 },
                 error:function (error) {

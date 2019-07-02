@@ -66,7 +66,8 @@
              * 5.imagePadding为当图片自适应是左右的单一padding(默认为0,可选)
              */
             try{
-                WxParse.wxParse(this.parserName , this.parserType, this.parserContent || this.props.parserContent.default, this,this.parserPadding);
+                WxParse.wxParse(this.parserName , this.parserType, this.parserContent , this,this.parserPadding);
+                console.log(this)
                 this.htmlParserTpl = this[this.parserName];
                 this.$apply();
             }catch (e){

@@ -94,7 +94,6 @@
             <view class="m-title">{{scenic_name}}</view>
             <view class="m-info">
                 <htmlParser :parserName.sync="name1" :parserContent.sync="content1" />
-                <template id="wxParse" data="{{wxParseData:htmlParserName2.nodes}}"></template>
             </view>
         </view>
         <view class="m-recommend-item">
@@ -183,16 +182,17 @@
     import api from '../../api/api';
     export default class scenicDetail extends wepy.page {
         config = {
-            navigationBarTitleText: '',
+            navigationBarTitleText: '景区',
             enablePullDownRefresh: true
         }
         components = {
             htmlParser:htmlParser
         }
         data = {
-            name1:'htmlParserName1',
+            name1:'htmlParserName2',
             content1:"",
-            scenic_name:''
+            scenic_name:'',
+          article_content:''
         }
         getDetail(id){
             let that = this;
@@ -209,9 +209,9 @@
                 success: function(res) {
                     that.scenic_name = res.data.data.sspname;
                     that.content1 = res.data.data.sspcontent;
-                    WxParse.wxParse('htmlParserName2','html',res.data.data.sspcontent,that,0);
-                    that.$invoke('htmlParser', 'htmlParserNotice');
                     that.$apply();
+                    that.$invoke('htmlParser', 'htmlParserNotice');
+
                     tip.loaded();
                 },
                 error:function (error) {

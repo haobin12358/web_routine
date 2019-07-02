@@ -63,6 +63,7 @@ function trimHtml(html) {
 
 
 function html2json(html, bindName) {
+
     //处理字符串
     html = removeDOCTYPE(html);
     html = trimHtml(html);
@@ -109,17 +110,21 @@ function html2json(html, bindName) {
                     var name = attr.name;
                     var value = attr.value;
                     if (name == 'class') {
-                        console.dir(value);
+                        console.log(name,'class')
                         //  value = value.join("")
                         node.classStr = value;
                     }
                     // has multi attibutes
                     // make it array of attribute
                     if (name == 'style') {
-                        console.dir(value);
                         //  value = value.join("")
                         node.styleStr = value;
                     }
+
+                  if (name == 'data-src') {
+                    //  value = value.join("")
+                    node.dataSrc = value;
+                  }
                     if (value.match(/ /)) {
                         value = value.split(' ');
                     }
@@ -143,21 +148,24 @@ function html2json(html, bindName) {
                     return pre;
                 }, {});
             }
-
             //对img添加额外数据
             if (node.tag === 'img') {
                 node.imgIndex = results.images.length;
                 var imgUrl = node.attr.src;
-                if (imgUrl[0] == '') {
-                    imgUrl.splice(0, 1);
-                }
+                // if (imgUrl[0] == '') {
+                //     imgUrl.splice(0, 1);
+                // }
+              if(typeof (imgUrl) == "undefined"){
+                imgUrl = node.dataSrc;
+              }
                 imgUrl = wxDiscode.urlToHttpUrl(imgUrl, __placeImgeUrlHttps);
                 node.attr.src = imgUrl;
                 node.from = bindName;
                 results.images.push(node);
                 results.imageUrls.push(imgUrl);
+
             }
-            
+
             // 处理font标签样式属性
             if (node.tag === 'font') {
                 var fontSize = ['x-small', 'small', 'medium', 'large', 'x-large', 'xx-large', '-webkit-xxx-large'];
@@ -182,7 +190,6 @@ function html2json(html, bindName) {
             if(node.tag === 'source'){
                 results.source = node.attr.src;
             }
-            
             if (unary) {
                 // if this tag doesn't have end tag
                 // like <img src="hoge.png"/>
@@ -200,9 +207,10 @@ function html2json(html, bindName) {
             //debug(tag);
             // merge into parent tag
             var node = bufArray.shift();
-            if (node.tag !== tag) console.error('invalid state: mismatch end tag');
+            if (node.tag !== tag) console.log('invalid state: mismatch end tag');
 
             //当有缓存source资源时于于video补上src资源
+
             if(node.tag === 'video' && results.source){
                 node.attr.src = results.source;
                 delete results.source;
@@ -252,6 +260,7 @@ function html2json(html, bindName) {
             // parent.nodes.push(node);
         },
     });
+    console.log(results,'resulte')
     return results;
 };
 

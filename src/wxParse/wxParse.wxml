@@ -115,7 +115,7 @@
     <view wx:else class="{{item.classStr}} wxParse-{{item.tag}} wxParse-{{item.tagType}}" style="{{item.styleStr}}">
       <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
         <template is="wxParse1" data="{{item}}" />
-      </block>0
+      </block>
     </view>
 
   </block>
