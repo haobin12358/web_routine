@@ -1,0 +1,102 @@
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../../styles/common";
+  .m-editStrategy{
+    .m-row{
+      padding: 20rpx 30rpx;
+      border: 1px solid @border-color;
+      .flex-row(space-between);
+      .m-btn{
+        display: inline-block;
+        width: 160rpx;
+        height: 50rpx;
+        line-height: 50rpx;
+        text-align: center;
+        background-color: @common-color;
+      }
+    }
+    .m-loc-box{
+      .flex-row(flex-start);
+      font-size: 24rpx;
+      line-height: 33rpx;
+      font-weight: 300;
+      margin-bottom: 30rpx;
+      .m-icon-loc{
+        display: inline-block;
+        width: 40rpx;
+        height: 40rpx;
+        margin: 0 10rpx 0 30rpx;
+      }
+    }
+  }
+
+</style>
+<template>
+    <view class="m-editStrategy">
+      <view class="m-alert-text">
+        <span>使用电脑版www.bigxingxing.com输入更方便</span>
+        <span class="m-alert-btn">草稿箱</span>
+      </view>
+      <view class="m-row">
+        <span>取消</span>
+        <span class="m-btn">发布</span>
+      </view>
+
+      <view class="m-row">
+        <span>城市</span>
+        <view class="m-flex-end">
+          <span class="m-grey">可多选</span>
+          <image src="../../images/common/icon-more.png" class="m-icon-more"></image>
+        </view>
+      </view>
+      <view>
+        <edit :context.sync="plcontent" @editorChange.user="onEditorChange"></edit>
+      </view>
+      <view class="m-loc-box">
+        <image src="../../images/common/icon-loc.png" class="m-icon-loc"></image>
+        <span>杭州·杭州西湖风景名胜区</span>
+      </view>
+      <view class="m-row">
+        <span>推荐携带物品</span>
+        <view class="m-flex-end">
+          <span class="m-grey">可多选</span>
+          <image src="../../images/common/icon-more.png" class="m-icon-more"></image>
+        </view>
+      </view>
+      <view class="m-row">
+        <span>预算</span>
+        <view class="m-flex-end">
+<!--          <span class="m-grey">可多选</span>-->
+          <image src="../../images/common/icon-more.png" class="m-icon-more"></image>
+        </view>
+      </view>
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import Edit from '../../components/common/edit';
+  export default class editStrategy extends wepy.page {
+    config = {
+      navigationBarTitleText: '攻略',
+      enablePullDownRefresh: true
+    };
+    components = {
+      edit:Edit
+    };
+    data = {
+      content:''
+    };
+
+    onLoad(options) {
+
+    }
+
+    methods = {
+      onEditorChange(e){
+        // this.form_data.plcontent = e;
+        this.content = e;
+        this.$apply();
+      },
+    };
+  }
+</script>
