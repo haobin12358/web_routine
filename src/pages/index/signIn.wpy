@@ -165,6 +165,7 @@
               tip.loaded();
               if(resule.data.status == 200){
                 that.code = resule.data.data.silnum;
+                that.getList();
                 that.$apply();
               }else{
                 wx.showToast({
