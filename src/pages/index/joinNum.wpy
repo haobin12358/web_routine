@@ -40,57 +40,146 @@
 </style>
 <template>
     <view class="m-joinNum">
-        <view class="m-one-person m-flex-between">
+      <scroll-view scroll-y='true' style="height:100vh;" bindscrolltolower='lower' wx:if="{{user_list.length > 0}}">
+        <view class="m-one-person m-flex-between" wx:for="{{user_list}}" wx:key="{{index}}">
             <view class="m-user-box">
-                <image class="m-user-head"></image>
-                <span class="m-user-name">榴莲哟哟</span>
-                <span class="m-user-label">游客</span>
+                <image src="{{item.usheader}}" class="m-user-head"></image>
+                <span class="m-user-name">{{item.usname}}</span>
+                <span class="m-user-label">{{item.uslevel}}</span>
             </view>
             <view>
                 <image src="../../images/index/icon-chat.png" class="m-icon"></image>
-                <image src="../../images/index/icon-add-look-active.png" class="m-icon"></image>
+                <image src="../../images/index/icon-add-look-active.png" wx:if="{{item.follow_status == 2}}" class="m-icon" @tap="collectTap({{index}})"></image>
+                <image src="../../images/index/icon-look-done.png" wx:if="{{item.follow_status == 0}}" class="m-icon" @tap="collectTap({{index}})"></image>
+                <image src="../../images/index/icon-look-gather.png" wx:if="{{item.follow_status == 1}}" class="m-icon" @tap="collectTap({{index}})"></image>
             </view>
         </view>
-        <view class="m-one-person m-flex-between">
-            <view class="m-user-box">
-                <image class="m-user-head"></image>
-                <span class="m-user-name">榴莲哟哟</span>
-                <span class="m-user-label">游客</span>
-            </view>
-            <view>
-                <image src="../../images/index/icon-chat.png" class="m-icon"></image>
-                <image src="../../images/index/icon-look-done.png" class="m-icon"></image>
-            </view>
-        </view>
-        <view class="m-one-person m-flex-between">
-            <view class="m-user-box">
-                <image class="m-user-head"></image>
-                <span class="m-user-name">榴莲哟哟</span>
-                <span class="m-user-label">游客</span>
-            </view>
-            <view>
-                <image src="../../images/index/icon-chat.png" class="m-icon"></image>
-                <image src="../../images/index/icon-look-gather.png" class="m-icon"></image>
-            </view>
-        </view>
+      </scroll-view>
+      <view class="m-no-data" wx:if="{{user_list.length == 0}}">暂无参与人员</view>
     </view>
 </template>
 
 <script>
     import wepy from 'wepy';
-
+    import api from '../../api/api';
+    import tip from '../../utils/tip';
     export default class joinNum extends wepy.page {
         config = {
             navigationBarTitleText: '参与人数',
             enablePullDownRefresh: true
         }
-        components = {}
-        data = {}
-
-        onLoad(options) {
+        components = {
 
         }
+        data = {
+          plid:'',
+          user_list:[],
+          page_info:{
+            page_size:20,
+            page_num:1
+          },
+          total_count:0
+        }
+      getList(){
+        let that = this;
+        wx.request({
+          url: api.get_enter_user + '?token=' +wx.getStorageSync('token'),
+          method:"get",
+          data:{
+            plid:that.plid,
+            page_num: that.page_info.page_num,
+            page_size: that.page_info.page_size
+          },
+          success: function (resule){
+            tip.loaded();
+            if(resule.data.status == 200){
+              console.log(resule.data)
+              if(that.page_info.page_num >1){
+                that.user_list =  that.user_list.concat(resule.data.data);
+              }else{
+                that.user_list = resule.data.data;
+              }
+              that.total_count = resule.data.total_count;
+              that.$apply();
+            }else{
+              wx.showToast({
+                title: resule.data.message,
+                icon: 'none',
+                duration: 2000
+              })
 
-        methods = {}
+            }
+          }
+        })
+      }
+      postData(id,index){
+        let that = this;
+        wx.request({
+          url: api.collect + '?token=' +wx.getStorageSync('token'),
+          method:"post",
+          data:{
+            uclcotype:2,
+            uclcollection:id
+          },
+          success: function (resule){
+            tip.loaded();
+            if(resule.data.status == 200){
+              if(that.user_list[index].follow_status == 0){
+                that.user_list[index].follow_status = 2
+              }else if(that.user_list[index].follow_status == 1){
+                that.user_list[index].follow_status = 2
+              }else if(that.user_list[index].follow_status == 2){
+                that.user_list[index].follow_status = 0
+              }
+
+              that.$apply();
+            }else{
+              wx.showToast({
+                title: resule.data.message,
+                icon: 'none',
+                duration: 2000
+              })
+
+            }
+          }
+        })
+      }
+        onLoad(options) {
+          if(options.plid){
+            this.plid = options.plid;
+            this.$apply();
+            this.getList();
+          }
+        }
+
+        methods = {
+          collectTap(index){
+            console.log(index)
+            this.postData(this.user_list[index].usid,index)
+          },
+          lower(){
+            if (this.user_list.length >= this.total_count) {
+              wx.showToast({ //期间为了显示效果可以添加一个过度的弹出框提示“加载中”
+                title: '我也是有底线的',
+                icon: 'success',
+                duration: 300
+              });
+              return false;
+            } else {
+              this.page_info.page_num += 1;
+
+              wx.showLoading({ //期间为了显示效果可以添加一个过度的弹出框提示“加载中”
+                title: '加载中',
+                icon: 'loading',
+              });
+              // setTimeout(() => {
+              //   this.setData({
+              //     res: cont
+              //   });
+              //   wx.hideLoading();
+              // }, 1500)
+            }
+          }
+        }
     }
 </script>

@@ -10,24 +10,38 @@
   .m-input-box{
     position: relative;
     width: 320rpx;
+    height: 84rpx;
     .m-input{
       opacity: 0;
       width: 320rpx;
       height: 80rpx;
-      position: absolute;
-      top: 0;
+      position: fixed;
+      top: -100rpx;
       left: 0;
+      color: transparent;
+      caret-color: transparent;
+      z-index: -1;
     }
-    display: flex;
-    flex-flow: row;
-    align-items: center;
-    justify-content: center;
+    .m-num-state{
+      display: flex;
+      flex-flow: row;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      background-color: #fff;
+      position: absolute;
+      top:0;
+      left: 0;
+      width: 320rpx;
+    }
     .m-num{
       width: 80rpx;
       height: 80rpx;
       line-height: 80rpx;
       border: 1px solid @common-color;
       text-align: center;
+      background-color: #fff;
+      .flex-row(center);
       &.m-rl{
         border-right: none;
         border-left: none;
@@ -38,8 +52,7 @@
       .blink {
         display: inline-block;
         width: 1px;
-        margin-top: 20rpx;
-        height: 40rpx;
+        height: 30rpx;
         animation: blink 1s infinite steps(1, start);
       }
     }
@@ -77,11 +90,13 @@
     <view  class="m-personSignin" @tap.catch="nofocusChange">
       <view class="m-title">请输入签到码</view>
       <view class="m-input-box" @tap.stop="focusChange">
-        <view class="m-num " ><i class="blink" wx:if="{{code.length==0 && focus}}"></i>{{code[0]}}</view>
-        <view class="m-num m-rl "><i class="blink" wx:if="{{code.length==1}}"></i>{{code[1]}}</view>
-        <view class="m-num "><i class="blink" wx:if="{{code.length==2}}"></i>{{code[2]}}</view>
-        <view class="m-num m-l "><i class="blink" wx:if="{{code.length==3}}"></i>{{code[3]}}</view>
-        <input type="number" class="m-input" value="{{code}}" focus="{{focus}}"  bindinput="inputChange"/>
+        <input type="number" class="m-input" value="{{code}}" readonly unselectable="on"  maxlength="4" focus="{{focus}}"  bindinput="inputChange"/>
+        <view class="m-num-state" @tap.stop="numTap" >
+          <view class="m-num " >{{code[0]}}<i class="blink" wx:if="{{code.length==0 && focus}}"></i></view>
+          <view class="m-num m-rl ">{{code[1]}}<i class="blink" wx:if="{{code.length==1 && focus}}"></i></view>
+          <view class="m-num ">{{code[2]}}<i class="blink" wx:if="{{code.length==2 && focus}}"></i></view>
+          <view class="m-num m-l ">{{code[3]}}<i class="blink" wx:if="{{(code.length==3 && focus) || (focus&&code.length==4) }}"></i></view>
+        </view>
       </view>
       <view class="m-btn active" wx:if="{{code.length == 4}}" @tap="signIn">签到</view>
       <view class="m-btn" wx:else>签到</view>
@@ -179,6 +194,10 @@
       signIn(){
         this.focus = false;
         this.postData();
+      },
+      numTap(){
+        this.focus = true;
+        this.$apply();
       }
     };
   }

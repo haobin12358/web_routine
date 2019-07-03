@@ -94,6 +94,9 @@
     data = {
       show_login:false
     }
+    onLaunch(options){
+      console.log(options)
+    }
 
     constructor () {
       super()

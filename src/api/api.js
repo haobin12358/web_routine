@@ -27,6 +27,8 @@ const get_signin = api2 + 'play/get_signin';//获取签到记录
 const get_current_play = api2 +'play/get_current_play';//获取当前活动id
 const help = api2 +'play/help';//求救
 const signin = api2 +'play/signin'; //用户签到
+const get_enter_user = api2 +'play/get_enter_user';//获取活动参与人
+const collect = api2 +'collection/collect';//用户关注
 
 
 const scenicspot_list = api2 +'scenicspot/list';//获取景区list
@@ -43,6 +45,7 @@ const img_src = '../../images/';
 //评价
 module.exports = {
   api,img_src,login,bind_phone,set_cost,set_insurance,scenicspot_list,scenicspot_get,set_play,get_cost,get_insurance,get_play,
-    get_play_list,get_gather,set_gather,get_playrequire,play_join,identity,set_signin,get_signin,get_current_play,help,signin
+    get_play_list,get_gather,set_gather,get_playrequire,play_join,identity,set_signin,get_signin,get_current_play,help,signin,
+  get_enter_user,collect
 
 }

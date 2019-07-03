@@ -176,7 +176,6 @@
 
       }
     methods = {
-
         changeRoute(v,name){
           switch (name) {
             case 'team':
@@ -216,7 +215,6 @@
           }
 
         },
-
         getCell(){
           let that = this;
           wx.getLocation({

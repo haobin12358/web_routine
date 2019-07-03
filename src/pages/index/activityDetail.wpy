@@ -72,7 +72,7 @@
            </li>
            <li>
                <view class="m-label">参与人数</view>
-               <view class="m-flex-end" @tap="changeRoute('/pages/index/joinNum')">
+               <view class="m-flex-end" @tap="changeRoute('/pages/index/joinNum','num')">
                    <span>
                        <span class="m-common">{{detail.enternum}}</span>/{{detail.plnum}}
                    </span>
@@ -128,7 +128,7 @@
             detail_info:null,
             content1:"",
             show_open:false,
-            plid:'0d85db48-9bd6-11e9-8e38-0242ac110002'
+            plid:''
         }
         getDetail(id){
             let that = this;
@@ -170,10 +170,21 @@
         }
 
         methods = {
-            changeRoute(v){
-                wx.navigateTo({
+            changeRoute(v,name){
+              let that = this;
+              switch (name) {
+                case 'num':
+                  wx.navigateTo({
+                    url: v +'?plid=' + that.plid
+                  });
+                  break;
+                default:
+                  wx.navigateTo({
                     url: v
-                });
+                  });
+                  break;
+              }
+
             },
             openClick(bool){
                 if(bool == 'false'){
