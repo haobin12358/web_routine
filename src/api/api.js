@@ -2,6 +2,8 @@
 
 const api2 = 'https://play.bigxingxing.com/api/v2/' ;
 
+
+const api = 'https://play.bigxingxing.com' ;
 //登录 注册
 
 const login = api2+'user/mp_login';//登录
@@ -33,7 +35,7 @@ const scenicspot_get = api2 +'scenicspot/get';//获取景区详情
 const img_src = '../../images/';
 //评价
 module.exports = {
-  img_src,login,bind_phone,set_cost,set_insurance,scenicspot_list,scenicspot_get,set_play,get_cost,get_insurance,get_play,
+  api,img_src,login,bind_phone,set_cost,set_insurance,scenicspot_list,scenicspot_get,set_play,get_cost,get_insurance,get_play,
     get_play_list,get_gather,set_gather,get_playrequire,play_join
 
 }

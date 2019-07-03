@@ -12,6 +12,8 @@
  * detail : http://weappdev.com/t/wxparse-alpha0-1-html-markdown/184
  */
 
+import api from '../api/api';
+
 var __placeImgeUrlHttps = "https";
 var __emojisReg = '';
 var __emojisBaseSrc = '';
@@ -155,6 +157,9 @@ function html2json(html, bindName) {
                 // if (imgUrl[0] == '') {
                 //     imgUrl.splice(0, 1);
                 // }
+              if(imgUrl[0] == '/'){
+                imgUrl = api.api + imgUrl;
+              }
               if(typeof (imgUrl) == "undefined"){
                 imgUrl = node.dataSrc;
               }
