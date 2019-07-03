@@ -60,6 +60,12 @@
                         white-space: nowrap;
                         text-overflow: ellipsis;
                     }
+                  .m-location{
+                    width: 250rpx;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                  }
                     .m-price-time{
                         width: 387rpx;
                         .flex-row(space-between);
@@ -137,7 +143,7 @@
                 <view class="m-one-travel-text">
                     <view class="m-title">{{item.sspname}}</view>
                     <view class="m-price-time">
-                        <span class="m-grey">{{item.ssparea}}</span>
+                        <span class="m-grey m-location">{{item.ssparea}}</span>
                         <view class="m-more-text">
                             <span>攻略 26</span>
                             <image src="../../images/common/icon-more-active.png" class="m-icon-more-active"></image>

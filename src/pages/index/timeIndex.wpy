@@ -26,11 +26,11 @@
     <view class="m-timeIndex">
       <view class="m-grey m-title">先选择时光记录的类型哦</view>
       <view class="m-time-icon-box">
-        <view class="m-one-icon">
+        <view class="m-one-icon" @tap="changeRoute('/pages/index/editTravelNote')">
           <image src="{{img_src}}index/time-travel-notes.png" class="m-icon"></image>
           <view>游记</view>
         </view>
-        <view class="m-one-icon">
+        <view class="m-one-icon" @tap="changeRoute('/pages/index/editStrategy')">
           <image src="{{img_src}}index/time-strategy.png" class="m-icon"></image>
           <view>攻略</view>
         </view>
@@ -60,6 +60,11 @@
     }
 
     methods = {
+      changeRoute(v){
+        wx.navigateTo({
+          url: v
+        });
+      },
 
     };
   }

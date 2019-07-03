@@ -31,9 +31,7 @@
   export default class extends wepy.app {
     config = {
       pages: [
-        'pages/index/editStrategy',
-        'pages/index/editTravelNote',
-        'pages/index/timeIndex',
+
         'pages/personal/login',
         'pages/index/enterPage',
         'pages/index/lookActivity',
@@ -51,6 +49,9 @@
         'pages/index/joinNum',
         'pages/index/rallyPoint',
         'pages/travel/scenicDetail',
+        'pages/index/editStrategy',
+        'pages/index/editTravelNote',
+        'pages/index/timeIndex',
       ],
       permission: {
         "scope.userLocation": {

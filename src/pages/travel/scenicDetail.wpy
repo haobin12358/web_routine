@@ -209,6 +209,7 @@
                 success: function(res) {
                     that.scenic_name = res.data.data.sspname;
                     that.content1 = res.data.data.sspcontent;
+                    that.content1 = that.content1.replace(/&quot;/g,'');
                     that.$apply();
                     that.$invoke('htmlParser', 'htmlParserNotice');
 

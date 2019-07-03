@@ -109,7 +109,8 @@ function HTMLParser(html, handler) {
 		}
 
 		if (html == last)
-			throw "Parse Error: " + html;
+			// throw "Parse Error: " + html;
+		  html = '';
 		last = html;
 	}
 

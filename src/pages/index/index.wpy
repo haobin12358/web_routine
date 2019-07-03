@@ -126,7 +126,7 @@
           <p><image src="../../images/index/index-chat.png" class="m-index-icon" alt="" /></p>
           <p>聊天室</p>
         </li>
-        <li>
+        <li @tap="changeRoute('/pages/index/timeIndex')">
           <p><image src="../../images/index/index-time.png" class="m-index-icon" alt="" /></p>
           <p>时光记录</p>
         </li>
