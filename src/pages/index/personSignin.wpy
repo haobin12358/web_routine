@@ -168,7 +168,12 @@
         this.$apply();
       },
       inputChange(e){
-        this.code = e.detail.value;
+        if(e.detail.value.length > 4){
+          this.code = e.detail.value.substr(0,4);
+        }else{
+          this.code = e.detail.value;
+        }
+
         this.$apply();
       },
       signIn(){
