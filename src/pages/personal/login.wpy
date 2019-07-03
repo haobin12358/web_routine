@@ -7,11 +7,13 @@
             padding: 70rpx 56rpx;
             font-size: 30rpx;
             font-weight: 500;
+          .flex-col(center);
             .m-login-logo{
                 display: inline-block;
-                width: 90rpx;
-                height: 90rpx;
+                width: 280rpx;
+                height: 280rpx;
                 margin-right: 20rpx;
+              margin-bottom: 60rpx;
             }
             .m-grey{
                 margin: 20rpx;
@@ -21,12 +23,18 @@
         }
 
     }
+     .m-btn-box{
+       margin-top: 200rpx;
+       padding: 0 56rpx;
+     }
      button{
          background-color: @common-color;
-         color: #fff;
+         /*color: #fff;*/
          border: none;
          border-radius: 0;
-         line-height: 90rpx;
+          height: 80rpx;
+         line-height: 80rpx;
+          /*margin-top: 300rpx;*/
      }
      .m-modal{
          position: fixed;
@@ -57,8 +65,10 @@
                  margin-bottom: 20rpx;
              }
              button{
-                 width: 250rpx;
+                 width: 240rpx;
                  margin-top: 30rpx;
+               height: 80rpx;
+               line-height: 80rpx;
                  &.cancel{
                      background-color: #c1c1c1;
                  }
@@ -71,17 +81,19 @@
     <view>
         <view class="m-login-state">
             <view class="m-login-info">
-                <view class="m-flex-start">
-                    <image src="" class="m-login-logo"></image>
-                    <span>欢迎加入XXXXXXXX平台</span>
-                </view>
+
+                <image src="{{img_src}}common/logo.png" class="m-login-logo"></image>
+               <view> 欢迎加入XXXXXXXX平台</view>
                 <view class="m-grey">为提供优质的服务，需要获取您的公开信息（昵称、头像等）</view>
             </view>
+          <view class="m-btn-box">
             <button open-type='getUserInfo' bindgetuserinfo='doLogin' id="doLogin">微信登录</button>
+          </view>
+
         </view>
        <view class="m-modal" wx:if="{{show_tel}}">
            <view class="m-modal-state">
-               <image src="" class="m-login-log"></image>
+               <image src="{{img_src}}common/logo.png" class="m-login-log"></image>
                <view class="m-grey">为了更优质的服务，需要获取您的手机号</view>
                <view class="m-flex-between">
                    <button @tap="cancelTel" class="cancel">拒绝</button>
@@ -98,12 +110,12 @@
     import api from '../../api/api';
     export default class login extends wepy.page {
         config = {
-            navigationBarTitleText: '登录',
-            enablePullDownRefresh: true
+            navigationBarTitleText: '登录'
         }
         components = {}
         data = {
-            show_tel:false
+            show_tel:false,
+          img_src:api.img_src
         }
 
         getLogin(code){

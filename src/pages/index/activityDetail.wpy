@@ -76,7 +76,7 @@
                    <span>
                        <span class="m-common">{{detail.enternum}}</span>/{{detail.plnum}}
                    </span>
-                   <image src="../../images/common/icon-right.png" class="m-icon-more" alt="" />
+                   <image src="{{img_src}}common/icon-right.png" class="m-icon-more" alt="" />
                </view>
            </li>
            <li class="m-no-flex">
@@ -87,11 +87,11 @@
                </view>
                <view class="m-open" wx:if="{{!show_open}}" @tap="openClick(true)">
                    <span>点击展开</span>
-                   <image src="../../images/common/icon-down.png" class="m-icon-down" alt="" />
+                   <image src="{{img_src}}common/icon-down.png" class="m-icon-down" alt="" />
                </view>
                <view class="m-open" wx:if="{{show_open}}"  @tap="openClick(false)">
                    <span>点击收起</span>
-                   <image src="../../images/common/icon-up.png" class="m-icon-down" alt="" />
+                   <image src="{{img_src}}common/icon-up.png" class="m-icon-down" alt="" />
                </view>
            </li>
        </ul>
@@ -122,6 +122,7 @@
         }
         components = {circle:Circle,    htmlParser:htmlParser}
         data = {
+            img_src:api.img_src,
             detail:null,
             name1:'htmlParserName1',
             detail_info:null,

@@ -172,11 +172,11 @@
                 </view>
                 <view class="m-open" wx:if="{{!show_open}}" @tap="openClick(true)">
                     <span>点击展开</span>
-                    <image src="../../images/common/icon-down.png" class="m-icon-down" alt="" />
+                    <image src="{{img_src}}common/icon-down.png" class="m-icon-down" alt="" />
                 </view>
                 <view class="m-open" wx:if="{{show_open}}"  @tap="openClick(false)">
                     <span>点击收起</span>
-                    <image src="../../images/common/icon-up.png" class="m-icon-down" alt="" />
+                    <image src="{{img_src}}common/icon-up.png" class="m-icon-down" alt="" />
                 </view>
             </view>
         </view>
@@ -184,31 +184,31 @@
            <view class="m-scheduling-btn" wx:if="{{detail.joinstatus}}" @tap="toEnter('/pages/index/enterPage')">我要报名</view>
            <ul class="m-icon-list" wx:if="{{detail.editstatus}}">
                <li wx:if="{{detail.plstatus == 2}}">
-                   <image src="../../images/index/icon-sign-in-active.png" class="m-icon-img"></image>
+                   <image src="{{img_src}}index/icon-sign-in-active.png" class="m-icon-img"></image>
                </li>
                <li wx:else>
-                   <image src="../../images/index/icon-sign-in.png" class="m-icon-img"></image>
+                   <image src="{{img_src}}index/icon-sign-in.png" class="m-icon-img"></image>
                </li>
                <li wx:if="{{detail.plstatus == 1 || detail.plstatus == 2}}" @tap="editNotice">
-                   <image src="../../images/index/icon-broad-active.png" class="m-icon-img"></image>
+                   <image src="{{img_src}}index/icon-broad-active.png" class="m-icon-img"></image>
                </li>
                <li wx:else>
-                   <image src="../../images/index/icon-broad.png" class="m-icon-img"></image>
+                   <image src="{{img_src}}index/icon-broad.png" class="m-icon-img"></image>
                </li>
                <li wx:if="{{detail.plstatus == 1 || detail.plstatus == 2}}">
-                   <image src="../../images/index/icon-close-active.png" class="m-icon-img" @tap="closePlay"></image>
+                   <image src="{{img_src}}index/icon-close-active.png" class="m-icon-img" @tap="closePlay"></image>
                </li>
                <li wx:if="{{detail.plstatus == 3}}">
-                   <image src="../../images/index/icon-close.png" class="m-icon-img"></image>
+                   <image src="{{img_src}}index/icon-close.png" class="m-icon-img"></image>
                </li>
                <li wx:if="{{detail.plstatus == 0}}">
-                   <image src="../../images/index/icon-edit.png" class="m-icon-img" @tap="editTap"></image>
+                   <image src="{{img_src}}index/icon-edit.png" class="m-icon-img" @tap="editTap"></image>
                </li>
                <li>
-                   <image src="../../images/index/icon-delete-active.png" class="m-icon-img" @tap="deletePlay"></image>
+                   <image src="{{img_src}}index/icon-delete-active.png" class="m-icon-img" @tap="deletePlay"></image>
                </li>
                <li>
-                   <button class="m-share-btn"  open-type="share" ><image src="../../images/index/icon-share-active.png" class="m-icon-img"></image></button>
+                   <button class="m-share-btn"  open-type="share" ><image src="{{img_src}}index/icon-share-active.png" class="m-icon-img"></image></button>
                </li>
            </ul>
 
@@ -230,6 +230,7 @@
         }
         components = {circle:circle,    htmlParser:htmlParser}
         data = {
+            img_src:api.img_src,
             detail:null,
             name1:'htmlParserName1',
             detail_info:null,

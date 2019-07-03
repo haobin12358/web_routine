@@ -191,6 +191,14 @@
 
         getCell(){
           let that = this;
+          wx.getLocation({
+            type: 'wgs84',
+            success (res) {
+              that.latitude = res.latitude;
+              that.longitude = res.longitude;
+
+            }
+          })
           wx.showActionSheet({
             itemList: ['17774012962'],
             success (res) {
