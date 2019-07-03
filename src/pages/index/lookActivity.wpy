@@ -150,7 +150,12 @@
             </li>
             <li>
                 <view class="m-label">参与人数</view>
-                <view >{{detail.enternum}}/{{detail.plnum}}</view>
+              <view class="m-flex-end" @tap="lookNum('/pages/index/joinNum')">
+                   <span>
+                       <span class="m-common">{{detail.enternum}}</span>/{{detail.plnum}}
+                   </span>
+                <image src="{{img_src}}common/icon-right.png" class="m-icon-more" alt="" />
+              </view>
             </li>
             <li>
                 <view class="m-label">活动费用</view>
@@ -350,6 +355,13 @@
                 wx.navigateTo({
                     url: v + '?plid=' +that.plid
                 });
+            },
+            //参与人数
+            lookNum(v){
+              let that = this;
+              wx.navigateTo({
+                url: v + '?plid=' +that.plid
+              });
             },
             //编辑
             editTap(){

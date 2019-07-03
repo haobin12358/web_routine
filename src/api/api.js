@@ -21,10 +21,16 @@ const get_gather = api2 + 'play/get_gather';//获取集合点
 
 const get_playrequire = api2 +'play/get_playrequire';//获取报名必选项
 const play_join = api2 + 'play/join';//报名活动
+const identity = api2 + 'play/identity';//身份判断
+const set_signin = api2 + 'play/set_signin';//发起签到
+const get_signin = api2 + 'play/get_signin';//获取签到记录
+const get_current_play = api2 +'play/get_current_play';//获取当前活动id
+const help = api2 +'play/help';//求救
 
 
 const scenicspot_list = api2 +'scenicspot/list';//获取景区list
 const scenicspot_get = api2 +'scenicspot/get';//获取景区详情
+
 
 
 
@@ -36,6 +42,6 @@ const img_src = '../../images/';
 //评价
 module.exports = {
   api,img_src,login,bind_phone,set_cost,set_insurance,scenicspot_list,scenicspot_get,set_play,get_cost,get_insurance,get_play,
-    get_play_list,get_gather,set_gather,get_playrequire,play_join
+    get_play_list,get_gather,set_gather,get_playrequire,play_join,identity,set_signin,get_signin,get_current_play,help
 
 }

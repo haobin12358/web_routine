@@ -44,6 +44,7 @@
         'pages/personal/index',
         'pages/index/activityDetail',
         'pages/index/signIn',
+        'pages/index/personSignin',
         'pages/index/enterLabel',
         'pages/index/enterTeam',
         'pages/index/joinNum',
