@@ -59,6 +59,7 @@
         'pages/personal/withdraw',
         'pages/personal/history',
         'pages/personal/evaluate',
+        'pages/personal/identification',
       ],
       permission: {
         "scope.userLocation": {

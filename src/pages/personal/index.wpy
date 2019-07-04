@@ -131,7 +131,7 @@
                         <span>客服中心</span>
                     </view>
                 </li>
-                <li>
+                <li @tap="changeRoute('/pages/personal/identification')">
                     <view class="m-flex-start">
                         <image src="{{img_src}}personal/icon-guide.png" class="m-icon"></image>
                         <span>导游认证</span>
