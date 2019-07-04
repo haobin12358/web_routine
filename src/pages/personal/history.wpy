@@ -89,7 +89,7 @@
             </view>
             <view class="m-bottom m-flex-between">
               <span>报名人数：3/5</span>
-              <span class="m-evaluate-btn active">去评价</span>
+              <span class="m-evaluate-btn active" @tap="changeRoute('/pages/personal/evaluate')">去评价</span>
             </view>
           </view>
         </view>
@@ -124,6 +124,12 @@
 
     }
 
-    methods = {};
+    methods = {
+      changeRoute(v){
+        wx.navigateTo({
+          url: v
+        });
+      },
+    };
   }
 </script>

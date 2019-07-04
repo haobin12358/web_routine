@@ -1,0 +1,154 @@
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../../styles/common";
+  .m-evaluate{
+    .m-play-info{
+      display: flex;
+      flex-flow: row;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10rpx 20rpx;
+      border-bottom: 10rpx solid #f4f4f4;
+      .m-play-img{
+        width:288rpx;
+        height: 161rpx;
+      }
+      .m-play-text{
+        .m-title{
+          width: 380rpx;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+        .m-user{
+          font-size: 24rpx;
+          margin-bottom: 35rpx;
+        }
+      }
+    }
+    .m-content{
+      .m-row{
+        padding: 10rpx 20rpx;
+        border-bottom: 1px solid @border-color;
+        .m-star{
+          width: 30rpx;
+          height: 30rpx;
+          margin-left: 5rpx;
+        }
+        .m-label-list{
+          .flex-row(flex-start);
+          flex-wrap: wrap;
+          width: 550rpx;
+          span{
+            margin-right: 20rpx;
+            margin-bottom: 20rpx;
+            padding: 0 25rpx;
+            border: 1px solid @border-color;
+            color: #C1C1C1;
+            font-size: 24rpx;
+            &.active{
+              color: #000;
+              background-color: @border-color;
+            }
+          }
+        }
+        .m-select-label{
+          margin-bottom: 20rpx;
+        }
+      }
+    }
+  }
+
+</style>
+<template>
+    <view class="m-evaluate">
+
+      <view class="m-play-info">
+        <image src="" class="m-play-img"></image>
+        <view class="m-play-text">
+          <view class="m-title">西湖-富春江-千岛湖-新安江…</view>
+          <view class="m-user">组织者：某某某</view>
+          <view class="m-grey">参与人数：5</view>
+        </view>
+      </view>
+      <view class="m-content">
+        <view class="m-row m-grey">组织者</view>
+        <view class="m-row">
+          <view class="m-flex-between">
+            <view class="m-flex-start">
+              <image src="" class="m-user-head"></image>
+              <span class="m-user-name">1231</span>
+            </view>
+            <view class="m-flex-end">
+              <image src="" class="m-star"></image>
+            </view>
+          </view>
+          <view class="m-flex-between m-select-label">
+            <view class="m-label-list">
+              <span class="active">12</span>
+              <span class="active">12</span>
+            </view>
+            <view class="m-flex-end">
+              <span class="m-grey">更多标签</span>
+              <image src="../../images/common/icon-down.png" class="m-icon-down"></image>
+            </view>
+          </view>
+
+          <view>
+            <view class="m-label-list">
+              <span >12</span>
+              <span>12</span>
+            </view>
+            <view class="m-flex-end">
+              <span class="m-grey">点击收起</span>
+              <image src="../../images/common/icon-up.png" class="m-icon-down"></image>
+            </view>
+          </view>
+        </view>
+
+        <view class="m-row m-grey">团队成员</view>
+        <view class="m-row">
+          <view class="m-flex-between">
+            <view class="m-flex-start">
+              <image src="" class="m-user-head"></image>
+              <span class="m-user-name">1231</span>
+            </view>
+          </view>
+          <view class="m-flex-between m-select-label">
+            <view class="m-label-list">
+              <span class="active">12</span>
+              <span class="active">12</span>
+            </view>
+          </view>
+
+          <view>
+            <view class="m-label-list">
+              <span>12</span>
+              <span> + </span>
+            </view>
+            <view class="m-flex-end">
+              <span class="m-grey">点击收起</span>
+              <image src="../../images/common/icon-up.png" class="m-icon-down"></image>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class evaluate extends wepy.page {
+    config = {
+      navigationBarTitleText: '历史团队'
+    };
+    components = {};
+    data = {};
+
+    onLoad(options) {
+
+    }
+
+    methods = {};
+  }
+</script>
