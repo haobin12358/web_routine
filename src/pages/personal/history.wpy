@@ -1,0 +1,129 @@
+<style scoped lang="less" rel="stylesheet/less">
+@import "../../styles/common";
+  .m-history{
+    .m-history-item{
+      border-bottom: 10rpx solid #f4f4f4;
+      &:last-child{
+        border-bottom: none;
+      }
+      .m-row{
+        padding: 20rpx 30rpx;
+        border-bottom: 1px solid @border-color;
+        .flex-row(space-between);
+        .m-play-img{
+          width: 288rpx;
+          height: 161rpx;
+          margin-right: 20rpx;
+        }
+        .m-play-info{
+          width: 380rpx;
+          height: 161rpx;
+          .flex-col(space-between);
+          .m-title{
+            width: 380rpx;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
+          .m-info-center{
+            .flex-row(space-between);
+            width: 380rpx;
+            .m-user{
+              width: 210rpx;
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+              font-size: 24rpx;
+            }
+            .m-btn{
+              padding: 0 20rpx;
+              background-color: @common-color;
+              font-weight: 500;
+            }
+          }
+          .m-bottom{
+            width: 380rpx;
+            color: @grey-color;
+            .m-evaluate-btn{
+              padding: 0 14rpx;
+              border: 1px solid #C1C1C1;
+              color: #C1C1C1;
+              &.active{
+                border-color: @common-color;
+                color: @common-color;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+</style>
+<template>
+    <view class="m-history">
+        <view class="m-history-item">
+          <view class="m-row">正在组队</view>
+          <view class="m-row">
+            <image src="" class="m-play-img"></image>
+            <view class="m-play-info">
+              <view class="m-title">西湖-富春江-千岛湖-新安江…</view>
+              <view class="m-info-center m-flex-between">
+                <span class="m-user">组织者：某某某</span>
+                <span class="m-btn">申请退团</span>
+              </view>
+              <view class="m-bottom m-flex-between">
+                <span>报名人数：3/5</span>
+              </view>
+            </view>
+          </view>
+        </view>
+      <view class="m-history-item">
+        <view class="m-row">历史团队</view>
+        <view class="m-row">
+          <image src="" class="m-play-img"></image>
+          <view class="m-play-info">
+            <view class="m-title">西湖-富春江-千岛湖-新安江…</view>
+            <view class="m-info-center m-flex-between">
+              <span class="m-user">组织者：某某某</span>
+            </view>
+            <view class="m-bottom m-flex-between">
+              <span>报名人数：3/5</span>
+              <span class="m-evaluate-btn active">去评价</span>
+            </view>
+          </view>
+        </view>
+        <view class="m-row">
+          <image src="" class="m-play-img"></image>
+          <view class="m-play-info">
+            <view class="m-title">西湖-富春江-千岛湖-新安江…</view>
+            <view class="m-info-center m-flex-between">
+              <span class="m-user">组织者：某某某</span>
+            </view>
+            <view class="m-bottom m-flex-between">
+              <span>报名人数：3/5</span>
+              <span class="m-evaluate-btn">去评价</span>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class history extends wepy.page {
+    config = {
+      navigationBarTitleText: '历史团队'
+    };
+    components = {};
+    data = {};
+
+    onLoad(options) {
+
+    }
+
+    methods = {};
+  }
+</script>

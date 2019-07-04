@@ -115,7 +115,7 @@
                         <span>任务中心</span>
                     </view>
                 </li>
-                <li>
+                <li @tap="changeRoute('/pages/personal/history')">
                     <view class="m-flex-start">
                         <image src="{{img_src}}personal/icon-history.png" class="m-icon"></image>
                         <span>历史团队</span>
