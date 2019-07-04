@@ -7,53 +7,27 @@
         height: 40rpx;
         margin-left: 30rpx;
     }
-    .m-one-person{
-        padding: 20rpx 30rpx;
-        border-bottom: 1px solid @border-color;
-        .m-user-box{
-            .flex(row,flex-start,flex-start);
-            .m-user-head{
-                display: inline-block;
-                width: 80rpx;
-                height: 80rpx;
-                border-radius: 50%;
-            }
-            .m-user-name{
-                display: inline-block;
-                margin: 0 20rpx;
-                font-weight: 500;
-                max-width: 280rpx;
-                overflow: hidden;
-                white-space: nowrap;
-                text-overflow: ellipsis;
-            }
-            .m-user-label{
-                display: inline-block;
-                padding: 0 10rpx;
-                border: 1px solid @common-color;
-                color: @common-color;
-            }
-        }
-    }
+
 }
 
 </style>
 <template>
     <view class="m-joinNum">
       <scroll-view scroll-y='true' style="height:100vh;" bindscrolltolower='lower' wx:if="{{user_list.length > 0}}">
-        <view class="m-one-person m-flex-between" wx:for="{{user_list}}" wx:key="{{index}}">
-            <view class="m-user-box">
-                <image src="{{item.usheader}}" class="m-user-head"></image>
-                <span class="m-user-name">{{item.usname}}</span>
-                <span class="m-user-label">{{item.uslevel}}</span>
-            </view>
-            <view>
-                <image src="../../images/index/icon-chat.png" class="m-icon"></image>
-                <image src="../../images/index/icon-add-look-active.png" wx:if="{{item.follow_status == 2}}" class="m-icon" @tap="collectTap({{index}})"></image>
-                <image src="../../images/index/icon-look-done.png" wx:if="{{item.follow_status == 0}}" class="m-icon" @tap="collectTap({{index}})"></image>
-                <image src="../../images/index/icon-look-gather.png" wx:if="{{item.follow_status == 1}}" class="m-icon" @tap="collectTap({{index}})"></image>
-            </view>
-        </view>
+<!--        <view class="m-one-person m-flex-between" wx:for="{{user_list}}" wx:key="{{index}}">-->
+<!--            <view class="m-user-box">-->
+<!--                <image src="{{item.usheader}}" class="m-user-head"></image>-->
+<!--                <span class="m-user-name">{{item.usname}}</span>-->
+<!--                <span class="m-user-label">{{item.uslevel}}</span>-->
+<!--            </view>-->
+<!--            <view>-->
+<!--                <image src="../../images/index/icon-chat.png" class="m-icon"></image>-->
+<!--                <image src="../../images/index/icon-add-look-active.png" wx:if="{{item.follow_status == 2}}" class="m-icon" @tap="collectTap({{index}})"></image>-->
+<!--                <image src="../../images/index/icon-look-done.png" wx:if="{{item.follow_status == 0}}" class="m-icon" @tap="collectTap({{index}})"></image>-->
+<!--                <image src="../../images/index/icon-look-gather.png" wx:if="{{item.follow_status == 1}}" class="m-icon" @tap="collectTap({{index}})"></image>-->
+<!--            </view>-->
+<!--        </view>-->
+        <user :user_list.sync="user_list"></user>
       </scroll-view>
       <view class="m-no-data" wx:if="{{user_list.length == 0}}">暂无参与人员</view>
     </view>
@@ -63,13 +37,14 @@
     import wepy from 'wepy';
     import api from '../../api/api';
     import tip from '../../utils/tip';
+    import User from '../../components/common/user';
     export default class joinNum extends wepy.page {
         config = {
             navigationBarTitleText: '参与人数',
             enablePullDownRefresh: true
         }
         components = {
-
+          user:User
         }
         data = {
           plid:'',
@@ -93,7 +68,6 @@
           success: function (resule){
             tip.loaded();
             if(resule.data.status == 200){
-              console.log(resule.data)
               if(that.page_info.page_num >1){
                 that.user_list =  that.user_list.concat(resule.data.data);
               }else{

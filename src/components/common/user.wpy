@@ -1,0 +1,116 @@
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../../styles/common.less";
+  .m-one-person{
+    padding: 20rpx 30rpx;
+    border-bottom: 1px solid @border-color;
+    .m-icon{
+      display: inline-block;
+      width: 40rpx;
+      height: 40rpx;
+      margin-left: 30rpx;
+    }
+    .m-user-box{
+      .flex(row,flex-start,flex-start);
+      .m-user-head{
+        display: inline-block;
+        width: 80rpx;
+        height: 80rpx;
+        border-radius: 50%;
+      }
+      .m-user-name{
+        display: inline-block;
+        margin: 0 20rpx;
+        font-weight: 500;
+        max-width: 280rpx;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+      .m-user-label{
+        display: inline-block;
+        padding: 0 10rpx;
+        border: 1px solid @common-color;
+        color: @common-color;
+      }
+    }
+  }
+</style>
+<template>
+    <view>
+      <view class="m-one-person m-flex-between" wx:for="{{user_list}}" wx:key="{{index}}">
+        <view class="m-user-box">
+          <image src="{{item.usheader}}" class="m-user-head"></image>
+          <span class="m-user-name">{{item.usname}}</span>
+          <span class="m-user-label">{{item.uslevel}}</span>
+        </view>
+        <view>
+          <image src="../../images/index/icon-chat.png" class="m-icon"></image>
+          <image src="../../images/index/icon-add-look-active.png" wx:if="{{item.follow_status == 2}}" class="m-icon" @tap="collectTap({{index}})"></image>
+          <image src="../../images/index/icon-look-done.png" wx:if="{{item.follow_status == 0}}" class="m-icon" @tap="collectTap({{index}})"></image>
+          <image src="../../images/index/icon-look-gather.png" wx:if="{{item.follow_status == 1}}" class="m-icon" @tap="collectTap({{index}})"></image>
+        </view>
+      </view>
+
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import api from '../../api/api';
+  import tip from '../../utils/tip';
+  export default class user extends wepy.component {
+    config = {
+      navigationBarTitleText: ''
+    };
+    components = {};
+    data = {};
+    props = {
+      user_list:{
+        type:Array,
+        default:[],
+        twoWay:true
+      }
+    }
+    postData(id,index){
+      let that = this;
+      wx.request({
+        url: api.collect + '?token=' +wx.getStorageSync('token'),
+        method:"post",
+        data:{
+          uclcotype:2,
+          uclcollection:id
+        },
+        success: function (resule){
+          tip.loaded();
+          if(resule.data.status == 200){
+            if(that.user_list[index].follow_status == 0){
+              that.user_list[index].follow_status = 2
+            }else if(that.user_list[index].follow_status == 1){
+              that.user_list[index].follow_status = 2
+            }else if(that.user_list[index].follow_status == 2){
+              that.user_list[index].follow_status = 0
+            }
+
+            that.$apply();
+          }else{
+            wx.showToast({
+              title: resule.data.message,
+              icon: 'none',
+              duration: 2000
+            })
+
+          }
+        }
+      })
+    }
+    onLoad(options) {
+      console.log(this.user_list)
+    }
+
+    methods = {
+      collectTap(index){
+        this.postData(this.user_list[index].usid,index)
+      },
+    };
+  }
+</script>

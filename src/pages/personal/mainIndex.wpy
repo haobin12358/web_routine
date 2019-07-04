@@ -1,0 +1,134 @@
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../../styles/common.less";
+  .m-mainIndex{
+    .m-mainIndex-top{
+      position: relative;
+      width: 100%;
+      height: 250rpx;
+      box-sizing: border-box;
+      .m-personal-bg{
+        width: 100%;
+        height: 250rpx;
+        position: absolute;
+        top:0;
+        left:0;
+      }
+      .m-top-content{
+        position: absolute;
+        top:0;
+        left:0;
+        width: 100%;
+        height: 250rpx;
+        .flex-row(space-around);
+        .m-user-info{
+          text-align: center;
+          .m-user-head{
+            width: 100rpx;
+            height: 100rpx;
+          }
+        }
+        .m-num-box{
+          .flex-row(space-around);
+          /*width:400rpx;*/
+          text-align: center;
+          .m-col{
+            &.active{
+              color: #fff;
+            }
+            .m-num{
+              font-size: 40rpx;
+              font-weight: 500;
+            }
+          }
+          .m-line{
+            height: 40rpx;
+            width: 1px;
+            background-color: #000;
+            margin: 0 60rpx;
+          }
+        }
+      }
+    }
+    .m-mainIndex-content{
+      .m-select-box{
+        .flex-row(space-around);
+        padding: 30rpx 0;
+      }
+    }
+  }
+
+</style>
+<template>
+    <view class="m-mainIndex">
+      <view class="m-mainIndex-top">
+        <image src="../../images/personal/personal-bg.png" class="m-personal-bg"></image>
+        <view class="m-top-content">
+          <view class="m-user-info">
+            <image src="" class="m-user-head"></image>
+            <view class="m-user-name">12e1</view>
+            <view class="m-user-label">212123</view>
+          </view>
+          <view class="m-num-box">
+            <view class="m-col active">
+              <view class="m-num">22</view>
+              <view>关注</view>
+            </view>
+            <view class="m-line"></view>
+            <view class="m-col">
+              <view class="m-num">22</view>
+              <view>粉丝</view>
+            </view>
+            <view class="m-line"></view>
+            <view class="m-col">
+              <view class="m-num">22</view>
+              <view>发布</view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="m-mainIndex-content">
+        <view class="m-select-box">
+          <view class="m-select-one">
+            <span>区域</span>
+            <image src="../../images/common/icon-down-solid.png" class="m-down-solid"></image>
+          </view>
+          <view class="m-select-one">
+            <span>区域</span>
+            <image src="../../images/common/icon-down-solid.png" class="m-down-solid"></image>
+          </view>
+          <view class="m-select-one">
+            <span>区域</span>
+            <image src="../../images/common/icon-down-solid.png" class="m-down-solid"></image>
+          </view>
+        </view>
+        <circle></circle>
+
+        <user></user>
+      </view>
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import api from '../../api/api';
+  import tip from '../../utils/tip';
+  import Circle from '../../components/common/circle';
+  import User from '../../components/common/user';
+  export default class mainIndex extends wepy.page {
+    config = {
+      navigationBarTitleText: '个人主页',
+      enablePullDownRefresh: true
+    };
+    components = {
+      circle:Circle,
+      user:User
+    };
+    data = {};
+
+    onLoad(options) {
+
+    }
+
+    methods = {};
+  }
+</script>

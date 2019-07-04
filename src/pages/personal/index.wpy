@@ -87,7 +87,7 @@
                 <view>
                     <span class="m-user-label">游客</span>
                 </view>
-                <view class="m-flex-end">
+                <view class="m-flex-end" @tap="changeRoute('/pages/personal/mainIndex')">
                     <span class="m-grey">主页</span>
                     <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>
                 </view>
@@ -168,9 +168,9 @@
         onLoad(){
         }
         methods = {
-            changeRoute(){
+            changeRoute(v){
                 wx.navigateTo({
-                    url: '/pages/personal/orderList'
+                    url: v
                 });
             },
             cancelTel(){

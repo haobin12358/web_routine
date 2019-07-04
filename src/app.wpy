@@ -53,6 +53,7 @@
         'pages/index/editStrategy',
         'pages/index/editTravelNote',
         'pages/index/timeIndex',
+        'pages/personal/mainIndex',
       ],
       permission: {
         "scope.userLocation": {
