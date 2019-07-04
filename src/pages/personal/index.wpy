@@ -109,7 +109,7 @@
                     </view>
                     <span class="m-grey">¥199.90</span>
                 </li>
-                <li>
+                <li @tap="changeRoute('/pages/personal/taskIndex')">
                     <view class="m-flex-start">
                         <image src="{{img_src}}personal/icon-task.png" class="m-icon"></image>
                         <span>任务中心</span>
@@ -125,7 +125,7 @@
         </view>
         <view class="m-personal-item">
             <ul >
-                <li>
+                <li @tap="getCell">
                     <view class="m-flex-start">
                         <image src="{{img_src}}personal/icon-service.png" class="m-icon"></image>
                         <span>客服中心</span>
@@ -140,14 +140,7 @@
             </ul>
         </view>
 
-        <view class="m-tel-modal" wx:if="{{show_tel}}">
-            <view class="m-modal-state">
-                <view class="m-tel-content">
-                    <view class="m-tel" @tap="call({{item}})" wx:for="{{tel_data}}" wx:for-index="index" wx:key="index"  wx:for-item="item">{{item.custom_telphone}}</view>
-                </view>
-                <view class="m-btn" @tap="cancelTel">取消</view>
-            </view>
-        </view>
+
     </view>
 </template>
 <script >
@@ -162,8 +155,7 @@
         data = {
             img_src: api.img_src,
             user_info: {},
-            show_tel:false,
-            tel_data:[]
+            all_phone:['12314241']
         }
         onLoad(){
         }
@@ -173,14 +165,47 @@
                     url: v
                 });
             },
-            cancelTel(){
-                this.show_tel = false;
-            },
-            call(item){
-                wx.makePhoneCall({
-                    phoneNumber: item.custom_telphone // 仅为示例，并非真实的电话号码
-                })
-            },
+          getCell(){
+            let that = this;
+                //
+                // wx.request({
+                //   url: api.help + '?token=' +wx.getStorageSync('token'),
+                //   method:"post",
+                //   data:{
+                //     latitude:res.latitude,
+                //     longitude:res.longitude
+                //   },
+                //   success: function (resule){
+                //     tip.loaded();
+                //     if(resule.data.status == 200){
+                //       that.all_phone = resule.data.data.phone;
+                      wx.showActionSheet({
+                        itemList: that.all_phone,
+                        success (res) {
+                          // that.call(res.tapIndex);
+                          wx.makePhoneCall({
+                            phoneNumber: that.all_phone[res.tapIndex]
+                          })
+                        },
+                        fail (res) {
+                          console.log(res.errMsg)
+                        }
+                      });
+                //       that.$apply();
+                //     }else{
+                //       wx.showToast({
+                //         title: resule.data.message,
+                //         icon: 'none',
+                //         duration: 2000
+                //       })
+                //
+                //     }
+                //   }
+                // })
+
+
+
+          },
 
         }
 

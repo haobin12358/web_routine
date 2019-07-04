@@ -60,6 +60,7 @@
         'pages/personal/history',
         'pages/personal/evaluate',
         'pages/personal/identification',
+        'pages/personal/taskIndex',
       ],
       permission: {
         "scope.userLocation": {
