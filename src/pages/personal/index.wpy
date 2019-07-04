@@ -96,7 +96,7 @@
 
         <view class="m-personal-item">
             <ul >
-                <li>
+                <li @tap="changeRoute('/pages/personal/personalInfo')">
                     <view class="m-flex-start">
                         <image src="{{img_src}}personal/icon-info.png" class="m-icon"></image>
                         <span>个人信息</span>

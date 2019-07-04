@@ -1,0 +1,118 @@
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../../styles/common";
+
+  .m-myWallet{
+    .m-myWallet-top{
+      position: relative;
+      width: 100%;
+      height: 250rpx;
+      .m-personal-bg{
+        position: absolute;
+        top:0;
+        left: 0;
+        width: 100%;
+        height: 250rpx;
+      }
+      .m-top-content{
+        position: absolute;
+        top:0;
+        left: 0;
+        width: 100%;
+        height: 250rpx;
+        padding: 40rpx;
+        box-sizing: border-box;
+        .flex-col(space-between);
+        .m-price{
+          font-weight: 500;
+          font-size: 40rpx;
+        }
+        .m-btn{
+          width:200rpx;
+          height: 50rpx;
+          line-height: 50rpx;
+          text-align: center;
+          border: 1px solid #000;
+        }
+      }
+    }
+    .m-select-box{
+      padding: 40rpx;
+      border-bottom: 10rpx solid #f4f4f4;
+      .flex-row(space-between);
+      .m-time{
+        padding: 4rpx 20rpx;
+        background-color: #EBEBEB;
+        border-radius: 50rpx;
+      }
+      .m-total-price{
+        color: #EB0000;
+        font-weight: 400;
+      }
+    }
+    .m-myWallet-list{
+      .m-row{
+        padding: 30rpx 40rpx;
+        border-bottom: 1px solid @border-color;
+        .m-grey{
+          margin-top: 20rpx;
+        }
+      }
+    }
+  }
+
+</style>
+<template>
+    <view class="m-myWallet">
+      <view class="m-myWallet-top">
+        <image src="../../images/personal/personal-bg.png" class="m-personal-bg"></image>
+        <view class="m-top-content">
+          <view>账户余额</view>
+          <view >¥ <span class="m-price">199</span></view>
+          <view class="m-btn">体现</view>
+        </view>
+      </view>
+      <view class="m-select-box">
+        <span>消费历史</span>
+        <view class="m-time">
+          <span>本月</span>
+          <image src="../../images/common/icon-down-solid.png" class="m-down-solid"></image>
+        </view>
+        <span class="m-total-price">总计:¥3100</span>
+      </view>
+
+      <view class="m-myWallet-list">
+        <view class="m-row">
+          <view class="m-flex-between">
+            <span>杭州-富阳一日游</span>
+            <span>¥10.00</span>
+          </view>
+          <view class="m-grey">2018-01-20  14:12:31</view>
+        </view>
+        <view class="m-row">
+          <view class="m-flex-between">
+            <span>杭州-富阳一日游</span>
+            <span>¥10.00</span>
+          </view>
+          <view class="m-grey">2018-01-20  14:12:31</view>
+        </view>
+      </view>
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class myWallet extends wepy.page {
+    config = {
+      navigationBarTitleText: ''
+    };
+    components = {};
+    data = {};
+
+    onLoad(options) {
+
+    }
+
+    methods = {};
+  }
+</script>
