@@ -102,7 +102,7 @@
                         <span>个人信息</span>
                     </view>
                 </li>
-                <li>
+                <li @tap="changeRoute('/pages/personal/myWallet')">
                     <view class="m-flex-start">
                         <image src="{{img_src}}personal/icon-wallet.png" class="m-icon"></image>
                         <span>我的钱包</span>

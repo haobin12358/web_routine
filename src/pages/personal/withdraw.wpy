@@ -1,0 +1,67 @@
+<style scoped lang="less" rel="stylesheet/less">
+
+.m-withdraw{
+  .m-top{
+    padding: 30rpx 60rpx;
+    border-bottom: 10rpx solid #f4f4f4;
+    .m-withdraw-input{
+      display: flex;
+      flex-flow: row;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 93rpx;
+      .m-input{
+        font-size: 48rpx;
+        font-weight: 500;
+      }
+      .m-icon-delete{
+        width: 30rpx;
+        height: 30rpx;
+      }
+      input::-webkit-input-placeholder {
+           color: #aab2bd;
+           font-size: 28rpx;
+      }
+    }
+  }
+  .m-alert{
+    padding: 30rpx 60rpx;
+
+  }
+}
+</style>
+<template>
+    <view class="m-withdraw">
+      <view class="m-top">
+        <view class="m-grey">提现金额</view>
+        <view class="m-withdraw-input">
+          <span>¥</span>
+          <input type="text" class="m-input m-common" placeholder="请输入金额"/>
+          <image src="../../images/common/icon-delete.png" class="m-icon-delete"></image>
+        </view>
+      </view>
+      <view class="m-alert m-grey">
+        <view>提示：</view>
+        <view>提交申请后，提现金额将在3个工作日内到微信钱包。</view>
+      </view>
+      <view class="m-foot-btn m-one">提交申请</view>
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class withdraw extends wepy.page {
+    config = {
+      navigationBarTitleText: '我的钱包'
+    };
+    components = {};
+    data = {};
+
+    onLoad(options) {
+
+    }
+
+    methods = {};
+  }
+</script>
