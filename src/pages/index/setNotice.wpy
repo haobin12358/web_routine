@@ -9,7 +9,7 @@
 <template>
     <view  class="m-setNotice">
       <view class="m-enterLabel">
-        <input type="text" value="{{label}}" @change="inputChange" placeholder="{{placeholder}}" />
+        <textarea value="{{nocontent}}" data-name="nocontent" bindinput="inputChange"  auto-height placeholder="{{placeholder}}" ></textarea>
       </view>
       <view class="m-foot-btn m-one" @tap="saveLabel">发布公告</view>
 
@@ -18,6 +18,8 @@
 
 <script>
   import wepy from 'wepy';
+  import api from '../../api/api';
+  import tip from '../../utils/tip';
 
   export default class setNotice extends wepy.page {
     config = {
@@ -26,11 +28,41 @@
     };
     components = {};
     data = {
-      label:'',
+      nocontent:'',
       all_data:null,
       placeholder:'请输入公告内容',
       plid:''
     };
+    postData(status){
+      let that = this;
+      tip.loading();
+
+      wx.request({
+        url: api.create_notice + '?token=' +wx.getStorageSync('token'),
+        method:"post",
+        data:{
+          plid:that.plid,
+          nocontent:that.nocontent
+        },
+        success: function (resule){
+          tip.loaded();
+          if(resule.data.status == 200){
+            tip.success('发布成功');
+            wx.navigateTo({
+              url: '/pages/index/enterTeam'
+            });
+          }else{
+            wx.showToast({
+              title: resule.data.message,
+              icon: 'none',
+              duration: 2000
+            })
+            that.$apply();
+          }
+
+        }
+      })
+    }
 
     onLoad(options) {
       if(options.plid){
@@ -42,10 +74,10 @@
       saveLabel(){
         let that = this;
 
-
+        that.postData();
       },
       inputChange(e){
-        this.label = e.detail.value;
+        this.nocontent = e.detail.value;
         this.$apply();
       }
     };

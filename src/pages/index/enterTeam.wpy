@@ -24,30 +24,23 @@
 </style>
 <template>
     <view class="m-enterTeam">
-        <view class="m-notice">
+        <view class="m-notice" wx:if="{{notice_list.nocontent}}">
             <view class="m-bd-bottom m-flex-between">
                 <span class="m-grey">群公告</span>
-                <view class="m-grey m-flex-end">
-                    <span>查看更多</span>
-                    <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>
-                </view>
+<!--                <view class="m-grey m-flex-end">-->
+<!--                    <span>查看更多</span>-->
+<!--                    <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>-->
+<!--                </view>-->
             </view>
             <view class="m-bd-bottom">
                 <view>
-                    群公告内容群公告内容群公告内容群公告内容群公告内容群公告内容群公告内容群公告内容群公告内容。
+                    {{notice_list.nocontent}}
                 </view>
                 <view class="m-grey">
-                    2019/06/05 19:20
+                    {{notice_list.createtime}}
                 </view>
             </view>
-            <view class="m-bd-bottom">
-                <view>
-                    群公告内容群公告内容群公告内容群公告内容群公告内容群公告内容群公告内容群公告内容群公告内容。
-                </view>
-                <view class="m-grey">
-                    2019/06/05 19:20
-                </view>
-            </view>
+
         </view>
         <view class="m-map-box">
             <view class="m-grey m-bd-bottom">成员位置</view>
@@ -69,6 +62,7 @@
     import wepy from 'wepy';
     import circle from '../../components/common/circle';
     import api from '../../api/api';
+    import tip from '../../utils/tip';
     export default class enterTeam extends wepy.page {
         config = {
             navigationBarTitleText: '进入团队',
@@ -107,11 +101,57 @@
                     height: 50
                 },
                 clickable: true
-            }]
+            }],
+          notice_list:null
         }
+      getId(){
+        let that = this;
+        tip.loading();
+        wx.request({
+          url: api.get_current_play + '?token=' +wx.getStorageSync('token'),
+          method:"get",
+          data:{},
+          success: function (resule){
+            if(resule.data.status == 200){
+              that.plid = resule.data.data.plid;
+              that.$apply();
+              that.getNotice();
+            }else{
+              wx.showToast({
+                title: resule.data.message,
+                icon: 'none',
+                duration: 2000
+              })
 
+            }
+          }
+        })
+      }
+      getNotice(id){
+        let that = this;
+        tip.loading();
+        wx.request({
+          url: api.get_notice + '?token=' +wx.getStorageSync('token'),
+          data: {
+            plid:id || that.plid
+          },
+          header: {
+            'content-type': 'application/json' // 默认值
+          },
+          success: function(res) {
+            let data = res.data.data;
+            console.log(data)
+            that.notice_list = data.data;
+            that.$apply();
+            tip.loaded();
+          },
+          error:function (error) {
+            tip.loaded();
+          }
+        })
+      }
         onLoad(options) {
-
+          this.getId();
         }
 
         methods = {
