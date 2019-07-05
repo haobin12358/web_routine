@@ -30,13 +30,14 @@
             from:'',
             location_list:[],
             all_data:null,
-            placeholder:''
+            placeholder:'',
+           page:''
         }
 
         onLoad(options) {
-            // if(options.formdata){
-            //     this.form_data = JSON.parse(options.formdata);
-            // }
+            if(options.page){
+                this.page = options.page;
+            }
             if(options.data){
                 this.all_data = JSON.parse(decodeURIComponent(options.data));
             }
@@ -73,9 +74,16 @@
                         // wx.navigateTo({
                         //     url: '/pages/index/editActivity?enter_list=' + JSON.stringify(that.enter_list) + '&form_data='+JSON.stringify(that.form_data)
                         // });
-                        wx.navigateTo({
-                            url: '/pages/index/editActivity?data='+encodeURIComponent(JSON.stringify(that.all_data))
-                        });
+                      // if(that.page == 'editStrategy'){
+                      //   wx.navigateTo({
+                      //     url: '/pages/index/editStrategy?data='+encodeURIComponent(JSON.stringify(that.all_data))
+                      //   });
+                      // }else{
+                      //   wx.navigateTo({
+                      //     url: '/pages/index/editActivity?data='+encodeURIComponent(JSON.stringify(that.all_data))
+                      //   });
+                      // }
+                      //
                         break;
                     case 'recommend':
 
@@ -83,12 +91,12 @@
                             name:this.label,
                             active:true
                         });
+                        // // wx.navigateTo({
+                        // //     url: '/pages/index/editActivity?recommend_list=' + JSON.stringify(that.recommend_list) + '&form_data='+JSON.stringify(that.form_data)
+                        // // });
                         // wx.navigateTo({
-                        //     url: '/pages/index/editActivity?recommend_list=' + JSON.stringify(that.recommend_list) + '&form_data='+JSON.stringify(that.form_data)
+                        //     url: '/pages/index/editActivity?data='+encodeURIComponent(JSON.stringify(that.all_data))
                         // });
-                        wx.navigateTo({
-                            url: '/pages/index/editActivity?data='+encodeURIComponent(JSON.stringify(that.all_data))
-                        });
                         break;
                     case 'location':
 
@@ -99,12 +107,21 @@
                         // wx.navigateTo({
                         //     url: '/pages/index/editActivity?location_list=' + JSON.stringify(that.location_list) + '&form_data='+JSON.stringify(that.form_data)
                         // });
-                        wx.navigateTo({
-                            url: '/pages/index/editActivity?data='+encodeURIComponent(JSON.stringify(that.all_data))
-                        });
+                        // wx.navigateTo({
+                        //     url: '/pages/index/editActivity?data='+encodeURIComponent(JSON.stringify(that.all_data))
+                        // });
                         break;
 
                 }
+              if(that.page == 'editStrategy'){
+                wx.navigateTo({
+                  url: '/pages/index/editStrategy?data='+encodeURIComponent(JSON.stringify(that.all_data))
+                });
+              }else{
+                wx.navigateTo({
+                  url: '/pages/index/editActivity?data='+encodeURIComponent(JSON.stringify(that.all_data))
+                });
+              }
 
             },
             inputChange(e){

@@ -1,0 +1,139 @@
+<style scoped lang="less" rel="stylesheet/less">
+  .m-scenic-box {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 10000;
+    background-color: rgba(0, 0, 0, 0.16);
+
+    .m-state {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 600rpx;
+      background-color: #fff;
+      text-align: center;
+      padding: 30rpx;
+      box-sizing: border-box;
+    }
+
+    /*overflow: auto;*/
+
+    input {
+      width: 400;
+      height: 40rpx;
+      line-height: 40rpx;
+      margin: 30rpx 0;
+    }
+
+  }
+
+</style>
+<template>
+    <view>
+      <span class="m-grey" @tap="showTap">{{scenic_name || '请输入景区'}}</span>
+      <view class="m-scenic-box" wx:if="{{show_scenic}}">
+        <view class="m-state">
+          <view class="m-flex-between">
+            <span class="m-grey" @tap="cancelTap">取消</span>
+            <span @tap="sureTap">确定</span>
+          </view>
+          <input type="text" placeholder="请输入景区" value="{{name}}" data-name="name" bindinput="inputChange"/>
+          <picker-view indicator-style="height: 50rpx;" style="width: 100%; height: 300rpx;" value="{{scenic_index}}" bindchange="bindChange">
+            <picker-view-column>
+              <view wx:for="{{scenic_list}}" wx:key="{{index}}" style="line-height: 80rpx;">{{item.sspname}}</view>
+            </picker-view-column>
+          </picker-view>
+        </view>
+
+      </view>
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import tip from '../../utils/tip';
+  import api from '../../api/api';
+  export default class IndexIndex extends wepy.component {
+    config = {
+      navigationBarTitleText: ''
+    };
+    components = {};
+    data = {
+      show_scenic:false,
+      scenic_list:[],
+      scenic_index:[],
+      name:''
+    };
+    props={
+      scenic_name:{
+        type:String,
+        default:'',
+        twoWay:true
+      }
+    }
+    getScenic(){
+      let that = this;
+      wx.request({
+        url: api.scenicspot_list + '?token=' +wx.getStorageSync('token'),
+        data: {
+          page_num: 1,
+          page_size: 10000,
+          option:'search',
+          sspname:that.name
+        },
+        header: {
+          'content-type': 'application/json' // 默认值
+        },
+        success: function(res) {
+          that.scenic_list = res.data.data;
+          that.$apply();
+        },
+        error:function (error) {
+
+        }
+      })
+    }
+    onLoad(options) {
+
+    }
+
+    methods = {
+      cancelTap(){
+        this.show_scenic = false;
+        this.$apply();
+      },
+      sureTap(){
+        this.show_scenic = false;
+        this.$apply();
+        this.$emit('sureTap',this.name);
+      },
+      showTap(){
+        this.show_scenic = true;
+        this.$apply();
+      },
+      inputChange(e){
+        let name = e.currentTarget.dataset.name;
+        this[name] = e.detail.value;
+        this.$apply();
+        let time;
+        let that =this;
+        if(time){
+          clearTimeout(time);
+        }else{
+          time = setTimeout(function() {
+            that.getScenic();
+          },1000)
+        }
+      },
+      bindChange(e){
+        let index = e.detail.value[0];
+        this.name = this.scenic_list[index].sspname;
+        this.$apply();
+      },
+    };
+  }
+</script>

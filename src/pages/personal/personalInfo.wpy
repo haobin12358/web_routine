@@ -33,7 +33,7 @@
       <view class="m-personalInfo-top">
         <image src="" class="m-user-head"></image>
         <span class="m-user-name">123</span>
-        <image src="../../images/index/icon-edit.png" class="m-icon-edit"></image>
+        <image src="{{img_src}}index/icon-edit.png" class="m-icon-edit"></image>
       </view>
       <view class="m-row">
         <span class="m-grey">基本信息</span>
@@ -42,14 +42,14 @@
         <span class="m-label">生日</span>
         <view class="m-flex-end">
           <span >1999/09/09</span>
-          <image src="../../images/common/icon-more.png" class="m-icon-more"></image>
+          <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>
         </view>
       </view>
       <view class="m-row">
         <span class="m-label">地区</span>
         <view class="m-flex-end">
           <span >浙江-杭州</span>
-          <image src="../../images/common/icon-more.png" class="m-icon-more"></image>
+          <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>
         </view>
       </view>
       <view class="m-row">
@@ -73,13 +73,16 @@
 
 <script>
   import wepy from 'wepy';
+  import api from '../../api/api';
 
   export default class personalInfo extends wepy.page {
     config = {
       navigationBarTitleText: '个人信息'
     };
     components = {};
-    data = {};
+    data = {
+      img_src:api.img_src
+    };
 
     onLoad(options) {
 

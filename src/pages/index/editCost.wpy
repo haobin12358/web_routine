@@ -81,7 +81,7 @@
         <view class="m-title m-grey">费用明细</view>
         <view class="m-one-cost " wx:for="{{cost_list}}" wx:key="{{index}}" wx:if="{{!item.delete}}">
                 <view class="m-cost-info">
-                    <image src="../../images/common/icon-cut.png" class="m-cut-add-icon" @tap="cutCost({{index}})"></image>
+                    <image src="{{img_src}}common/icon-cut.png" class="m-cut-add-icon" @tap="cutCost({{index}})"></image>
                     <view class="m-row-box">
                         <view class="m-one-cost-row">
                             <span>{{cost_name}}名称</span>
@@ -103,7 +103,7 @@
 <!--                <view class="m-delete-btn">删除</view>-->
             </view>
         <view class="m-flex-start m-add-box">
-            <image src="../../images/common/icon-add.png" class="m-cut-add-icon" @tap="addCost"></image>
+            <image src="{{img_src}}common/icon-add.png" class="m-cut-add-icon" @tap="addCost"></image>
             <span>添加费用</span>
         </view>
         <view class="m-foot-btn m-one" @tap="saveCost">保存</view>
@@ -122,6 +122,7 @@
         }
         components = {}
         data = {
+          img_src:api.img_src,
             show_radio:false,
             cost_list:[],
             cost_name:'费用',

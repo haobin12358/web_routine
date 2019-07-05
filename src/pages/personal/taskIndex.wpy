@@ -90,7 +90,7 @@
 <template>
     <view class="m-taskIndex">
       <view class="m-taskIndex-top">
-        <image src="../../images/personal/personal-bg.png" class="m-personal-bg"></image>
+        <image src="{{img_src}}personal/personal-bg.png" class="m-personal-bg"></image>
         <view class="m-top-content">
           <view class="m-flex-end"><span>规则</span></view>
           <view class="m-flex-center">
@@ -119,13 +119,14 @@
       </view>
 
 
-      <image src="../../images/personal/icon-select-award.png" class="m-fix-img"></image>
-      <image src="../../images/personal/icon-select-task.png" class="m-fix-img m-two"></image>
+      <image src="{{img_src}}personal/icon-select-award.png" class="m-fix-img"></image>
+      <image src="{{img_src}}personal/icon-select-task.png" class="m-fix-img m-two"></image>
     </view>
 </template>
 
 <script>
   import wepy from 'wepy';
+  import api from '../../api/api';
 
   export default class taskIndex extends wepy.page {
     config = {
@@ -133,7 +134,9 @@
       enablePullDownRefresh: true
     };
     components = {};
-    data = {};
+    data = {
+      img_src:api.img_src
+    };
 
     onLoad(options) {
 

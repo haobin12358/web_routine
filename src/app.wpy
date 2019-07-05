@@ -52,6 +52,7 @@
         'pages/travel/scenicDetail',
         'pages/index/editStrategy',
         'pages/index/editTravelNote',
+        'pages/index/editEssay',
         'pages/index/timeIndex',
         'pages/personal/mainIndex',
         'pages/personal/personalInfo',

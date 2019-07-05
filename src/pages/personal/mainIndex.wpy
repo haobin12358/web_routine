@@ -61,7 +61,7 @@
 <template>
     <view class="m-mainIndex">
       <view class="m-mainIndex-top">
-        <image src="../../images/personal/personal-bg.png" class="m-personal-bg"></image>
+        <image src="{{img_src}}personal/personal-bg.png" class="m-personal-bg"></image>
         <view class="m-top-content">
           <view class="m-user-info">
             <image src="" class="m-user-head"></image>
@@ -90,15 +90,15 @@
         <view class="m-select-box">
           <view class="m-select-one">
             <span>区域</span>
-            <image src="../../images/common/icon-down-solid.png" class="m-down-solid"></image>
+            <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
+        </view>
+          <view class="m-select-one">
+            <span>区域</span>
+            <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
           </view>
           <view class="m-select-one">
             <span>区域</span>
-            <image src="../../images/common/icon-down-solid.png" class="m-down-solid"></image>
-          </view>
-          <view class="m-select-one">
-            <span>区域</span>
-            <image src="../../images/common/icon-down-solid.png" class="m-down-solid"></image>
+            <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
           </view>
         </view>
         <circle></circle>
@@ -123,7 +123,9 @@
       circle:Circle,
       user:User
     };
-    data = {};
+    data = {
+      img_src:api.img_src
+    };
 
     onLoad(options) {
 

@@ -37,7 +37,7 @@
         <view class="m-withdraw-input">
           <span>¥</span>
           <input type="text" class="m-input m-common" placeholder="请输入金额"/>
-          <image src="../../images/common/icon-delete.png" class="m-icon-delete"></image>
+          <image src="{{img_src}}common/icon-delete.png" class="m-icon-delete"></image>
         </view>
       </view>
       <view class="m-alert m-grey">
@@ -50,13 +50,16 @@
 
 <script>
   import wepy from 'wepy';
+  import api from '../../api/api';
 
   export default class withdraw extends wepy.page {
     config = {
       navigationBarTitleText: '我的钱包'
     };
     components = {};
-    data = {};
+    data = {
+      img_src:api.img_src
+    };
 
     onLoad(options) {
 

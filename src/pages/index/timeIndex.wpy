@@ -34,7 +34,7 @@
           <image src="{{img_src}}index/time-strategy.png" class="m-icon"></image>
           <view>攻略</view>
         </view>
-        <view class="m-one-icon">
+        <view class="m-one-icon" @tap="changeRoute('/pages/index/editEssay')">
           <image src="{{img_src}}index/time-jot.png" class="m-icon"></image>
           <view>随记</view>
         </view>

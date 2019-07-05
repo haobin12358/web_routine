@@ -102,13 +102,13 @@
             <picker mode="date" value="{{createtime}}" start="2018-09-01"  bindchange="bindDateChange">
                 <view class="m-time-btn">
                     <span>{{createtime || '日期'}}</span>
-                    <image src="../../images/common/icon-down-solid.png" class="m-down-solid"></image>
+                    <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
                 </view>
             </picker>
             <picker bindchange="bindPickerChange" value="{{index}}" range-key="name" range="{{array}}">
                 <view class="m-flex-end">
                     <span>{{array[index].name}}</span>
-                    <image src="../../images/common/icon-down-solid.png" class="m-down-solid"></image>
+                    <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
                 </view>
             </picker>
 
@@ -160,6 +160,7 @@
         }
         components = {}
         data = {
+          img_src:api.img_src,
             plstatus:'',
             createtime:'',
             data_list:[],

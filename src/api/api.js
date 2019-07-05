@@ -29,12 +29,13 @@ const help = api2 +'play/help';//求救
 const signin = api2 +'play/signin'; //用户签到
 const get_enter_user = api2 +'play/get_enter_user';//获取活动参与人
 const collect = api2 +'collection/collect';//用户关注
-
+const add_travelrecord = api2 + 'scenicspot/add_travelrecord';//发布游记/攻略/随笔
 
 const scenicspot_list = api2 +'scenicspot/list';//获取景区list
 const scenicspot_get = api2 +'scenicspot/get';//获取景区详情
 
-
+const upload = api2 + 'file/upload';//上传图片
+const batch_upload = api2 + 'file/batch_upload';//批量上传
 
 
 
@@ -46,6 +47,6 @@ const img_src = '../../images/';
 module.exports = {
   api,img_src,login,bind_phone,set_cost,set_insurance,scenicspot_list,scenicspot_get,set_play,get_cost,get_insurance,get_play,
     get_play_list,get_gather,set_gather,get_playrequire,play_join,identity,set_signin,get_signin,get_current_play,help,signin,
-  get_enter_user,collect
+  get_enter_user,collect,add_travelrecord,upload,batch_upload
 
 }

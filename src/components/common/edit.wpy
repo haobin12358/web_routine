@@ -74,6 +74,10 @@
           context:{
               type:String,
               default:''
+          },
+          type:{
+            type:String,
+            default:''
           }
         }
         data = {
@@ -123,37 +127,40 @@
             insertImage() {
                 const that = this
                 wx.chooseImage({
-                    count: 1,
+                    count: 9,
                     sizeType: ['original', 'compressed'],
                     sourceType: ['album', 'camera'],
                     success (res) {
                         // tempFilePath可以作为img标签的src属性显示图片
                         const tempFilePaths = res.tempFilePaths;
-                      wx.uploadFile({
-                        url: 'https://play.bigxingxing.com/api/v2/file/upload', //仅为示例，非真实的接口地址
-                        filePath: tempFilePaths[0],
-                        name: 'file',
-                        formData: {
-                          token:wx.getStorageSync('token'),
-                          type:'play'
-                        },
-                        success (res1){
-                          // const data = res.data
-                          let data = JSON.parse(res1.data);
-                          //do something
-                          that.editorCtx.insertImage({
-                            src: api.api + data.data,
-                            data: {
-                              id: '',
-                              role: ''
-                            },
-                            success: function () {
-                              console.log('insert image success')
-                            }
-                          })
-                          that.$apply();
-                        }
-                      })
+                      for(let i=0;i<tempFilePaths.length;i++){
+                        wx.uploadFile({
+                          url: api.upload, //仅为示例，非真实的接口地址
+                          filePath: tempFilePaths[i],
+                          name: 'file',
+                          formData: {
+                            token:wx.getStorageSync('token'),
+                            type: that.type
+                          },
+                          success (res1){
+                            // const data = res.data
+                            let data = JSON.parse(res1.data);
+                            //do something
+                            that.editorCtx.insertImage({
+                              src: api.api + data.data,
+                              data: {
+                                id: '',
+                                role: ''
+                              },
+                              success: function () {
+                                console.log('insert image success')
+                              }
+                            })
+                            that.$apply();
+                          }
+                        })
+                      }
+
 
                     }
                 })

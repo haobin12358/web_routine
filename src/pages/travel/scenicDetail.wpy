@@ -101,7 +101,7 @@
                 <span class="m-border-back">推荐攻略</span>
                 <view class="m-flex-end">
                     <span class="m-grey">更多攻略</span>
-                    <image src="../../images/common/icon-more.png" class="m-icon-more"></image>
+                    <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>
                 </view>
             </view>
             <view class="m-one-recommend">
@@ -116,7 +116,7 @@
                             <image src="" class="m-user-head"></image>
                             <span class="m-user-name">芒果哟哟</span>
                         </view>
-                        <image src="../../images/index/icon-add-look-active.png" class="m-recommend-icon"></image>
+                        <image src="{{img_src}}index/icon-add-look-active.png" class="m-recommend-icon"></image>
                     </view>
                 </view>
             </view>
@@ -132,7 +132,7 @@
                             <image src="" class="m-user-head"></image>
                             <span class="m-user-name">芒果哟哟</span>
                         </view>
-                        <image src="../../images/index/icon-add-look-active.png" class="m-recommend-icon"></image>
+                        <image src="{{img_src}}index/icon-add-look-active.png" class="m-recommend-icon"></image>
                     </view>
                 </view>
             </view>
@@ -143,7 +143,7 @@
                 <span class="m-border-back">推荐旅团</span>
                 <view class="m-flex-end">
                     <span class="m-grey">更多旅团</span>
-                    <image src="../../images/common/icon-more.png" class="m-icon-more"></image>
+                    <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>
                 </view>
             </view>
             <view class="m-one-recommend">
@@ -189,6 +189,7 @@
             htmlParser:htmlParser
         }
         data = {
+          img_src:api.img_src,
             name1:'htmlParserName2',
             content1:"",
             scenic_name:'',

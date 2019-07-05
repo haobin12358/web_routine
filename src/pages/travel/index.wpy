@@ -119,22 +119,22 @@
         </swiper>
        <ul class="m-icon-list">
            <li class="{{item.value == select_icon.value ? 'active':''}}"  wx:for="{{icon_list}}" wx:key="{{index}}" @tap="iconClick({{item}})">
-               <image src="../../images/travel/{{item.value == select_icon.value ? item.active_icon:item.icon}}.png" class="m-icon-img"></image>
+               <image src="{{img_src}}travel/{{item.value == select_icon.value ? item.active_icon:item.icon}}.png" class="m-icon-img"></image>
                <view class="m-icon-name">{{item.name}}</view>
            </li>
        </ul>
         <ul class="m-nav-list">
             <li class="active">
                 <span>杭州</span>
-                <image src="../../images/common/icon-down-solid-active.png" class="m-down-solid"></image>
+                <image src="{{img_src}}common/icon-down-solid-active.png" class="m-down-solid"></image>
             </li>
             <li>
                 <span>杭州</span>
-                <image src="../../images/common/icon-down-solid.png" class="m-down-solid"></image>
+                <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
             </li>
             <li>
                 <span>杭州</span>
-                <image src="../../images/common/icon-down-solid.png" class="m-down-solid"></image>
+                <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
             </li>
         </ul>
         <view class="m-travel-list">
@@ -146,7 +146,7 @@
                         <span class="m-grey m-location">{{item.ssparea}}</span>
                         <view class="m-more-text">
                             <span>攻略 26</span>
-                            <image src="../../images/common/icon-more-active.png" class="m-icon-more-active"></image>
+                            <image src="{{img_src}}common/icon-more-active.png" class="m-icon-more-active"></image>
                         </view>
                     </view>
                 </view>
@@ -191,6 +191,7 @@
         }
         components = {}
         data = {
+            img_src:api.img_src,
             scroll_data: [],
             indicatorDots: true,
             autoplay: false,

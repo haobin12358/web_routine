@@ -107,27 +107,27 @@
           <p>团队签到</p>
         </li>
         <li  @tap="changeRoute('/pages/index/enterTeam')">
-          <p><image src="{{img_src}}/index/index-add-team.png" class="m-index-icon" alt="" /></p>
+          <p><image src="{{img_src}}index/index-add-team.png" class="m-index-icon" alt="" /></p>
           <p>进入团队</p>
         </li>
         <li @tap="getCell">
-          <p><image src="../../images/index/index-tel.png" class="m-index-icon" alt="" /></p>
+          <p><image src="{{img_src}}index/index-tel.png" class="m-index-icon" alt="" /></p>
           <p>一键求救</p>
         </li>
         <li  @tap="changeRoute('/pages/index/enterPage')">
-          <p><image src="../../images/index/index-find.png" class="m-index-icon" alt="" /></p>
+          <p><image src="{{img_src}}index/index-find.png" class="m-index-icon" alt="" /></p>
           <p>找厕所</p>
         </li>
         <li>
-          <p><image src="../../images/index/index-chat.png" class="m-index-icon" alt="" /></p>
+          <p><image src="{{img_src}}index/index-chat.png" class="m-index-icon" alt="" /></p>
           <p>聊天室</p>
         </li>
         <li @tap="changeRoute('/pages/index/timeIndex')">
-          <p><image src="../../images/index/index-time.png" class="m-index-icon" alt="" /></p>
+          <p><image src="{{img_src}}index/index-time.png" class="m-index-icon" alt="" /></p>
           <p>时光记录</p>
         </li>
         <li @tap="changeRoute('/pages/index/rallyPoint')">
-          <p><image src="../../images/index/index-gather.png" class="m-index-icon" alt="" /></p>
+          <p><image src="{{img_src}}index/index-gather.png" class="m-index-icon" alt="" /></p>
           <p>集合点</p>
         </li>
         <li></li>

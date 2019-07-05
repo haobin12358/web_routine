@@ -148,14 +148,14 @@
                     <span class="m-edit-label">活动费用</span>
                     <span class="m-flex-end" @tap="changeRoute('/pages/index/editCost','cost')">
                         <span class="m-grey">{{cost_list.length?cost_list.length:'未设置'}}</span>
-                        <image src="../../images/common/icon-more.png" class="m-icon-more"></image>
+                        <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>
                     </span>
                 </li>
                 <li>
                     <span class="m-edit-label">活动保险</span>
                     <span class="m-flex-end" @tap="changeRoute('/pages/index/editCost','insurance')">
                         <span class="m-grey">{{insurances_list.length?insurances_list.length:'未设置'}}</span>
-                        <image src="../../images/common/icon-more.png" class="m-icon-more"></image>
+                        <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>
                     </span>
                 </li>
                 <li class="m-no-flex">
@@ -189,11 +189,11 @@
                     <span class="m-edit-label">行程介绍推文</span>
                     <span class="m-flex-end" wx:if="{{show_detail}}" @tap="showDetail">
                         <span class="m-grey">点击收起</span>
-                        <image src="../../images/common/icon-up.png" class="m-icon-down"></image>
+                        <image src="{{img_src}}common/icon-up.png" class="m-icon-down"></image>
                     </span>
                     <span class="m-flex-end" wx:else @tap="showDetail">
                         <span class="m-grey">点击展开</span>
-                        <image src="../../images/common/icon-down.png" class="m-icon-down"></image>
+                        <image src="{{img_src}}common/icon-down.png" class="m-icon-down"></image>
                     </span>
                 </li>
                 <li wx:if="{{show_detail}}">
@@ -201,7 +201,7 @@
                     <span class="m-edit-label m-grey">不超过30字</span>
                 </li>
                 <li class="m-no-flex" wx:if="{{show_detail}}">
-                    <edit :context.sync="plcontent" @editorChange.user="onEditorChange"></edit>
+                    <edit :context.sync="plcontent" :type.sync="type" @editorChange.user="onEditorChange"></edit>
                 </li>
             </ul>
         </view>
@@ -236,6 +236,8 @@
             edit:Edit
         }
         data = {
+          img_src:api.img_src,
+            type:'play',
             show_detail:false,
             plstarttime:'',
             plendtime:'',
@@ -501,7 +503,7 @@
                         const tempFilePaths = res.tempFilePaths
 
                       wx.uploadFile({
-                        url: 'https://play.bigxingxing.com/api/v2/file/upload', //仅为示例，非真实的接口地址
+                        url: api.upload,
                         filePath: tempFilePaths[0],
                         name: 'file',
                         formData: {
