@@ -24,7 +24,7 @@
 </style>
 <template>
     <view class="m-enterTeam">
-        <view class="m-notice" wx:if="{{notice_list.nocontent}}">
+        <view class="m-notice" >
             <view class="m-bd-bottom m-flex-between">
                 <span class="m-grey">群公告</span>
 <!--                <view class="m-grey m-flex-end">-->
@@ -32,7 +32,7 @@
 <!--                    <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>-->
 <!--                </view>-->
             </view>
-            <view class="m-bd-bottom">
+            <view class="m-bd-bottom" wx:if="{{notice_list.nocontent}}">
                 <view>
                     {{notice_list.nocontent}}
                 </view>
@@ -40,6 +40,7 @@
                     {{notice_list.createtime}}
                 </view>
             </view>
+          <view class="m-no-data" wx:if="{{!notice_list.nocontent}}">暂无公告</view>
 
         </view>
         <view class="m-map-box">
