@@ -124,9 +124,8 @@
 <!--           </li>-->
 <!--       </ul>-->
         <ul class="m-nav-list">
-            <li class="active">
-                <span>杭州</span>
-                <image src="{{img_src}}common/icon-down-solid-active.png" class="m-down-solid"></image>
+            <li>
+              <city @citySelect.user="citySelect" ></city>
             </li>
             <li>
                 <span>杭州</span>
@@ -183,13 +182,15 @@
     import wepy from 'wepy';
     import tip from '../../utils/tip';
     import api from '../../api/api';
-
+    import City from '../../components/common/city';
     export default class travelIndex extends wepy.page {
         config = {
             navigationBarTitleText: '景区',
             enablePullDownRefresh: true
         }
-        components = {}
+        components = {
+           city:City
+        }
         data = {
             img_src:api.img_src,
             scroll_data: [],
@@ -227,7 +228,8 @@
             page_info:{
                 page_num: 1,
                 page_size: 10
-            }
+            },
+          select_city:{}
         }
 
         getScenic(){
@@ -257,14 +259,19 @@
         }
 
         methods = {
-            iconClick(item){
-                this.select_icon = item;
-            },
+            // iconClick(item){
+            //     this.select_icon = item;
+            // },
             changeRoute(v,item){
                 wx.navigateTo({
                     url: v+'?sspid=' + item.sspid
                 });
-            }
+            },
+            //城市选择
+            citySelect(e){
+              this.select_city = e;
+              this.$apply();
+            },
         }
     }
 </script>

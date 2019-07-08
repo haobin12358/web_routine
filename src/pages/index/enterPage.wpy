@@ -25,10 +25,10 @@
             <view class="m-item-one m-grey">填写报名信息</view>
             <view class="m-item-one" wx:for="{{label_list}}" wx:key="{{index}}">
                 <span class="m-label">{{item.prename}}</span>
-                <input type="text" value="{{item.value}}" data-name="{{index}}" @change="inputChange" placeholder="{{'请填写'+ item.prename}}" />
+                <input type="text" value="{{item.value}}" data-name="{{index}}" disabled="{{item.disabled}}" @change="inputChange" placeholder="{{'请填写'+ item.prename}}" />
             </view>
 
-            <view class="m-item-one">
+            <view class="m-item-one" wx:if="{{insurances_list.length >0}}">
                 <span class="m-label">保险</span>
                 <checkbox-group bindchange="checkboxChange">
                     <label class="checkbox" wx:for="{{insurances_list}}" wx:key="index">
@@ -55,7 +55,7 @@
         }
         components = {}
         data = {
-            plid:'0d85db48-9bd6-11e9-8e38-0242ac110002',
+            plid:'54d2ad04-a131-11e9-9271-0242ac110002',
             label_list:[],
             insurances_list: [],
             insurances:[]
@@ -96,10 +96,10 @@
                         _arr.push({
                             preid:data[i].preid,
                             prename:data[i].prename,
-                            value:''
+                            value:data[i].prevalue || '',
+                            disabled:data[i].prevalue ? true : false
                         })
                     }
-
                     that.label_list = _arr;
                     that.$apply();
                 },
@@ -107,6 +107,36 @@
 
                 }
             })
+        }
+        //支付
+        pay(params){
+          wx.requestPayment({
+            timeStamp: params.timeStamp,
+            nonceStr: params.nonceStr,
+            package: params.package,
+            signType: params.signType,
+            paySign: params.sign,
+            success (res) {
+
+              wx.showToast({
+                title: '报名成功',
+                icon: 'none',
+                duration: 2000
+              });
+              wx.navigateTo({
+                url: '/pages/index/manageActivity'
+              });
+
+
+            },
+            fail (res) {
+              wx.showToast({
+                title: '支付失败，请稍后再试',
+                icon: 'none',
+                duration: 2000
+              })
+            }
+          })
         }
         postData(){
             let that = this;
@@ -123,50 +153,26 @@
                 success: function (resule){
                     tip.loaded();
                     if(resule.data.status == 200){
+                      // if( !resule.data.data.change_name){
+                      //   wx.showModal({
+                      //     title: '提示',
+                      //     content: '这是一个模态弹窗',
+                      //     confirmText:'同意',
+                      //     cancelText:'拒绝',
+                      //     confirmColor:'#FFCE00',
+                      //     success (res) {
+                      //       if (res.confirm) {
+                      //         console.log('用户点击确定')
+                      //       } else if (res.cancel) {
+                      //         console.log('用户点击取消')
+                      //       }
+                      //     }
+                      //   })
+                      //
+                      // }else{
                         let params = resule.data.data.args;
-                        wx.requestPayment({
-                            timeStamp: params.timeStamp,
-                            nonceStr: params.nonceStr,
-                            package: params.package,
-                            signType: params.signType,
-                            paySign: params.sign,
-                            success (res) {
-                              if(res.data.data.change_name){
-                                wx.showModal({
-                                  title: '提示',
-                                  content: '这是一个模态弹窗',
-                                  confirmText:'同意',
-                                  cancelText:'拒绝',
-                                  success (res) {
-                                    if (res.confirm) {
-                                      console.log('用户点击确定')
-                                    } else if (res.cancel) {
-                                      console.log('用户点击取消')
-                                    }
-                                  }
-                                })
-
-                              }else{
-                                wx.showToast({
-                                  title: '报名成功',
-                                  icon: 'none',
-                                  duration: 2000
-                                });
-                                wx.navigateTo({
-                                  url: '/pages/index/manageActivity'
-                                });
-                              }
-
-                            },
-                            fail (res) {
-                                wx.showToast({
-                                    title: '支付失败，请稍后再试',
-                                    icon: 'none',
-                                    duration: 2000
-                                })
-                            }
-                        })
-
+                        that.pay(params);
+                      // }
                     }else{
                         wx.showToast({
                             title: resule.data.message,

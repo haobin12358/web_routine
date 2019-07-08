@@ -8,8 +8,9 @@
     <!--              当前选择：{{multiArray[0][multiIndex[0]]}}，{{multiArray[1][multiIndex[1]]}}，{{multiArray[2][multiIndex[2]]}}-->
     <!--            </view>-->
     <view class="m-select-one" @tap="areaTap">
-      <span>{{select_loc.name || '区域'}}</span>
-      <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
+      <span class="{{select_loc.name?'m-common':''}}">{{select_loc.name || '区域'}}</span>
+      <image src="{{img_src}}common/icon-down-solid-active.png" wx:if="{{select_loc.name}}"  class="m-down-solid"></image>
+      <image src="{{img_src}}common/icon-down-solid.png" wx:else  class="m-down-solid"></image>
     </view>
   </picker>
 </template>
@@ -23,6 +24,8 @@
       navigationBarTitleText: ''
     };
     components = {};
+    props={
+    }
     data = {
       img_src:api.img_src,
       multiArray:[[],[],[]],

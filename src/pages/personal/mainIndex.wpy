@@ -98,17 +98,19 @@
       <view class="m-mainIndex-content">
         <view class="m-select-box">
           <city @citySelect.user="citySelect"></city>
-          <picker mode="date" value="{{date}}" start="2018-09-01"  bindchange="bindDateChange">
+          <picker mode="date" value="{{date}}" start="2018-09" fields="month"	  bindchange="bindDateChange">
             <view class="m-select-one">
-              <span>{{date || '时间'}}</span>
-              <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
+              <span class="{{date?'m-common':''}}">{{date || '时间'}}</span>
+              <image src="{{img_src}}common/icon-down-solid-active.png" wx:if="{{date}}" class="m-down-solid"></image>
+              <image src="{{img_src}}common/icon-down-solid.png" wx:else class="m-down-solid"></image>
             </view>
           </picker>
 
           <picker bindchange="bindStatusChange" value="{{status_index}}" range-key="name" range="{{status_list}}">
             <view class="m-select-one">
-              <span>{{status_list[status_index].name}}</span>
-              <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
+              <span  class="{{status_index?'m-common':''}}">{{status_list[status_index].name}}</span>
+              <image src="{{img_src}}common/icon-down-solid-active.png" wx:if="{{status_index}}" class="m-down-solid"></image>
+              <image src="{{img_src}}common/icon-down-solid.png" wx:else class="m-down-solid"></image>
             </view>
           </picker>
 
