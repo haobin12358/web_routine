@@ -36,7 +36,7 @@
         </view>
         <view class="m-one-icon" @tap="changeRoute('/pages/index/editEssay')">
           <image src="{{img_src}}index/time-jot.png" class="m-icon"></image>
-          <view>随记</view>
+          <view>随笔</view>
         </view>
       </view>
     </view>

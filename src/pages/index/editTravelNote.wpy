@@ -104,6 +104,12 @@
     onLoad(options) {
 
     }
+    onUnload(){
+      this.trlocation = '';
+      this.trcontent = '';
+      this.trtitle = '';
+      this.$apply();
+    }
 
     methods = {
       //富文本编辑
@@ -125,6 +131,18 @@
       },
       //发布
       submitNote(){
+        if(!this.trtitle){
+          tip.error('请先填写标题');
+          return false;
+        }
+        if(!this.trcontent){
+          tip.error('请先填写内容');
+          return false;
+        }
+        if(!this.trcontent){
+          tip.error('请先填写景区');
+          return false;
+        }
         this.postData(1);
       },
       //取消

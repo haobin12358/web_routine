@@ -177,6 +177,13 @@
 
     }
 
+    onUnload(){
+      this.trlocation = '';
+      this.recommend_list = [];
+      this.trcontent = '';
+      this.trbudget = '';
+      this.$apply();
+    }
     methods = {
       //新增推荐
       changeRoute(v,from){
@@ -216,6 +223,14 @@
       },
       //发布
       submitNote(){
+        if(this.recommend_list.length == 0){
+          tip.error('请输入推荐携带物品');
+          return false;
+        }
+        if(!this.trbudget){
+          tip.error('请输入预算金额');
+          return false;
+        }
         this.postData(1);
       },
       //取消

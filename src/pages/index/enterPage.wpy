@@ -131,14 +131,32 @@
                             signType: params.signType,
                             paySign: params.sign,
                             success (res) {
+                              if(res.data.data.change_name){
+                                wx.showModal({
+                                  title: '提示',
+                                  content: '这是一个模态弹窗',
+                                  confirmText:'同意',
+                                  cancelText:'拒绝',
+                                  success (res) {
+                                    if (res.confirm) {
+                                      console.log('用户点击确定')
+                                    } else if (res.cancel) {
+                                      console.log('用户点击取消')
+                                    }
+                                  }
+                                })
+
+                              }else{
                                 wx.showToast({
-                                    title: '报名成功',
-                                    icon: 'none',
-                                    duration: 2000
+                                  title: '报名成功',
+                                  icon: 'none',
+                                  duration: 2000
                                 });
                                 wx.navigateTo({
-                                    url: '/pages/index/manageActivity'
+                                  url: '/pages/index/manageActivity'
                                 });
+                              }
+
                             },
                             fail (res) {
                                 wx.showToast({

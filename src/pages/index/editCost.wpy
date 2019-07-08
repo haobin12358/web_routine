@@ -106,7 +106,7 @@
             <image src="{{img_src}}common/icon-add.png" class="m-cut-add-icon" @tap="addCost"></image>
             <span>添加费用</span>
         </view>
-        <view class="m-foot-btn m-one" @tap="saveCost">保存</view>
+        <view class="m-foot-btn m-one" wx:if="{{cost_list.length >0}}" @tap="saveCost">保存</view>
     </view>
 </template>
 
@@ -159,6 +159,7 @@
         }
         setInsurance(){
             let that = this;
+
             for(let i in this.cost_list){
                 if(this.cost_list[i].intype){
                     this.cost_list[i].intype = 1;

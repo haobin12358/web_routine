@@ -40,9 +40,13 @@
           .m-col{
             &.active{
               font-weight: 500;
+              .m-num{
+                font-weight: 600;
+              }
             }
             .m-num{
               font-size: 40rpx;
+              font-weight: 400;
             }
           }
           .m-line{
@@ -74,17 +78,17 @@
             <view class="m-user-label">212123</view>
           </view>
           <view class="m-num-box">
-            <view class="m-col">
+            <view class="m-col {{num_list[0].active ? 'active':''}}"  @tap="topTap(0)">
               <view class="m-num">22</view>
               <view>关注</view>
             </view>
             <view class="m-line"></view>
-            <view class="m-col">
+            <view class="m-col {{num_list[1].active ? 'active':''}}" @tap="topTap(1)">
               <view class="m-num">22</view>
               <view>粉丝</view>
             </view>
             <view class="m-line"></view>
-            <view class="m-col">
+            <view class="m-col {{num_list[2].active ? 'active':''}}" @tap="topTap(2)">
               <view class="m-num">22</view>
               <view>发布</view>
             </view>
@@ -216,8 +220,17 @@
         this.date = e.detail.value;
         this.$apply();
       },
+      //城市选择
       citySelect(e){
         this.select_city = e;
+        this.$apply();
+      },
+      //关注粉丝发布点击
+      topTap(e){
+        for (let i=0;i<this.num_list.length;i++){
+          this.num_list[i].active = false;
+        }
+        this.num_list[Number(e)].active = true;
         this.$apply();
       }
     };

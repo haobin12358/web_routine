@@ -173,6 +173,10 @@
       },
       //发布
       submitNote(){
+        if(!this.text){
+          tip.error('请输入随笔内容');
+          return false;
+        }
         this.postData(1);
       },
       //+点击

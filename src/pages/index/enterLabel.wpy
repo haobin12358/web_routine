@@ -64,53 +64,31 @@
         methods = {
             saveLabel(){
                 let that = this;
-                switch (this.from) {
+                this.label = this.label.replace(/^\s*|\s*$/g,"");
+                if(this.label){
+                  switch (this.from) {
                     case 'enter':
-
-                        this.all_data.enter_list.push({
-                            name:this.label,
-                            active:true
-                        });
-                        // wx.navigateTo({
-                        //     url: '/pages/index/editActivity?enter_list=' + JSON.stringify(that.enter_list) + '&form_data='+JSON.stringify(that.form_data)
-                        // });
-                      // if(that.page == 'editStrategy'){
-                      //   wx.navigateTo({
-                      //     url: '/pages/index/editStrategy?data='+encodeURIComponent(JSON.stringify(that.all_data))
-                      //   });
-                      // }else{
-                      //   wx.navigateTo({
-                      //     url: '/pages/index/editActivity?data='+encodeURIComponent(JSON.stringify(that.all_data))
-                      //   });
-                      // }
-                      //
-                        break;
+                      this.all_data.enter_list.push({
+                        name:this.label,
+                        active:true
+                      });
+                      break;
                     case 'recommend':
 
-                        this.all_data.recommend_list.push({
-                            name:this.label,
-                            active:true
-                        });
-                        // // wx.navigateTo({
-                        // //     url: '/pages/index/editActivity?recommend_list=' + JSON.stringify(that.recommend_list) + '&form_data='+JSON.stringify(that.form_data)
-                        // // });
-                        // wx.navigateTo({
-                        //     url: '/pages/index/editActivity?data='+encodeURIComponent(JSON.stringify(that.all_data))
-                        // });
-                        break;
+                      this.all_data.recommend_list.push({
+                        name:this.label,
+                        active:true
+                      });
+                      break;
                     case 'location':
 
-                        this.all_data.location_list.push({
-                            name:this.label,
-                            active:true
-                        });
-                        // wx.navigateTo({
-                        //     url: '/pages/index/editActivity?location_list=' + JSON.stringify(that.location_list) + '&form_data='+JSON.stringify(that.form_data)
-                        // });
-                        // wx.navigateTo({
-                        //     url: '/pages/index/editActivity?data='+encodeURIComponent(JSON.stringify(that.all_data))
-                        // });
-                        break;
+                      this.all_data.location_list.push({
+                        name:this.label,
+                        active:true
+                      });
+                      break;
+
+                  }
 
                 }
               if(that.page == 'editStrategy'){
