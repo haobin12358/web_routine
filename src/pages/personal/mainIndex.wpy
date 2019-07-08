@@ -1,6 +1,7 @@
 <style scoped lang="less" rel="stylesheet/less">
   @import "../../styles/common.less";
   .m-mainIndex{
+    padding-bottom: 30rpx;
     .m-mainIndex-top{
       position: relative;
       width: 100%;
@@ -26,18 +27,22 @@
             width: 100rpx;
             height: 100rpx;
           }
+          .m-user-label{
+            color: #000;
+            border-color: #000;
+          }
         }
         .m-num-box{
           .flex-row(space-around);
           /*width:400rpx;*/
           text-align: center;
+          font-weight: 300;
           .m-col{
             &.active{
-              color: #fff;
+              font-weight: 500;
             }
             .m-num{
               font-size: 40rpx;
-              font-weight: 500;
             }
           }
           .m-line{
@@ -69,7 +74,7 @@
             <view class="m-user-label">212123</view>
           </view>
           <view class="m-num-box">
-            <view class="m-col active">
+            <view class="m-col">
               <view class="m-num">22</view>
               <view>关注</view>
             </view>
@@ -88,18 +93,21 @@
       </view>
       <view class="m-mainIndex-content">
         <view class="m-select-box">
-          <view class="m-select-one">
-            <span>区域</span>
-            <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
-        </view>
-          <view class="m-select-one">
-            <span>区域</span>
-            <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
-          </view>
-          <view class="m-select-one">
-            <span>区域</span>
-            <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
-          </view>
+          <city @citySelect.user="citySelect"></city>
+          <picker mode="date" value="{{date}}" start="2018-09-01"  bindchange="bindDateChange">
+            <view class="m-select-one">
+              <span>{{date || '时间'}}</span>
+              <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
+            </view>
+          </picker>
+
+          <picker bindchange="bindStatusChange" value="{{status_index}}" range-key="name" range="{{status_list}}">
+            <view class="m-select-one">
+              <span>{{status_list[status_index].name}}</span>
+              <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
+            </view>
+          </picker>
+
         </view>
         <circle></circle>
 
@@ -114,6 +122,8 @@
   import tip from '../../utils/tip';
   import Circle from '../../components/common/circle';
   import User from '../../components/common/user';
+  import City from '../../components/common/city';
+
   export default class mainIndex extends wepy.page {
     config = {
       navigationBarTitleText: '个人主页',
@@ -121,16 +131,95 @@
     };
     components = {
       circle:Circle,
-      user:User
+      user:User,
+      city:City
     };
     data = {
-      img_src:api.img_src
+      num_list:[
+        {
+          name:'关注',
+          value:22,
+          active:false
+        },
+        {
+          name:'粉丝',
+          value:22,
+          active:false
+        },
+        {
+          name:'发布',
+          value:22,
+          active:false
+        }
+      ],
+      img_src:api.img_src,
+      status_list:[
+        {
+          name:'全部',
+          value:''
+        },
+        {
+          name:'攻略',
+          value:''
+        },
+        {
+          name:'游记',
+          value:''
+        },
+        {
+          name:'随笔',
+          value:''
+        }
+      ],
+      status_index:0,
+      date:'',
+      select_city:{}
     };
+    //
+    getData(){
+      let that = this;
+      wx.request({
+        url: api.get_provinces ,
+        data: {
+        },
+        header: {
+          'content-type': 'application/json' // 默认值
+        },
+        success: function(res) {
+          let data = res.data.data;
+          that.multiArray[0] = [];
+          for(let i =0;i<data.length;i++){
+            that.multiArray[0].push({
+              apid:data[i].apid,
+              name:data[i].apname
+            });
+          }
+          that.getCity(data[0].apid);
+          that.$apply();
+        }
+      })
+    }
+
 
     onLoad(options) {
 
     }
 
-    methods = {};
+    methods = {
+      //类型选择
+      bindStatusChange(e){
+        this.status_index = e.detail.value;
+        this.$apply();
+      },
+      //时间选择
+      bindDateChange(e){
+        this.date = e.detail.value;
+        this.$apply();
+      },
+      citySelect(e){
+        this.select_city = e;
+        this.$apply();
+      }
+    };
   }
 </script>

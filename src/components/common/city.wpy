@@ -1,0 +1,144 @@
+<style scoped lang="less" rel="stylesheet/less">
+
+
+</style>
+<template>
+  <picker mode="multiSelector" bindchange="bindMultiPickerChange" bindcolumnchange="bindMultiPickerColumnChange" range-key="name" value="{{multiIndex}}"  range="{{multiArray}}">
+    <!--            <view class="picker">-->
+    <!--              当前选择：{{multiArray[0][multiIndex[0]]}}，{{multiArray[1][multiIndex[1]]}}，{{multiArray[2][multiIndex[2]]}}-->
+    <!--            </view>-->
+    <view class="m-select-one" @tap="areaTap">
+      <span>{{multiArray[2][multiIndex[2]].name || '区域'}}</span>
+      <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
+    </view>
+  </picker>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import api from '../../api/api';
+
+  export default class area extends wepy.component {
+    config = {
+      navigationBarTitleText: ''
+    };
+    components = {};
+    data = {
+      img_src:api.img_src,
+      multiArray:[[],[],[]],
+      multiIndex:[]
+    };
+    //获取省份
+    getProvince(){
+      let that = this;
+      wx.request({
+        url: api.get_provinces ,
+        data: {
+        },
+        header: {
+          'content-type': 'application/json' // 默认值
+        },
+        success: function(res) {
+          let data = res.data.data;
+          that.multiArray[0] = [];
+          for(let i =0;i<data.length;i++){
+            that.multiArray[0].push({
+              apid:data[i].apid,
+              name:data[i].apname
+            });
+          }
+          that.getCity(data[0].apid);
+          that.$apply();
+        }
+      })
+    }
+    //获取市
+    getCity(id){
+      let that = this;
+      wx.request({
+        url: api.get_citys ,
+        data: {
+          apid:id
+        },
+        header: {
+          'content-type': 'application/json' // 默认值
+        },
+        success: function(res) {
+          let data = res.data.data;
+          that.multiArray[1] = [];
+          for(let i =0;i<data.length;i++){
+            that.multiArray[1].push({
+              acid:data[i].acid,
+              name:data[i].acname
+            });
+          }
+          that.getCountry(data[0].acid);
+          that.$apply();
+        }
+      })
+    }
+    //获取区县
+    getCountry(id){
+      let that = this;
+      wx.request({
+        url: api.get_areas ,
+        data: {
+          acid:id
+        },
+        header: {
+          'content-type': 'application/json' // 默认值
+        },
+        success: function(res) {
+          let data = res.data.data;
+          that.multiArray[2] = [];
+          for(let i =0;i<data.length;i++){
+            that.multiArray[2].push({
+              aaid:data[i].aaid,
+              name:data[i].aaname
+            });
+          }
+          that.$apply();
+        }
+      })
+    }
+
+    onLoad(options) {
+
+    }
+
+    methods = {
+      //省市区确定
+      bindMultiPickerChange(e){
+        this.multiIndex = e.detail.value;
+        for(let i=0;i<this.multiIndex.length;i++){
+          if(this.multiIndex[i] == null){
+            this.multiIndex[i] = 0;
+          }
+        }
+        this.$apply();
+        this.$emit('citySelect',this.multiArray[2][this.multiIndex[2]]);
+
+      },
+      //省市区每列变化
+      bindMultiPickerColumnChange(e){
+
+        let data = this.multiArray[e.detail.column][e.detail.value];
+        switch (e.detail.column) {
+          case 0:
+            this.getCity(data.apid);
+            break;
+          case 1:
+            this.getCountry(data.acid);
+            break;
+        }
+
+      },
+      //点击区域选择
+      areaTap(){
+        if(this.multiArray[0].length == 0 ){
+          this.getProvince();
+        }
+      }
+    };
+  }
+</script>
