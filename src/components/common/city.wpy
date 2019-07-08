@@ -8,7 +8,7 @@
     <!--              当前选择：{{multiArray[0][multiIndex[0]]}}，{{multiArray[1][multiIndex[1]]}}，{{multiArray[2][multiIndex[2]]}}-->
     <!--            </view>-->
     <view class="m-select-one" @tap="areaTap">
-      <span>{{multiArray[2][multiIndex[2]].name || '区域'}}</span>
+      <span>{{select_loc.name || '区域'}}</span>
       <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
     </view>
   </picker>
@@ -26,7 +26,8 @@
     data = {
       img_src:api.img_src,
       multiArray:[[],[],[]],
-      multiIndex:[]
+      multiIndex:[],
+      select_loc:{}
     };
     //获取省份
     getProvince(){
@@ -66,6 +67,10 @@
         success: function(res) {
           let data = res.data.data;
           that.multiArray[1] = [];
+          that.multiArray[1].push({
+            acid:'',
+            name:'不限'
+          });
           for(let i =0;i<data.length;i++){
             that.multiArray[1].push({
               acid:data[i].acid,
@@ -91,6 +96,10 @@
         success: function(res) {
           let data = res.data.data;
           that.multiArray[2] = [];
+          that.multiArray[2].push({
+            aaid:'',
+            name:'不限'
+          });
           for(let i =0;i<data.length;i++){
             that.multiArray[2].push({
               aaid:data[i].aaid,
@@ -115,8 +124,17 @@
             this.multiIndex[i] = 0;
           }
         }
+        if(!this.multiIndex[2]){
+          if(!this.multiIndex[1]){
+            this.select_loc = this.multiArray[0][this.multiIndex[0]];
+          }else{
+            this.select_loc = this.multiArray[1][this.multiIndex[1]];
+          }
+        }else{
+          this.select_loc = this.multiArray[2][this.multiIndex[2]];
+        }
         this.$apply();
-        this.$emit('citySelect',this.multiArray[2][this.multiIndex[2]]);
+        this.$emit('citySelect',this.select_loc);
 
       },
       //省市区每列变化

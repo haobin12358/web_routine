@@ -156,19 +156,19 @@
           },
           success: function(res) {
             let data = res.data.data;
-            console.log(data)
             // that.notice_list = data.data;
             that.markers =[];
             for(let i =0;i<data.length;i++){
+              let content = data[i].ustelphone ?`${data[i].usname}:${data[i].ustelphone}`: data[i].usname;
               that.markers.push({
-                iconPath: "/images/common/icon-loc-mark.png",
+                iconPath: data[i].isleader?`${that.img_src}index/marker-loc-active.png`:`${that.img_src}index/marker-loc.png`,
                 id: i,
                 latitude: data[i].latitude,
                 longitude: data[i].longitude,
-                width: 50,
-                height: 50,
+                width:data[i].isleader?35: 20,
+                height: data[i].isleader?35:20,
                 callout:{
-                  content:`${data[i].usname}`,
+                  content:content,
                   padding: 10
                 }
               })

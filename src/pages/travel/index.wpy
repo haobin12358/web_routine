@@ -117,12 +117,12 @@
                 </swiper-item>
             </block>
         </swiper>
-       <ul class="m-icon-list">
-           <li class="{{item.value == select_icon.value ? 'active':''}}"  wx:for="{{icon_list}}" wx:key="{{index}}" @tap="iconClick({{item}})">
-               <image src="{{img_src}}travel/{{item.value == select_icon.value ? item.active_icon:item.icon}}.png" class="m-icon-img"></image>
-               <view class="m-icon-name">{{item.name}}</view>
-           </li>
-       </ul>
+<!--       <ul class="m-icon-list">-->
+<!--           <li class="{{item.value == select_icon.value ? 'active':''}}"  wx:for="{{icon_list}}" wx:key="{{index}}" @tap="iconClick({{item}})">-->
+<!--               <image src="{{img_src}}travel/{{item.value == select_icon.value ? item.active_icon:item.icon}}.png" class="m-icon-img"></image>-->
+<!--               <view class="m-icon-name">{{item.name}}</view>-->
+<!--           </li>-->
+<!--       </ul>-->
         <ul class="m-nav-list">
             <li class="active">
                 <span>杭州</span>
@@ -186,7 +186,7 @@
 
     export default class travelIndex extends wepy.page {
         config = {
-            navigationBarTitleText: '',
+            navigationBarTitleText: '景区',
             enablePullDownRefresh: true
         }
         components = {}
