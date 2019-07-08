@@ -58,7 +58,7 @@
                 showImgToolbar
                 showImgResize
                 bindstatuschange="onStatusChange"
-                bindblur="onEditorChange"
+                bindinput="onEditorChange"
                 read-only="{{readOnly}}"
                 bindready="onEditorReady">
         </editor>
@@ -91,7 +91,9 @@
         }
         events = {
             'index-broadcast': (value) => {
+              console.log(value)
                 this.context = value;
+                this.$apply();
             }
         }
         methods = {
@@ -115,7 +117,6 @@
                         html:that.context
                     })
                 }).exec();
-                console.log(that.context,'sgdsrgdgr')
 
             },
             format(e) {
@@ -133,10 +134,10 @@
                     success (res) {
                         // tempFilePath可以作为img标签的src属性显示图片
                         const tempFilePaths = res.tempFilePaths;
-                      for(let i=0;i<tempFilePaths.length;i++){
+                      // for(let i=0;i<tempFilePaths.length;i++){
                         wx.uploadFile({
                           url: api.upload, //仅为示例，非真实的接口地址
-                          filePath: tempFilePaths[i],
+                          filePath: tempFilePaths[0],
                           name: 'file',
                           formData: {
                             token:wx.getStorageSync('token'),
@@ -159,7 +160,7 @@
                             that.$apply();
                           }
                         })
-                      }
+                      // }
 
 
                     }
@@ -184,6 +185,7 @@
                 })
             },
             onEditorChange(e){
+              console.log(e,'html')
                 this.$emit('editorChange',e.detail.html);
                 this.$apply();
             }

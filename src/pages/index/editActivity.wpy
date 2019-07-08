@@ -448,6 +448,11 @@
                  this.recommend_list =data.recommend_list;
                  this.location_list= data.location_list;
                  this.agree = data.agree;
+                 this.$broadcast('eventName', data);
+                 this.$invoke('time','numNotice');
+                 this.$invoke('time2','numNotice');
+                 // that.$invoke('edit','editNotice');
+                 this.$broadcast('index-broadcast', data.plcontent);
              }
 
              if(options.plid){

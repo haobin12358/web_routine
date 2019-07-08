@@ -86,7 +86,7 @@
           tip.loaded();
           if(resule.data.status == 200){
             tip.success('发布成功');
-              wx.navigateTo({
+              wx.redirectTo({
                 url: '/pages/personal/mainIndex'
               });
           }else{
@@ -103,6 +103,14 @@
     }
     onLoad(options) {
 
+      let data;
+      if(options.data){
+        data = JSON.parse(decodeURIComponent(options.data));
+        this.trcontent = data.trcontent;
+        this.trlocation =data.trlocation;
+        this.trtitle = data.trtitle;
+        this.$apply();
+      }
     }
     onUnload(){
       this.trlocation = '';

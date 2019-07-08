@@ -40,6 +40,7 @@
             }
             if(options.data){
                 this.all_data = JSON.parse(decodeURIComponent(options.data));
+              console.log( this.all_data,'111')
             }
             // console.log(this.all_data)
             if(options.from){
@@ -92,11 +93,11 @@
 
                 }
               if(that.page == 'editStrategy'){
-                wx.navigateTo({
+                wx.redirectTo({
                   url: '/pages/index/editStrategy?data='+encodeURIComponent(JSON.stringify(that.all_data))
                 });
               }else{
-                wx.navigateTo({
+                wx.redirectTo({
                   url: '/pages/index/editActivity?data='+encodeURIComponent(JSON.stringify(that.all_data))
                 });
               }

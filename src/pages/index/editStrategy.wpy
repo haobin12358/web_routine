@@ -173,6 +173,8 @@
           this.trlocation =data.trlocation;
           this.trbudget = data.trbudget;
           this.$apply();
+         this.$broadcast('index-broadcast', data.trcontent);
+        // this.$invoke('edit','onEditorReady');
       }
 
     }
@@ -193,8 +195,8 @@
             url: v + `?from=${from}&page=editStrategy&data=${encodeURIComponent(JSON.stringify(that.data))}`
           });
         }else{
-          wx.navigateTo({
-            url: v + `?data=${JSON.stringify(that.data)}`
+          wx.redirectTo({
+            url: v + `?data=${encodeURIComponent(JSON.stringify(that.data))}`
           });
         }
 
