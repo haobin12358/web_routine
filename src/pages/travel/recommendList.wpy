@@ -1,0 +1,81 @@
+<style scoped lang="less" rel="stylesheet/less">
+
+
+</style>
+<template>
+    <view>
+      <scroll-view scroll-y style="height: 100vh;" bindscrolltolower="lower">
+        <recommend :list.sync="recommend_raiders" ></recommend>
+      </scroll-view>
+
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import api from '../../api/api';
+  import Recommend from '../../components/common/recommend';
+  import tip from '../../utils/tip';
+
+  export default class recommendList extends wepy.page {
+    config = {
+      navigationBarTitleText: '攻略'
+    };
+    components = {
+      recommend:Recommend
+    };
+    data = {
+      recommend_raiders:[],
+      page_info:{
+        page_num: 1,
+        page_size: 10
+      },
+      total_count:0
+    };
+    getData(id){
+      let that = this;
+      tip.loading();
+      wx.request({
+        url: api.raiders_list,
+        data: {
+          sspid:id,
+          token:wx.getStorageSync('token'),
+          page_num:that.page_info.page_num,
+          page_size:that.page_info.page_size
+        },
+        header: {
+          'content-type': 'application/json' // 默认值
+        },
+        success: function(res) {
+          if(that.page_info.page_num > 1){
+            that.recommend_raiders = that.recommend_raiders.concat(res.data.data);
+          }else{
+            that.recommend_raiders = res.data.data;
+          }
+          that.total_count = res.data.total_count;
+          that.$apply();
+
+          tip.loaded();
+        },
+        error:function (error) {
+          tip.loaded();
+        }
+      })
+    }
+    onLoad(options) {
+      if(options.sspid){
+        this.getData(options.sspid);
+      }
+    }
+
+    methods = {
+      lower(){
+        if(this.total_count > this.recommend_raiders.length) {
+          this.page_info.page_num += 1;
+          this.$apply();
+          this.getData();
+        }
+      }
+    };
+  }
+</script>

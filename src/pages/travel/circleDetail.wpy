@@ -67,9 +67,9 @@
 <template>
   <view class="m-one-circle" wx:if="{{item}}">
     <view class="m-one-circle-title">
-      <view class="m-flex-start">
-        <image src="{{item.author.usheader}}" class="m-user-head"></image>
-        <span class="m-user-name">{{item.author.usname}}</span>
+      <view class="m-flex-start" @tap="toOtherMain({{item}})">
+        <image src="{{img_url}}{{item.author.usheader}}" class="m-user-head" ></image>
+        <span class="m-user-name" >{{item.author.usname}}</span>
         <span class="m-user-label">{{item.author.usminilevel}}</span>
       </view>
       <view class="m-circle-label">{{item.travelrecordtype_zh}}</view>
@@ -118,6 +118,7 @@
       trid:'',
       img_list:[],
       img_src:api.img_src,
+      img_url:api.api,
       name1:'htmlParserName2',
       content1:"",
 
@@ -176,7 +177,14 @@
     }
 
     methods = {
+      toOtherMain(item){
+        if(!item.is_own && item.author.usid){
+          wx.navigateTo({
+            url: '/pages/personal/mainIndex?usid='+item.author.usid
+          });
+        }
 
+      },
     };
   }
 </script>

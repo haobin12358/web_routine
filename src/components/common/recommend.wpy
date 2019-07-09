@@ -1,0 +1,193 @@
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../../styles/common.less";
+  .m-one-recommend{
+    padding: 20rpx 30rpx;
+    border-bottom: 1px solid @border-color;
+    .flex-row(flex-start);
+    overflow: auto;
+    position: relative;
+    .m-recommend-label{
+      position: absolute;
+      padding: 0 10rpx;
+      font-size: 20rpx;
+      height: 32rpx;
+      line-height: 32rpx;
+      top: 4rpx;
+      background-color: @common-color;
+      z-index: 1;
+    }
+    .m-recommend-img-box{
+      width: 288rpx;
+      height: 161rpx;
+      flex-shrink: 0;
+      margin-right: 20rpx;
+      /*background-color: #C1C1C1;*/
+      .m-recommend-img{
+        display: block;
+        width: 288rpx;
+        height: 161rpx;
+      }
+    }
+    .m-recommend-text{
+      height: 161rpx;
+      width: 380rpx;
+      display: flex;
+      flex-flow: column;
+      align-items: flex-start;
+      justify-content: space-between;
+      .m-recommend-topic{
+        color: #006FCE;
+      }
+      .m-recommend-name{
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-weight: 500;
+      }
+      .m-between-text{
+        width: 100%;
+      }
+      .m-recommend-icon{
+        display: block;
+        width: 40rpx;
+        height: 40rpx;
+      }
+      .m-price{
+        color: #EB0000;
+        font-size: 32rpx;
+        font-weight: 500;
+      }
+    }
+  }
+
+</style>
+<template>
+  <view>
+    <view class="m-one-recommend" wx:for="{{list}}" wx:key="{{index}}" @tap="toDetail({{item}})">
+      <view class="m-recommend-img-box">
+        <span class="m-recommend-label">{{item.travelrecordtype_zh}}</span>
+        <image src="{{item.picture || img_src+'common/travel-img.jpg'}}" class="m-recommend-img"></image>
+      </view>
+      <view class="m-recommend-text">
+        <view class="m-recommend-topic">#{{item.trtitle}}#</view>
+        <view class="m-flex-between m-between-text">
+          <view class="m-flex-start">
+            <image src="{{img_url}}{{item.author.usheader}}" class="m-user-head"></image>
+            <span class="m-user-name">{{item.author.usname}}</span>
+          </view>
+          <image src="{{img_src}}index/icon-add-look-active.png" class="m-recommend-icon" wx:if="{{!item.is_own && !item.followed}}" @tap.stop="follow({{index}})"></image>
+<!--          <image src="{{img_src}}index/icon-add-look-active.png" class="m-recommend-icon" wx:if="{{!item.is_own && item.followed}}" @tap.stop="follow({{index}})"></image>-->
+        </view>
+      </view>
+    </view>
+
+
+    <!--        <view class="m-recommend-item">-->
+    <!--            <view class="m-recommend-title">-->
+    <!--                <span class="m-border-back">推荐旅团</span>-->
+    <!--                <view class="m-flex-end">-->
+    <!--                    <span class="m-grey">更多旅团</span>-->
+    <!--                    <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>-->
+    <!--                </view>-->
+    <!--            </view>-->
+    <!--            <view class="m-one-recommend">-->
+    <!--                <view class="m-recommend-img-box">-->
+    <!--                    <image src="" class="m-recommend-img"></image>-->
+    <!--                </view>-->
+    <!--                <view class="m-recommend-text">-->
+    <!--                    <view class="m-recommend-name">西湖-富春江-千岛湖-新安讲讲新安讲讲</view>-->
+    <!--                    <view class="m-flex-between m-between-text">-->
+    <!--                       <span class="m-price">¥ 199</span>-->
+    <!--                        <span class="m-grey">2017-09-01</span>-->
+    <!--                    </view>-->
+    <!--                </view>-->
+    <!--            </view>-->
+    <!--            <view class="m-one-recommend">-->
+    <!--                <view class="m-recommend-img-box">-->
+    <!--                    <image src="" class="m-recommend-img"></image>-->
+    <!--                </view>-->
+    <!--                <view class="m-recommend-text">-->
+    <!--                    <view class="m-recommend-name">西湖-富春江-千岛湖-新安讲讲新安讲讲</view>-->
+    <!--                    <view class="m-flex-between m-between-text">-->
+    <!--                        <span class="m-price">¥ 199</span>-->
+    <!--                        <span class="m-grey">2017-09-01</span>-->
+    <!--                    </view>-->
+    <!--                </view>-->
+    <!--            </view>-->
+    <!--        </view>-->
+  </view>
+
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import api from '../../api/api';
+  import tip from '../../utils/tip';
+  export default class recommend extends wepy.component {
+    config = {
+
+    };
+    components = {};
+    data = {
+      img_src:api.img_src,
+      img_url:api.api
+    };
+    props = {
+      list:{
+        type:Array,
+        default:[],
+        twoWay:true
+      }
+    }
+    postData(id,index){
+      let that = this;
+      wx.request({
+        url: api.collect + '?token=' +wx.getStorageSync('token'),
+        method:"post",
+        data:{
+          uclcotype:2,
+          uclcollection:id
+        },
+        success: function (resule){
+          tip.loaded();
+          if(resule.data.status == 200){
+            for(let i =0;i<that.list.length;i++){
+              if(that.list[i].author.usid == id){
+                that.list[i].followed = !that.list[i].followed
+              }
+            }
+            wx.showToast({
+              title: resule.data.message,
+              icon: 'success',
+              duration: 2000
+            })
+            that.$apply();
+          }else{
+            wx.showToast({
+              title: resule.data.message,
+              icon: 'none',
+              duration: 2000
+            })
+
+          }
+        }
+      })
+    }
+    onLoad(options) {
+
+    }
+
+    methods = {
+      follow(index){
+        console.log(index,this.list[index])
+        this.postData(this.list[index].author.usid,index);
+      },
+      toDetail(item){
+          wx.navigateTo({
+            url: '/pages/travel/circleDetail?trid='+item.trid
+          });
+      },
+    };
+  }
+</script>

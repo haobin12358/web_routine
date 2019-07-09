@@ -24,66 +24,7 @@
                     font-weight: 600;
                 }
             }
-            .m-one-recommend{
-                padding: 20rpx 30rpx;
-                border-bottom: 1px solid @border-color;
-                .flex-row(flex-start);
-                overflow: auto;
-                position: relative;
-                .m-recommend-label{
-                    position: absolute;
-                    padding: 0 10rpx;
-                    font-size: 20rpx;
-                    height: 32rpx;
-                    line-height: 32rpx;
-                    top: 4rpx;
-                    background-color: @common-color;
-                    z-index: 1;
-                }
-                .m-recommend-img-box{
-                    width: 288rpx;
-                    height: 161rpx;
-                    flex-shrink: 0;
-                    margin-right: 20rpx;
-                    /*background-color: #C1C1C1;*/
-                    .m-recommend-img{
-                        display: block;
-                        width: 288rpx;
-                        height: 161rpx;
-                    }
-                }
-                .m-recommend-text{
-                    height: 161rpx;
-                    width: 380rpx;
-                   display: flex;
-                    flex-flow: column;
-                    align-items: flex-start;
-                    justify-content: space-between;
-                    .m-recommend-topic{
-                        color: #006FCE;
-                    }
-                    .m-recommend-name{
-                        width: 100%;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        white-space: nowrap;
-                        font-weight: 500;
-                    }
-                    .m-between-text{
-                        width: 100%;
-                    }
-                    .m-recommend-icon{
-                        display: block;
-                        width: 40rpx;
-                        height: 40rpx;
-                    }
-                    .m-price{
-                        color: #EB0000;
-                        font-size: 32rpx;
-                        font-weight: 500;
-                    }
-                }
-            }
+
         }
     }
 
@@ -96,104 +37,42 @@
                 <htmlParser :parserName.sync="name1" :parserContent.sync="content1" />
             </view>
         </view>
-        <view class="m-recommend-item">
+        <view class="m-recommend-item" wx:if="{{recommend_raiders.length >0}}">
             <view class="m-recommend-title">
                 <span class="m-border-back">推荐攻略</span>
-                <view class="m-flex-end">
+                <view class="m-flex-end" wx:if="{{recommend_raiders.length == 2}}" @tap="changeRoute">
                     <span class="m-grey">更多攻略</span>
                     <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>
                 </view>
             </view>
-            <view class="m-one-recommend">
-                <view class="m-recommend-img-box">
-                    <span class="m-recommend-label">游记</span>
-                    <image src="{{img_src}}common/travel-img.jpg" class="m-recommend-img"></image>
-                </view>
-                <view class="m-recommend-text">
-                    <view class="m-recommend-topic">#杭州西湖二日游攻略#</view>
-                    <view class="m-flex-between m-between-text">
-                        <view class="m-flex-start">
-                            <image src="" class="m-user-head"></image>
-                            <span class="m-user-name">芒果哟哟</span>
-                        </view>
-                        <image src="{{img_src}}index/icon-add-look-active.png" class="m-recommend-icon"></image>
-                    </view>
-                </view>
-            </view>
-            <view class="m-one-recommend">
-                <view class="m-recommend-img-box">
-                    <span class="m-recommend-label">游记</span>
-                    <image src="" class="m-recommend-img"></image>
-                </view>
-                <view class="m-recommend-text">
-                    <view class="m-recommend-topic">#杭州西湖二日游攻略#</view>
-                    <view class="m-flex-between m-between-text">
-                        <view class="m-flex-start">
-                            <image src="" class="m-user-head"></image>
-                            <span class="m-user-name">芒果哟哟</span>
-                        </view>
-                        <image src="{{img_src}}index/icon-add-look-active.png" class="m-recommend-icon"></image>
-                    </view>
-                </view>
-            </view>
+          <recommend :list.sync="recommend_raiders" ></recommend>
         </view>
 
-<!--        <view class="m-recommend-item">-->
-<!--            <view class="m-recommend-title">-->
-<!--                <span class="m-border-back">推荐旅团</span>-->
-<!--                <view class="m-flex-end">-->
-<!--                    <span class="m-grey">更多旅团</span>-->
-<!--                    <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>-->
-<!--                </view>-->
-<!--            </view>-->
-<!--            <view class="m-one-recommend">-->
-<!--                <view class="m-recommend-img-box">-->
-<!--                    <image src="" class="m-recommend-img"></image>-->
-<!--                </view>-->
-<!--                <view class="m-recommend-text">-->
-<!--                    <view class="m-recommend-name">西湖-富春江-千岛湖-新安讲讲新安讲讲</view>-->
-<!--                    <view class="m-flex-between m-between-text">-->
-<!--                       <span class="m-price">¥ 199</span>-->
-<!--                        <span class="m-grey">2017-09-01</span>-->
-<!--                    </view>-->
-<!--                </view>-->
-<!--            </view>-->
-<!--            <view class="m-one-recommend">-->
-<!--                <view class="m-recommend-img-box">-->
-<!--                    <image src="" class="m-recommend-img"></image>-->
-<!--                </view>-->
-<!--                <view class="m-recommend-text">-->
-<!--                    <view class="m-recommend-name">西湖-富春江-千岛湖-新安讲讲新安讲讲</view>-->
-<!--                    <view class="m-flex-between m-between-text">-->
-<!--                        <span class="m-price">¥ 199</span>-->
-<!--                        <span class="m-grey">2017-09-01</span>-->
-<!--                    </view>-->
-<!--                </view>-->
-<!--            </view>-->
-<!--        </view>-->
     </view>
 </template>
 
 <script>
     import wepy from 'wepy';
     import htmlParser from '../../components/common/htmlParser';
-    import WxParse from '../../wxParse/wxParse';
     import tip from '../../utils/tip';
     import api from '../../api/api';
+    import Recommend from '../../components/common/recommend';
     export default class scenicDetail extends wepy.page {
         config = {
-            navigationBarTitleText: '景区',
-            enablePullDownRefresh: true
+            navigationBarTitleText: '景区'
         }
         components = {
-            htmlParser:htmlParser
+            htmlParser:htmlParser,
+            recommend:Recommend
         }
         data = {
           img_src:api.img_src,
             name1:'htmlParserName2',
             content1:"",
             scenic_name:'',
-          article_content:''
+          article_content:'',
+          recommend_raiders:[],
+          sspid:''
         }
         getDetail(id){
             let that = this;
@@ -209,6 +88,7 @@
                 },
                 success: function(res) {
                     that.scenic_name = res.data.data.sspname;
+                    that.recommend_raiders = res.data.data.recommend_raiders;
                     that.content1 = res.data.data.sspcontent;
                     that.content1 = that.content1.replace(/&quot;/g,'');
                     that.$apply();
@@ -225,11 +105,19 @@
             let that = this;
             // WxParse.wxParse('htmlParserName1','html',"<p style='font-size: 32rpx;padding: 30rpx 0;'>1231242</p>",that,0);
             if(options.sspid){
+              that.sspid = options.sspid;
                 this.getDetail(options.sspid)
             }
 
         }
 
-        methods = {}
+        methods = {
+          changeRoute(){
+            let that = this;
+            wx.navigateTo({
+              url: '/pages/travel/recommendList?sspid=' + that.sspid
+            });
+          }
+        }
     }
 </script>

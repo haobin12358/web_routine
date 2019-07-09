@@ -31,14 +31,15 @@
   export default class extends wepy.app {
     config = {
       pages: [
-
+        'pages/index/lookActivity',
         'pages/personal/login',
         'pages/index/enterPage',
-        'pages/index/lookActivity',
+
         'pages/index/setNotice',
         'pages/index/index',
         'pages/index/manageActivity',
         'pages/travel/index',
+        'pages/travel/recommendList',
         'pages/travel/circleDetail',
         'pages/index/editActivity',
         'pages/index/editCost',

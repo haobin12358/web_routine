@@ -31,6 +31,10 @@
           .m-user-label{
             color: #000;
             border-color: #000;
+            max-width: 200rpx;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
           }
         }
         .m-num-box{
@@ -96,7 +100,8 @@
               </view>
               <view class="m-line" wx:if="{{!usid || (usid && !user_info.concerned)}}"></view>
               <view class="m-col {{num_list[2].active ? 'active':''}}" wx:if="{{usid && !user_info.concerned}}" @tap="topTap(2)">
-                <image src="{{img_src}}index/icon-add-look.png" class="m-img"></image>
+                <image src="{{img_src}}index/icon-add-look.png" class="m-img" wx:if="{{ !user_info.concerned}}"></image>
+<!--                <image src="{{img_src}}index/icon-look-done.png" class="m-img" wx:else></image>-->
                 <view>关注</view>
               </view>
               <view class="m-col {{num_list[2].active ? 'active':''}}" wx:if="{{!usid}}" @tap="topTap(2)">
@@ -296,7 +301,7 @@
         },
         success: function (resule){
           if(resule.data.status == 200){
-            that.user_info.concerned = true;
+            that.user_info.concerned = !that.user_info.concerned;
             that.$apply();
           }else{
             wx.showToast({

@@ -49,7 +49,7 @@
                     case 'enter':
                         this.placeholder = '输入报名填写项，4字以内';
                         break;
-                    case 'recommend':
+                    case 'recommend.wpy':
                         this.placeholder = '输入推荐携带物品，建议5个以内';
                         break;
                     case 'location':
@@ -74,7 +74,7 @@
                         active:true
                       });
                       break;
-                    case 'recommend':
+                    case 'recommend.wpy':
 
                       this.all_data.recommend_list.push({
                         name:this.label,

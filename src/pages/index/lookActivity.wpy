@@ -1,125 +1,224 @@
 <style  lang="less" rel="stylesheet/less">
     @import "../../styles/common";
     .m-activityDetail{
-        .m-scheduling-info{
-            padding: 30rpx;
-            .m-scheduling-name{
-                font-weight: 600;
-                width: 560rpx;
-                overflow: hidden;
-                white-space: nowrap;
-                text-overflow: ellipsis;
-            }
-            .m-price{
-                color: #EB0000;
-                font-weight: 600;
-                font-size: 32rpx;
-            }
-            .m-name-title{
-                margin-bottom: 25rpx;
-            }
-            .m-name{
-                max-width: 300rpx;
-                overflow: hidden;
-                text-overflow:ellipsis;
-                white-space: nowrap;
-            }
+      .m-btn{
+        width: 100%;
+        background-color: #fff;
+        padding-top: 10rpx;
+        text-align: center;
+        span{
+          display: inline-block;
+          width: 300rpx;
+          height: 60rpx;
+          line-height: 60rpx;
+          background-color: @common-color;
         }
-        .m-scheduling-img{
-            display: block;
-            width: 100%;
-            height: 420rpx;
+
+      }
+      .m-scheduling-info{
+          padding: 30rpx;
+          .m-scheduling-name{
+              font-weight: 600;
+              width: 560rpx;
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+          }
+          .m-price{
+              color: #EB0000;
+              font-weight: 600;
+              font-size: 32rpx;
+          }
+          .m-name-title{
+              margin-bottom: 25rpx;
+          }
+          .m-name{
+              max-width: 300rpx;
+              overflow: hidden;
+              text-overflow:ellipsis;
+              white-space: nowrap;
+          }
+      }
+      .m-scheduling-img{
+          display: block;
+          width: 100%;
+          height: 420rpx;
+      }
+      .m-activityDetail-info{
+          li{
+              padding: 20rpx 30rpx;
+              border-bottom: 1px solid @border-color;
+              .flex-row(space-between);
+              .m-label{
+                  color: @grey-color;
+                  /*width: 162rpx;*/
+                  text-align: left;
+                  .flex-col(space-between);
+                  .m-line{
+                      color: @common-color;
+                  }
+              }
+              .m-info-text{
+                  width: 300rpx;
+                  .flex-col(space-between);
+                  .m-line{
+                      color: @common-color;
+                  }
+              }
+              &.m-no-flex{
+                  display: flex;
+                  flex-flow: column;
+                  justify-content: flex-start;
+                  align-items: flex-start;
+              }
+              .m-detail-text{
+                  text-indent: 2em;
+                  line-height: 56rpx;
+                  font-size: 24rpx;
+              }
+          }
+      }
+      .m-activity-scheduling{
+          padding-bottom: 240rpx;
+          .m-activity-scheduling-h3{
+              font-size: 32rpx;
+              padding: 14rpx 30rpx 0;
+          }
+          .m-scheduling-detail{
+              padding-bottom: 20rpx;
+              .m-open{
+                  width: 100%;
+                  text-align: center;
+                  color: @grey-color;
+              }
+          }
+      }
+      .m-info{
+          padding: 20rpx 30rpx;
+          line-height: 52rpx;
+          image{
+              width: 690rpx;
+              height: 388rpx!important;
+          }
+      }
+      .m-scheduling-foot{
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          border-top: 1px solid @border-color;
+          z-index: 10;
+          .m-icon-list{
+              .flex-row(space-around);
+              width: 750rpx;
+              padding: 30rpx 0;
+              background-color: #fff;
+              .m-icon-img{
+                  display: inline-block;
+                  width: 44rpx;
+                  height: 44rpx;
+              }
+          }
+          .m-scheduling-btn{
+              padding: 30rpx 0;
+              width: 750rpx;
+              background-color: @common-color;
+              font-size: 30rpx;
+              font-weight: 500;
+              text-align: center;
+          }
+
+      }
+      .m-modal{
+        width: 100%;
+        height: 100vh;
+        background-color: rgba(0,0,0,0.16);
+        position: fixed;
+        top:0;
+        left: 0;
+        z-index: 100;
+        .m-grey{
+          font-size: 24rpx;
         }
-        .m-activityDetail-info{
-            li{
-                padding: 20rpx 30rpx;
-                border-bottom: 1px solid @border-color;
-                .flex-row(space-between);
-                .m-label{
-                    color: @grey-color;
-                    /*width: 162rpx;*/
-                    text-align: left;
-                    .flex-col(space-between);
-                    .m-line{
-                        color: @common-color;
-                    }
-                }
-                .m-info-text{
-                    width: 300rpx;
-                    .flex-col(space-between);
-                    .m-line{
-                        color: @common-color;
-                    }
-                }
-                &.m-no-flex{
-                    display: flex;
-                    flex-flow: column;
-                    justify-content: flex-start;
-                    align-items: flex-start;
-                }
-                .m-detail-text{
-                    text-indent: 2em;
-                    line-height: 56rpx;
-                    font-size: 24rpx;
-                }
+        .m-modal-state{
+          width: 690rpx;
+          box-sizing: border-box;
+          padding: 30rpx;
+          background-color: #fff;
+          position: fixed;
+          top: 0;
+          left:0;
+          right: 0;
+          bottom: 0;
+          margin: auto;
+          text-align: center;
+          height: 750rpx;
+          .m-row{
+            padding: 20rpx 0;
+            border-bottom: 1px solid @border-color;
+            .flex-row(space-between);
+            .m-input{
+              text-align: right;
+              &.m-input-s{
+                width: 200rpx;
+              }
             }
-        }
-        .m-activity-scheduling{
-            padding-bottom: 120rpx;
-            .m-activity-scheduling-h3{
-                font-size: 32rpx;
-                padding: 14rpx 30rpx 0;
-            }
-            .m-scheduling-detail{
-                padding-bottom: 20rpx;
-                .m-open{
-                    width: 100%;
-                    text-align: center;
-                    color: @grey-color;
-                }
-            }
-        }
-        .m-info{
-            padding: 20rpx 30rpx;
-            line-height: 52rpx;
-            image{
-                width: 690rpx;
-                height: 388rpx!important;
-            }
-        }
-        .m-scheduling-foot{
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            border-top: 1px solid @border-color;
-            z-index: 10;
-            .m-icon-list{
-                .flex-row(space-around);
-                width: 750rpx;
-                padding: 30rpx 0;
-                background-color: #fff;
-                .m-icon-img{
-                    display: inline-block;
-                    width: 44rpx;
-                    height: 44rpx;
-                }
-            }
-            .m-scheduling-btn{
-                padding: 30rpx 0;
-                width: 750rpx;
+          }
+          .m-btn-box{
+            margin-top: 120rpx;
+            span{
+              border: 1px solid @common-color;
+              color: @common-color;
+              display: inline-block;
+              padding: 20rpx 120rpx;
+              &.active{
                 background-color: @common-color;
-                font-size: 30rpx;
-                font-weight: 500;
-                text-align: center;
+                color: #000;
+              }
             }
-
+          }
         }
-
+        .m-state{
+          width: 400rpx;
+          height: 400rpx;
+          text-align: center;
+          background-color: #fff;
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          margin: auto;
+          box-sizing: border-box;
+          padding: 0 30rpx;
+          &.m-small{
+            height: 520rpx;
+            .m-grey{
+              font-size: 28rpx;
+            }
+            .m-dashed-btn{
+              margin-top: 50rpx;
+              width: 300rpx;
+              height: 60rpx;
+              line-height: 60rpx;
+              text-align: center;
+              border: 1px solid @common-color;
+              color: @common-color;
+            }
+          }
+          .flex-col(center);
+          .m-result-img{
+            width: 120rpx;
+            height: 120rpx;
+            margin-bottom:30rpx ;
+          }
+        }
+      }
     }
 
 </style>
 <template>
     <view class="m-activityDetail" wx:if="{{detail}}">
+      <view class="m-btn"><span >确认承接</span></view>
         <view class="m-scheduling-info">
             <view class="m-flex-between m-name-title">
                 <span class="m-scheduling-name">{{detail.plname}}</span>
@@ -186,6 +285,7 @@
             </view>
         </view>
        <view class="m-scheduling-foot">
+          <view class="m-btn"><span @tap="changeActivity">转让活动</span></view>
            <view class="m-scheduling-btn" wx:if="{{detail.joinstatus}}" @tap="toEnter('/pages/index/enterPage')">我要报名</view>
            <ul class="m-icon-list" wx:if="{{detail.editstatus}}">
                <li wx:if="{{detail.plstatus == 2}}">
@@ -218,6 +318,51 @@
            </ul>
 
        </view>
+
+      <view class="m-modal" wx:if="{{show_modal}}">
+        <view class="m-modal-state">
+          <view class="m-row m-grey">填写转让对象信息</view>
+          <view class="m-row">
+            <span class="m-label">姓名</span>
+            <input type="text" class="m-input" placeholder="请输入姓名"/>
+          </view>
+          <view class="m-row">
+            <span class="m-label">手机号</span>
+            <input type="text" class="m-input" placeholder="请输入手机号"/>
+          </view>
+          <view class="m-row">
+            <span class="m-label">身份证号</span>
+            <input type="text" class="m-input" placeholder="请输入身份证号"/>
+          </view>
+          <view class="m-row">
+            <span class="m-label">转让费用<span class="m-grey">(支付转让对象的费用)</span></span>
+            <input type="number" class="m-input m-input-s" placeholder="0"/>
+          </view>
+          <view class="m-btn-box">
+            <span @tap="cancelModal('show_modal')">取消</span>
+            <span class="active" @tap="sureTap">确定</span>
+          </view>
+        </view>
+      </view>
+      <view class="m-modal" wx:if="{{show_result}}" @tap="cancelModal('show_result')">
+        <view class="m-state">
+          <view>
+            <image src="{{img_src}}common/result.png" class="m-result-img"></image>
+            <view>转让人不存在</view>
+            <view class="m-grey">请确认转让对象信息</view>
+          </view>
+        </view>
+      </view>
+      <view class="m-modal" wx:if="{{show_look}}" @tap="cancelModal('show_look')">
+        <view class="m-state m-small">
+          <view>
+            <image src="{{img_src}}common/result-bag.png" class="m-result-img"></image>
+          </view>
+          <view>转让协议 <span class="m-grey">可以在</span></view>
+          <view>个人中心-协议管理<span class="m-grey">中查看</span></view>
+          <view class="m-dashed-btn">我知道了</view>
+        </view>
+      </view>
     </view>
 </template>
 
@@ -241,7 +386,10 @@
             detail_info:null,
             content1:"",
             show_open:false,
-            plid:'0d85db48-9bd6-11e9-8e38-0242ac110002'
+            plid:'0d85db48-9bd6-11e9-8e38-0242ac110002',
+            show_modal:false,
+            show_result:false,
+          show_look:false
         }
 
         getDetail(id){
@@ -410,6 +558,20 @@
             wx.navigateTo({
               url: '/pages/index/setNotice' + '?plid=' +that.plid
             });
+          },
+          //关闭弹框
+          cancelModal(name){
+              this[name] = false;
+              this.$apply();
+          },
+          //确认
+          sureTap(){
+            this.show_result = true;
+            this.$apply();
+          },
+          changeActivity(){
+            this.show_modal = true;
+            this.$apply();
           }
         }
     }

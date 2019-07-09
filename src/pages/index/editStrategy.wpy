@@ -88,7 +88,7 @@
         </view>
         <view class="m-block-box">
           <span class="{{item.active? 'active':''}}"  wx:for="{{recommend_list}}" @tap="labelTap({{index}},'recommend_list')" wx:key="{{index}}">{{item.name}}</span>
-          <span @tap="changeRoute('/pages/index/enterLabel','recommend')">+</span>
+          <span @tap="changeRoute('/pages/index/enterLabel','recommend.wpy')">+</span>
         </view>
       </view>
       <view class="m-row">

@@ -63,9 +63,9 @@
   <view>
     <view class="m-one-circle" wx:for="{{list}}" wx:key="{{index}}">
       <view class="m-one-circle-title">
-        <view class="m-flex-start">
-          <image src="{{img_url}}{{item.author.usheader}}" class="m-user-head" @tap="toOtherMain({{item}})"></image>
-          <span class="m-user-name" @tap="toOtherMain({{item}})">{{item.author.usname}}</span>
+        <view class="m-flex-start"  @tap="toOtherMain({{item}})">
+          <image src="{{img_url}}{{item.author.usheader}}" class="m-user-head"></image>
+          <span class="m-user-name" >{{item.author.usname}}</span>
           <span class="m-user-label">{{item.author.usminilevel}}</span>
         </view>
         <view class="m-circle-label">{{item.travelrecordtype_zh}}</view>

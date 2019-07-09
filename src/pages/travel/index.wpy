@@ -105,6 +105,7 @@
 </style>
 <template>
     <view class="m-travel">
+      <scroll-view scroll-y style="height: 100vh;" bindscrolltolower="lower">
         <swiper
                 indicator-dots="{{indicatorDots}}"
                 autoplay="{{autoplay}}"
@@ -127,10 +128,10 @@
             <li>
               <city @citySelect.user="citySelect" ></city>
             </li>
-            <li>
-                <span>杭州</span>
-                <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
-            </li>
+<!--            <li>-->
+<!--                <span>杭州</span>-->
+<!--                <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>-->
+<!--            </li>-->
             <li>
 
               <picker bindchange="bindLevelChange" value="{{level_index}}" range-key="name" range="{{level_list}}">
@@ -150,7 +151,7 @@
                     <view class="m-price-time">
                         <span class="m-grey m-location">{{item.ssparea}}</span>
                         <view class="m-more-text">
-                            <span>攻略 26</span>
+                            <span>攻略 {{item.raiders_num}}</span>
                             <image src="{{img_src}}common/icon-more-active.png" class="m-icon-more-active"></image>
                         </view>
                     </view>
@@ -181,6 +182,7 @@
 <!--                </view>-->
 <!--            </view>-->
         </view>
+      </scroll-view>
     </view>
 </template>
 
@@ -235,6 +237,7 @@
                 page_num: 1,
                 page_size: 10
             },
+          total_count:0,
           select_city:{},
           level_list:[
             {
@@ -271,16 +274,23 @@
             wx.request({
                 url: api.scenicspot_list + '?token=' +wx.getStorageSync('token'),
                 data: {
-                    page_num: 1,
+                    page_num: that.page_info.page_num,
                     page_size:that.page_info.page_size,
+                  ssparea:that.select_city.name || '',
+                  ssplevel: that.level_list[that.level_index].value
                 },
                 header: {
                     'content-type': 'application/json' // 默认值
                 },
                 success: function(res) {
+                  if(that.page_info.page_num > 1){
+                    that.scenic_data = that.scenic_data.concat(res.data.data);
+                  }else{
                     that.scenic_data = res.data.data;
-                    that.$apply();
-                    tip.loaded();
+                  }
+                  that.total_count = res.data.total_count;
+                  that.$apply();
+                  tip.loaded();
                 },
                 error:function (error) {
                     tip.loaded();
@@ -292,22 +302,31 @@
         }
 
         methods = {
-            // iconClick(item){
-            //     this.select_icon = item;
-            // },
-            changeRoute(v,item){
-                wx.navigateTo({
-                    url: v+'?sspid=' + item.sspid
-                });
-            },
-            //城市选择
-            citySelect(e){
-              this.select_city = e;
-              this.$apply();
-            },
+          // iconClick(item){
+          //     this.select_icon = item;
+          // },
+          changeRoute(v,item){
+              wx.navigateTo({
+                  url: v+'?sspid=' + item.sspid
+              });
+          },
+          //城市选择
+          citySelect(e){
+            this.select_city = e;
+            this.$apply();
+            this.getScenic();
+          },
           bindLevelChange(e){
             this.level_index = e.detail.value;
             this.$apply();
+            this.getScenic();
+          },
+          lower(){
+            if(this.total_count > this.scenic_data.length) {
+              this.page_info.page_num += 1;
+              this.$apply();
+              this.getScenic();
+            }
           }
         }
     }
