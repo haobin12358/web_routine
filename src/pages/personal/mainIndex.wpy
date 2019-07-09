@@ -56,6 +56,10 @@
             background-color: #000;
             margin: 0 60rpx;
           }
+          .m-img{
+            width: 40rpx;
+            height: 40rpx;
+          }
         }
       }
     }
@@ -71,57 +75,69 @@
 </style>
 <template>
     <view class="m-mainIndex">
-      <view class="m-mainIndex-top">
-        <image src="{{img_src}}personal/personal-bg.png" class="m-personal-bg"></image>
-        <view class="m-top-content">
-          <view class="m-user-info">
-            <image src="" class="m-user-head"></image>
-            <view class="m-user-name">12e1</view>
-            <view class="m-user-label">212123</view>
-          </view>
-          <view class="m-num-box">
-            <view class="m-col {{num_list[0].active ? 'active':''}}"  @tap="topTap(0)">
-              <view class="m-num">{{num_list[0].value}}</view>
-              <view>关注</view>
+      <scroll-view scroll-y style="height: 100vh;" bindscrolltolower="lower"  >
+        <view class="m-mainIndex-top">
+          <image src="{{img_src}}personal/personal-bg.png" class="m-personal-bg"></image>
+          <view class="m-top-content">
+            <view class="m-user-info">
+              <image src="{{img_url}}{{user_info.usheader}}" class="m-user-head"></image>
+              <view class="m-user-name">{{user_info.usname}}</view>
+              <view class="m-user-label">{{user_info.usminilevel}}</view>
             </view>
-            <view class="m-line"></view>
-            <view class="m-col {{num_list[1].active ? 'active':''}}" @tap="topTap(1)">
-              <view class="m-num">{{num_list[1].value}}</view>
-              <view>粉丝</view>
-            </view>
-            <view class="m-line"></view>
-            <view class="m-col {{num_list[2].active ? 'active':''}}" @tap="topTap(2)">
-              <view class="m-num">{{num_list[2].value}}</view>
-              <view>发布</view>
+            <view class="m-num-box">
+              <view class="m-col {{num_list[0].active ? 'active':''}}"  @tap="topTap(0)">
+                <view class="m-num">{{num_list[0].value}}</view>
+                <view>关注</view>
+              </view>
+              <view class="m-line"></view>
+              <view class="m-col {{num_list[1].active ? 'active':''}}" @tap="topTap(1)">
+                <view class="m-num">{{num_list[1].value}}</view>
+                <view>粉丝</view>
+              </view>
+              <view class="m-line" wx:if="{{!usid || (usid && !user_info.concerned)}}"></view>
+              <view class="m-col {{num_list[2].active ? 'active':''}}" wx:if="{{usid && !user_info.concerned}}" @tap="topTap(2)">
+                <image src="{{img_src}}index/icon-add-look.png" class="m-img"></image>
+                <view>关注</view>
+              </view>
+              <view class="m-col {{num_list[2].active ? 'active':''}}" wx:if="{{!usid}}" @tap="topTap(2)">
+                <view class="m-num">{{num_list[2].value}}</view>
+                <view>发布</view>
+              </view>
             </view>
           </view>
         </view>
-      </view>
-      <view class="m-mainIndex-content">
-        <view class="m-select-box">
-          <city @citySelect.user="citySelect"></city>
-          <picker mode="date" value="{{date}}" start="2018-09" fields="month"	  bindchange="bindDateChange">
-            <view class="m-select-one">
-              <span class="{{date?'m-common':''}}">{{date || '时间'}}</span>
-              <image src="{{img_src}}common/icon-down-solid-active.png" wx:if="{{date}}" class="m-down-solid"></image>
-              <image src="{{img_src}}common/icon-down-solid.png" wx:else class="m-down-solid"></image>
-            </view>
-          </picker>
+        <view class="m-mainIndex-content">
 
-          <picker bindchange="bindStatusChange" value="{{status_index}}" range-key="name" range="{{status_list}}">
-            <view class="m-select-one">
-              <span  class="{{status_index?'m-common':''}}">{{status_list[status_index].name}}</span>
-              <image src="{{img_src}}common/icon-down-solid-active.png" wx:if="{{status_index}}" class="m-down-solid"></image>
-              <image src="{{img_src}}common/icon-down-solid.png" wx:else class="m-down-solid"></image>
+          <view wx:if="{{!num_list[0].active && !num_list[1].active  }}">
+            <view class="m-select-box">
+              <city @citySelect.user="citySelect"></city>
+              <picker mode="date" value="{{date}}" start="2018-09" fields="month"	  bindchange="bindDateChange">
+                <view class="m-select-one">
+                  <span class="{{date?'m-common':''}}">{{date || '时间'}}</span>
+                  <image src="{{img_src}}common/icon-down-solid-active.png" wx:if="{{date}}" class="m-down-solid"></image>
+                  <image src="{{img_src}}common/icon-down-solid.png" wx:else class="m-down-solid"></image>
+                </view>
+              </picker>
+
+              <picker bindchange="bindStatusChange" value="{{status_index}}" range-key="name" range="{{status_list}}">
+                <view class="m-select-one">
+                  <span  class="{{status_index?'m-common':''}}">{{status_list[status_index].name}}</span>
+                  <image src="{{img_src}}common/icon-down-solid-active.png" wx:if="{{status_index}}" class="m-down-solid"></image>
+                  <image src="{{img_src}}common/icon-down-solid.png" wx:else class="m-down-solid"></image>
+                </view>
+              </picker>
             </view>
-          </picker>
+
+              <circle :list.sync="list_data" wx:if="{{list_data.length > 0}}" ></circle>
+            <view class="m-no-data" wx:else>暂无内容</view>
+          </view>
+          <view wx:else>
+            <user :user_list.sync="user_list" wx:if="{{user_list.length > 0}}" ></user>
+            <view class="m-no-data" wx:else>暂无{{num_list[0].active?'关注的人':'粉丝'}}</view>
+          </view>
 
         </view>
-        <circle :list.sync="list_data" wx:if="{{list_data.length>0}}"></circle>
-        <view class="m-no-data">暂无内容</view>
-
-        <user></user>
-      </view>
+      </scroll-view>
     </view>
 </template>
 
@@ -149,12 +165,14 @@
         {
           name:'关注',
           value:22,
-          active:false
+          active:false,
+          type:'follow'
         },
         {
           name:'粉丝',
           value:22,
-          active:false
+          active:false,
+          type:'fens'
         },
         {
           name:'发布',
@@ -163,6 +181,7 @@
         }
       ],
       img_src:api.img_src,
+      img_url:api.api,
       status_list:[
         {
           name:'全部',
@@ -184,17 +203,30 @@
       status_index:0,
       date:'',
       select_city:{},
-      list_data:[]
+      list_data:[],
+      usid:'',
+      user_list:[],
+      page_info:{
+        page_num:1,
+        page_size:20
+      },
+      total_count:0,
+      option:''
     };
     //
     getData(){
       let that = this;
+      tip.loading();
       wx.request({
         url: api.travelrecord_list +'?token='+wx.getStorageSync('token') ,
         data: {
-          area:that.select_city.name,
+          usid:that.usid,
+          area:that.select_city.name || '',
           date:that.date,
-          trtype:that.status_list[that.status_index].value
+          trtype:that.status_list[that.status_index].value,
+          page_num:that.page_info.page_num,
+          page_size: that.page_info.page_size,
+          option:that.option
         },
         header: {
           'content-type': 'application/json' // 默认值
@@ -204,17 +236,90 @@
           that.num_list[0].value = data.top.followed;
           that.num_list[1].value = data.top.fens;
           that.num_list[2].value = data.top.published;
-          that.list_data = data.travelrecord;
+          that.user_info = data.top;
+          if(that.page_info.page_num >1){
+            that.list_data = that.list_data.concat(data.travelrecord);
+          }else{
+            that.list_data = data.travelrecord;
+          }
+          if(that.usid){
+            wx.setNavigationBarTitle({
+              title: data.top.usname +'的主页'
+            })
+          }
+          that.total_count = res.data.total_count;
           that.$apply();
+          tip.loaded();
         }
       })
     }
+    getUser(){
+      let that = this;
+      tip.loading();
+      let type = '';
+      for(let i =0;i<that.num_list.length;i++){
+        if(that.num_list[i].active){
+          type = that.num_list[i].type
+        }
+      }
+      wx.request({
+        url: api.collection_show +'?token='+wx.getStorageSync('token') ,
+        data: {
+          showtype:type,
+          page_num:that.page_info.page_num,
+          page_size: that.page_info.page_size
+        },
+        header: {
+          'content-type': 'application/json' // 默认值
+        },
+        success: function(res) {
+          let data = res.data.data;
+          if(that.page_info.page_num >1){
+            that.user_list =  that.user_list.concat(data);
+          }else{
+            that.user_list =  data;
+          }
+          that.total_count = res.data.total_count;
+          that.$apply();
+          tip.loaded();
+        }
+      })
+    }
+    postData(){
+      let that = this;
+      wx.request({
+        url: api.collect + '?token=' +wx.getStorageSync('token'),
+        method:"post",
+        data:{
+          uclcotype:2,
+          uclcollection:that.usid
+        },
+        success: function (resule){
+          if(resule.data.status == 200){
+            that.user_info.concerned = true;
+            that.$apply();
+          }else{
+            wx.showToast({
+              title: resule.data.message,
+              icon: 'none',
+              duration: 2000
+            })
 
-
+          }
+        }
+      })
+    }
     onLoad(options) {
+      if(options.usid){
+        this.usid = options.usid;
+        this.$apply();
+      }
       this.getData();
     }
-
+    onUnload(){
+      this.usid = '';
+      this.$apply();
+    }
     methods = {
       //类型选择
       bindStatusChange(e){
@@ -236,11 +341,59 @@
       },
       //关注粉丝发布点击
       topTap(e){
-        for (let i=0;i<this.num_list.length;i++){
-          this.num_list[i].active = false;
+        if(this.usid && this.user_info.concerned){
+          return false;
         }
-        this.num_list[Number(e)].active = true;
+        this.page_info.page_num = 1;
+        if(this.num_list[Number(e)].active){
+          this.num_list[Number(e)].active = !this.num_list[Number(e)].active;
+        }else{
+          for (let i=0;i<this.num_list.length;i++){
+            this.num_list[i].active = false;
+          }
+          this.num_list[Number(e)].active = true;
+        }
+
+        this.option = '';
         this.$apply();
+        if(this.num_list[Number(e)].active) {
+          switch (e) {
+            case '0':
+              this.getUser();
+              break;
+            case '1':
+              this.getUser();
+              break;
+            case '2':
+              if(this.usid){
+                this.postData();
+              }else{
+                this.option = 'my';
+                this.getData();
+              }
+              break;
+          }
+        }else{
+          this.getData();
+        }
+
+      },
+      lower(){
+
+          if(!this.num_list[0].active && !this.num_list[1].active){
+            if(this.total_count > this.list_data.length){
+              this.page_info.page_num +=1;
+              this.$apply();
+              this.getData();
+            }
+          }else{
+            if(this.total_count > this.user_list.length){
+              this.page_info.page_num +=1;
+              this.$apply();
+              this.getUser();
+            }
+          }
+
       }
     };
   }

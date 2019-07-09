@@ -64,8 +64,8 @@
     <view class="m-one-circle" wx:for="{{list}}" wx:key="{{index}}">
       <view class="m-one-circle-title">
         <view class="m-flex-start">
-          <image src="{{item.author.usheader}}" class="m-user-head"></image>
-          <span class="m-user-name">{{item.author.usname}}</span>
+          <image src="{{img_url}}{{item.author.usheader}}" class="m-user-head" @tap="toOtherMain({{item}})"></image>
+          <span class="m-user-name" @tap="toOtherMain({{item}})">{{item.author.usname}}</span>
           <span class="m-user-label">{{item.author.usminilevel}}</span>
         </view>
         <view class="m-circle-label">{{item.travelrecordtype_zh}}</view>
@@ -75,7 +75,7 @@
         <view class="m-text"  wx:if="{{item.trtype == 2 }}">
           <view>{{item.text}}</view>
           <view class="m-img-box">
-            <image src="{{key}}" class="m-img" wx:if="{{item.showtype == 'image'}}" wx:for="{{item.image}}" wx:key="{{i}}" wx:for-index="i" wx:for-item="key" @tap.stop="previewImage({{key}})"></image>
+            <image wx:for="{{item.image}}" wx:key="{{i}}" wx:for-index="i" wx:for-item="key" src="{{key}}" class="m-img" wx:if="{{item.showtype == 'image'}}"  @tap.stop="previewImage({{key}})"></image>
             <video  wx:if="{{item.showtype == 'video'}}" src="{{item.video.url}}" poster="{{item.video.thumbnail}}"  controls></video>
           </view>
         </view>
@@ -124,7 +124,8 @@
         }
         data = {
           img_src:api.img_src,
-          img_list:[]
+          img_list:[],
+          img_url:api.api
 
         }
 
@@ -141,12 +142,20 @@
               });
             }
           },
+          toOtherMain(item){
+            if(!item.is_own && item.author.usid){
+              wx.navigateTo({
+                url: '/pages/personal/mainIndex?usid='+item.author.usid
+              });
+            }
+
+          },
           //预览图片
           previewImage(item){
+
             let that = this;
             if(this.list.length > 0){
               for(let i=0;i<this.list.length;i++){
-                console.log(this.list[i].picture)
                 if(this.list[i].picture){
                   this.img_list.push(this.list[i].picture);
                 }
