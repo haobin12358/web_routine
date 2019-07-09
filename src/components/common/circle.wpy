@@ -30,6 +30,21 @@
             height: 388rpx;
             margin-bottom: 10rpx;
         }
+       .m-img-box{
+        .flex-row(flex-start);
+        flex-wrap: wrap;
+        margin-top: 20rpx;
+        .m-img{
+          width: 200rpx;
+          height: 200rpx;
+          margin: 0 20rpx 20rpx 0;
+        }
+        video{
+          width: 690rpx;
+          height: 388rpx;
+          margin-bottom: 20rpx;
+        }
+      }
         .m-loc-box{
             .flex-row(flex-start);
             font-size: 24rpx;
@@ -45,53 +60,107 @@
 
 </style>
 <template>
-    <view class="m-one-circle">
-        <view class="m-one-circle-title">
-            <view class="m-flex-start">
-                <image src="" class="m-user-head"></image>
-                <span class="m-user-name">123</span>
-                <span class="m-user-label">会员</span>
-            </view>
-            <view class="m-circle-label">游记</view>
+  <view>
+    <view class="m-one-circle" wx:for="{{list}}" wx:key="{{index}}">
+      <view class="m-one-circle-title">
+        <view class="m-flex-start">
+          <image src="{{item.author.usheader}}" class="m-user-head"></image>
+          <span class="m-user-name">{{item.author.usname}}</span>
+          <span class="m-user-label">{{item.author.usminilevel}}</span>
         </view>
-        <view class="m-info">杭州-富阳</view>
-        <view class="m-text">
-                        <span class="m-topic">
-                            #去热带的岛屿游泳#
-                        </span>
-            攻略测评打赏,榜单场景内容推荐
-            网红打卡自由主题圈子活动游记攻略测评打赏榜单场景,
-            内容推荐网红打卡自由主题圈子活动游记攻略测评
+        <view class="m-circle-label">{{item.travelrecordtype_zh}}</view>
+      </view>
+      <view >
+        <!--      <view class="m-info">杭州-富阳</view>-->
+        <view class="m-text"  wx:if="{{item.trtype == 2 }}">
+          <view>{{item.text}}</view>
+          <view class="m-img-box">
+            <image src="{{key}}" class="m-img" wx:if="{{item.showtype == 'image'}}" wx:for="{{item.image}}" wx:key="{{i}}" wx:for-index="i" wx:for-item="key" @tap.stop="previewImage({{key}})"></image>
+            <video  wx:if="{{item.showtype == 'video'}}" src="{{item.video.url}}" poster="{{item.video.thumbnail}}"  controls></video>
+          </view>
         </view>
-        <image src="" class="m-one-img" ></image>
-        <view class="m-info">杭州-富阳</view>
-        <view class="m-info">杭州-富阳</view>
-        <view class="m-loc-box">
+        <view class="m-text" wx:else >
+            <span class="m-topic">
+                #{{item.trtitle}}#
+            </span>
+          <span wx:if="{{item.text}}">{{item.text}}</span>
+
+        </view>
+        <image src="{{item.picture}}" wx:if="{{item.picture}}" class="m-one-img" @tap.stop="previewImage({{item.picture}})"></image>
+
+        <!--      <image src="" class="m-one-img" ></image>-->
+        <view class="m-info" wx:if="{{item.trproducts_str}}">推荐携带物品：{{item.trproducts_str}}</view>
+        <view class="m-info" wx:if="{{item.trbudget}}">预算：¥{{item.trbudget}}</view>
+        <view class="m-flex-between" >
+          <view class="m-loc-box" wx:if="{{item.trlocation}}">
             <image src="{{img_src}}common/icon-loc.png" class="m-icon-loc"></image>
-            <span>杭州·杭州西湖风景名胜区</span>
+            <span >{{item.trlocation}}</span>
+          </view>
+          <view class="m-grey m-flex-end" wx:if="{{item.trtype != 2 }}" @tap="changeRoute({{item}})">
+            <span>查看详情</span>
+            <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>
+          </view>
         </view>
+      </view>
+
     </view>
+  </view>
+
 </template>
 
 <script>
     import wepy from 'wepy';
     import api from '../../api/api';
+
     export default class Circle extends wepy.component {
         props ={
-            item:{
-                type:Object,
-                default:{}
+            list:{
+                type:Array,
+                default:[]
             }
         }
-        components = {}
+        components = {
+
+        }
         data = {
-          img_src:api.img_src
+          img_src:api.img_src,
+          img_list:[]
+
         }
 
         onLoad(options) {
-            console.log(this.item,'asdasd')
+
+
         }
 
-        methods = {}
+        methods = {
+          changeRoute(item){
+            if(item.trtype != 2){
+              wx.navigateTo({
+                url: '/pages/travel/circleDetail?trid='+item.trid
+              });
+            }
+          },
+          //预览图片
+          previewImage(item){
+            let that = this;
+            if(this.list.length > 0){
+              for(let i=0;i<this.list.length;i++){
+                console.log(this.list[i].picture)
+                if(this.list[i].picture){
+                  this.img_list.push(this.list[i].picture);
+                }
+                if(this.list[i].image){
+                  this.img_list = this.img_list.concat(this.list[i].image);
+                }
+              }
+              this.$apply();
+            }
+            wx.previewImage({
+              current: item, // 当前显示图片的http链接
+              urls: that.img_list // 需要预览的图片http链接列表
+            })
+          },
+        }
     }
 </script>

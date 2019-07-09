@@ -132,8 +132,14 @@
                 <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
             </li>
             <li>
-                <span>杭州</span>
-                <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
+
+              <picker bindchange="bindLevelChange" value="{{level_index}}" range-key="name" range="{{level_list}}">
+                <view class="m-select-one">
+                  <span  class="{{level_index?'m-common':''}}">{{level_list[level_index].name}}</span>
+                  <image src="{{img_src}}common/icon-down-solid-active.png" wx:if="{{level_index}}" class="m-down-solid"></image>
+                  <image src="{{img_src}}common/icon-down-solid.png" wx:else class="m-down-solid"></image>
+                </view>
+              </picker>
             </li>
         </ul>
         <view class="m-travel-list">
@@ -150,30 +156,30 @@
                     </view>
                 </view>
             </view>
-            <view class="m-one-travel">
-                <image src="" class="m-travel-img"></image>
-                <view class="m-one-travel-text">
-                    <view class="m-title">西湖-富春江-千岛湖-新安江讲讲江</view>
-                    <view class="m-price-time">
-                        <span class="m-price">¥199</span>
-                        <span class="m-grey">6/10-6/12</span>
+<!--            <view class="m-one-travel">-->
+<!--                <image src="" class="m-travel-img"></image>-->
+<!--                <view class="m-one-travel-text">-->
+<!--                    <view class="m-title">西湖-富春江-千岛湖-新安江讲讲江</view>-->
+<!--                    <view class="m-price-time">-->
+<!--                        <span class="m-price">¥199</span>-->
+<!--                        <span class="m-grey">6/10-6/12</span>-->
 
-                    </view>
-                </view>
-            </view>
-            <view class="m-one-travel">
-                <image src="" class="m-travel-img"></image>
-                <view class="m-one-travel-text">
-                    <view class="m-user-title">
-                        <span class="m-user-name">西湖-富春江-千岛湖-新安江讲讲江</span>
-                        <span class="m-grey">工龄5年</span>
-                    </view>
-                    <view class="m-price-time">
-                        <span class="m-grey">浙江省·杭州市</span>
-                        <view class="m-common">4.8分</view>
-                    </view>
-                </view>
-            </view>
+<!--                    </view>-->
+<!--                </view>-->
+<!--            </view>-->
+<!--            <view class="m-one-travel">-->
+<!--                <image src="" class="m-travel-img"></image>-->
+<!--                <view class="m-one-travel-text">-->
+<!--                    <view class="m-user-title">-->
+<!--                        <span class="m-user-name">西湖-富春江-千岛湖-新安江讲讲江</span>-->
+<!--                        <span class="m-grey">工龄5年</span>-->
+<!--                    </view>-->
+<!--                    <view class="m-price-time">-->
+<!--                        <span class="m-grey">浙江省·杭州市</span>-->
+<!--                        <view class="m-common">4.8分</view>-->
+<!--                    </view>-->
+<!--                </view>-->
+<!--            </view>-->
         </view>
     </view>
 </template>
@@ -229,7 +235,34 @@
                 page_num: 1,
                 page_size: 10
             },
-          select_city:{}
+          select_city:{},
+          level_list:[
+            {
+              name:'不限',
+              value:''
+            },
+            {
+              name:'1A',
+              value:'1'
+            },
+            {
+              name:'2A',
+              value:'2'
+            },
+            {
+              name:'3A',
+              value:'3'
+            },
+            {
+              name:'4A',
+              value:'4'
+            },
+            {
+              name:'5A',
+              value:'5'
+            }
+          ],
+          level_index:0
         }
 
         getScenic(){
@@ -272,6 +305,10 @@
               this.select_city = e;
               this.$apply();
             },
+          bindLevelChange(e){
+            this.level_index = e.detail.value;
+            this.$apply();
+          }
         }
     }
 </script>

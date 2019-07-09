@@ -67,7 +67,6 @@
              */
             try{
                 WxParse.wxParse(this.parserName , this.parserType, this.parserContent , this,this.parserPadding);
-                console.log(this)
                 this.htmlParserTpl = this[this.parserName];
                 this.$apply();
             }catch (e){

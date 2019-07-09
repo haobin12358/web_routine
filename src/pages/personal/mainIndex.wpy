@@ -2,6 +2,7 @@
   @import "../../styles/common.less";
   .m-mainIndex{
     padding-bottom: 30rpx;
+    font-size: 28rpx;
     .m-mainIndex-top{
       position: relative;
       width: 100%;
@@ -62,6 +63,7 @@
       .m-select-box{
         .flex-row(space-around);
         padding: 30rpx 0;
+        font-size: 24rpx;
       }
     }
   }
@@ -79,17 +81,17 @@
           </view>
           <view class="m-num-box">
             <view class="m-col {{num_list[0].active ? 'active':''}}"  @tap="topTap(0)">
-              <view class="m-num">22</view>
+              <view class="m-num">{{num_list[0].value}}</view>
               <view>关注</view>
             </view>
             <view class="m-line"></view>
             <view class="m-col {{num_list[1].active ? 'active':''}}" @tap="topTap(1)">
-              <view class="m-num">22</view>
+              <view class="m-num">{{num_list[1].value}}</view>
               <view>粉丝</view>
             </view>
             <view class="m-line"></view>
             <view class="m-col {{num_list[2].active ? 'active':''}}" @tap="topTap(2)">
-              <view class="m-num">22</view>
+              <view class="m-num">{{num_list[2].value}}</view>
               <view>发布</view>
             </view>
           </view>
@@ -115,7 +117,8 @@
           </picker>
 
         </view>
-        <circle></circle>
+        <circle :list.sync="list_data" wx:if="{{list_data.length>0}}"></circle>
+        <view class="m-no-data">暂无内容</view>
 
         <user></user>
       </view>
@@ -141,6 +144,7 @@
       city:City
     };
     data = {
+      user_info:{},
       num_list:[
         {
           name:'关注',
@@ -166,41 +170,41 @@
         },
         {
           name:'攻略',
-          value:''
+          value:'0'
         },
         {
           name:'游记',
-          value:''
+          value:'1'
         },
         {
           name:'随笔',
-          value:''
+          value:'2'
         }
       ],
       status_index:0,
       date:'',
-      select_city:{}
+      select_city:{},
+      list_data:[]
     };
     //
     getData(){
       let that = this;
       wx.request({
-        url: api.get_provinces ,
+        url: api.travelrecord_list +'?token='+wx.getStorageSync('token') ,
         data: {
+          area:that.select_city.name,
+          date:that.date,
+          trtype:that.status_list[that.status_index].value
         },
         header: {
           'content-type': 'application/json' // 默认值
         },
         success: function(res) {
           let data = res.data.data;
-          that.multiArray[0] = [];
-          for(let i =0;i<data.length;i++){
-            that.multiArray[0].push({
-              apid:data[i].apid,
-              name:data[i].apname
-            });
-          }
-          that.getCity(data[0].apid);
+          that.num_list[0].value = data.top.followed;
+          that.num_list[1].value = data.top.fens;
+          that.num_list[2].value = data.top.published;
+          that.list_data = data.travelrecord;
           that.$apply();
         }
       })
@@ -208,7 +212,7 @@
 
 
     onLoad(options) {
-
+      this.getData();
     }
 
     methods = {
@@ -216,16 +220,19 @@
       bindStatusChange(e){
         this.status_index = e.detail.value;
         this.$apply();
+        this.getData();
       },
       //时间选择
       bindDateChange(e){
         this.date = e.detail.value;
         this.$apply();
+        this.getData();
       },
       //城市选择
       citySelect(e){
         this.select_city = e;
         this.$apply();
+        this.getData();
       },
       //关注粉丝发布点击
       topTap(e){

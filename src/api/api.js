@@ -33,6 +33,8 @@ const add_travelrecord = api2 + 'scenicspot/add_travelrecord';//发布游记/攻
 
 const scenicspot_list = api2 +'scenicspot/list';//获取景区list
 const scenicspot_get = api2 +'scenicspot/get';//获取景区详情
+const travelrecord_list = api2 +'scenicspot/travelrecord_list';//获取个人主页列表
+const get_travelrecord = api2 +'scenicspot/get_travelrecord';//获取详情
 
 const get_provinces = api2 + 'address/get_provinces';//获取所有省份
 const get_citys = api2 +'address/get_citys';//获取城市
@@ -55,6 +57,7 @@ const img_src = '../../images/';
 module.exports = {
   api,img_src,login,bind_phone,set_cost,set_insurance,scenicspot_list,scenicspot_get,set_play,get_cost,get_insurance,get_play,
     get_play_list,get_gather,set_gather,get_playrequire,play_join,identity,set_signin,get_signin,get_current_play,help,signin,
-  get_enter_user,collect,add_travelrecord,upload,batch_upload,create_notice,get_notice,get_provinces,get_citys,get_areas,get_member_location
+  get_enter_user,collect,add_travelrecord,upload,batch_upload,create_notice,get_notice,get_provinces,get_citys,get_areas,get_member_location,
+  travelrecord_list,get_travelrecord
 
 }
