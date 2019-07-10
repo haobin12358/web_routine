@@ -24,6 +24,7 @@
 </style>
 <template>
     <view class="m-enterTeam">
+      <scroll-view scroll-y style="height: 100vh;" bindscrolltolower="lower"  >
         <view class="m-notice" >
             <view class="m-bd-bottom m-flex-between">
                 <span class="m-grey">群公告</span>
@@ -56,6 +57,7 @@
             </view>
             <circle :list.sync="list_data"></circle>
         </view>
+      </scroll-view>
     </view>
 </template>
 
@@ -99,7 +101,8 @@
           page_info:{
             page_num: 1,
             page_size: 10
-          }
+          },
+          total_count:0
         }
       getId(){
         let that = this;
@@ -244,7 +247,14 @@
         methods = {
           markertap(e){
                 // console.log(e)
+            },
+          lower(){
+            if(this.total_count > this.list_data.length) {
+              this.page_info.page_num += 1;
+              this.$apply();
+              this.getData();
             }
+          }
         }
     }
 </script>
