@@ -70,7 +70,7 @@
               <view class="m-title">西湖-富春江-千岛湖-新安江…</view>
               <view class="m-info-center m-flex-between">
                 <span class="m-user">组织者：某某某</span>
-                <span class="m-btn">申请退团</span>
+                <span class="m-btn" @tap="changeRoute('/pages/personal/outTeam')">申请退团</span>
               </view>
               <view class="m-bottom m-flex-between">
                 <span>报名人数：3/5</span>
