@@ -52,6 +52,7 @@
         .m-icon{
           width: 66rpx;
           height: 66rpx;
+          flex-shrink: 0;
         }
         .m-title{
           width: 460rpx;
@@ -59,6 +60,9 @@
           white-space: nowrap;
           text-overflow: ellipsis;
           margin: 0 20rpx;
+          &.m-small{
+            width: 300rpx;
+          }
         }
         .m-btn{
           width: 150rpx;
@@ -80,8 +84,86 @@
       right: 30rpx;
       width: 156rpx;
       height: 156rpx;
+      z-index: 10;
       &.m-two{
         bottom: 260rpx;
+      }
+    }
+    .m-task-modal{
+      z-index: 20;
+      width: 100%;
+      height: 100vh;
+      background-color: rgba(0,0,0,0.16);
+      position: fixed;
+      top:0;
+      left: 0;
+      .m-modal-state{
+        width: 690rpx;
+        box-sizing: border-box;
+        padding: 45rpx;
+        background-color: #fff;
+        position: fixed;
+        top: 0;
+        left:0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        text-align: center;
+        height: 690rpx;
+        .m-icon{
+          width: 88rpx;
+          height: 88rpx;
+        }
+        .m-task-text{
+          line-height: 46rpx;
+          margin: 40rpx 0;
+          text-align: left;
+        }
+        .m-task-btn{
+          .m-btn{
+            width: 598rpx;
+            height: 80rpx;
+            line-height: 80rpx;
+            text-align: center;
+            border: 1px solid @common-color;
+            color: @common-color;
+            margin-bottom: 20rpx;
+            &.active{
+              background-color: @common-color;
+              color: #000;
+            }
+          }
+        }
+      }
+
+    }
+    .m-modal{
+      width: 100%;
+      height: 100vh;
+      background-color: rgba(0,0,0,0.16);
+      position: fixed;
+      top:0;
+      left: 0;
+      z-index: 100;
+      .m-state{
+        width: 400rpx;
+        height: 400rpx;
+        text-align: center;
+        background-color: #fff;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        box-sizing: border-box;
+        padding: 0 30rpx;
+        .flex-col(center);
+        .m-result-img{
+          width: 120rpx;
+          height: 120rpx;
+          margin-bottom:30rpx ;
+        }
       }
     }
   }
@@ -116,11 +198,51 @@
           <span class="m-title">任务内容内容内容内容</span>
           <span class="m-btn down">去完成</span>
         </view>
+        <view class="m-one-task">
+          <image src="{{img_src}}personal/award-star.png" class="m-icon"></image>
+          <span class="m-title m-small">1000大行星商城星币</span>
+          <span class="m-grey">2019/06/11  18:10</span>
+        </view>
+        <view class="m-one-task">
+          <image src="{{img_src}}personal/award-discount.png"  class="m-icon"></image>
+          <span class="m-title m-small">¥50大行星商城优惠券</span>
+          <span class="m-grey">2019/06/11  18:10</span>
+        </view>
+        <view class="m-one-task">
+          <image src="{{img_src}}personal/award-money.png"  class="m-icon"></image>
+          <span class="m-title m-small">¥90现金</span>
+          <span class="m-grey">2019/06/11  18:10</span>
+        </view>
       </view>
 
 
       <image src="{{img_src}}personal/icon-select-award.png" class="m-fix-img"></image>
       <image src="{{img_src}}personal/icon-select-task.png" class="m-fix-img m-two"></image>
+
+      <view class="m-task-modal" wx:if="{{show_task}}">
+        <view class="m-modal-state">
+          <view>
+            <image src="" class="m-icon"></image>
+          </view>
+          <scroll-view class="m-task-text" scroll-y style="height: 220rpx;">
+            任务内容内容内容任务内容内容内容任务内容内容内容任务内容内容内容任务内容内容内容任务内容内容内容任务内容内容内容任务内容内容内容
+            任务内容内容内容任务内容内容内容任务内容内容内容任务内容内容内容任务内容内容内容任务内容内容内容任务内容内容内容任务内容内容内容
+          </scroll-view>
+
+          <view class="m-task-btn">
+            <view class="m-btn active">领取任务</view>
+            <view class="m-btn">更换任务</view>
+          </view>
+        </view>
+      </view>
+      <view class="m-modal" wx:if="{{show_result}}" @tap="cancelModal('show_result')">
+        <view class="m-state">
+          <view>
+            <image src="{{img_src}}common/result.png" class="m-result-img"></image>
+            <view>今日更换任务次数已达上限</view>
+          </view>
+        </view>
+      </view>
     </view>
 </template>
 
@@ -130,18 +252,25 @@
 
   export default class taskIndex extends wepy.page {
     config = {
-      navigationBarTitleText: '任务中心',
-      enablePullDownRefresh: true
+      navigationBarTitleText: '任务中心'
     };
     components = {};
     data = {
-      img_src:api.img_src
+      img_src:api.img_src,
+      show_result:false,
+      show_task:false
     };
 
     onLoad(options) {
 
     }
 
-    methods = {};
+    methods = {
+      //关闭弹框
+      cancelModal(name){
+        this[name] = false;
+        this.$apply();
+      },
+    };
   }
 </script>

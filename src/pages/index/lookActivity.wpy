@@ -324,19 +324,19 @@
           <view class="m-row m-grey">填写转让对象信息</view>
           <view class="m-row">
             <span class="m-label">姓名</span>
-            <input type="text" class="m-input" placeholder="请输入姓名"/>
+            <input type="text" class="m-input" value="{{form_data.name}}" data-name="name" bindinput="inputChange" placeholder="请输入姓名"/>
           </view>
           <view class="m-row">
             <span class="m-label">手机号</span>
-            <input type="text" class="m-input" placeholder="请输入手机号"/>
+            <input type="text" class="m-input" value="{{form_data.tel}}" data-name="tel" bindinput="inputChange" placeholder="请输入手机号"/>
           </view>
           <view class="m-row">
             <span class="m-label">身份证号</span>
-            <input type="text" class="m-input" placeholder="请输入身份证号"/>
+            <input type="text" class="m-input" value="{{form_data.value}}" data-name="value" bindinput="inputChange" placeholder="请输入身份证号"/>
           </view>
           <view class="m-row">
             <span class="m-label">转让费用<span class="m-grey">(支付转让对象的费用)</span></span>
-            <input type="number" class="m-input m-input-s" placeholder="0"/>
+            <input type="number" class="m-input m-input-s" value="{{form_data.cost}}" data-name="cost" bindinput="inputChange" placeholder="0"/>
           </view>
           <view class="m-btn-box">
             <span @tap="cancelModal('show_modal')">取消</span>
@@ -389,7 +389,13 @@
             plid:'0d85db48-9bd6-11e9-8e38-0242ac110002',
             show_modal:false,
             show_result:false,
-          show_look:false
+          show_look:false,
+          form_data:{
+              name:'',
+              value:'',
+              tel:'',
+              cost:''
+          }
         }
 
         getDetail(id){
@@ -566,13 +572,47 @@
           },
           //确认
           sureTap(){
+            let that = this;
+            // wx.request({
+            //   url: api.set_play + '?token=' +wx.getStorageSync('token'),
+            //   method:"post",
+            //   data:that.form_data,
+            //   success: function (resule){
+            //     tip.loaded();
+            //     if(resule.data.status == 200){
+            //       // if(status == 0){
+            //       //   wx.navigateTo({
+            //       //     url: '/pages/index/manageActivity'
+            //       //   });
+            //       // }else if(status == 1){
+            //       //   wx.navigateTo({
+            //       //     url: '/pages/index/lookActivity?plid=' + resule.data.data
+            //       //   });
+            //       // }
+            //
+            //     }else{
+            //       wx.showToast({
+            //         title: resule.data.message,
+            //         icon: 'none',
+            //         duration: 2000
+            //       })
+            //       that.$apply();
+            //     }
+            //
+            //   }
+            // })
             this.show_result = true;
             this.$apply();
           },
           changeActivity(){
             this.show_modal = true;
             this.$apply();
-          }
+          },
+          inputChange(e){
+            let name = e.currentTarget.dataset.name;
+            this.form_data[name] = e.detail.value;
+            this.$apply();
+          },
         }
     }
 </script>

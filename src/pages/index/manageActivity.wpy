@@ -82,6 +82,12 @@
                         &.cancel{
                             color: @grey-color;
                         }
+                        &.m-btn{
+                          background-color: @common-color;
+                          padding: 0 15rpx;
+                          border-radius: 30rpx;
+                          font-size: 24rpx;
+                        }
                     }
                 }
             }
@@ -126,7 +132,7 @@
                        </view>
                        <view class="m-one-activity-status">
                            <span class="m-price">¥ {{item.playsum}}</span>
-                           <span class=" {{item.plstatus == 4?'m-status cancel':(item.plstatus == 3?'active m-status':'m-status')}} ">{{item.plstatus_zh}}</span>
+                           <span class=" {{item.plstatus == 4?'m-status cancel':(item.plstatus == 3?'active m-status':'m-status m-btn')}} ">{{item.plstatus_zh}}</span>
                        </view>
                    </view>
                </view>
