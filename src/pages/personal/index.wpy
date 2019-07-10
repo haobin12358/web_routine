@@ -137,6 +137,12 @@
                         <span>导游认证</span>
                     </view>
                 </li>
+              <li @tap="changeRoute('/pages/personal/ruleList')">
+                <view class="m-flex-start">
+                  <image src="{{img_src}}personal/icon-rule.png" class="m-icon"></image>
+                  <span>协议管理</span>
+                </view>
+              </li>
             </ul>
         </view>
 

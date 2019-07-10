@@ -32,7 +32,6 @@
     config = {
       pages: [
 
-
         'pages/personal/login',
         'pages/index/enterPage',
         'pages/index/lookActivity',
@@ -66,6 +65,8 @@
         'pages/personal/evaluate',
         'pages/personal/identification',
         'pages/personal/taskIndex',
+        'pages/personal/ruleDetail',
+        'pages/personal/ruleList',
       ],
       permission: {
         "scope.userLocation": {

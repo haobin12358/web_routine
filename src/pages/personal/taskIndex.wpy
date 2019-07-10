@@ -217,9 +217,9 @@
 
 
       <image src="{{img_src}}personal/icon-select-award.png" class="m-fix-img"></image>
-      <image src="{{img_src}}personal/icon-select-task.png" class="m-fix-img m-two"></image>
+      <image src="{{img_src}}personal/icon-select-task.png" class="m-fix-img m-two" @tap="getTask"></image>
 
-      <view class="m-task-modal" wx:if="{{show_task}}">
+      <view class="m-task-modal" wx:if="{{show_task}}" @tap="cancelModal('show_task')">
         <view class="m-modal-state">
           <view>
             <image src="" class="m-icon"></image>
@@ -271,6 +271,12 @@
         this[name] = false;
         this.$apply();
       },
+    //
+      getTask(){
+        this.show_task = true;
+        this.show_result = true;
+        this.$apply();
+      }
     };
   }
 </script>

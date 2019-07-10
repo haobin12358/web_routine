@@ -188,6 +188,7 @@
                 page_size: 10,
                 page_num: 1
             },
+            total_count:0,
             array: [
                 {
                     id: -1,

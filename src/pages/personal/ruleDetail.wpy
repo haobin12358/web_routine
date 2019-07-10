@@ -1,0 +1,130 @@
+<style scoped lang="less" rel="stylesheet/less">
+@import "../../styles/common";
+.m-ruleDetail{
+  .m-row{
+    padding: 20rpx 30rpx;
+    border-bottom: 1px solid @border-color;
+    .flex-row(space-between);
+    .m-one-activity{
+      .flex-row(flex-start);
+      .m-activity-img{
+        display: block;
+        width: 288rpx;
+        height: 160rpx;
+        margin-right: 34rpx;
+      }
+      .m-one-activity-info{
+        .m-one-activity-title{
+          width: 387rpx;
+          height: 40rpx;
+          line-height: 40rpx;
+          font-size: 28rpx;
+          font-weight: 500;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+        .m-one-activity-time{
+          width: 367rpx;
+          .flex-row(space-between);
+          color: @grey-color;
+          font-size: 24rpx;
+          margin: 10rpx 0 30rpx;
+        }
+        .m-one-activity-user{
+          font-size: 24rpx;
+          font-weight: 300;
+          margin: 10rpx 0 30rpx;
+        }
+        .m-one-activity-status{
+          width: 367rpx;
+          .flex-row(space-between);
+          font-size: 28rpx;
+          font-weight: 400;
+          .m-price{
+            font-size: 32rpx;
+            color: #EB0000;
+            font-weight: 500;
+          }
+          .m-grey{
+            color: @grey-color;
+            font-size: 24rpx;
+            font-weight: 300;
+          }
+        }
+      }
+    }
+  }
+}
+</style>
+<template>
+    <view class="m-ruleDetail">
+      <view class="m-row">
+        <span class="m-grey">协议活动</span>
+      </view>
+      <view class="m-row">
+        <view class="m-one-activity"  >
+          <image src="" class="m-activity-img" alt=""></image>
+          <view class="m-one-activity-info">
+            <view class="m-one-activity-title">西湖-富春江-千岛湖-新安江…</view>
+            <view class="m-one-activity-time">
+              <span>2019/07/01</span>
+              <span>报名人数：3/5</span>
+            </view>
+            <view class="m-one-activity-status">
+              <span class="m-price">¥ 4000</span>
+              <view class="m-flex-end" @tap="changeRoute('/pages/index/lookActivity')">
+                <span>查看详情</span>
+                <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="m-row">
+        <span class="m-grey">协议内容</span>
+      </view>
+      <view class="m-row">
+        <span>转让时间</span>
+        <span>2019/07/01 17:07:33</span>
+      </view>
+
+      <view class="m-row">
+        <span>转让方</span>
+        <span>某某某</span>
+      </view>
+      <view class="m-row">
+        <span>承接方</span>
+        <span>某某某</span>
+      </view>
+      <view class="m-row">
+        <span class="m-grey">协议电子文件</span>
+      </view>
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import api from '../../api/api';
+  export default class ruleDetail extends wepy.page {
+    config = {
+      navigationBarTitleText: '协议内容'
+    };
+    components = {};
+    data = {
+      img_src:api.img_src
+    };
+
+    onLoad(options) {
+
+    }
+
+    methods = {
+      changeRoute(v,item){
+        wx.navigateTo({
+          url: v
+        });
+      },
+    };
+  }
+</script>

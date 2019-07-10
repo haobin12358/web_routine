@@ -1,0 +1,215 @@
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../../styles/common";
+.m-ruleList{
+  .m-search-box{
+    .flex-row(space-around);
+    color: #666;
+    font-size: 24rpx;
+    padding: 30rpx 0;
+    .m-time-btn{
+      .flex-row(center);
+      padding: 2px 20rpx;
+      background-color: #F5F5F5;
+      border-radius: 30rpx;
+    }
+  }
+  .m-activity-list{
+    .m-one-activity{
+      padding: 10rpx 20rpx;
+      border-bottom: 1px solid @border-color;
+      .flex-row(flex-start);
+      .m-activity-img{
+        display: block;
+        width: 288rpx;
+        height: 160rpx;
+        margin-right: 34rpx;
+      }
+      .m-one-activity-info{
+        .m-one-activity-title{
+          width: 387rpx;
+          height: 40rpx;
+          line-height: 40rpx;
+          font-size: 28rpx;
+          font-weight: 500;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+        .m-one-activity-time{
+          width: 387rpx;
+          .flex-row(space-between);
+          color: @grey-color;
+          font-size: 24rpx;
+          margin: 10rpx 0 30rpx;
+        }
+        .m-one-activity-user{
+          font-size: 24rpx;
+          font-weight: 300;
+          margin: 10rpx 0 30rpx;
+        }
+        .m-one-activity-status{
+          width: 387rpx;
+          .flex-row(space-between);
+          font-size: 28rpx;
+          font-weight: 400;
+          .m-price{
+            font-size: 32rpx;
+            color: #EB0000;
+            font-weight: 500;
+          }
+          .m-grey{
+            color: @grey-color;
+            font-size: 24rpx;
+            font-weight: 300;
+          }
+          .m-status{
+            &.active{
+              color: #FFCE00;
+            }
+            &.cancel{
+              color: @grey-color;
+            }
+            &.m-btn{
+              background-color: @common-color;
+              padding: 0 15rpx;
+              border-radius: 30rpx;
+              font-size: 24rpx;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+</style>
+<template>
+    <view class="m-ruleList">
+      <view class="m-search-box">
+        <picker mode="date" value="{{createtime}}" start="2018-09-01"  bindchange="bindDateChange">
+          <view class="m-time-btn">
+            <span>{{createtime || '日期'}}</span>
+            <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
+          </view>
+        </picker>
+        <picker bindchange="bindPickerChange" value="{{index}}" range-key="name" range="{{array}}">
+          <view class="m-flex-end">
+            <span>{{array[index].name}}</span>
+            <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
+          </view>
+        </picker>
+
+      </view>
+      <view class="m-activity-list">
+<!--        <view class="m-no-data" wx:if="{{data_list.length == 0}}">暂无数据</view>-->
+        <view>
+          <view class="m-one-activity" @tap="changeRoute('/pages/personal/ruleDetail')">
+            <image src="" class="m-activity-img" alt=""></image>
+            <view class="m-one-activity-info">
+              <view class="m-one-activity-title">西湖-富春江-千岛湖-新安江…</view>
+              <view class="m-one-activity-time">
+                <span>2019/07/01 17:07:33</span>
+              </view>
+              <view class="m-one-activity-status">
+                <span class="m-price">¥ 4000</span>
+                <span>承接人：某某某</span>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import api from '../../api/api';
+  import tip from '../../utils/tip';
+  export default class ruleList extends wepy.page {
+    config = {
+      navigationBarTitleText: '协议管理'
+    };
+    components = {};
+    data = {
+      createtime:'',
+      array: [
+        {
+          id: -1,
+          name: '全部'
+        },
+        {
+          id: 0,
+          name: '转出'
+        },
+        {
+          id: 1,
+          name: '转入'
+        }
+      ],
+      index:0,
+      img_src: api.img_src,
+      data_list:[],
+      page_info:{
+        page_size: 10,
+        page_num: 1
+      },
+      total_count:0,
+    };
+    getData(){
+      let that = this;
+      tip.loading();
+      wx.request({
+        url: api.get_play_list + '?token=' +wx.getStorageSync('token'),
+        data: {
+          page_num: that.page_info.page_num,
+          page_size:that.page_info.page_size,
+          playtype:that.select_value.value,
+          createtime: that.createtime,
+          plstatus: that.plstatus
+        },
+        header: {
+          'content-type': 'application/json' // 默认值
+        },
+        success: function(res) {
+          let data = res.data.data;
+          let time = '';
+          for(let i in data){
+            data[i].time = data[i].plstarttime.slice(5,7) +'/' + data[i].plstarttime.slice(8,10) + '-' + data[i].plendtime.slice(5,7) +'/' + data[i].plendtime.slice(8,10)
+          }
+          that.data_list = res.data.data;
+          that.total_count = res.data.total_count;
+          that.$apply();
+          tip.loaded();
+        },
+        error:function (error) {
+          tip.loaded();
+        }
+      })
+    }
+    onLoad(options) {
+
+    }
+
+    methods = {
+      bindDateChange(e){
+        this.createtime = e.detail.value;
+        this.page_info.page_num = 1;
+        // this.getData();
+      },
+      bindPickerChange(e){
+        console.log(e)
+        this.index = e.detail.value;
+        // this.plstatus = this.array[this.index].id;
+        this.page_info.page_num = 1;
+        // this.$apply();
+        // this.getData();
+      },
+      changeRoute(v,item){
+        wx.navigateTo({
+          url: v
+        });
+      },
+    };
+  }
+</script>
