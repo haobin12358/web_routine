@@ -170,6 +170,21 @@
                 </li>
             </ul>
         </view>
+      <view class="m-edit-item">
+        <ul>
+          <li>
+            <span class="m-grey">退团信息</span>
+          </li>
+          <li>
+            <span class="m-edit-label">扣款金额</span>
+            <span class="m-flex-end" @tap="changeRoute('/pages/index/editCost','withdraw')">
+                        <span class="m-grey">{{withdraw_list.length?withdraw_list.length:'未设置'}}</span>
+                        <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>
+                    </span>
+          </li>
+
+        </ul>
+      </view>
         <view class="m-edit-item">
             <ul>
                 <li>
@@ -260,6 +275,7 @@
             },
             cost_list:[],
             insurances_list:[],
+            withdraw_list:[],
             enter_list:[
                 {
                     name:'昵称',
@@ -444,6 +460,7 @@
                  data.form_data.plcontent = this.plcontent;
                  this.cost_list = data.cost_list;
                  this.insurances_list = data.insurances_list;
+                 this.withdraw_list = data.withdraw_list;
                  this.enter_list = data.enter_list;
                  this.recommend_list =data.recommend_list;
                  this.location_list= data.location_list;

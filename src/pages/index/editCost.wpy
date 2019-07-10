@@ -82,7 +82,7 @@
         <view class="m-one-cost " wx:for="{{cost_list}}" wx:key="{{index}}" wx:if="{{!item.delete}}">
                 <view class="m-cost-info">
                     <image src="{{img_src}}common/icon-cut.png" class="m-cut-add-icon" @tap="cutCost({{index}})"></image>
-                    <view class="m-row-box">
+                    <view class="m-row-box" wx:if="{{cost_name != '退团'}}">
                         <view class="m-one-cost-row">
                             <span>{{cost_name}}名称</span>
                             <input type="text" class="m-tr" value="{{cost_name == '费用' ? item.cosname:item.inname}}" bindinput="nameInput" data-name="{{index}}" placeholder="20字以内" />
@@ -99,12 +99,32 @@
                            <span class="m-mr"> 是否为必要保险</span>     <switch value="{{item.intype}}" data-name="{{index}}" bindchange="switchChange" color="#FFCE00"/>
                         </view>
                     </view>
+                    <view class="m-row-box" wx:else>
+                      <view class="m-one-cost-row">
+                        <span>距离活动开始时间</span>
+                        <picker mode="multiSelector" bindchange="bindMultiPickerChange" bindcolumnchange="bindMultiPickerColumnChange" data-name="{{index}}" value="{{item.multiIndex}}" range-key="name" range="{{item.multiArray}}">
+                          <view class="m-flex-end">
+                            <span class="m-grey" wx:if="{{item.multiArray[0][item.multiIndex[0]].name == undefined}}">选择</span>
+                            <span wx:else>
+                              <span wx:if="{{item.multiArray[0][item.multiIndex[0]].name }}">{{item.multiArray[0][item.multiIndex[0]].name}}</span>
+                              <span wx:if="{{item.multiArray[1][item.multiIndex[1]].name}}">{{item.multiArray[1][item.multiIndex[1]].name}}</span>
+                            </span>
+                            <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>
+                          </view>
+                        </picker>
+                      </view>
+                      <view class="m-one-cost-row">
+                        <span>扣款金额</span>
+                        <input type="number" value="{{cost_name == '费用' ? item.cossubtotal : item.incost}}" class="m-tr" bindinput="moneyInput" data-name="{{index}}" placeholder="有人报名后不能修改" />
+                      </view>
+                    </view>
                 </view>
 <!--                <view class="m-delete-btn">删除</view>-->
             </view>
         <view class="m-flex-start m-add-box">
             <image src="{{img_src}}common/icon-add.png" class="m-cut-add-icon" @tap="addCost"></image>
-            <span>添加费用</span>
+            <span wx:if="{{cost_name != '退团'}}">添加费用</span>
+            <span wx:else>添加时间及金额</span>
         </view>
         <view class="m-foot-btn m-one" wx:if="{{cost_list.length >0}}" @tap="saveCost">保存</view>
     </view>
@@ -114,7 +134,10 @@
     import wepy from 'wepy';
     import tip from '../../utils/tip';
     import api from '../../api/api';
-
+    const arr = [];
+    for(let i=1;i<24;i++){
+      arr.push({value:i,name:i +'小时'});
+    }
     export default class editCost extends wepy.page {
         config = {
             navigationBarTitleText: '活动费用',
@@ -127,7 +150,9 @@
             cost_list:[],
             cost_name:'费用',
             form_data:null,
-            all_data:null
+            all_data:null,
+            multiArray:[[],[]],
+            multiIndex:[]
         }
 
         setCost(){
@@ -193,6 +218,38 @@
                 }
             })
         }
+        setWithdraw(){
+        let that = this;
+
+        for(let i in this.cost_list){
+
+        }
+
+        wx.request({
+          url: api.set_insurance + '?token=' +wx.getStorageSync('token'),
+          method:"post",
+          data:{
+            insurance:that.cost_list
+          },
+          success: function (resule){
+            if(resule.data.status == 200){
+              that.all_data.form_data.insurances = resule.data.data;
+              that.all_data.withdraw_list = that.cost_list;
+              wx.navigateTo({
+                url: '/pages/index/editActivity?data=' + encodeURIComponent(JSON.stringify(that.all_data))
+              });
+            }else{
+              wx.showToast({
+                title: resule.data.message,
+                icon: 'none',
+                duration: 2000
+              })
+              that.$apply();
+            }
+
+          }
+        })
+      }
         onLoad(options) {
 
             // if(options.cost_list){
@@ -205,6 +262,9 @@
                     this.show_radio = true;
                     this.cost_name = '保险';
                     this.cost_list =  this.all_data.insurances_list;
+                }else if(options.from == 'withdraw'){
+                    this.cost_list = this.all_data.withdraw_list;
+                    this.cost_name = '退团';
                 }else{
                     this.cost_list =  this.all_data.cost_list;
                 }
@@ -226,7 +286,7 @@
                         cossubtotal:'',
                         delete:false
                     });
-                }else{
+                }else if(this.cost_name == '保险'){
                     this.cost_list.push({
                         inid:'',
                         inname:'',
@@ -235,6 +295,25 @@
                         intype:false,
                         delete:false
                     });
+                }else if(this.cost_name == '退团'){
+                  this.cost_list.push({
+                    inid:'',
+                    incost:'',
+                    delete:false,
+                    multiIndex:[],
+                    multiArray:[[{
+                      name:'0天',
+                      value:0
+                    },
+                      {
+                        name:'1天',
+                        value:1
+                      },{
+                        name:'2天',
+                        value:2
+                      },
+                    ],arr]
+                  });
                 }
             },
             //删除费用
@@ -256,11 +335,17 @@
 
             },
             saveCost(){
-                if(this.cost_name == '费用'){
-                    this.setCost();
-                }else{
-                    this.setInsurance();
-                }
+              switch (this.cost_name) {
+                case '费用':
+                  this.setCost();
+                  break;
+                case '保险':
+                  this.setInsurance();
+                  break;
+                case '退团':
+                  this.setWithdraw();
+                  break;
+              }
             },
             nameInput(e){
              console.log(e)
@@ -276,10 +361,16 @@
             moneyInput(e){
                 let index = e.currentTarget.dataset.name;
                 let value =parseFloat(e.detail.value);
-                if(this.cost_name == '费用'){
+                switch (this.cost_name) {
+                  case '费用':
                     this.cost_list[index].cossubtotal = value;
-                }else{
+                    break;
+                  case '保险':
                     this.cost_list[index].incost = value;
+                    break;
+                  case '退团':
+                    this.cost_list[index].incost = value;
+                    break;
                 }
                 this.$apply();
             },
@@ -296,7 +387,24 @@
                 let index = e.currentTarget.dataset.name;
                 this.cost_list[index].intype = e.detail.value;
                 this.$apply();
+            },
+          bindMultiPickerChange(e) {
+            let i = e.target.dataset.name;
+            this.cost_list[i].multiIndex =  e.detail.value;
+            this.$apply();
+
+          },
+          bindMultiPickerColumnChange(e) {
+            let i = e.target.dataset.name;
+            if(e.detail.column == 0){
+              if(e.detail.value == 0){
+                this.cost_list[i].multiArray[1] = arr;
+              }else{
+                this.cost_list[i].multiArray[1] = []
+              }
             }
+            this.$apply();
+          }
         }
     }
 </script>
