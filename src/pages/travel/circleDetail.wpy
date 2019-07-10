@@ -25,6 +25,12 @@
         color: #006FCE;
       }
     }
+    .m-recommend-icon{
+      display: inline-block;
+      width: 40rpx;
+      height: 40rpx;
+      margin-right: 20rpx;
+    }
     .m-one-img{
       display: block;
       width: 690rpx;
@@ -72,7 +78,11 @@
         <span class="m-user-name" >{{item.author.usname}}</span>
         <span class="m-user-label">{{item.author.usminilevel}}</span>
       </view>
-      <view class="m-circle-label">{{item.travelrecordtype_zh}}</view>
+      <view>
+        <image src="{{img_src}}index/icon-add-look-active.png" class="m-recommend-icon" wx:if="{{!item.is_own && !item.followed}}" @tap.stop="follow({{item}})"></image>
+        <view class="m-circle-label">{{item.travelrecordtype_zh}}</view>
+      </view>
+
     </view>
     <!--      <view class="m-info">杭州-富阳</view>-->
     <view class="m-text" >
@@ -155,6 +165,36 @@
         }
       })
     }
+    postData(id,index){
+      let that = this;
+      wx.request({
+        url: api.collect + '?token=' +wx.getStorageSync('token'),
+        method:"post",
+        data:{
+          uclcotype:2,
+          uclcollection:id
+        },
+        success: function (resule){
+          tip.loaded();
+          if(resule.data.status == 200){
+            that.item.followed = !that.item.followed;
+            wx.showToast({
+              title: resule.data.message,
+              icon: 'success',
+              duration: 2000
+            })
+            that.$apply();
+          }else{
+            wx.showToast({
+              title: resule.data.message,
+              icon: 'none',
+              duration: 2000
+            })
+
+          }
+        }
+      })
+    }
     onShareAppMessage(res) {
       if (res.from === 'button') {
 
@@ -184,6 +224,9 @@
           });
         }
 
+      },
+      follow(item){
+        this.postData(item.author.usid);
       },
     };
   }

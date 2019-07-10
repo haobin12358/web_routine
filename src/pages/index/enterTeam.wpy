@@ -54,7 +54,7 @@
             <view class="m-bd-bottom">
                 <span class="m-border-back">团队广场</span>
             </view>
-            <circle></circle>
+            <circle :list.sync="list_data"></circle>
         </view>
     </view>
 </template>
@@ -94,7 +94,12 @@
             //     clickable: true
             // }],
           notice_list:null,
-          all_points:[]
+          all_points:[],
+          list_data:[],
+          page_info:{
+            page_num: 1,
+            page_size: 10
+          }
         }
       getId(){
         let that = this;
@@ -109,6 +114,7 @@
               that.$apply();
               that.getNotice();
               that.getLoc();
+              that.getData();
             }else{
               wx.showToast({
                 title: resule.data.message,
@@ -201,6 +207,32 @@
           }
         })
 
+      }
+      getData(id){
+        let that = this;
+        tip.loading();
+        wx.request({
+          url: api.get_team_travelrecord +'?token='+wx.getStorageSync('token') ,
+          data: {
+            plid:id  || that.plid,
+            page_num:that.page_info.page_num,
+            page_size: that.page_info.page_size,
+          },
+          header: {
+            'content-type': 'application/json' // 默认值
+          },
+          success: function(res) {
+            let data = res.data.data;
+            if(that.page_info.page_num >1){
+              that.list_data = that.list_data.concat(data);
+            }else{
+              that.list_data = data;
+            }
+            that.total_count = res.data.total_count;
+            that.$apply();
+            tip.loaded();
+          }
+        })
       }
         onLoad(options) {
           this.getId();

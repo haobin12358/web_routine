@@ -17,6 +17,12 @@
             font-weight: 600;
             line-height: 56rpx;
         }
+      .m-recommend-icon{
+        display: inline-block;
+        width: 40rpx;
+        height: 40rpx;
+        margin-right: 20rpx;
+      }
         .m-text{
             line-height: 56rpx;
             text-align: left;
@@ -68,7 +74,10 @@
           <span class="m-user-name" >{{item.author.usname}}</span>
           <span class="m-user-label">{{item.author.usminilevel}}</span>
         </view>
-        <view class="m-circle-label">{{item.travelrecordtype_zh}}</view>
+        <view>
+          <image src="{{img_src}}index/icon-add-look-active.png" class="m-recommend-icon" wx:if="{{!item.is_own && !item.followed}}" @tap.stop="follow({{index}})"></image>
+          <view class="m-circle-label">{{item.travelrecordtype_zh}}</view>
+        </view>
       </view>
       <view >
         <!--      <view class="m-info">杭州-富阳</view>-->
@@ -111,12 +120,14 @@
 <script>
     import wepy from 'wepy';
     import api from '../../api/api';
+    import tip from '../../utils/tip';
 
     export default class Circle extends wepy.component {
         props ={
             list:{
                 type:Array,
-                default:[]
+                default:[],
+                twoWay:true
             }
         }
         components = {
@@ -128,7 +139,40 @@
           img_url:api.api
 
         }
+      postData(id,index){
+        let that = this;
+        wx.request({
+          url: api.collect + '?token=' +wx.getStorageSync('token'),
+          method:"post",
+          data:{
+            uclcotype:2,
+            uclcollection:id
+          },
+          success: function (resule){
+            tip.loaded();
+            if(resule.data.status == 200){
+              for(let i =0;i<that.list.length;i++){
+                if(that.list[i].author.usid == id){
+                  that.list[i].followed = !that.list[i].followed
+                }
+              }
+              wx.showToast({
+                title: resule.data.message,
+                icon: 'success',
+                duration: 2000
+              })
+              that.$apply();
+            }else{
+              wx.showToast({
+                title: resule.data.message,
+                icon: 'none',
+                duration: 2000
+              })
 
+            }
+          }
+        })
+      }
         onLoad(options) {
 
 
@@ -169,6 +213,9 @@
               current: item, // 当前显示图片的http链接
               urls: that.img_list // 需要预览的图片http链接列表
             })
+          },
+          follow(index){
+            this.postData(this.list[index].author.usid,index);
           },
         }
     }
