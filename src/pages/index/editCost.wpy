@@ -61,8 +61,8 @@
     }
     .m-cut-add-icon{
         display: inline-block;
-        width: 30rpx;
-        height: 30rpx;
+        width: 45rpx;
+        height: 45rpx;
         margin: 0 20rpx;
     }
     .m-add-box{
@@ -123,7 +123,7 @@
             </view>
         <view class="m-flex-start m-add-box">
             <image src="{{img_src}}common/icon-add.png" class="m-cut-add-icon" @tap="addCost"></image>
-            <span wx:if="{{cost_name != '退团'}}">添加费用</span>
+            <span wx:if="{{cost_name != '退团'}}">添加{{cost_name}}</span>
             <span wx:else>添加时间及金额</span>
         </view>
         <view class="m-foot-btn m-one" wx:if="{{cost_list.length >0}}" @tap="saveCost">保存</view>
@@ -167,7 +167,7 @@
                     if(resule.data.status == 200){
                         that.all_data.form_data.costs = resule.data.data;
                         that.all_data.cost_list = that.cost_list;
-                        wx.navigateTo({
+                        wx.redirectTo({
                             url: '/pages/index/editActivity?data=' + encodeURIComponent(JSON.stringify(that.all_data))
                         });
                     }else{
@@ -203,7 +203,7 @@
                     if(resule.data.status == 200){
                         that.all_data.form_data.insurances = resule.data.data;
                         that.all_data.insurances_list = that.cost_list;
-                        wx.navigateTo({
+                        wx.redirectTo({
                             url: '/pages/index/editActivity?data=' + encodeURIComponent(JSON.stringify(that.all_data))
                         });
                     }else{
@@ -225,7 +225,6 @@
           for(let i in params){
             params[i].pddeltaday  = params[i].multiArray[0][params[i].multiIndex[0]].value;
             params[i].pddeltahour  = params[i].multiIndex[1] ? params[i].multiArray[1][params[i].multiIndex[1]].value : 0;
-            console.log(params[i])
             delete params[i].multiArray;
             delete params[i].multiIndex;
           }
@@ -240,7 +239,7 @@
             if(resule.data.status == 200){
               that.all_data.form_data.discounts = resule.data.data;
               that.all_data.withdraw_list = that.cost_list;
-              wx.navigateTo({
+              wx.redirectTo({
                 url: '/pages/index/editActivity?data=' + encodeURIComponent(JSON.stringify(that.all_data))
               });
             }else{
@@ -292,10 +291,10 @@
             name:'0天',
             value:0
           });
-          arr = [{
-            name:'0小时',
-            value:0
-          }];
+          // arr = [{
+          //   name:'0小时',
+          //   value:0
+          // }];
         }
         this.multiArray = [arr1,arr];
         this.$apply();
@@ -313,6 +312,9 @@
                     this.show_radio = true;
                     this.cost_name = '保险';
                     this.cost_list =  this.all_data.insurances_list;
+                    wx.setNavigationBarTitle({
+                      title: '活动保险'
+                    })
                 }else if(options.from == 'withdraw'){
                     this.cost_list = this.all_data.withdraw_list;
                     for(let i =0;i<this.cost_list.length;i++){
@@ -331,6 +333,9 @@
 
                     }
                     this.cost_name = '退团';
+                  wx.setNavigationBarTitle({
+                    title: '扣款金额'
+                  })
                 }else{
                     this.cost_list =  this.all_data.cost_list;
                 }

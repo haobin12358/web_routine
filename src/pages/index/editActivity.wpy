@@ -279,10 +279,6 @@
             withdraw_list:[],
             enter_list:[
                 {
-                    name:'昵称',
-                    active:true
-                },
-                {
                     name:'手机号',
                     active:true
                 },

@@ -53,7 +53,7 @@ const get_notice = api2 +'play/get_notice';//获取公告
 const upload = api2 + 'file/upload';//上传图片
 const batch_upload = api2 + 'file/batch_upload';//批量上传
 
-
+const list_mp_banner = api2 +'index/list_mp_banner';//获取轮播图
 
 
 
@@ -64,6 +64,6 @@ module.exports = {
   api,img_src,login,bind_phone,set_cost,set_insurance,scenicspot_list,scenicspot_get,set_play,get_cost,get_insurance,get_play,
     get_play_list,get_gather,set_gather,get_playrequire,play_join,identity,set_signin,get_signin,get_current_play,help,signin,
   get_enter_user,collect,add_travelrecord,upload,batch_upload,create_notice,get_notice,get_provinces,get_citys,get_areas,get_member_location,
-  travelrecord_list,get_travelrecord,collection_show,raiders_list,get_team_travelrecord,set_discount,get_discount
+  travelrecord_list,get_travelrecord,collection_show,raiders_list,get_team_travelrecord,set_discount,get_discount,list_mp_banner
 
 }
