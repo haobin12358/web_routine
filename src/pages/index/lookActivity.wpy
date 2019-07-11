@@ -520,6 +520,7 @@
             //编辑
             editTap(){
                 let that = this;
+                console.log(that)
                 wx.navigateTo({
                     url: '/pages/index/editActivity' + '?plid=' +that.plid
                 });

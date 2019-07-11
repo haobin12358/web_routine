@@ -80,11 +80,10 @@
     }
     events = {
       'eventName': (value) => {
-        console.log(value,this);
-        if(this.name == 'time'){
+        if(this.$name == 'time'){
           this.num = value.plstarttime
         }
-        if(this.name == 'time2'){
+        if(this.$name == 'time2'){
           this.num = value.plendtime
         }
         // this.initTime(new Date(this.num))
@@ -136,7 +135,10 @@
    }
     methods = {
       numNotice(){
-        date = new Date(this.num)
+        if(this.num){
+          date = new Date(this.num);
+        }
+
         this.initTime()
       },
       bindMultiPickerChange: function(e) {

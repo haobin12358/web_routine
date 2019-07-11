@@ -271,7 +271,8 @@
                 delete:false,
                 costs:[],
                 insurances:[],
-                playrequires:[]
+                playrequires:[],
+              discounts:[]
             },
             cost_list:[],
             insurances_list:[],
@@ -342,6 +343,27 @@
                 }
             })
         }
+
+      //获取保险
+      getDiscounts(id){
+        let that = this;
+        wx.request({
+          url: api.get_discount + '?token=' +wx.getStorageSync('token'),
+          data: {
+            plid: id
+          },
+          header: {
+            'content-type': 'application/json' // 默认值
+          },
+          success: function(res) {
+            that.withdraw_list = res.data.data.discounts;
+            that.$apply();
+          },
+          error:function (error) {
+
+          }
+        })
+      }
          getPlay(id){
             let that = this;
             wx.request({
@@ -452,11 +474,15 @@
              let data;
              if(options.data){
                  data = JSON.parse(decodeURIComponent(options.data));
+
                  this.show_detail = data.show_detail;
                  this.plstarttime =data.plstarttime;
                  this.plendtime = data.plendtime;
                  this.plcontent = data.plcontent;
                  this.form_data = data.form_data;
+                  if(this.form_data.plstarttime.indexOf('undefined') >0){
+                    this.form_data.plstarttime = this.plstarttime
+                  }
                  data.form_data.plcontent = this.plcontent;
                  this.cost_list = data.cost_list;
                  this.insurances_list = data.insurances_list;
@@ -476,6 +502,7 @@
                  this.getPlay(options.plid);
                  this.getCost(options.plid);
                  this.getInsureance(options.plid);
+                 this.getDiscounts(options.plid);
              }
 
              this.$apply();
@@ -498,6 +525,7 @@
             },
             //选择开始时间
             bindMultiPickerChangeStart(e,evt){
+
                 this.form_data.plstarttime = e;
                 this.plstarttime = e;
                 this.$apply();

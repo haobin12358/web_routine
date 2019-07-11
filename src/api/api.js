@@ -13,6 +13,9 @@ const set_cost = api2 + 'play/set_cost';  //创建费用
 const get_cost = api2 +'play/get_cost'; //获取费用
 const set_insurance = api2 +'play/set_insurance'; //创建保险
 const get_insurance = api2 +'play/get_insurance';//获取费用
+const set_discount = api2 + 'play/set_discount';//创建退款
+const get_discount = api2 + 'play/get_discount';//获取扣款
+
 const set_play = api2 +'play/set_play';//创建活动
 const get_play = api2 +'play/get_play';//获取活动
 const get_play_list = api2 +'play/get_play_list';//获取所有活动列表
@@ -61,6 +64,6 @@ module.exports = {
   api,img_src,login,bind_phone,set_cost,set_insurance,scenicspot_list,scenicspot_get,set_play,get_cost,get_insurance,get_play,
     get_play_list,get_gather,set_gather,get_playrequire,play_join,identity,set_signin,get_signin,get_current_play,help,signin,
   get_enter_user,collect,add_travelrecord,upload,batch_upload,create_notice,get_notice,get_provinces,get_citys,get_areas,get_member_location,
-  travelrecord_list,get_travelrecord,collection_show,raiders_list,get_team_travelrecord
+  travelrecord_list,get_travelrecord,collection_show,raiders_list,get_team_travelrecord,set_discount,get_discount
 
 }

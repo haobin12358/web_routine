@@ -115,7 +115,7 @@
                       </view>
                       <view class="m-one-cost-row">
                         <span>扣款金额</span>
-                        <input type="number" value="{{cost_name == '费用' ? item.cossubtotal : item.incost}}" class="m-tr" bindinput="moneyInput" data-name="{{index}}" placeholder="有人报名后不能修改" />
+                        <input type="number" value="{{item.pdprice}}" class="m-tr" bindinput="moneyInput" data-name="{{index}}" placeholder="有人报名后不能修改" />
                       </view>
                     </view>
                 </view>
@@ -134,7 +134,7 @@
     import wepy from 'wepy';
     import tip from '../../utils/tip';
     import api from '../../api/api';
-    const arr = [];
+    let arr = [];
     for(let i=1;i<24;i++){
       arr.push({value:i,name:i +'小时'});
     }
@@ -220,20 +220,25 @@
         }
         setWithdraw(){
         let that = this;
+          let params = [].concat(this.cost_list);
 
-        for(let i in this.cost_list){
-
-        }
+          for(let i in params){
+            params[i].pddeltaday  = params[i].multiArray[0][params[i].multiIndex[0]].value;
+            params[i].pddeltahour  = params[i].multiIndex[1] ? params[i].multiArray[1][params[i].multiIndex[1]].value : 0;
+            console.log(params[i])
+            delete params[i].multiArray;
+            delete params[i].multiIndex;
+          }
 
         wx.request({
-          url: api.set_insurance + '?token=' +wx.getStorageSync('token'),
+          url: api.set_discount + '?token=' +wx.getStorageSync('token'),
           method:"post",
           data:{
-            insurance:that.cost_list
+            discounts:params
           },
           success: function (resule){
             if(resule.data.status == 200){
-              that.all_data.form_data.insurances = resule.data.data;
+              that.all_data.form_data.discounts = resule.data.data;
               that.all_data.withdraw_list = that.cost_list;
               wx.navigateTo({
                 url: '/pages/index/editActivity?data=' + encodeURIComponent(JSON.stringify(that.all_data))
@@ -250,6 +255,51 @@
           }
         })
       }
+      //生成时间选择
+      initArray(){
+        // multiArray
+        let start = new Date(this.all_data.plstarttime);
+        let end = new Date();
+        let arr1 =[];
+        if((start.getMonth() > end.getMonth()) || (end.getFullYear() > start.getFullYear()) ){
+          for(let i=0;i<31;i++){
+            arr1.push({
+              name:i+'天',
+              value:i
+            })
+          }
+        }else if(start.getDate() > end.getDate()){
+          for(let i=0;i<= (start.getDate() - end.getDate());i++){
+            arr1.push({
+              name:i+'天',
+              value:i
+            })
+          }
+        }else if(start.getHours() > end.getHours()){
+          arr = [];
+          arr1.push({
+            name:'0天',
+            value:0
+          });
+          for(let i=0;i< (start.getHours() - end.getHours());i++){
+            arr.push({
+              name:i+'小时',
+              value:i
+            })
+          }
+        }else{
+          arr1.push({
+            name:'0天',
+            value:0
+          });
+          arr = [{
+            name:'0小时',
+            value:0
+          }];
+        }
+        this.multiArray = [arr1,arr];
+        this.$apply();
+      }
         onLoad(options) {
 
             // if(options.cost_list){
@@ -258,12 +308,28 @@
             // }
             if(options.data){
                 this.all_data = JSON.parse(decodeURIComponent(options.data));
+                this.initArray();
                 if(options.from == 'insurance'){
                     this.show_radio = true;
                     this.cost_name = '保险';
                     this.cost_list =  this.all_data.insurances_list;
                 }else if(options.from == 'withdraw'){
                     this.cost_list = this.all_data.withdraw_list;
+                    for(let i =0;i<this.cost_list.length;i++){
+                      this.cost_list[i].multiArray = this.multiArray;
+                      this.cost_list[i].multiIndex = [null,null]
+                      for(let j = 0;j<this.multiArray[0].length;j++){
+                        if(this.cost_list[i].pddeltaday == this.multiArray[0][j].value){
+                          this.cost_list[i].multiIndex[0] = j;
+                        }
+                      }
+                      for(let j = 0;j<this.multiArray[1].length;j++){
+                        if(this.cost_list[i].pddeltahour == this.multiArray[1][j].value){
+                          this.cost_list[i].multiIndex[1] = j;
+                        }
+                      }
+
+                    }
                     this.cost_name = '退团';
                 }else{
                     this.cost_list =  this.all_data.cost_list;
@@ -276,6 +342,7 @@
         }
 
         methods = {
+
             //添加费用
             addCost(){
                 if(this.cost_name == '费用'){
@@ -297,22 +364,11 @@
                     });
                 }else if(this.cost_name == '退团'){
                   this.cost_list.push({
-                    inid:'',
-                    incost:'',
+                    pdprice:'',
+                    pdid:'',
                     delete:false,
                     multiIndex:[],
-                    multiArray:[[{
-                      name:'0天',
-                      value:0
-                    },
-                      {
-                        name:'1天',
-                        value:1
-                      },{
-                        name:'2天',
-                        value:2
-                      },
-                    ],arr]
+                    multiArray:[this.multiArray[0],arr]
                   });
                 }
             },
@@ -348,7 +404,7 @@
               }
             },
             nameInput(e){
-             console.log(e)
+
                 let index = e.currentTarget.dataset.name;
              if(this.cost_name == '费用'){
                  this.cost_list[index].cosname = e.detail.value;
@@ -369,7 +425,7 @@
                     this.cost_list[index].incost = value;
                     break;
                   case '退团':
-                    this.cost_list[index].incost = value;
+                    this.cost_list[index].pdprice = value;
                     break;
                 }
                 this.$apply();

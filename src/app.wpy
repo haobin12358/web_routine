@@ -67,6 +67,7 @@
         'pages/personal/taskIndex',
         'pages/personal/ruleDetail',
         'pages/personal/ruleList',
+
       ],
       permission: {
         "scope.userLocation": {
