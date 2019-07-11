@@ -223,11 +223,14 @@
           let params = [].concat(this.cost_list);
 
           for(let i=0;i<params.length;i++){
-            params[i].pddeltaday  = params[i].multiArray[0][params[i].multiIndex[0]].value;
+            params[i].pddeltaday  =  params[i].multiArray[0][params[i].multiIndex[0]].value;
             if(params[i].multiArray[0][params[i].multiIndex[0]].value == 0){
               params[i].multiArray[1] = arr;
+              params[i].pddeltahour  = params[i].multiArray[1][params[i].multiIndex[1]].value;
+            }else{
+              params[i].pddeltahour  = 0;
             }
-            params[i].pddeltahour  = params[i].multiIndex[1] != undefined ? params[i].multiArray[1][params[i].multiIndex[1]].value : 0;
+            // console.log(params[i].multiIndex[1])
             delete params[i].multiArray;
             delete params[i].multiIndex;
           }
