@@ -340,7 +340,7 @@
             })
         }
 
-      //获取保险
+      //获取退款
       getDiscounts(id){
         let that = this;
         wx.request({

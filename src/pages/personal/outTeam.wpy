@@ -71,42 +71,32 @@
             <image src="{{img_src}}common/icon-question.png" class="m-icon"></image>
           </view>
         </view>
-      <view class="m-item">
-        <span class="m-label">距离活动开始</span>
-        <span class="m-num">0</span>
-        <span>天</span>
-        <span class="m-num">0</span>
-        <span>小时</span>
-      </view>
-      <view class="m-item">
-        <span class="m-label">需扣除报名费用</span>
-        <span class="m-num">50</span>
-        <span>元</span>
+      <view class="m-no-data" wx:if="{{discounts.length == 0}}">无需扣费</view>
+      <view wx:for="{{discounts}}" wx:key="{{index}}">
+        <view class="m-item">
+          <span class="m-label">距离活动开始</span>
+          <span class="m-num">{{item.pddeltaday}}</span>
+          <span>天</span>
+          <span class="m-num">{{item.pddeltahour}}</span>
+          <span>小时</span>
+        </view>
+        <view class="m-item">
+          <span class="m-label">需扣除报名费用</span>
+          <span class="m-num">{{item.pdprice}}</span>
+          <span>元</span>
+        </view>
       </view>
 
+
       <view class="m-foot-btn m-two">
-        <view class="m-btn">取消</view>
-        <view class="m-btn active">确定</view>
+        <view class="m-btn" @tap="cancelTap">取消</view>
+        <view class="m-btn active" @tap="sureCancel">确定</view>
       </view>
 
       <view class="m-rule-modal" wx:if="{{show_rule}}" @tap="cancelModal('show_rule')">
         <view class="m-modal-state">
           <view class="m-title">退团规则</view>
-          <view>退团规则退团规则退团规则退团规则退团规则退团
-            规则退团规则退团规则退团规则退团规则退团规则
-            退团规则退团规则退团规则退团规则退团规则退团
-            规则退团规则退团规则退团规则退团规则退团规则
-            退团规则退团规则退团规则退团规则退团规则退团
-            规则退团规则退团规则退团规则退团规则退团规则
-            退团规则退团规则退团规则退团规则退团规则退团
-            规则退团规则退团规则退团规则退团规则退团规则退团规则退团规则退团规则退团规则退团规则退团
-            规则退团规则退团规则退团规则退团规则退团规则
-            退团规则退团规则退团规则退团规则退团规则退团
-            规则退团规则退团规则退团规则退团规则退团规则
-            退团规则退团规则退团规则退团规则退团规则退团
-            规则退团规则退团规则退团规则退团规则退团规则
-            退团规则退团规则退团规则退团规则退团规则退团
-            规则退团规则退团规则退团规则退团规则退团规则</view>
+          <view>{{rule}}</view>
         </view>
       </view>
     </view>
@@ -124,11 +114,72 @@
     components = {};
     data = {
       img_src:api.img_src,
-      show_rule:false
+      show_rule:false,
+      rule:'',
+      plid:'',
+      discounts:[]
     };
+    //获取退款
+    getDiscounts(id){
+      let that = this;
+      wx.request({
+        url: api.get_discount + '?token=' +wx.getStorageSync('token'),
+        data: {
+          plid: id
+        },
+        header: {
+          'content-type': 'application/json' // 默认值
+        },
+        success: function(res) {
+          that.discounts = res.data.data.discounts;
+          that.rule = res.data.data.role;
+          that.$apply();
+        },
+        error:function (error) {
 
+        }
+      })
+    }
+    postData(){
+      let that = this;
+      tip.loading();
+      wx.request({
+        url: api.cancel_play + '?token=' +wx.getStorageSync('token'),
+        method:"post",
+        data:{
+          plid:that.plid
+        },
+        success: function (resule){
+          tip.loaded();
+          if(resule.data.status == 200){
+            wx.showToast({
+              title: resule.data.message,
+              icon: 'success',
+              duration: 2000
+            })
+            wx.navigateTo({
+              url: '/pages/personal/history'
+            });
+
+
+          }else{
+            wx.showToast({
+              title: resule.data.message,
+              icon: 'none',
+              duration: 2000
+            })
+            that.$apply();
+          }
+
+        }
+      })
+    }
     onLoad(options) {
-
+      if(options.plid){
+        this.plid = options.plid;
+        this.getDiscounts(this.plid);
+        this.$apply();
+      }
     }
 
     methods = {
@@ -141,6 +192,26 @@
       showRule(name){
         this[name] = true;
         this.$apply();
+      },
+      sureCancel(){
+        let that = this;
+        wx.showModal({
+          title: '提示',
+          content: '确定要退出这个活动吗？',
+          success (res) {
+            if (res.confirm) {
+             that.postData();
+            } else if (res.cancel) {
+              // console.log('用户点击取消')
+            }
+          }
+        })
+
+      },
+      cancelTap(){
+        wx.navigateBack({
+          delta: 1
+        })
       }
     };
   }

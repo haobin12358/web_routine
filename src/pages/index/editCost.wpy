@@ -230,7 +230,6 @@
             }else{
               params[i].pddeltahour  = 0;
             }
-            // console.log(params[i].multiIndex[1])
             delete params[i].multiArray;
             delete params[i].multiIndex;
           }

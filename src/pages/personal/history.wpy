@@ -62,47 +62,34 @@
 </style>
 <template>
     <view class="m-history">
-        <view class="m-history-item">
+        <view class="m-history-item" wx:if="{{now_team.length >0}}" >
           <view class="m-row">正在组队</view>
-          <view class="m-row">
-            <image src="" class="m-play-img"></image>
+          <view class="m-row" wx:for="{{now_team}}" wx:key="{{index}}">
+            <image src="{{item.plimg}}" class="m-play-img"></image>
             <view class="m-play-info">
-              <view class="m-title">西湖-富春江-千岛湖-新安江…</view>
+              <view class="m-title">{{item.pltitle}}</view>
               <view class="m-info-center m-flex-between">
-                <span class="m-user">组织者：某某某</span>
-                <span class="m-btn" @tap="changeRoute('/pages/personal/outTeam')">申请退团</span>
+                <span class="m-user">组织者：{{item.plcreate}}</span>
+                <span class="m-btn" @tap="changeRoute('/pages/personal/outTeam',{{item}})" wx:if="{{item.plstatus == 1}}">申请退团</span>
               </view>
               <view class="m-bottom m-flex-between">
-                <span>报名人数：3/5</span>
+                <span>报名人数：{{item.enternum}}/{{item.plnum}}</span>
               </view>
             </view>
           </view>
         </view>
       <view class="m-history-item">
         <view class="m-row">历史团队</view>
-        <view class="m-row">
-          <image src="" class="m-play-img"></image>
+        <view class="m-row" wx:for="{{data_list}}" wx:key="{{index}}">
+          <image src="{{item.plimg}}" class="m-play-img"></image>
           <view class="m-play-info">
-            <view class="m-title">西湖-富春江-千岛湖-新安江…</view>
+            <view class="m-title">{{item.pltitle}}</view>
             <view class="m-info-center m-flex-between">
-              <span class="m-user">组织者：某某某</span>
+              <span class="m-user">组织者：{{item.plcreate}}</span>
             </view>
             <view class="m-bottom m-flex-between">
-              <span>报名人数：3/5</span>
-              <span class="m-evaluate-btn active" @tap="changeRoute('/pages/personal/evaluate')">去评价</span>
-            </view>
-          </view>
-        </view>
-        <view class="m-row">
-          <image src="" class="m-play-img"></image>
-          <view class="m-play-info">
-            <view class="m-title">西湖-富春江-千岛湖-新安江…</view>
-            <view class="m-info-center m-flex-between">
-              <span class="m-user">组织者：某某某</span>
-            </view>
-            <view class="m-bottom m-flex-between">
-              <span>报名人数：3/5</span>
-              <span class="m-evaluate-btn">去评价</span>
+              <span>报名人数：{{item.enternum}}/{{item.plnum}}</span>
+              <span class="m-evaluate-btn" @tap="changeRoute('/pages/personal/evaluate')">{{item.plstatus_zh}}</span>
             </view>
           </view>
         </view>
@@ -112,22 +99,84 @@
 
 <script>
   import wepy from 'wepy';
+  import api from '../../api/api';
+  import tip from '../../utils/tip';
 
   export default class history extends wepy.page {
     config = {
       navigationBarTitleText: '历史团队'
     };
     components = {};
-    data = {};
+    data = {
+      data_list:[],
+      now_team:[],
+      page_info:{
+        page_size:10,
+        page_num:1
+      },
+      total_count:0
+    };
+    getId(){
+      let that = this;
+      tip.loading();
+      wx.request({
+        url: api.get_play_history + '?token=' +wx.getStorageSync('token'),
+        method:"get",
+        data:{
+          publish:1
+        },
+        success: function (resule){
+          if(resule.data.status == 200){
+            that.now_team = resule.data.data;
+            that.$apply();
+          }else{
+            wx.showToast({
+              title: resule.data.message,
+              icon: 'none',
+              duration: 2000
+            })
 
+          }
+        }
+      })
+    }
+    getData(){
+      let that = this;
+      tip.loading();
+      wx.request({
+        url: api.get_play_history + '?token=' +wx.getStorageSync('token'),
+        data: {
+          page_num: that.page_info.page_num,
+          page_size:that.page_info.page_size,
+
+        },
+        header: {
+          'content-type': 'application/json' // 默认值
+        },
+        success: function(res) {
+          let data = res.data.data;
+
+          that.data_list = res.data.data;
+          that.total_count = res.data.total_count;
+          that.$apply();
+          tip.loaded();
+        },
+        error:function (error) {
+          tip.loaded();
+        }
+      })
+    }
     onLoad(options) {
-
+      this.getId();
+      this.getData();
     }
 
+
     methods = {
-      changeRoute(v){
+      changeRoute(v,item){
+        let that = this;
         wx.navigateTo({
-          url: v
+          url: v + '?plid=' + item.plid
         });
       },
     };

@@ -114,7 +114,7 @@
         >
             <block wx:for="{{scroll_data}}" wx:key="item">
                 <swiper-item>
-                    <image src="{{item.loadpic_pic}}"  class="slide-image" style="width: 750rpx;height: 300rpx;" />
+                    <image src="{{item.mpbpicture}}" @tap="imgTap({{item}})"  class="slide-image" style="width: 750rpx;height: 300rpx;" />
                 </swiper-item>
             </block>
         </swiper>
@@ -297,14 +297,37 @@
                 }
             })
         }
+      //获取轮播图
+      getImg(id){
+        let that = this;
+        wx.request({
+          url: api.list_mp_banner + '?token=' +wx.getStorageSync('token'),
+          data: {
+            mpbposition: 1
+          },
+          header: {
+            'content-type': 'application/json' // 默认值
+          },
+          success: function(res) {
+            that.scroll_data = res.data.data;
+            that.$apply();
+          },
+          error:function (error) {
+
+          }
+        })
+      }
         onLoad(options) {
             this.getScenic();
+            this.getImg();
         }
 
         methods = {
-          // iconClick(item){
-          //     this.select_icon = item;
-          // },
+          imgTap(item){
+            wx.navigateTo({
+              url: item.contentlink
+            });
+          },
           changeRoute(v,item){
               wx.navigateTo({
                   url: v+'?sspid=' + item.sspid
