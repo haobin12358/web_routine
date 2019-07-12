@@ -71,7 +71,7 @@
         method:"post",
         data:{
           cncashnum:that.money,
-          applyfrom: 'mp'
+          applyplatform: '2'
         },
         success: function (resule){
           tip.loaded();

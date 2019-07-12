@@ -201,7 +201,7 @@
       changeRoute(v,item,name){
         let that = this;
         if(name){
-          if(!item.playtype){
+          if(item.playtype){
             v = '/pages/index/activityDetail';
           }else{
             v ='/pages/index/lookActivity'

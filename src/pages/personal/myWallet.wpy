@@ -86,7 +86,7 @@
               <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
             </view>
           </picker>
-          <span class="m-total-price">总计:¥{{total}}</span>
+          <span class="m-total-price">总计:{{total}}</span>
         </view>
         <view class="m-myWallet-list">
           <view class="m-no-data" wx:if="{{data_list.length == 0}}">暂无{{array[index].name}}</view>

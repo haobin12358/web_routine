@@ -21,6 +21,7 @@ const get_play = api2 +'play/get_play';//获取活动
 const get_play_list = api2 +'play/get_play_list';//获取所有活动列表
 const make_over = api2 +'play/make_over';//活动转让
 const undertake = api2 +'play/undertake';//承接
+const payment = api2 +'play/payment';//承接支付
 const set_gather = api2 + 'play/set_gather';//设置集合点
 const get_gather = api2 + 'play/get_gather';//获取集合点
 
@@ -72,6 +73,6 @@ module.exports = {
     get_play_list,get_gather,set_gather,get_playrequire,play_join,identity,set_signin,get_signin,get_current_play,help,signin,
   get_enter_user,collect,add_travelrecord,upload,batch_upload,create_notice,get_notice,get_provinces,get_citys,get_areas,get_member_location,
   travelrecord_list,get_travelrecord,collection_show,raiders_list,get_team_travelrecord,set_discount,get_discount,list_mp_banner,get_play_history,
-  cancel_play,make_over,my_wallet,undertake,apply_cash
+  cancel_play,make_over,my_wallet,undertake,apply_cash,payment
 
 }

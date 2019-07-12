@@ -107,6 +107,7 @@
           left: 0;
           border-top: 1px solid @border-color;
           z-index: 10;
+          width: 100%;
           .m-icon-list{
               .flex-row(space-around);
               width: 750rpx;
@@ -218,7 +219,8 @@
 </style>
 <template>
     <view class="m-activityDetail" wx:if="{{detail}}">
-      <view class="m-btn" wx:if="{{detail.plstatus == 5}}"><span >确认承接</span></view>
+      <view class="m-btn" wx:if="{{detail.plstatus == 4 && detail.playtype}}"><span @tap="acceptTap">确认承接</span></view>
+      <view class="m-btn" wx:if="{{detail.plstatus == 5 && detail.playtype}}"><span @tap="pay">确认并支付</span></view>
         <view class="m-scheduling-info">
             <view class="m-flex-between m-name-title">
                 <span class="m-scheduling-name">{{detail.plname}}</span>
@@ -285,7 +287,7 @@
             </view>
         </view>
        <view class="m-scheduling-foot">
-          <view class="m-btn" wx:if="{{detail.plstatus < 2}}"><span @tap="changeActivity">转让活动</span></view>
+            <view class="m-btn" wx:if="{{detail.plstatus < 2 && !detail.playtype}}"><span @tap="changeActivity">转让活动</span></view>
            <view class="m-scheduling-btn" wx:if="{{detail.joinstatus}}" @tap="toEnter('/pages/index/enterPage')">我要报名</view>
            <ul class="m-icon-list" wx:if="{{detail.editstatus}}">
                <li wx:if="{{detail.plstatus == 2}}">
@@ -300,10 +302,10 @@
                <li wx:else>
                    <image src="{{img_src}}index/icon-broad.png" class="m-icon-img"></image>
                </li>
-               <li wx:if="{{detail.plstatus == 1 || detail.plstatus == 2}}">
+               <li wx:if="{{detail.plstatus == 1 || detail.plstatus == 5 || detail.plstatus == 4 || detail.plstatus == 6}}">
                    <image src="{{img_src}}index/icon-close-active.png" class="m-icon-img" @tap="closePlay"></image>
                </li>
-               <li wx:if="{{detail.plstatus == 3}}">
+               <li wx:if="{{detail.plstatus == 3 || detail.plstatus == 2}}">
                    <image src="{{img_src}}index/icon-close.png" class="m-icon-img"></image>
                </li>
                <li wx:if="{{detail.plstatus == 0}}">
@@ -360,7 +362,7 @@
           </view>
           <view>转让协议 <span class="m-grey">可以在</span></view>
           <view>个人中心-协议管理<span class="m-grey">中查看</span></view>
-          <view class="m-dashed-btn">我知道了</view>
+          <view class="m-dashed-btn" @tap.stop="lookKnow">我知道了</view>
         </view>
       </view>
     </view>
@@ -394,10 +396,11 @@
             usrealname:'',
             usidentification:'',
             ustelphone:'',
-            moprice:0
+            moprice:0,
+            args:null
           }
         }
-
+        //获取活动详情
         getDetail(id){
             let that = this;
             tip.loading();
@@ -441,6 +444,7 @@
                 }
             })
         }
+        //修改活动
         postData(status){
             let that = this;
             tip.loading();
@@ -469,6 +473,59 @@
 
                 }
             })
+        }
+        //获取支付参数
+        getPay(){
+          let that = this;
+          wx.request({
+            url: api.payment + '?token=' +wx.getStorageSync('token'),
+            method:"post",
+            data:{
+              plid:that.plid
+            },
+            success: function (resule){
+              tip.loaded();
+              if(resule.data.status == 200){
+                that.payData(resule.data.data.args);
+              }else{
+                wx.showToast({
+                  title: resule.data.message,
+                  icon: 'none',
+                  duration: 2000
+                })
+                that.$apply();
+              }
+
+            }
+          })
+        }
+        //调起微信支付
+        payData(params){
+          let that = this;
+          wx.requestPayment({
+            timeStamp: params.timeStamp,
+            nonceStr: params.nonceStr,
+            package: params.package,
+            signType: params.signType,
+            paySign: params.sign,
+            success (res) {
+              wx.showToast({
+                title: '支付成功',
+                icon: 'none',
+                duration: 1000
+              });
+              that.show_look = true;
+              that.$apply();
+
+            },
+            fail (res) {
+              wx.showToast({
+                title: '支付失败，请稍后再试',
+                icon: 'none',
+                duration: 2000
+              })
+            }
+          })
         }
         onShareAppMessage(res) {
             if (res.from === 'button') {
@@ -605,6 +662,49 @@
             })
 
           },
+          //承接
+          acceptTap(){
+            let that = this;
+            let params = {};
+            params.plid = that.plid;
+            params.mostatus = 1;
+            wx.request({
+              url: api.undertake + '?token=' +wx.getStorageSync('token'),
+              method:"post",
+              data:params,
+              success: function (resule){
+                tip.loaded();
+                console.log(resule)
+                if(resule.data.status == 200){
+                  tip.success('承接成功');
+                  that.detail.plstatus = 5;
+                  // that.args = resule.data.data;
+                  // that.payData();
+                  that.$apply();
+                  // wx.navigateTo({
+                  //   url: '/pages/index/manageActivity'
+                  // });
+
+                }else if(resule.data.status == 405){
+                  that.show_result = true;
+                  that.$apply();
+                }else{
+                  wx.showToast({
+                    title: resule.data.message,
+                    icon: 'none',
+                    duration: 2000
+                  })
+                  that.$apply();
+                }
+
+              }
+            })
+          },
+          //确定并支付
+          pay(){
+            this.getPay();
+          },
+          //调起转让信息
           changeActivity(){
             this.show_modal = true;
             this.$apply();
@@ -614,6 +714,11 @@
             this.form_data[name] = e.detail.value;
             this.$apply();
           },
+          lookKnow(){
+            wx.navigateTo({
+              url: '/pages/index/manageActivity'
+            });
+          }
         }
     }
 </script>

@@ -133,7 +133,9 @@
                          <view class="m-one-activity-status">
                              <span class="m-price">¥ {{item.playsum}}</span>
 <!--                           m-btn-->
-                             <span class=" {{item.plstatus == 3?'m-status cancel':(item.plstatus == 2 || item.plstatus == 4?'active m-status':'m-status ')}} ">{{item.plstatus_zh}}</span>
+                             <span class=" {{item.plstatus == 3?'m-status cancel':(item.plstatus == 2 ?'active m-status':'m-status ')}} " wx:if="{{item.plstatus < 4}}">{{item.plstatus_zh}}</span>
+                           <span class=" {{!item.playtype?'active m-status':'m-status m-btn'}}" wx:if="{{item.plstatus == 4}}">{{!item.playtype ? '转让中' : '待承接'}}</span>
+                           <span class=" {{!item.playtype?'active m-status':'m-status m-btn'}}" wx:if="{{item.plstatus == 5}}">{{!item.playtype ? item.plstatus_zh : '确认'}}</span>
                          </view>
                      </view>
                  </view>
@@ -147,7 +149,9 @@
                         <view class="m-one-activity-user">组织者：{{item.plcreate}}</view>
                         <view class="m-one-activity-status">
                             <span class="m-grey">¥ {{item.playsum}}</span>
-                            <span class=" {{item.plstatus == 4?'m-status cancel':(item.plstatus == 3?'active m-status':'m-status')}} ">{{item.plstatus_zh}}</span>
+
+                            <span class=" {{item.plstatus == 3?'m-status cancel':(item.plstatus == 2?'active m-status':'m-status')}} " >{{item.plstatus_zh}}</span>
+
                         </view>
                     </view>
                 </view>
@@ -211,7 +215,15 @@
                 {
                     id: 3,
                     name: '已关闭'
-                }
+                },
+              {
+                id: 4,
+                name: '转让中'
+              },
+              {
+                id: 5,
+                name: '待支付'
+              }
             ],
             index:0
         }
