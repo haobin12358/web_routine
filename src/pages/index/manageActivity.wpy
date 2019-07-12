@@ -97,61 +97,63 @@
 </style>
 <template>
     <view class="m-manageActivity">
-       <ul class="m-nav">
-           <li wx:for="{{nav_list}}" wx:key="{{index}}">
-<!--                class="m-border-back"-->
-               <span  class="{{item.value == select_value.value ? 'm-border-back':''}}" @tap="navClick({{index}})">{{item.name}}</span>
-           </li>
-       </ul>
-
-        <view class="m-search-box">
-            <picker mode="date" value="{{createtime}}" start="2018-09-01"  bindchange="bindDateChange">
-                <view class="m-time-btn">
-                    <span>{{createtime || '日期'}}</span>
-                    <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
-                </view>
-            </picker>
-            <picker bindchange="bindPickerChange" value="{{index}}" range-key="name" range="{{array}}">
-                <view class="m-flex-end">
-                    <span>{{array[index].name}}</span>
-                    <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
-                </view>
-            </picker>
-
-        </view>
-       <view class="m-activity-list">
-           <view class="m-no-data" wx:if="{{data_list.length == 0}}">暂无数据</view>
-           <view wx:if="{{select_value.value == 0 }}">
-               <view class="m-one-activity" @tap="changeRoute('/pages/index/lookActivity',{{item}})" wx:for="{{data_list}}" wx:key="{{index}}">
-                   <image src="{{item.plimg}}" class="m-activity-img" alt=""></image>
-                   <view class="m-one-activity-info">
-                       <view class="m-one-activity-title">{{item.plname}}</view>
-                       <view class="m-one-activity-time">
-                           <span>{{item.time}}</span>
-                           <span>报名人数：{{item.enternum}}/{{item.plnum}}</span>
-                       </view>
-                       <view class="m-one-activity-status">
-                           <span class="m-price">¥ {{item.playsum}}</span>
-                           <span class=" {{item.plstatus == 4?'m-status cancel':(item.plstatus == 3?'active m-status':'m-status m-btn')}} ">{{item.plstatus_zh}}</span>
-                       </view>
-                   </view>
-               </view>
-           </view>
-          <view wx:else>
-              <!--我报名的-->
-              <view class="m-one-activity" @tap="changeRoute('/pages/index/activityDetail',{{item}})" wx:for="{{data_list}}" wx:key="{{index}}">
-                  <image src="{{item.plimg}}" class="m-activity-img" alt=""></image>
-                  <view class="m-one-activity-info">
-                      <view class="m-one-activity-title">{{item.plname}}</view>
-                      <view class="m-one-activity-user">组织者：{{item.plcreate}}</view>
-                      <view class="m-one-activity-status">
-                          <span class="m-grey">¥ {{item.playsum}}</span>
-                          <span class=" {{item.plstatus == 4?'m-status cancel':(item.plstatus == 3?'active m-status':'m-status')}} ">{{item.plstatus_zh}}</span>
-                      </view>
+      <scroll-view scroll-y style="height: 100vh;" bindscrolltolower="lower"  >
+         <ul class="m-nav">
+             <li wx:for="{{nav_list}}" wx:key="{{index}}">
+  <!--                class="m-border-back"-->
+                 <span  class="{{item.value == select_value.value ? 'm-border-back':''}}" @tap="navClick({{index}})">{{item.name}}</span>
+             </li>
+         </ul>
+          <view class="m-search-box">
+              <picker mode="date" value="{{createtime}}" start="2018-09-01"  bindchange="bindDateChange">
+                  <view class="m-time-btn">
+                      <span>{{createtime || '日期'}}</span>
+                      <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
                   </view>
-              </view>
+              </picker>
+              <picker bindchange="bindPickerChange" value="{{index}}" range-key="name" range="{{array}}">
+                  <view class="m-flex-end">
+                      <span>{{array[index].name}}</span>
+                      <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
+                  </view>
+              </picker>
+
           </view>
-       </view>
+         <view class="m-activity-list">
+             <view class="m-no-data" wx:if="{{data_list.length == 0}}">暂无数据</view>
+             <view wx:if="{{select_value.value == 0 }}">
+                 <view class="m-one-activity" @tap="changeRoute('/pages/index/lookActivity',{{item}})" wx:for="{{data_list}}" wx:key="{{index}}">
+                     <image src="{{item.plimg}}" class="m-activity-img" alt=""></image>
+                     <view class="m-one-activity-info">
+                         <view class="m-one-activity-title">{{item.plname}}</view>
+                         <view class="m-one-activity-time">
+                             <span>{{item.time}}</span>
+                             <span>报名人数：{{item.enternum}}/{{item.plnum}}</span>
+                         </view>
+                         <view class="m-one-activity-status">
+                             <span class="m-price">¥ {{item.playsum}}</span>
+<!--                           m-btn-->
+                             <span class=" {{item.plstatus == 4?'m-status cancel':(item.plstatus == 3?'active m-status':'m-status ')}} ">{{item.plstatus_zh}}</span>
+                         </view>
+                     </view>
+                 </view>
+             </view>
+            <view wx:else>
+                <!--我报名的-->
+                <view class="m-one-activity" @tap="changeRoute('/pages/index/activityDetail',{{item}})" wx:for="{{data_list}}" wx:key="{{index}}">
+                    <image src="{{item.plimg}}" class="m-activity-img" alt=""></image>
+                    <view class="m-one-activity-info">
+                        <view class="m-one-activity-title">{{item.plname}}</view>
+                        <view class="m-one-activity-user">组织者：{{item.plcreate}}</view>
+                        <view class="m-one-activity-status">
+                            <span class="m-grey">¥ {{item.playsum}}</span>
+                            <span class=" {{item.plstatus == 4?'m-status cancel':(item.plstatus == 3?'active m-status':'m-status')}} ">{{item.plstatus_zh}}</span>
+                        </view>
+                    </view>
+                </view>
+            </view>
+         </view>
+      </scroll-view>
     </view>
 </template>
 
@@ -230,11 +232,15 @@
                 },
                 success: function(res) {
                     let data = res.data.data;
-                    let time = '';
                     for(let i in data){
                         data[i].time = data[i].plstarttime.slice(5,7) +'/' + data[i].plstarttime.slice(8,10) + '-' + data[i].plendtime.slice(5,7) +'/' + data[i].plendtime.slice(8,10)
                     }
-                    that.data_list = res.data.data;
+                    if(that.page_info.page_num > 1){
+                      that.data_list = that.data_list.concat(res.data.data);
+                    }else{
+                      that.data_list = res.data.data;
+                    }
+                    that.total_count = res.data.total_count;
                     that.$apply();
                     tip.loaded();
                 },
@@ -271,7 +277,14 @@
                 this.page_info.page_num = 1;
                 // this.$apply();
                 this.getData();
+            },
+          lower(){
+            if(this.total_count > this.data_list.length) {
+              this.page_info.page_num += 1;
+              this.$apply();
+              this.getData();
             }
+          }
         }
     }
 </script>
