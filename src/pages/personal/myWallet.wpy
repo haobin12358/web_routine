@@ -63,56 +63,117 @@
 </style>
 <template>
     <view class="m-myWallet">
-      <view class="m-myWallet-top">
-        <image src="{{img_src}}personal/personal-bg.png" class="m-personal-bg"></image>
-        <view class="m-top-content">
-          <view>账户余额</view>
-          <view >¥ <span class="m-price">199</span></view>
-          <view class="m-btn" @tap="changeRoute('/pages/personal/withdraw')">提现</view>
+      <scroll-view scroll-y style="height: 100vh;" bindscrolltolower="lower"  >
+        <view class="m-myWallet-top">
+          <image src="{{img_src}}personal/personal-bg.png" class="m-personal-bg"></image>
+          <view class="m-top-content">
+            <view>账户余额</view>
+            <view >¥ <span class="m-price">{{uwcash}}</span></view>
+            <view class="m-btn" @tap="changeRoute('/pages/personal/withdraw')">提现</view>
+          </view>
         </view>
-      </view>
-      <view class="m-select-box">
-        <span>消费历史</span>
-        <view class="m-time">
-          <span>本月</span>
-          <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
-        </view>
-        <span class="m-total-price">总计:¥3100</span>
-      </view>
+        <view class="m-select-box">
 
-      <view class="m-myWallet-list">
-        <view class="m-row">
-          <view class="m-flex-between">
-            <span>杭州-富阳一日游</span>
-            <span>¥10.00</span>
-          </view>
-          <view class="m-grey">2018-01-20  14:12:31</view>
+          <picker bindchange="bindPickerChange" value="{{index}}" range-key="name" range="{{array}}">
+            <view class="m-time">
+              <span>{{array[index].name}}</span>
+              <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
+            </view>
+          </picker>
+          <picker mode="date" value="{{time}}" start="2018-09" fields="month"  bindchange="bindDateChange">
+            <view class="m-time">
+              <span>{{time || '本月'}}</span>
+              <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
+            </view>
+          </picker>
+          <span class="m-total-price">总计:¥{{total}}</span>
         </view>
-        <view class="m-row">
-          <view class="m-flex-between">
-            <span>杭州-富阳一日游</span>
-            <span>¥10.00</span>
+        <view class="m-myWallet-list">
+          <view class="m-no-data" wx:if="{{data_list.length == 0}}">暂无{{array[index].name}}</view>
+          <view class="m-row" wx:for="{{data_list}}" wx:key="{{index}}">
+            <view class="m-flex-between">
+              <span>{{item.title}}</span>
+              <span>{{item.amount}}</span>
+            </view>
+            <view class="m-grey">{{item.time}}</view>
           </view>
-          <view class="m-grey">2018-01-20  14:12:31</view>
         </view>
-      </view>
+      </scroll-view>
     </view>
 </template>
 
 <script>
   import wepy from 'wepy';
  import api from '../../api/api';
+ import tip from '../../utils/tip';
   export default class myWallet extends wepy.page {
     config = {
       navigationBarTitleText: '我的钱包'
     };
     components = {};
     data = {
-      img_src:api.img_src
+      img_src:api.img_src,
+      time:'',
+      page_info:{
+        page_num:1,
+        page_size:20
+      },
+      total_count:0,
+      data_list:[],
+      total:0,
+      uwcash:0,
+      array: [
+        {
+          id: 0,
+          name: '消费记录',
+          value:'expense'
+        },
+        {
+          id: 1,
+          name: '提现历史',
+          value:'withdraw'
+        }
+      ],
+      index:0
     };
-
+    getData(){
+      let that = this;
+      tip.loading();
+      wx.request({
+        url: api.my_wallet + '?token=' +wx.getStorageSync('token'),
+        data: {
+          page_num: that.page_info.page_num,
+          page_size:that.page_info.page_size,
+          date:that.time,
+          option:that.array[that.index].value
+        },
+        header: {
+          'content-type': 'application/json' // 默认值
+        },
+        success: function(res) {
+          let data = res.data.data.transactions;
+          if(that.page_info.page_num >1){
+            that.data_list = that.data_list.concat(data);
+          }else{
+            that.data_list = data;
+          }
+          that.total_count = res.data.total_count;
+          that.uwcash = res.data.data.uwcash;
+          that.total = res.data.data.total;
+          that.$apply();
+          tip.loaded();
+        },
+        error:function (error) {
+          tip.loaded();
+        }
+      })
+    }
     onLoad(options) {
-
+      let date = new Date();
+      let month = date.getMonth() +1;
+      this.time = date.getFullYear() + '-' +(month > 9?month: '0'+month);
+      this.$apply();
+      this.getData();
     }
 
     methods = {
@@ -121,6 +182,25 @@
           url: v
         });
       },
+      bindDateChange(e){
+        this.time = e.detail.value;
+        this.page_info.page_num = 1;
+        this.getData();
+      },
+      bindPickerChange(e){
+        this.index = e.detail.value;
+        // this.plstatus = this.array[this.index].id;
+        this.page_info.page_num = 1;
+        // this.$apply();
+        this.getData();
+      },
+      lower(){
+        if(this.total_count > this.data_list.length) {
+          this.page_info.page_num += 1;
+          this.$apply();
+          this.getData();
+        }
+      }
     };
   }
 </script>

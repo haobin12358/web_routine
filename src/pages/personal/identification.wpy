@@ -24,6 +24,7 @@
         .m-img{
           width: 301rpx;
           height: 169rpx;
+          margin: 0 20rpx 0 20rpx;
         }
       }
     }
@@ -35,15 +36,15 @@
       <view class="m-row m-grey">认证信息</view>
       <view class="m-row">
         <span>真实姓名</span>
-        <input type="text" placeholder="请输入真实姓名"/>
+        <input type="text" placeholder="请输入真实姓名"  value="{{form_data.name}}" data-name="name" bindinput="inputChange"/>
       </view>
       <view class="m-row">
         <span>手机号</span>
-        <input type="number" placeholder="请输入手机号"/>
+        <input type="number" placeholder="请输入手机号"  value="{{form_data.tel}}" data-name="tel" bindinput="inputChange"/>
       </view>
       <view class="m-row">
         <span>身份证号</span>
-        <input type="text" placeholder="请输入身份证号"/>
+        <input type="text" placeholder="请输入身份证号"  value="{{form_data.identification}}" data-name="identification" bindinput="inputChange"/>
       </view>
       <view class="m-row m-no-flex">
         <view class="m-flex-between">
@@ -51,30 +52,104 @@
           <span class="m-grey">选填</span>
         </view>
         <view class="m-img-box">
-          <image src="{{img_src}}common/icon-img-up.png" class="m-img"></image>
+          <image src="" alt="" wx:if="{{form_data.img}}" class="m-img"> </image>
+          <image src="{{img_src}}common/icon-img-up.png" class="m-img" @tap="uploadImg"></image>
         </view>
       </view>
-      <view class="m-foot-btn m-one">提交审核</view>
+      <view class="m-foot-btn m-one" @tap="sureSubmit">提交审核</view>
     </view>
 </template>
 
 <script>
   import wepy from 'wepy';
   import api from '../../api/api';
-
+  import tip from '../../utils/tip';
   export default class identification extends wepy.page {
     config = {
       navigationBarTitleText: '导游认证'
     };
     components = {};
     data = {
-      img_src:api.img_src
+      img_src:api.img_src,
+      form_data:{
+        name:'',
+        tel:'',
+        identification:'',
+        img:''
+      }
     };
+    postData(){
+      let that = this;
+      tip.loading();
+      wx.request({
+        url: api.set_play + '?token=' +wx.getStorageSync('token'),
+        method:"post",
+        data:that.form_data,
+        success: function (resule){
+          tip.loaded();
+          if(resule.data.status == 200){
+            wx.navigateTo({
+              url: '/pages/index/lookActivity?plid=' + resule.data.data
+            });
+          }else{
+            wx.showToast({
+              title: resule.data.message,
+              icon: 'none',
+              duration: 2000
+            })
+            that.$apply();
+          }
 
+        }
+      })
+    }
     onLoad(options) {
 
     }
 
-    methods = {};
+    methods = {
+      inputChange(e){
+        let name = e.currentTarget.dataset.name;
+        this.form_data[name] = e.detail.value;
+        this.$apply();
+      },
+      //选择封面
+      uploadImg(){
+        let that = this;
+        // if(that.form_data.img){
+        //   return
+        // }
+        wx.chooseImage({
+          count: 1,
+          sizeType: ['original', 'compressed'],
+          sourceType: ['album', 'camera'],
+          success (res) {
+            // tempFilePath可以作为img标签的src属性显示图片
+            const tempFilePaths = res.tempFilePaths;
+
+            wx.uploadFile({
+              url: api.upload,
+              filePath: tempFilePaths[0],
+              name: 'file',
+              formData: {
+                token:wx.getStorageSync('token'),
+                type:'play'
+              },
+              success (res1){
+                // const data = res.data
+                let data = JSON.parse(res1.data);
+                //do something
+                that.form_data.img = api.api + data.data;
+                that.$apply();
+              }
+            })
+
+          }
+        })
+      },
+      sureSubmit(){
+        this.postData();
+      }
+    };
   }
 </script>

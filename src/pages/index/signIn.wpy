@@ -61,7 +61,7 @@
                 <view class="m-code-user">
                     <image src="{{item.usheader}}" class="m-user-head"></image>
                     <span class="m-user-name">{{item.usname}}</span>
-                    <span class="m-user-label">{{item.uslevel}}</span>
+                    <span class="m-user-label">{{item.usminilevel_zh}}</span>
                 </view>
                <span class="m-grey">{{item.updatetime}}</span>
             </view>
@@ -76,7 +76,7 @@
                 <view class="m-code-user">
                   <image src="{{item.usheader}}" class="m-user-head"></image>
                   <span class="m-user-name">{{item.usname}}</span>
-                  <span class="m-user-label">{{item.uslevel}}</span>
+                  <span class="m-user-label">{{item.usminilevel_zh}}</span>
                 </view>
 <!--                <span class="m-grey">19:20</span>-->
             </view>

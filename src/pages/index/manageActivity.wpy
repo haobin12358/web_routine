@@ -133,7 +133,7 @@
                          <view class="m-one-activity-status">
                              <span class="m-price">¥ {{item.playsum}}</span>
 <!--                           m-btn-->
-                             <span class=" {{item.plstatus == 4?'m-status cancel':(item.plstatus == 3?'active m-status':'m-status ')}} ">{{item.plstatus_zh}}</span>
+                             <span class=" {{item.plstatus == 3?'m-status cancel':(item.plstatus == 2 || item.plstatus == 4?'active m-status':'m-status ')}} ">{{item.plstatus_zh}}</span>
                          </view>
                      </view>
                  </view>
