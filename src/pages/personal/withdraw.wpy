@@ -70,7 +70,8 @@
         url: api.apply_cash + '?token=' +wx.getStorageSync('token'),
         method:"post",
         data:{
-          cncashnum:that.money
+          cncashnum:that.money,
+          applyfrom: 'mp'
         },
         success: function (resule){
           tip.loaded();
