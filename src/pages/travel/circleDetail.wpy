@@ -159,6 +159,7 @@
 
           that.content1 = res.data.data.trcontent;
           that.content1 = that.content1.replace(/&quot;/g,'');
+          that.content1 = that.content1.replace(/&nbsp;/g, '\xa0');
           that.$apply();
           that.$invoke('htmlParser', 'htmlParserNotice');
           that.$apply();

@@ -143,7 +143,7 @@
         },
         success: function(res) {
           that.content1 = res.data.data.agreemen.replace(/&quot;/g,'');
-
+          that.content1 = that.content1.replace(/&nbsp;/g, '\xa0');
             res.data.data.time =  res.data.data.plstarttime.slice(5,7) +'/' + res.data.data.plstarttime.slice(8,10) + '-' +  res.data.data.plendtime.slice(5,7) +'/' +  res.data.data.plendtime.slice(8,10)
 
           that.detail_info = res.data.data;

@@ -91,6 +91,7 @@
                     that.recommend_raiders = res.data.data.recommend_raiders;
                     that.content1 = res.data.data.sspcontent;
                     that.content1 = that.content1.replace(/&quot;/g,'');
+                     that.content1 = that.content1.replace(/&nbsp;/g, '\xa0');
                     that.$apply();
                     that.$invoke('htmlParser', 'htmlParserNotice');
 

@@ -149,6 +149,8 @@
                     data.pllocation = data.pllocation.join('-');
                     data.plproducts = data.plproducts.join('、');
                     that.content1 = res.data.data.plcontent;
+                  that.content1 = that.content1.replace(/&quot;/g,'');
+                  that.content1 = that.content1.replace(/&nbsp;/g, '\xa0');
                     that.detail = data;
                     // WxParse.wxParse('htmlParserName2','html',res.data.data.plcontent,that,0);
                     that.$apply();
