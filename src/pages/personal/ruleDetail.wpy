@@ -54,6 +54,10 @@
         }
       }
     }
+    .m-info{
+      padding: 20rpx 30rpx;
+      line-height: 52rpx;
+    }
   }
 }
 </style>
@@ -64,16 +68,16 @@
       </view>
       <view class="m-row">
         <view class="m-one-activity"  >
-          <image src="" class="m-activity-img" alt=""></image>
+          <image src="{{detail_info.plimg}}" class="m-activity-img" alt=""></image>
           <view class="m-one-activity-info">
-            <view class="m-one-activity-title">西湖-富春江-千岛湖-新安江…</view>
+            <view class="m-one-activity-title">{{detail_info.pltitle}}</view>
             <view class="m-one-activity-time">
-              <span>2019/07/01</span>
-              <span>报名人数：3/5</span>
+              <span>{{detail_info.time}}</span>
+              <span>报名人数：{{detail_info.enternum}}/{{detail_info.plnum}}</span>
             </view>
             <view class="m-one-activity-status">
-              <span class="m-price">¥ 4000</span>
-              <view class="m-flex-end" @tap="changeRoute('/pages/index/lookActivity')">
+              <span class="m-price">¥ {{detail_info.moprice}}</span>
+              <view class="m-flex-end" @tap="changeRoute('/pages/index/lookActivity',{{detail_info}})">
                 <span>查看详情</span>
                 <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>
               </view>
@@ -86,19 +90,22 @@
       </view>
       <view class="m-row">
         <span>转让时间</span>
-        <span>2019/07/01 17:07:33</span>
+        <span>{{detail_info.createtime}}</span>
       </view>
 
       <view class="m-row">
         <span>转让方</span>
-        <span>某某某</span>
+        <span>{{detail_info.moassignor}}</span>
       </view>
       <view class="m-row">
         <span>承接方</span>
-        <span>某某某</span>
+        <span>{{detail_info.mosuccessor}}</span>
       </view>
       <view class="m-row">
         <span class="m-grey">协议电子文件</span>
+      </view>
+      <view class="m-info">
+        <htmlParser :parserName.sync="name1" :parserContent.sync="content1" />
       </view>
     </view>
 </template>
@@ -106,23 +113,67 @@
 <script>
   import wepy from 'wepy';
   import api from '../../api/api';
+  import tip from '../../utils/tip';
+  import htmlParser from '../../components/common/htmlParser';
   export default class ruleDetail extends wepy.page {
     config = {
       navigationBarTitleText: '协议内容'
     };
-    components = {};
-    data = {
-      img_src:api.img_src
+    components = {
+      htmlParser:htmlParser
     };
+    data = {
+      img_src:api.img_src,
+      name1:'htmlParserName2',
+      content1:"",
+      detail_info:'',
+      id:''
+    };
+    getDetail(){
+      let that = this;
+      tip.loading();
+      wx.request({
+        url: api.get_make_over,
+        data: {
+          moid:that.id,
+          token:wx.getStorageSync('token')
+        },
+        header: {
+          'content-type': 'application/json' // 默认值
+        },
+        success: function(res) {
+          that.content1 = res.data.data.agreemen.replace(/&quot;/g,'');
 
+            res.data.data.time =  res.data.data.plstarttime.slice(5,7) +'/' + res.data.data.slice(8,10) + '-' +  res.data.data.slice(5,7) +'/' +  res.data.data.slice(8,10)
+
+          that.detail_info = res.data.data;
+          that.$apply();
+          that.$invoke('htmlParser', 'htmlParserNotice');
+
+          tip.loaded();
+        },
+        error:function (error) {
+          tip.loaded();
+        }
+      })
+    }
     onLoad(options) {
-
+      if(options.id){
+        this.id = options.id;
+        this.$apply();
+        this.getDetail();
+      }
     }
 
     methods = {
       changeRoute(v,item){
+        if(item.playtype){
+          v = '/pages/index/activityDetail';
+        }else{
+          v ='/pages/index/lookActivity'
+        }
         wx.navigateTo({
-          url: v
+          url: v + '?plid='+item.plid
         });
       },
     };
