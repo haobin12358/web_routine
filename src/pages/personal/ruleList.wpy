@@ -104,10 +104,10 @@
         <view class="m-activity-list">
   <!--        <view class="m-no-data" wx:if="{{data_list.length == 0}}">暂无数据</view>-->
           <view>
-            <view class="m-one-activity" @tap="changeRoute('/pages/personal/ruleDetail')" wx:for="{{data_list}}" wx:key="{{index}}">
+            <view class="m-one-activity" @tap="changeRoute('/pages/personal/ruleDetail',{{item}})" wx:for="{{data_list}}" wx:key="{{index}}">
               <image src="{{item.plimg}}" class="m-activity-img" alt=""></image>
               <view class="m-one-activity-info">
-                <view class="m-one-activity-title">{{item.pltitle}}</view>
+                <view class="m-one-activity-title">{{item.plname}}</view>
                 <view class="m-one-activity-time">
                   <span>{{item.createtime}}</span>
                 </view>
@@ -202,6 +202,7 @@
         // this.getData();
       },
       changeRoute(v,item){
+        console.log(item)
         wx.navigateTo({
           url: v + '?id=' +item.moid
         });

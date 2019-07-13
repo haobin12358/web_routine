@@ -54,10 +54,10 @@
         }
       }
     }
-    .m-info{
-      padding: 20rpx 30rpx;
-      line-height: 52rpx;
-    }
+  }
+  .m-info{
+    padding: 20rpx 30rpx;
+    line-height: 52rpx;
   }
 }
 </style>
@@ -70,7 +70,7 @@
         <view class="m-one-activity"  >
           <image src="{{detail_info.plimg}}" class="m-activity-img" alt=""></image>
           <view class="m-one-activity-info">
-            <view class="m-one-activity-title">{{detail_info.pltitle}}</view>
+            <view class="m-one-activity-title">{{detail_info.plname}}</view>
             <view class="m-one-activity-time">
               <span>{{detail_info.time}}</span>
               <span>报名人数：{{detail_info.enternum}}/{{detail_info.plnum}}</span>
@@ -144,7 +144,7 @@
         success: function(res) {
           that.content1 = res.data.data.agreemen.replace(/&quot;/g,'');
 
-            res.data.data.time =  res.data.data.plstarttime.slice(5,7) +'/' + res.data.data.slice(8,10) + '-' +  res.data.data.slice(5,7) +'/' +  res.data.data.slice(8,10)
+            res.data.data.time =  res.data.data.plstarttime.slice(5,7) +'/' + res.data.data.plstarttime.slice(8,10) + '-' +  res.data.data.plendtime.slice(5,7) +'/' +  res.data.data.plendtime.slice(8,10)
 
           that.detail_info = res.data.data;
           that.$apply();
