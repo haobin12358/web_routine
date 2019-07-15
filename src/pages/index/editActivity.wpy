@@ -444,11 +444,11 @@
                     tip.loaded();
                     if(resule.data.status == 200){
                         if(status == 0){
-                            wx.navigateTo({
+                            wx.redirectTo({
                                 url: '/pages/index/manageActivity'
                             });
                         }else if(status == 1){
-                            wx.navigateTo({
+                            wx.redirectTo({
                                 url: '/pages/index/lookActivity?plid=' + resule.data.data
                             });
                         }
@@ -470,7 +470,6 @@
              let data;
              if(options.data){
                  data = JSON.parse(decodeURIComponent(options.data));
-
                  this.show_detail = data.show_detail;
                  this.plstarttime =data.plstarttime;
                  this.plendtime = data.plendtime;

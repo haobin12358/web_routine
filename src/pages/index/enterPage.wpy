@@ -33,7 +33,7 @@
                 <checkbox-group bindchange="checkboxChange">
                     <label class="checkbox" wx:for="{{insurances_list}}" wx:key="index">
                         <view>
-                            <checkbox value="{{item.inid}}" checked="{{item.checked}}" color="#FFCE00"/>{{item.inname}}:¥{{item.incost}}
+                            <checkbox value="{{item.inid}}" checked="{{item.checked}}" disabled="{{item.checked}}" color="#FFCE00"/>{{item.inname}}:¥{{item.incost}}
                         </view>
 
                     </label>
@@ -71,6 +71,32 @@
                     'content-type': 'application/json' // 默认值
                 },
                 success: function(res) {
+                  // res.data.data = [
+                  //   {
+                  //     "incontent": "incontent",
+                  //     "incost": 0.01,
+                  //     "inid": "49edb308-97e4-11e9-8a08-0242ac110002",
+                  //     "inname": "inname",
+                  //     "intype": 0,
+                  //     "plid": "3c43aa9e-97d7-11e9-9b26-0242ac110002"
+                  //   },
+                  //   {
+                  //     "incontent": "incontent",
+                  //     "incost": 0.01,
+                  //     "inid": "49edb308-97e4-11e9-8a08-0242ac110002",
+                  //     "inname": "inname",
+                  //     "intype": 1,
+                  //     "plid": "3c43aa9e-97d7-11e9-9b26-0242ac110002"
+                  //   }
+                  // ];
+                    for(let i=0;i<res.data.data.length;i++){
+                      if(res.data.data[i].intype == 1){
+                        res.data.data[i].checked = true;
+                        that.insurances.push(res.data.data[i].inid);
+                      }else{
+                        res.data.data[i].checked = false;
+                      }
+                    }
                     that.insurances_list = res.data.data;
                     that.$apply();
                 },
@@ -123,7 +149,7 @@
                 icon: 'none',
                 duration: 2000
               });
-              wx.navigateTo({
+              wx.redirectTo({
                 url: '/pages/index/manageActivity'
               });
 
@@ -187,12 +213,13 @@
         }
 
         onLoad(options) {
-            if(options.id){
-              this.plid= options.id;
+            if(options.plid){
+              this.plid= options.plid;
               this.$apply();
-              this.getInsurance(options.id);
-              this.getLabel(options.id);
+              this.getInsurance(options.plid);
+              this.getLabel(options.plid);
             }
+
 
         }
 

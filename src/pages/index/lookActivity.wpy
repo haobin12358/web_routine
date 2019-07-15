@@ -544,8 +544,9 @@
         onLoad(options) {
             if(options.plid){
                 this.plid = options.plid;
-
+                this.$apply();
             }
+
             this.getDetail(this.plid);
             wx.showShareMenu({
                 withShareTicket: true
@@ -565,6 +566,7 @@
             //报名
             toEnter(v){
                 let that = this;
+                console.log(that.plid)
                 wx.navigateTo({
                     url: v + '?plid=' +that.plid
                 });
