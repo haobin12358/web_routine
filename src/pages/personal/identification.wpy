@@ -36,15 +36,15 @@
       <view class="m-row m-grey">认证信息</view>
       <view class="m-row">
         <span>真实姓名</span>
-        <input type="text" placeholder="请输入真实姓名"  value="{{form_data.name}}" data-name="name" bindinput="inputChange"/>
+        <input type="text" placeholder="请输入真实姓名" disabled="{{disabled}}"  value="{{form_data.gurealname}}" data-name="gurealname" bindinput="inputChange"/>
       </view>
       <view class="m-row">
         <span>手机号</span>
-        <input type="number" placeholder="请输入手机号"  value="{{form_data.tel}}" data-name="tel" bindinput="inputChange"/>
+        <input type="number" placeholder="请输入手机号" disabled="{{disabled}}" value="{{form_data.gutelphone}}" data-name="gutelphone" bindinput="inputChange"/>
       </view>
       <view class="m-row">
         <span>身份证号</span>
-        <input type="text" placeholder="请输入身份证号"  value="{{form_data.identification}}" data-name="identification" bindinput="inputChange"/>
+        <input type="text" placeholder="请输入身份证号" disabled="{{disabled}}"  value="{{form_data.guidentification}}" data-name="guidentification" bindinput="inputChange"/>
       </view>
       <view class="m-row m-no-flex">
         <view class="m-flex-between">
@@ -52,11 +52,11 @@
           <span class="m-grey">选填</span>
         </view>
         <view class="m-img-box">
-          <image src="" alt="" wx:if="{{form_data.img}}" class="m-img"> </image>
-          <image src="{{img_src}}common/icon-img-up.png" class="m-img" @tap="uploadImg"></image>
+          <image src="{{form_data.guimg}}" alt="" wx:if="{{form_data.guimg}}" class="m-img"> </image>
+          <image src="{{img_src}}common/icon-img-up.png" class="m-img"  wx:if="{{!disabled}}" @tap="uploadImg"></image>
         </view>
       </view>
-      <view class="m-foot-btn m-one" @tap="sureSubmit">提交审核</view>
+      <view class="m-foot-btn m-one" wx:if="{{!disabled}}" @tap="sureSubmit">提交审核</view>
     </view>
 </template>
 
@@ -72,25 +72,55 @@
     data = {
       img_src:api.img_src,
       form_data:{
-        name:'',
-        tel:'',
-        identification:'',
-        img:''
-      }
+        gurealname:'',
+        gutelphone:'',
+        guidentification:'',
+        guimg:''
+      },
+      ustelphone:'',
+      disabled:false
     };
     postData(){
       let that = this;
       tip.loading();
       wx.request({
-        url: api.set_play + '?token=' +wx.getStorageSync('token'),
+        url: api.guide_certification + '?token=' +wx.getStorageSync('token'),
         method:"post",
         data:that.form_data,
         success: function (resule){
           tip.loaded();
           if(resule.data.status == 200){
-            wx.navigateTo({
-              url: '/pages/index/lookActivity?plid=' + resule.data.data
-            });
+            tip.success(resule.data.message);
+             that.disabled = true;
+             that.$apply();
+          }else{
+            wx.showToast({
+              title: resule.data.message,
+              icon: 'none',
+              duration: 2000
+            })
+            that.$apply();
+          }
+
+        }
+      })
+    }
+    getData(){
+      let that = this;
+      tip.loading();
+      wx.request({
+        url: api.guide + '?token=' +wx.getStorageSync('token'),
+        method:"get",
+        data:{},
+        success: function (resule){
+          tip.loaded();
+          if(resule.data.status == 200){
+            if(resule.data.data.gurealname){
+              that.form_data = resule.data.data;
+              that.disabled = true;
+              that.$apply();
+            }
+
           }else{
             wx.showToast({
               title: resule.data.message,
@@ -104,7 +134,12 @@
       })
     }
     onLoad(options) {
-
+      if(options.tel){
+        this.ustelphone = options.tel;
+        this.form_data.gutelphone = options.tel;
+        this.$apply();
+      }
+      this.getData();
     }
 
     methods = {
@@ -113,7 +148,7 @@
         this.form_data[name] = e.detail.value;
         this.$apply();
       },
-      //选择封面
+      //选择证明
       uploadImg(){
         let that = this;
         // if(that.form_data.img){
@@ -126,20 +161,19 @@
           success (res) {
             // tempFilePath可以作为img标签的src属性显示图片
             const tempFilePaths = res.tempFilePaths;
-
             wx.uploadFile({
               url: api.upload,
               filePath: tempFilePaths[0],
               name: 'file',
               formData: {
                 token:wx.getStorageSync('token'),
-                type:'play'
+                type:'voucher'
               },
               success (res1){
                 // const data = res.data
                 let data = JSON.parse(res1.data);
                 //do something
-                that.form_data.img = api.api + data.data;
+                that.form_data.guimg = api.api + data.data;
                 that.$apply();
               }
             })
@@ -148,7 +182,24 @@
         })
       },
       sureSubmit(){
-        this.postData();
+        let that = this;
+        if(this.form_data.gutelphone != this.ustelphone){
+          wx.showModal({
+            title: '提示',
+            content: '请确认填写手机号无误',
+            success (res) {
+              if (res.confirm) {
+                that.postData();
+              } else if (res.cancel) {
+                console.log('用户点击取消')
+              }
+            }
+          })
+
+        }else{
+          that.postData();
+        }
+
       }
     };
   }

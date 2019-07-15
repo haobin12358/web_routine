@@ -75,7 +75,7 @@
           <span class="m-user-label">{{item.uslevel_zn || item.usminilevel_zh}}</span>
         </view>
         <view>
-          <image src="{{img_src}}index/icon-chat.png" class="m-icon"></image>
+          <image src="{{img_src}}index/icon-chat.png" class="m-icon" @tap="showTip"></image>
           <image src="{{img_src}}index/icon-add-look-active.png" wx:if="{{item.follow_status == 2}}" class="m-icon" @tap="collectTap({{index}})"></image>
           <image src="{{img_src}}index/icon-look-done.png" wx:if="{{item.follow_status == 0}}" class="m-icon" @tap="collectTap({{index}})"></image>
           <image src="{{img_src}}index/icon-look-gather.png" wx:if="{{item.follow_status == 1}}" class="m-icon" @tap="collectTap({{index}})"></image>
@@ -164,6 +164,14 @@
     }
 
     methods = {
+      showTip(){
+        wx.showToast({
+          title: '功能尚未开放，敬请期待',
+          icon: "none",
+          mask: true,
+          duration: 1000
+        });
+      },
       collectTap(index){
         if(this.user_list[index].follow_status != 2){
           this.show_modal = true;

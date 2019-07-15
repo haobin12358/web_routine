@@ -64,6 +64,9 @@ const get_play_history = api2 +'play/get_play_history';//获取历史团队
 const cancel_play = api2 +'play/cancel';//取消报名
 const my_wallet = api2 +'personalcenter/my_wallet';//我的钱包
 const apply_cash = api2 +'user/apply_cash';//提现
+const get_home = api2 + 'user/get_home';//获取个人中心主页信息
+const guide_certification = api2 +'personalcenter/guide_certification';//导游认证
+const guide = api2 +'personalcenter/guide';//获取导游认证
 
 
 
@@ -75,6 +78,6 @@ module.exports = {
     get_play_list,get_gather,set_gather,get_playrequire,play_join,identity,set_signin,get_signin,get_current_play,help,signin,
   get_enter_user,collect,add_travelrecord,upload,batch_upload,create_notice,get_notice,get_provinces,get_citys,get_areas,get_member_location,
   travelrecord_list,get_travelrecord,collection_show,raiders_list,get_team_travelrecord,set_discount,get_discount,list_mp_banner,get_play_history,
-  cancel_play,make_over,my_wallet,undertake,apply_cash,payment,get_make_over_list,get_make_over
+  cancel_play,make_over,my_wallet,undertake,apply_cash,payment,get_make_over_list,get_make_over,get_home,guide_certification,guide
 
 }

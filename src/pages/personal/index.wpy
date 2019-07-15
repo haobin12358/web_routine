@@ -75,17 +75,18 @@
 <template>
     <view class="m-personal">
         <view class="m-personal-top">
-            <image src="" class="m-user-avator"></image>
+            <image src="{{user_info.usheader}}" class="m-user-avator"></image>
             <view class="m-user-info">
                 <view class="m-flex-between">
                     <view class="m-flex-start">
-                        <span class="m-user-name">居居女孩</span>
-                        <image src="{{img_src}}personal/icon-women.png" class="m-icon"></image>
+                        <span class="m-user-name">{{user_info.usname}}</span>
+                        <image src="{{img_src}}personal/icon-women.png" wx:if="{{user_info.usgender == 1}}" class="m-icon"></image>
+                      <image src="{{img_src}}personal/icon-men.png" wx:if="{{user_info.usgender == 0}}" class="m-icon"></image>
                     </view>
-                   <image src="{{img_src}}personal/icon-code.png" class="m-icon"></image>
+<!--                   <image src="{{img_src}}personal/icon-code.png" class="m-icon"></image>-->
                 </view>
                 <view>
-                    <span class="m-user-label">游客</span>
+                    <span class="m-user-label">{{user_info.usminilevel}}</span>
                 </view>
                 <view class="m-flex-end" @tap="changeRoute('/pages/personal/mainIndex')">
                     <span class="m-grey">主页</span>
@@ -96,7 +97,7 @@
 
         <view class="m-personal-item">
             <ul >
-                <li @tap="changeRoute('/pages/personal/personalInfo')">
+                <li @tap="changeRoute('/pages/personal/personalInfo','true')">
                     <view class="m-flex-start">
                         <image src="{{img_src}}personal/icon-info.png" class="m-icon"></image>
                         <span>个人信息</span>
@@ -107,9 +108,9 @@
                         <image src="{{img_src}}personal/icon-wallet.png" class="m-icon"></image>
                         <span>我的钱包</span>
                     </view>
-                    <span class="m-grey">¥ 0</span>
+                    <span class="m-grey">¥ {{user_info.uscash}}</span>
                 </li>
-                <li @tap="changeRoute('/pages/personal/taskIndex')">
+                <li @tap="changeRoute('/pages/personal/taskIndex','true')">
                     <view class="m-flex-start">
                         <image src="{{img_src}}personal/icon-task.png" class="m-icon"></image>
                         <span>任务中心</span>
@@ -131,7 +132,7 @@
                         <span>客服中心</span>
                     </view>
                 </li>
-                <li @tap="changeRoute('/pages/personal/identification')">
+                <li @tap="changeRoute('/pages/personal/identification','info')">
                     <view class="m-flex-start">
                         <image src="{{img_src}}personal/icon-guide.png" class="m-icon"></image>
                         <span>导游认证</span>
@@ -161,15 +162,59 @@
         data = {
             img_src: api.img_src,
             user_info: {},
-            all_phone:['12314241']
+            all_phone:['15079564151']
         }
         onLoad(){
+          this.getData();
+        }
+        getData(){
+          let that = this;
+          wx.request({
+            url: api.get_home + '?token=' +wx.getStorageSync('token'),
+            method:"get",
+            data:{
+
+            },
+            success: function (resule){
+              tip.loaded();
+              if(resule.data.status == 200){
+                that.user_info = resule.data.data;
+                that.$apply();
+              }else{
+                wx.showToast({
+                  title: resule.data.message,
+                  icon: 'none',
+                  duration: 2000
+                })
+
+              }
+            }
+          })
         }
         methods = {
-            changeRoute(v){
-                wx.navigateTo({
+            changeRoute(v,show){
+              let that = this;
+              switch (show) {
+                case 'true':
+                  wx.showToast({
+                    title: '功能尚未开放，敬请期待',
+                    icon: "none",
+                    mask: true,
+                    duration: 1000
+                  });
+                  break;
+                case 'info':
+                  wx.navigateTo({
+                    url: v + '?tel=' + that.user_info.ustelphone
+                  });
+                  break;
+                default:
+                  wx.navigateTo({
                     url: v
-                });
+                  });
+                  break;
+              }
+
             },
           getCell(){
             let that = this;
