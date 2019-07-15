@@ -55,17 +55,17 @@
         }
         components = {}
         data = {
-            plid:'0d85db48-9bd6-11e9-8e38-0242ac110002',
+            plid:'',
             label_list:[],
             insurances_list: [],
             insurances:[]
         }
-        getInsurance(){
+        getInsurance(id){
             let that = this;
             wx.request({
                 url: api.get_insurance + '?token=' +wx.getStorageSync('token'),
                 data: {
-                    plid: that.plid
+                    plid: id || that.plid
                 },
                 header: {
                     'content-type': 'application/json' // 默认值
@@ -79,12 +79,12 @@
                 }
             })
         }
-        getLabel(){
+        getLabel(id){
             let that = this;
             wx.request({
                 url: api.get_playrequire + '?token=' +wx.getStorageSync('token'),
                 data: {
-                    plid: that.plid
+                    plid: id || that.plid
                 },
                 header: {
                     'content-type': 'application/json' // 默认值
@@ -188,11 +188,12 @@
 
         onLoad(options) {
             if(options.id){
-                this.plid= options.id;
+              this.plid= options.id;
+              this.$apply();
+              this.getInsurance(options.id);
+              this.getLabel(options.id);
             }
-            this.$apply();
-            this.getInsurance();
-            this.getLabel();
+
         }
 
         methods = {

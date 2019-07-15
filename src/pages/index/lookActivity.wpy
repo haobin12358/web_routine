@@ -290,28 +290,28 @@
             <view class="m-btn" wx:if="{{detail.plstatus < 2 && !detail.playtype}}"><span @tap="changeActivity">转让活动</span></view>
            <view class="m-scheduling-btn" wx:if="{{detail.joinstatus}}" @tap="toEnter('/pages/index/enterPage')">我要报名</view>
            <ul class="m-icon-list" wx:if="{{detail.editstatus}}">
-               <li wx:if="{{detail.plstatus == 2}}">
+               <li wx:if="{{detail.plstatus > 1}}">
                    <image src="{{img_src}}index/icon-sign-in-active.png" class="m-icon-img"></image>
                </li>
                <li wx:else>
                    <image src="{{img_src}}index/icon-sign-in.png" class="m-icon-img"></image>
                </li>
-               <li wx:if="{{detail.plstatus == 1 || detail.plstatus == 2}}" @tap="editNotice">
+               <li  @tap="editNotice">
                    <image src="{{img_src}}index/icon-broad-active.png" class="m-icon-img"></image>
                </li>
-               <li wx:else>
-                   <image src="{{img_src}}index/icon-broad.png" class="m-icon-img"></image>
-               </li>
-               <li wx:if="{{detail.plstatus == 1 || detail.plstatus == 5 || detail.plstatus == 4 || detail.plstatus == 6}}">
+<!--               <li wx:else>-->
+<!--                   <image src="{{img_src}}index/icon-broad.png" class="m-icon-img"></image>-->
+<!--               </li>-->
+               <li wx:if="{{detail.editstatus}}">
                    <image src="{{img_src}}index/icon-close-active.png" class="m-icon-img" @tap="closePlay"></image>
                </li>
-               <li wx:if="{{detail.plstatus == 3 || detail.plstatus == 2}}">
+               <li wx:else>
                    <image src="{{img_src}}index/icon-close.png" class="m-icon-img"></image>
                </li>
-               <li wx:if="{{detail.plstatus == 0}}">
+               <li wx:if="{{detail.editstatus}}">
                    <image src="{{img_src}}index/icon-edit.png" class="m-icon-img" @tap="editTap"></image>
                </li>
-               <li>
+               <li wx:if="{{detail.editstatus}}">
                    <image src="{{img_src}}index/icon-delete-active.png" class="m-icon-img" @tap="deletePlay"></image>
                </li>
                <li>

@@ -426,7 +426,7 @@
             },
             moneyInput(e){
                 let index = e.currentTarget.dataset.name;
-                let value =parseFloat(e.detail.value);
+                let value =e.detail.value;
                 switch (this.cost_name) {
                   case '费用':
                     this.cost_list[index].cossubtotal = value;
