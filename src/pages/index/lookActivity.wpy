@@ -289,7 +289,7 @@
        <view class="m-scheduling-foot">
             <view class="m-btn" wx:if="{{detail.plstatus < 2 && !detail.playtype}}"><span @tap="changeActivity">转让活动</span></view>
            <view class="m-scheduling-btn" wx:if="{{detail.joinstatus}}" @tap="toEnter('/pages/index/enterPage')">我要报名</view>
-           <ul class="m-icon-list" wx:if="{{detail.editstatus}}">
+           <ul class="m-icon-list" wx:if="{{!detail.playtype}}">
                <li wx:if="{{detail.plstatus > 1}}">
                    <image src="{{img_src}}index/icon-sign-in-active.png" class="m-icon-img"></image>
                </li>

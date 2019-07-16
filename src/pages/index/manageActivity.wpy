@@ -267,6 +267,7 @@
 
         methods = {
             changeRoute(v,item){
+              console.log(item)
                 wx.navigateTo({
                     url: v + '?plid=' +item.plid
                 });

@@ -57,6 +57,7 @@
 </style>
 <template>
     <view class="m-activityDetail">
+      <scroll-view scroll-y style="height: 100vh;" bindscrolltolower="lower"  >
        <ul class="m-activityDetail-info">
            <li>
              <view class="m-label">
@@ -99,12 +100,12 @@
             <h3 class="m-activity-circle-h3">
                 <span class="m-border-back">团队广场</span>
             </h3>
-<!--            <view class="m-circle-content">-->
-<!--                <circle ></circle>-->
-<!--            </view>-->
-            <view class="m-no-data">暂无信息</view>
+            <view class="m-circle-content">
+              <circle :list.sync="list_data"></circle>
+            </view>
+            <view class="m-no-data" wx:if="{{list_data.length == 0}}">暂无信息</view>
         </view>
-
+      </scroll-view>
     </view>
 </template>
 
@@ -128,7 +129,13 @@
             detail_info:null,
             content1:"",
             show_open:false,
-            plid:''
+            plid:'',
+          list_data:[],
+          page_info:{
+            page_num: 1,
+            page_size: 10
+          },
+          total_count:0
         }
         getDetail(id){
             let that = this;
@@ -163,12 +170,40 @@
                 }
             })
         }
+      getData(id){
+        let that = this;
+        tip.loading();
+        wx.request({
+          url: api.get_team_travelrecord +'?token='+wx.getStorageSync('token') ,
+          data: {
+            plid:id  || that.plid,
+            page_num:that.page_info.page_num,
+            page_size: that.page_info.page_size,
+          },
+          header: {
+            'content-type': 'application/json' // 默认值
+          },
+          success: function(res) {
+            let data = res.data.data;
+            if(that.page_info.page_num >1){
+              that.list_data = that.list_data.concat(data);
+            }else{
+              that.list_data = data;
+            }
+            that.total_count = res.data.total_count;
+            that.$apply();
+            tip.loaded();
+          }
+        })
+      }
         onLoad(options) {
             if(options.plid){
                 this.plid = options.plid;
-
+                this.$apply();
+              this.getDetail(this.plid);
+              this.getData(this.plid);
             }
-            this.getDetail(this.plid);
+
         }
 
         methods = {
@@ -197,6 +232,13 @@
 
                 this.$apply();
             },
+          lower(){
+            if(this.total_count > this.list_data.length) {
+              this.page_info.page_num += 1;
+              this.$apply();
+              this.getData();
+            }
+          }
         }
     }
 </script>

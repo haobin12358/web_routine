@@ -45,6 +45,9 @@ const scenicspot_get = api2 +'scenicspot/get';//获取景区详情
 const raiders_list = api2 + 'scenicspot/raiders_list';//攻略推荐
 const travelrecord_list = api2 +'scenicspot/travelrecord_list';//获取个人主页列表
 const get_travelrecord = api2 +'scenicspot/get_travelrecord';//获取详情
+const add_toilet = api2 +'scenicspot/add_toilet';//添加厕所
+const toilet_list = api2 +'scenicspot/toilet_list';//获取厕所列表
+const get_toilet = api2 +'scenicspot/get_toilet';//获取厕所详情
 const collection_show = api2 +'collection/show';//获取关注和粉丝
 
 const get_provinces = api2 + 'address/get_provinces';//获取所有省份
@@ -78,6 +81,7 @@ module.exports = {
     get_play_list,get_gather,set_gather,get_playrequire,play_join,identity,set_signin,get_signin,get_current_play,help,signin,
   get_enter_user,collect,add_travelrecord,upload,batch_upload,create_notice,get_notice,get_provinces,get_citys,get_areas,get_member_location,
   travelrecord_list,get_travelrecord,collection_show,raiders_list,get_team_travelrecord,set_discount,get_discount,list_mp_banner,get_play_history,
-  cancel_play,make_over,my_wallet,undertake,apply_cash,payment,get_make_over_list,get_make_over,get_home,guide_certification,guide
+  cancel_play,make_over,my_wallet,undertake,apply_cash,payment,get_make_over_list,get_make_over,get_home,guide_certification,guide,
+  add_toilet,toilet_list,get_toilet
 
 }
