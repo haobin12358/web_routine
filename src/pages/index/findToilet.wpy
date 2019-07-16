@@ -226,6 +226,7 @@
           tip.loaded();
           if(resule.data.status == 200){
             let data = resule.data.data;
+            that.markers = [];
             for(let i=0;i<data.length;i++){
               that.markers.push({
                 iconPath: api.img_src + "index/toilet-loc.png",
@@ -258,6 +259,7 @@
     }
 
     methods = {
+      //视野变化
       onregionchange(e){
         let that = this;
         wx.createMapContext('map').getScale({
@@ -301,6 +303,7 @@
           }
         })
       },
+      //控制点点击
       controlTap(){
         this.getLocation();
       },
@@ -334,6 +337,7 @@
         })
 
       },
+      //调起导航
       showLine(){
         let that = this;
         wx.openLocation({ // 打开微信内置地图，实现导航功能（在内置地图里面打开地图软件）
@@ -383,11 +387,13 @@
           }
         })
       },
+      //上传
       sureSubmit(){
         if(this.select_loc && this.select_img){
           this.postData();
         }
       },
+      //关闭/取消
       colseModel(name){
         this[name] = null;
         this.select_img = '';
