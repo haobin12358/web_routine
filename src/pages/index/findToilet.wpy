@@ -31,6 +31,7 @@
       border: 1px dashed #C1C1C1;
       color: #C1C1C1;
       margin-left: 20rpx;
+      margin-top: 20rpx;
       &.active{
         border: none;
       }
@@ -101,8 +102,9 @@
       </cover-view>
       <cover-view class="m-add-toilet" wx:if="{{detail_info}}">
         <cover-view class="m-toilet-center">
-          <cover-view class="m-flex-start">
+          <cover-view class="m-flex-between">
             <cover-view class="m-grey" @tap="colseModel('detail_info')">关闭</cover-view>
+            <cover-view  @tap="showLine">前往</cover-view>
           </cover-view>
           <cover-viw class="m-flex-between">
             <cover-view >
@@ -331,6 +333,20 @@
           }
         })
 
+      },
+      showLine(){
+        let that = this;
+        wx.openLocation({ // 打开微信内置地图，实现导航功能（在内置地图里面打开地图软件）
+          latitude: Number(that.detail_info.latitude),
+          longitude: Number(that.detail_info.longitude),
+          name:'厕所',
+          success:function(res){
+            console.log(res);
+          },
+          fail:function(res){
+            console.log(res);
+          }
+        })
       },
       //选择证明
       uploadImg(){
