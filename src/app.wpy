@@ -31,7 +31,6 @@
   export default class extends wepy.app {
     config = {
       pages: [
-
         'pages/personal/login',
         'pages/index/enterPage',
         'pages/index/lookActivity',
@@ -68,6 +67,8 @@
         'pages/personal/ruleDetail',
         'pages/personal/ruleList',
         'pages/index/findToilet',
+        'pages/index/chatHouse',
+        'pages/index/chatList',
       ],
       permission: {
         "scope.userLocation": {

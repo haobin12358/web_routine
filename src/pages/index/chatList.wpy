@@ -1,0 +1,154 @@
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../../styles/common";
+.m-chatList{
+  .m-search-box{
+    width: 684rpx;
+    height: 60rpx;
+    .flex-row(flex-start);
+    background-color: #EBEBEB;
+    margin-left: 30rpx;
+    .m-icon-search{
+      width: 36rpx;
+      height: 36rpx;
+      margin: 0 30rpx;
+    }
+  }
+  .m-chatList-content{
+    padding-top: 40rpx;
+    .m-row{
+      /*display: -webkit-box;*/
+      /*display: box;*/
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      -webkit-box-orient:horizontal;
+      box-orient:horizontal;
+      width: 750rpx;
+      margin-top: -33rpx;
+      .flex-row(felx-start);
+      .m-left{
+        flex-shrink: 0;
+        width: 750rpx;
+        box-sizing: border-box;
+        padding: 20rpx 30rpx;
+        border-bottom: 1px solid @border-color;
+        .flex-row(flex-start);
+        .m-user-head{
+          margin-right: 20rpx;
+        }
+        .m-title{
+          width: 580rpx;
+          .flex-row(space-between);
+        }
+        .m-name{
+          width: 400rpx;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow:ellipsis;
+        }
+        .m-info{
+          max-width: 580rpx;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow:ellipsis;
+        }
+      }
+      .m-btn{
+        flex-shrink: 0;
+        width: 140rpx;
+        height: 120rpx;
+        background-color: #D83A3A;
+        color: #fff;
+        line-height: 120rpx;
+        text-align: center;
+      }
+
+    }
+  }
+  /* 隐藏下方的滚动条 */
+  .m-row::-webkit-scrollbar {
+    background-color: transparent;
+  }
+}
+
+</style>
+<template>
+    <view class="m-chatList">
+     <view class="m-search-box">
+       <image src="{{img_src}}common/icon-search.png" class="m-icon-search"></image>
+       <input type="text" class="m-input">
+     </view>
+      <view class="m-chatList-content">
+        <view class="m-row" @tap="changeRoute('/pages/index/chatHouse')">
+          <view class="m-left">
+            <image src="" class="m-user-head"></image>
+            <view>
+              <view class="m-title">
+                <span class="m-name">我不想关注你恐龙宝宝！我不想关注你恐龙宝宝！</span>
+                <span class="m-grey">2018-12-29</span>
+              </view>
+              <view class="m-grey m-info">我关注你了哦蔡文姬！</view>
+            </view>
+          </view>
+          <view class="m-right m-btn">删除</view>
+        </view>
+
+        <view class="m-row">
+          <view class="m-left">
+            <image src="" class="m-user-head"></image>
+            <view>
+              <view class="m-title">
+                <span class="m-name">moumou</span>
+                <span class="m-grey">2018-12-29</span>
+              </view>
+              <view class="m-grey m-info">我不想关注你恐龙宝宝！我不想关注你恐龙宝宝！</view>
+            </view>
+          </view>
+          <view class="m-right m-btn">删除</view>
+        </view>
+        <view class="m-row">
+          <view class="m-left">
+            <image src="" class="m-user-head"></image>
+            <view>
+              <view class="m-title">
+                <span class="m-name">moumou</span>
+                <span class="m-grey">2018-12-29</span>
+              </view>
+              <view class="m-grey m-info">我关注你了哦蔡文姬！</view>
+            </view>
+          </view>
+          <view class="m-right m-btn">删除</view>
+        </view>
+      </view>
+
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import api from '../../api/api';
+  import tip from '../../utils/tip';
+
+  export default class chatList extends wepy.page {
+    config = {
+      navigationBarTitleText: '聊天室'
+    };
+    components = {};
+    data = {
+      img_src:api.img_src
+    };
+
+    onLoad(options) {
+
+    }
+
+    methods = {
+      changeRoute(v,item){
+        console.log(item)
+        wx.navigateTo({
+          url: v
+        });
+      },
+    };
+  }
+</script>

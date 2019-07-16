@@ -119,7 +119,8 @@
           <p><image src="{{img_src}}index/index-find.png" class="m-index-icon" alt="" /></p>
           <p>找厕所</p>
         </li>
-        <li @tap="showTip">
+<!--        @tap="showTip"-->
+        <li @tap="changeRoute('/pages/index/chatList')" >
           <p><image src="{{img_src}}index/index-chat.png" class="m-index-icon" alt="" /></p>
           <p>聊天室</p>
         </li>
