@@ -45,13 +45,17 @@
         success: function(res) {
           let data = res.data.data;
           that.multiArray[0] = [];
+          that.multiArray[0].push({
+            apid:'',
+            name:'不限'
+          });
           for(let i =0;i<data.length;i++){
             that.multiArray[0].push({
               apid:data[i].apid,
               name:data[i].apname
             });
           }
-          that.getCity(data[0].apid);
+          that.getCity(that.multiArray[0].apid);
           that.$apply();
         }
       })
@@ -59,59 +63,84 @@
     //获取市
     getCity(id){
       let that = this;
-      wx.request({
-        url: api.get_citys ,
-        data: {
-          apid:id
-        },
-        header: {
-          'content-type': 'application/json' // 默认值
-        },
-        success: function(res) {
-          let data = res.data.data;
-          that.multiArray[1] = [];
-          that.multiArray[1].push({
-            acid:'',
-            name:'不限'
-          });
-          for(let i =0;i<data.length;i++){
+      if(id){
+        wx.request({
+          url: api.get_citys ,
+          data: {
+            apid:id
+          },
+          header: {
+            'content-type': 'application/json' // 默认值
+          },
+          success: function(res) {
+            let data = res.data.data;
+            that.multiArray[1] = [];
             that.multiArray[1].push({
-              acid:data[i].acid,
-              name:data[i].acname
+              acid:'',
+              name:'不限'
             });
+            if(data.length > 0){
+              for(let i =0;i<data.length;i++){
+                that.multiArray[1].push({
+                  acid:data[i].acid,
+                  name:data[i].acname
+                });
+              }
+              that.getCountry(that.multiArray[0].acid);
+            }
+
+            that.$apply();
           }
-          that.getCountry(data[0].acid);
-          that.$apply();
-        }
-      })
+        })
+      }else{
+        that.multiArray[1] = [];
+        that.multiArray[1].push({
+          acid:'',
+          name:'不限'
+        });
+        that.getCountry(that.multiArray[0].acid);
+        that.$apply();
+      }
+
     }
     //获取区县
     getCountry(id){
       let that = this;
-      wx.request({
-        url: api.get_areas ,
-        data: {
-          acid:id
-        },
-        header: {
-          'content-type': 'application/json' // 默认值
-        },
-        success: function(res) {
-          let data = res.data.data;
-          that.multiArray[2] = [];
-          that.multiArray[2].push({
-            aaid:'',
-            name:'不限'
-          });
-          for(let i =0;i<data.length;i++){
+      if(id){
+        wx.request({
+          url: api.get_areas ,
+          data: {
+            acid:id || ''
+          },
+          header: {
+            'content-type': 'application/json' // 默认值
+          },
+          success: function(res) {
+            let data = res.data.data;
+            that.multiArray[2] = [];
             that.multiArray[2].push({
-              aaid:data[i].aaid,
-              name:data[i].aaname
+              aaid:'',
+              name:'不限'
             });
+            for(let i =0;i<data.length;i++){
+              that.multiArray[2].push({
+                aaid:data[i].aaid,
+                name:data[i].aaname
+              });
+            }
+
+            that.$apply();
           }
-          that.$apply();
-        }
-      })
+        })
+      }else{
+        that.multiArray[2] = [];
+        that.multiArray[2].push({
+          aaid:'',
+          name:'不限'
+        });
+        that.$apply();
+      }
+
     }
 
     onLoad(options) {
@@ -137,6 +166,10 @@
           this.select_loc = this.multiArray[2][this.multiIndex[2]];
         }
         this.$apply();
+        // console.log(this.select_loc)
+        if(this.select_loc.apid == '' && this.select_loc.name == '不限'){
+          this.select_loc = {}
+        }
         this.$emit('citySelect',this.select_loc);
 
       },

@@ -105,7 +105,7 @@
 </style>
 <template>
     <view class="m-travel">
-      <scroll-view scroll-y style="height: 100vh;" bindscrolltolower="lower">
+<!--      <scroll-view scroll-y style="height: 100vh;" bindscrolltolower="lower">-->
         <swiper
                 indicator-dots="{{indicatorDots}}"
                 autoplay="{{autoplay}}"
@@ -184,7 +184,7 @@
 <!--                </view>-->
 <!--            </view>-->
         </view>
-      </scroll-view>
+<!--      </scroll-view>-->
     </view>
 </template>
 
@@ -267,12 +267,15 @@
               value:'5'
             }
           ],
-          level_index:0
+          level_index:0,
+          loading:false
         }
 
         getScenic(){
             let that = this;
             tip.loading();
+            that.loading = true;
+
             wx.request({
                 url: api.scenicspot_list + '?token=' +wx.getStorageSync('token'),
                 data: {
@@ -291,7 +294,9 @@
                     that.scenic_data = res.data.data;
                   }
                   that.total_count = res.data.total_count;
+                  that.loading = false;
                   that.$apply();
+                  wx.stopPullDownRefresh();
                   tip.loaded();
                 },
                 error:function (error) {
@@ -299,6 +304,7 @@
                 }
             })
         }
+
       //获取轮播图
       getImg(id){
         let that = this;
@@ -323,6 +329,26 @@
             this.getScenic();
             this.getImg();
         }
+      // onPullDownRefresh() {
+      //     console.log(this,'asdada')
+      //   this.select_city = {};
+      //   this.level_index = 0;
+      //   this.$apply();
+      //   // 上拉刷新
+      //   if (!this.loading) {
+      //     this. getScenic();
+      //       // 处理完成后，终止下拉刷新
+      //   }
+      // }
+      onReachBottom() {
+        // 下拉触底，先判断是否有请求正在进行中
+        // 以及检查当前请求页数是不是小于数据总页数，如符合条件，则发送请求
+        if(!this.loading && this.total_count > this.scenic_data.length) {
+          this.page_info.page_num += 1;
+          this.$apply();
+          this.getScenic();
+        }
+      }
 
         methods = {
           imgTap(item){
@@ -338,20 +364,15 @@
           //城市选择
           citySelect(e){
             this.select_city = e;
+            this.page_info.page_num =1;
             this.$apply();
             this.getScenic();
           },
           bindLevelChange(e){
             this.level_index = e.detail.value;
+            this.page_info.page_num =1;
             this.$apply();
             this.getScenic();
-          },
-          lower(){
-            if(this.total_count > this.scenic_data.length) {
-              this.page_info.page_num += 1;
-              this.$apply();
-              this.getScenic();
-            }
           }
         }
     }
