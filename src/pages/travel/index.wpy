@@ -145,6 +145,7 @@
             </li>
         </ul>
         <view class="m-travel-list">
+          <view class="m-no-data" wx:if="{{scenic_data.length == 0}}">该选项暂无景区</view>
             <view class="m-one-travel" wx:for="{{scenic_data}}" wx:key="{{index}}"  @tap="changeRoute('/pages/travel/scenicDetail',{{item}})">
                 <image src="{{item.sspmainimg}}" class="m-travel-img"></image>
                 <view class="m-one-travel-text">

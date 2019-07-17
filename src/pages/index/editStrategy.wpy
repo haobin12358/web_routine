@@ -60,10 +60,10 @@
 </style>
 <template>
     <view class="m-editStrategy">
-      <view class="m-alert-text">
-        <span>使用电脑版www.bigxingxing.com输入更方便</span>
-<!--        <span class="m-alert-btn">草稿箱</span>-->
-      </view>
+<!--      <view class="m-alert-text">-->
+<!--        <span>使用电脑版www.bigxingxing.com输入更方便</span>-->
+<!--&lt;!&ndash;        <span class="m-alert-btn">草稿箱</span>&ndash;&gt;-->
+<!--      </view>-->
       <view class="m-row">
         <span @tap="cancelContent">取消</span>
         <span class="m-btn" @tap="submitNote">发布</span>

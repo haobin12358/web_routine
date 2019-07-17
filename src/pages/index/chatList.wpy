@@ -76,7 +76,7 @@
     <view class="m-chatList">
      <view class="m-search-box">
        <image src="{{img_src}}common/icon-search.png" class="m-icon-search"></image>
-       <input type="text" class="m-input">
+       <input type="text" class="m-input" />
      </view>
       <view class="m-chatList-content">
         <view class="m-row" @tap="changeRoute('/pages/index/chatHouse')">
