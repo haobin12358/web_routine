@@ -81,9 +81,8 @@
     <view>
         <view class="m-login-state">
             <view class="m-login-info">
-
                 <image src="{{img_src}}common/logo.png" class="m-login-logo"></image>
-               <view> 欢迎加入XXXXXXXX平台</view>
+               <view> 欢迎加入旗行</view>
                 <view class="m-grey">为提供优质的服务，需要获取您的公开信息（昵称、头像等）</view>
             </view>
           <view class="m-btn-box">

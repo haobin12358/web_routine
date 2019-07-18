@@ -119,8 +119,8 @@
           <p><image src="{{img_src}}index/index-find.png" class="m-index-icon" alt="" /></p>
           <p>找厕所</p>
         </li>
-<!--        @tap="changeRoute('/pages/index/chatList')"-->
-        <li @tap="showTip" >
+<!--      @tap="changeRoute('/pages/index/chatList')" -->
+        <li  @tap="showTip"  >
           <p><image src="{{img_src}}index/index-chat.png" class="m-index-icon" alt="" /></p>
           <p>聊天室</p>
         </li>
@@ -147,7 +147,7 @@
 
   export default class IndexIndex extends wepy.page {
     config = {
-      navigationBarTitleText: '大行星',
+      navigationBarTitleText: '旗行',
         enablePullDownRefresh:true
     }
     components = {

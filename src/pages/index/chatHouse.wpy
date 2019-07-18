@@ -6,6 +6,24 @@
     padding-bottom: 100rpx;
     box-sizing: border-box;
     position: relative;
+    .history{
+      height: 1100rpx;
+      &.active{
+        height: 900rpx;
+      }
+    }
+    .m-img{
+      width: 340rpx;
+      height: 450rpx;
+      background-color: #c1c1c1;
+    }
+    .m-map{
+      width: 440rpx;
+      height: 320rpx;
+      .m-map-name{
+        padding: 20rpx 0;
+      }
+    }
     .m-row-left{
       .flex(row,flex-start,flex-start);
       padding: 20rpx 30rpx;
@@ -54,28 +72,78 @@
     }
     .m-chat-foot{
       position: absolute;
-      bottom: 0;
+      bottom: 10rpx;
       left: 0;
       width: 100%;
       z-index: 100;
       background-color: #fff;
-      padding: 20rpx;
       box-sizing: border-box;
-      .flex-row(space-around);
+      .m-message-edit{
+        .flex-row(space-around);
+        padding: 20rpx;
+        border-bottom: 1px solid @border-color;
+      }
       .m-icon{
         width: 46rpx;
         height: 46rpx;
         margin: 0 20rpx;
+        background-color: #c1c1c1;
+        border-radius: 50%;
       }
       .m-input{
         width: 510rpx;
-        height: 40rpx;
+        height: 46rpx;
         line-height: 46rpx;
         border: 1px solid @border-color;
         border-bottom: none;
         border-top: none;
         padding: 0 20rpx;
         box-sizing: border-box;
+      }
+      .m-audio-text{
+        width: 510rpx;
+        height: 46rpx;
+        line-height: 46rpx;
+        text-align: center;
+        border: 1px solid @border-color;
+        &.active{
+          color: #c1c1c1;
+        }
+      }
+      .m-edit-icon-box{
+        padding: 20rpx 40rpx;
+        .flex-row(flex-start);
+        flex-wrap: wrap;
+        .m-img{
+          width: 150rpx;
+          height: 150rpx;
+          background-color: #c1c1c1;
+          margin-right: 20rpx;
+        }
+      }
+    }
+    .m-voice-alert{
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      top:0;
+      left:0;
+      /*background-color: rgba(0,0,0,0.16);*/
+      z-index: 1000;
+      .m-voice-state{
+        width: 300rpx;
+        height: 300rpx;
+        background-color: rgba(0,0,0,0.4);
+        color: #fff;
+        margin: 400rpx auto 0;
+        .flex-col(center);
+        border-radius: 10rpx;
+        .m-voice-icon{
+          width: 120rpx;
+          height: 150rpx;
+          background-color: #fff;
+          margin-bottom: 20rpx;
+        }
       }
     }
   }
@@ -84,33 +152,92 @@
 </style>
 <template>
     <view class="m-chatHouse">
-<!--      <scroll-view class="history" scroll-y="true" scroll-with-animation scroll-top="{{scrollTop}}">-->
-
-
-<!--      </scroll-view>-->
-      <view class="m-row-left">
-        <image src="" class="m-user-head"></image>
-        <view class="m-text-box">
-          <span class="m-arrow"></span>
-          <view class="m-text">
-            132124124
+      <scroll-view class="{{height ? 'active history':'history'}}" scroll-y="true" bindscroll="scroll" scroll-with-animation  scroll-into-view='{{toView}}'>
+        <view class="m-row-left">
+          <image src="" class="m-user-head"></image>
+          <view class="m-text-box">
+            <span class="m-arrow"></span>
+            <view class="m-text">
+              132124124
+            </view>
           </view>
         </view>
-      </view>
-      <view class="m-row-right">
-        <view class="m-text-box">
-          <view class="m-text">
-            132124124
+        <view class="m-row-left">
+          <image src="" class="m-user-head"></image>
+          <view class="m-text-box">
+            <span class="m-arrow"></span>
+            <view class="m-text">
+              <view class="m-map" @tap="lookLoc">
+                <view class="m-map-name">地理名字</view>
+                <map id="map"
+                     longitude="{{longitude}}"
+                     latitude="{{latitude}}"
+                     scale="13"
+                     ></map>
+              </view>
+            </view>
           </view>
-          <span class="m-arrow"></span>
         </view>
-        <image src="" class="m-user-head"></image>
-      </view>
+        <view class="m-row-left">
+          <image src="" class="m-user-head"></image>
+          <view class="m-text-box">
+            <span class="m-arrow"></span>
+            <view class="m-text">
+              132124124
+            </view>
+          </view>
+        </view>
+        <view class="m-row-left">
+          <image src="" class="m-user-head"></image>
+          <view class="m-text-box">
+            <span class="m-arrow"></span>
+            <view class="m-text">
+              132124124
+            </view>
+          </view>
+        </view>
+        <view class="m-row-left" id="msg-2">
+          <image src="" class="m-user-head"></image>
+          <view class="m-text-box">
+            <span class="m-arrow"></span>
+            <view class="m-text">
+              <video src="" style="width: 350rpx;" ></video>
+            </view>
+          </view>
+        </view>
+        <view class="m-row-right" id="msg-3">
+          <view class="m-text-box">
+            <view class="m-text">
+              <image src="" class="m-img" @tap="previewImage"></image>
+            </view>
+            <span class="m-arrow"></span>
+          </view>
+          <image src="" class="m-user-head"></image>
+        </view>
+
+      </scroll-view>
+
       <view class="m-chat-foot">
-        <image src="" class="m-icon" @tap="uploadImg"></image>
-        <input type="text" class="m-input" placeholder="发消息..."/>
-        <span class="m-send">发送</span>
+        <view class="m-message-edit">
+          <image src="" class="m-icon" wx:if="{{!open_voice}}" @tap="readyAudio"></image>
+          <image src="" class="m-icon" wx:else @tap="showInput"></image>
+          <view class="m-audio-text {{tap_voice?'active':''}}" wx:if="{{open_voice}}" @longtap="on_recorder" @touchstart="voice_ing_start" @touchmove="voice_ing_move" @touchend="voice_ing_end">按住说话</view>
+          <input type="text" value="{{input_value}}" bindinput="changeInput" @tap="closeAdd" class="m-input" wx:else placeholder="发消息..."/>
+          <span class="m-send" wx:if="{{input_value}}">发送</span>
+          <image src="" class="m-icon" wx:else @tap="showSelect" ></image>
+        </view>
+        <view class="m-edit-icon-box" wx:if="{{show_select}}">
+          <image class="m-img" @tap="uploadImg"></image>
+          <image class="m-img" @tap="uploadVideo"></image>
+          <image class="m-img" @tap="selectLoc"></image>
+        </view>
       </view>
+      <cover-view class="m-voice-alert" wx:if="{{on_voice}}">
+        <cover-view class="m-voice-state">
+          <cover-image src="" class="m-voice-icon" />
+          <cover-view>手指上滑，取消发送</cover-view>
+        </cover-view>
+      </cover-view>
     </view>
 </template>
 
@@ -119,21 +246,37 @@
   import api from '../../api/api';
   import tip from '../../utils/tip';
 
+  var recorder = wx.getRecorderManager();
   export default class chatHouse extends wepy.page {
     config = {
       navigationBarTitleText: '聊天室'
     };
     components = {};
     data = {
-
+      img_src:api.img_src,
+      show_select:false,
+      type:'',
+      open_voice:false,
+      tap_voice:false,
+      input_value:'',
+      height:false,
+      scrollTop:100,
+      toView:'',
+      voice_ing_start_date:'',
+      on_voice:false,
+      cancel_voice:false,
+      start_loc:'',
+      longitude:'120.3',
+      latitude:'30.22'
     }
     // 页面加载
     onLoad(e) {
 
-
+      let that = this;
       // if (onUnload_num < 1) {
       // this.webSocket_open()
       // }
+
     }
     onShow(e){
       // onHide_s = false
@@ -153,8 +296,8 @@
     // 页面加载完成
     onReady() {
       var that = this;
-      // this.on_recorder();
-      // this.bottom()
+      this.recorder_all();
+      this.bottom()
     }
     // // 创建websocket
     // webSocket_open() {
@@ -193,8 +336,88 @@
     //   })
     //
     // }
+    recorder_all(){
+      let that = this;
+      recorder.onStart((res) => {
+        console.log('开始录音');
+      })
+      recorder.onStop((res) => {
+        console.log('停止录音,临时路径', res.tempFilePath);
+        // _tempFilePath = res.tempFilePath;
+
+        //不取消发送
+        if(!that.cancel_voice){
+
+        }
+        var x = new Date().getTime() - this.data.voice_ing_start_date
+        if (x > 1000) {
+          // that.data.allContentList.push({
+          //   is_my: true,
+          //   audio: res.tempFilePath,
+          //   length: x / 1000 * 30
+          // });
+          // that.setData({
+          //   allContentList: that.data.allContentList
+          // })
+        }
+      });
+      // recorder.onFrameRecorded((res) => {
+      //   var x = new Date().getTime() - this.data.voice_ing_start_date
+      //   if (x > 1000) {
+      //     console.log('onFrameRecorded  res.frameBuffer', res.frameBuffer);
+      //     // string_base64 = wx.arrayBufferToBase64(res.frameBuffer)
+      //
+      //     // console.log('string_base64--', wx.arrayBufferToBase64(string_base64))
+      //     if (res.isLastFrame) {
+      //       // that.session_pro.then(function(session) {
+      //       //   var data = {
+      //       //     audioType: 3,
+      //       //     cmd: 1,
+      //       //     type: 2,
+      //       //     signType: 'BASE64',
+      //       //     session: session,
+      //       //     body: string_base64,
+      //       //   }
+      //       //   console.log('that.data.allContentList', that.data.allContentList)
+      //         // sendSocketMessage(data)
+      //       })
+      //       // 进行下一步操作
+      //     } else {
+      //       // that.session_pro.then(function(session) {
+      //       //   var data = {
+      //       //     cmd: 1,
+      //       //     audioType: 2,
+      //       //     type: 2,
+      //       //     signType: 'BASE64',
+      //       //     session: session,
+      //       //     body: string_base64
+      //       //   }
+      //       //   console.log('录音上传的data:', data)
+      //       // })
+      //     }
+      //   }
+      // }
+    }
+    bottom() {
+      let that = this;
+      //滚动到底部
+      setTimeout(function() {
+        that.toView = 'msg-3';
+        that.$apply();
+      },100);
+    }
+    closeIcon(){
+      this.show_select = false;
+      if(this.show_select){
+        this.height = true
+      }else{
+        this.height = false
+      }
+      this.$apply();
+      this.bottom();
+    }
     methods = {
-//发送图片
+      //发送图片
       uploadImg(){
         let that = this;
         // if(that.form_data.img){
@@ -229,6 +452,147 @@
           }
         })
       },
+      //上传视频
+      uploadVideo(){
+        let that =this;
+        wx.chooseVideo({
+          sourceType: ['album','camera'],
+          maxDuration: 60,
+          camera: 'back',
+          success(res) {
+            wx.uploadFile({
+              url: api.upload, //仅为示例，非真实的接口地址
+              filePath: res.tempFilePath,
+              name: 'file',
+              formData: {
+                token:wx.getStorageSync('token'),
+                type:that.type
+              },
+              success (res1){
+                // const data = res.data
+                let data = JSON.parse(res1.data);
+                //do something
+                // that.video = {
+                //   url: api.api + data.data,
+                //   thumbnail: api.api +data.video_thum,
+                //   duration: data.video_dur
+                // };
+                // that.show_select = false;
+                that.$apply();
+              }
+            })
+          }
+        })
+      },
+      //点击 + 号
+      showSelect(){
+        this.show_select = !this.show_select;
+        if(this.show_select){
+          this.height = true
+        }else{
+          this.height = false
+        }
+        this.open_voice = false;
+        this.$apply();
+        this.bottom();
+      },
+      //选择位置发送
+      selectLoc(){
+        let that  = this;
+        wx.chooseLocation({
+          success:function (res) {
+            console.log(res)
+            that.$apply();
+          },
+          error:function (res) {
+            console.log(res,'error')
+          }
+        })
+      },
+      //开启录音框
+      readyAudio(){
+        console.log(recorder)
+        this.open_voice = true;
+        this.$apply();
+        this.closeIcon();
+      },
+      //手指接触按住说话位置
+      voice_ing_start(e){
+        this.start_loc = e.touches[0].pageY;
+        this.$apply();
+      },
+      //手指移动，上滑取消发送
+      voice_ing_move(e){
+        if(this.start_loc  - e.touches[0].pageY  >30){
+          this.cancel_voice = true;
+          tip.error('取消发送');
+          this.$apply();
+          recorder.stop();
+        }
+      },
+      //开始录音
+      on_recorder(){
+        this.tap_voice = true;
+        this.voice_ing_start_date = new Date().getTime();
+        this.on_voice = true;
+        this.$apply();
+        this.bottom();
+        recorder.start();
+
+      },
+      //松开录音
+      voice_ing_end(e){
+        this.tap_voice = false;
+        this.on_voice = false;
+        this.$apply();
+        recorder.stop();
+      },
+      //调起input
+      showInput(){
+        this.open_voice = false;
+        this.$apply();
+      },
+      //input值
+      changeInput(e){
+        console.log(e)
+        this.input_value = e.detail.value;
+        this.$apply();
+      },
+      //预览图片
+      previewImage(item){
+        let that = this;
+        wx.previewImage({
+          current: item, // 当前显示图片的http链接
+          urls: that.image // 需要预览的图片http链接列表
+        })
+      },
+      //页面滚动
+      scroll(){
+        this.toView = '';
+        // console.log(that.toView)
+        this.$apply();
+        // this.closeIcon();
+      },
+      closeAdd(){
+        this.closeIcon();
+      },
+      //查看地图
+      lookLoc(item){
+        let that = this;
+        wx.openLocation({ // 打开微信内置地图，实现导航功能（在内置地图里面打开地图软件）
+          latitude: Number(item.latitude) || 30,
+          longitude: Number(item.longitude) || 120,
+          name:'名称',
+          success:function(res){
+            console.log(res);
+          },
+          fail:function(res){
+            console.log(res);
+          }
+        })
+      }
+
+
     }
   }
 </script>
