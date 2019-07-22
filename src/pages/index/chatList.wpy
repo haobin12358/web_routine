@@ -41,7 +41,7 @@
           .flex-row(space-between);
         }
         .m-name{
-          width: 400rpx;
+          width: 300rpx;
           overflow: hidden;
           white-space: nowrap;
           text-overflow:ellipsis;
@@ -79,42 +79,16 @@
        <input type="text" class="m-input" />
      </view>
       <view class="m-chatList-content">
-        <view class="m-row" @tap="changeRoute('/pages/index/chatHouse')">
+        <view class="m-no-data" wx:if="{{room_list.length == 0}}">暂无聊天记录</view>
+        <view class="m-row" @tap="changeRoute('/pages/index/chatHouse')" wx:for="{{room_list}}" wx:key="{{index}}">
           <view class="m-left">
-            <image src="" class="m-user-head"></image>
+            <image src="{{item.headlist[0]}}" class="m-user-head"></image>
             <view>
               <view class="m-title">
-                <span class="m-name">我不想关注你恐龙宝宝！我不想关注你恐龙宝宝！</span>
-                <span class="m-grey">2018-12-29</span>
+                <span class="m-name">{{item.roomname}}</span>
+                <span class="m-grey">{{item.updatetime}}</span>
               </view>
-              <view class="m-grey m-info">我关注你了哦蔡文姬！</view>
-            </view>
-          </view>
-          <view class="m-right m-btn">删除</view>
-        </view>
-
-        <view class="m-row">
-          <view class="m-left">
-            <image src="" class="m-user-head"></image>
-            <view>
-              <view class="m-title">
-                <span class="m-name">moumou</span>
-                <span class="m-grey">2018-12-29</span>
-              </view>
-              <view class="m-grey m-info">我不想关注你恐龙宝宝！我不想关注你恐龙宝宝！</view>
-            </view>
-          </view>
-          <view class="m-right m-btn">删除</view>
-        </view>
-        <view class="m-row">
-          <view class="m-left">
-            <image src="" class="m-user-head"></image>
-            <view>
-              <view class="m-title">
-                <span class="m-name">moumou</span>
-                <span class="m-grey">2018-12-29</span>
-              </view>
-              <view class="m-grey m-info">我关注你了哦蔡文姬！</view>
+              <view class="m-grey m-info">{{item.umsgtext}}</view>
             </view>
           </view>
           <view class="m-right m-btn">删除</view>
@@ -135,11 +109,28 @@
     };
     components = {};
     data = {
-      img_src:api.img_src
+      img_src:api.img_src,
+      room_list:[]
     };
 
+    getData(){
+      let that = this;
+      tip.loading();
+      wepy.request({
+        url:api.get_room_list+ '?token=' +wx.getStorageSync('token'),
+        data:{}
+      }).then(res => {
+        if(res.data.status == 200){
+          that.room_list = res.data.data;
+          that.$apply();
+        }
+      })
+    }
     onLoad(options) {
 
+    }
+    onShow(){
+      this.getData();
     }
 
     methods = {

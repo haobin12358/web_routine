@@ -89,7 +89,7 @@ export default class Tips {
             title: title,
             icon: "none",
             mask: true,
-            duration: 500
+            duration: 1000
         });
         // 隐藏结束回调
         if (onHide) {

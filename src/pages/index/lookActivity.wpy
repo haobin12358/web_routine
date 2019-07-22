@@ -58,6 +58,14 @@
                       color: @common-color;
                   }
               }
+            .m-icon{
+              width: 30rpx;
+              height: 30rpx;
+              margin-left: 10rpx;
+            }
+            .m-rule{
+              max-width: 400rpx;
+            }
               .m-info-text{
                   width: 300rpx;
                   .flex-col(space-between);
@@ -271,6 +279,13 @@
                 <view class="m-label">推荐携带物品</view>
                 <view >{{detail.plproducts}}</view>
             </li>
+          <li wx:if="{{rule}}">
+            <view class="m-label">退款信息</view>
+            <view class="m-flex-end" >
+              <view class="m-rule">{{rule}}</view>
+              <image src="{{img_src}}common/icon-question.png" class="m-icon" alt="" @tap="showRule"/>
+            </view>
+          </li>
         </ul>
         <view class="m-activity-scheduling">
             <h3 class="m-activity-scheduling-h3">
@@ -291,6 +306,7 @@
                 </view>
             </view>
         </view>
+
        <view class="m-scheduling-foot">
             <view class="m-btn" wx:if="{{detail.plstatus < 2 && !detail.playtype}}"><span @tap="changeActivity">转让活动</span></view>
            <view class="m-scheduling-btn" wx:if="{{detail.joinstatus}}" @tap="toEnter('/pages/index/enterPage')">我要报名</view>
@@ -404,7 +420,8 @@
             ustelphone:'',
             moprice:0,
             args:null
-          }
+          },
+          rule:''
         }
         //获取活动详情
         getDetail(id){
@@ -444,6 +461,24 @@
                 that.$invoke('htmlParser', 'htmlParserNotice');
               }
             })
+        }
+        //获取退款
+        getDiscounts(id){
+          let that = this;
+          wepy.request({
+            url: api.get_discount + '?token=' +wx.getStorageSync('token'),
+            data: {
+              plid: id
+            },
+            header: {
+              'content-type': 'application/json' // 默认值
+            }
+          }).then(res => {
+            if(res.data.status == 200){
+              that.rule = res.data.data.role;
+              that.$apply();
+            }
+          })
         }
         //修改活动
         postData(status){
@@ -563,6 +598,7 @@
         }
         onShow(){
           this.getDetail(this.plid);
+          this.getDiscounts(this.plid);
         }
 
         methods = {
@@ -737,6 +773,14 @@
               }
             })
           },
+          showRule(){
+            wx.showToast({
+              title: '费用扣减详情可询问领队',
+              icon: 'none',
+              duration: 2000
+            })
+
+          }
         }
     }
 </script>

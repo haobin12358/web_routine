@@ -9,7 +9,7 @@
     .history{
       height: 1100rpx;
       &.active{
-        height: 900rpx;
+        height: 830rpx;
       }
     }
     .m-img{
@@ -72,7 +72,7 @@
     }
     .m-chat-foot{
       position: absolute;
-      bottom: 10rpx;
+      bottom: 1rpx;
       left: 0;
       width: 100%;
       z-index: 100;
@@ -84,10 +84,9 @@
         border-bottom: 1px solid @border-color;
       }
       .m-icon{
-        width: 46rpx;
-        height: 46rpx;
+        width: 54rpx;
+        height: 54rpx;
         margin: 0 20rpx;
-        background-color: #c1c1c1;
         border-radius: 50%;
       }
       .m-input{
@@ -111,14 +110,20 @@
         }
       }
       .m-edit-icon-box{
-        padding: 20rpx 40rpx;
+        padding: 50rpx;
         .flex-row(flex-start);
         flex-wrap: wrap;
+        background-color: #f2f2f2;
+        color: #999999;
+        .m-one{
+          width: 128rpx;
+          margin-right: 45rpx;
+          text-align: center;
+        }
         .m-img{
-          width: 150rpx;
-          height: 150rpx;
-          background-color: #c1c1c1;
-          margin-right: 20rpx;
+          width: 128rpx;
+          height: 128rpx;
+          margin-bottom: 5rpx;
         }
       }
     }
@@ -219,17 +224,27 @@
 
       <view class="m-chat-foot">
         <view class="m-message-edit">
-          <image src="" class="m-icon" wx:if="{{!open_voice}}" @tap="readyAudio"></image>
-          <image src="" class="m-icon" wx:else @tap="showInput"></image>
+          <image src="{{img_src}}index/chat-audio.png" class="m-icon" wx:if="{{!open_voice}}" @tap="readyAudio"></image>
+          <image src="{{img_src}}index/chat-input.png" class="m-icon" wx:else @tap="showInput"></image>
           <view class="m-audio-text {{tap_voice?'active':''}}" wx:if="{{open_voice}}" @longtap="on_recorder" @touchstart="voice_ing_start" @touchmove="voice_ing_move" @touchend="voice_ing_end">按住说话</view>
           <input type="text" value="{{input_value}}" bindinput="changeInput" @tap="closeAdd" class="m-input" wx:else placeholder="发消息..."/>
           <span class="m-send" wx:if="{{input_value}}">发送</span>
-          <image src="" class="m-icon" wx:else @tap="showSelect" ></image>
+          <image src="{{img_src}}index/chat-add.png" class="m-icon" wx:else @tap="showSelect" ></image>
         </view>
         <view class="m-edit-icon-box" wx:if="{{show_select}}">
-          <image class="m-img" @tap="uploadImg"></image>
-          <image class="m-img" @tap="uploadVideo"></image>
-          <image class="m-img" @tap="selectLoc"></image>
+          <view class="m-one">
+            <image src="{{img_src}}index/chat-img.png" class="m-img" @tap="uploadImg"></image>
+            <view>图片</view>
+          </view>
+          <view class="m-one">
+            <image src="{{img_src}}index/chat-video.png" class="m-img" @tap="uploadVideo"></image>
+            <view>视频</view>
+          </view>
+          <view class="m-one">
+            <image src="{{img_src}}index/chat-loc.png" class="m-img" @tap="selectLoc"></image>
+            <view>位置</view>
+          </view>
+
         </view>
       </view>
       <cover-view class="m-voice-alert" wx:if="{{on_voice}}">
@@ -247,6 +262,12 @@
   import tip from '../../utils/tip';
 
   var recorder = wx.getRecorderManager();
+  let socketOpen = false;
+  var uuid = '',
+    time_ = "1";
+  var frameBuffer_Data, session, SocketTask, string_base64, open_num = 0, submitTo_string,
+    onUnload_num = 0,
+    autoRestart, onHide_s = false;
   export default class chatHouse extends wepy.page {
     config = {
       navigationBarTitleText: '聊天室'
@@ -300,42 +321,164 @@
       this.bottom()
     }
     // // 创建websocket
-    // webSocket_open() {
-    //   var that = this;
-    //   console.log('开始创建')
-    //   // 创建Socket
-    //   SocketTask = wx.connectSocket({
-    //     url: '',
-    //     header: {
-    //       'content-type': 'application/json'
-    //     },
-    //     method: 'post',
-    //     success: function(res) {
-    //       console.log('WebSocket连接创建', res)
-    //     },
-    //     fail: function(err) {
-    //       wx.showToast({
-    //         title: '网络异常！',
-    //       })
-    //       console.log(err)
-    //     },
-    //   })
-    //   that.initSocket();
-    // }
-    // // socket监听事件
-    // initSocket() {
-    //   var that = this;
-    //   console.log("aaa", SocketTask)
-    //   SocketTask.onOpen(res => {
-    //     socketOpen = true;
-    //     open_num++
-    //     if (session == undefined || session == null) {
-    //
-    //     }
-    //     console.log('监听 WebSocket 连接打开事件。', res)
-    //   })
-    //
-    // }
+    webSocket_open() {
+      var that = this;
+      console.log('开始创建')
+      // 创建Socket
+      SocketTask = wx.connectSocket({
+        url: 'wss://play.bigxingxing.com/',
+        header: {
+          'content-type': 'application/json'
+        },
+        method: 'post',
+        success: function(res) {
+          console.log('WebSocket连接创建', res)
+        },
+        fail: function(err) {
+          wx.showToast({
+            title: '网络异常！',
+            icon:'none'
+          })
+          console.log(err)
+        },
+      })
+      that.initSocket();
+    }
+    // socket监听事件
+    initSocket() {
+      let that = this;
+      console.log("aaa", SocketTask)
+      SocketTask.onOpen(res => {
+        socketOpen = true;
+        open_num++
+        if (session == undefined || session == null) {
+          // repositoryType = 1 联通 2 移动 3 电信
+          // ofType	int		进入客服小程序类型 1, 小程序跳转 2，搜索
+          //  ofOperatorType	int	否	运营商类型1，移动 2，联通 3，电信
+          //  wy_appid	String	否	小程序appid
+          if (app.appid) {
+            var data = {
+              cmd: 2,
+              ofType: 1,
+              wy_appid: app.appid
+            }
+          } else {
+            var data = {
+              cmd: 2,
+              ofType: 2,
+              ofOperatorType: that.data.ofOperatorType
+              // ofOperatorType: 1
+            }
+          }
+          sendSocketMessage(data)
+        }
+        console.log('监听 WebSocket 连接打开事件。', res)
+      })
+      SocketTask.onClose(onClose => {
+        console.log('监听 WebSocket 连接关闭事件。', onClose)
+        session = null;
+        SocketTask = false;
+        socketOpen = false;
+        // if (!autoRestart && onHide_s) {
+        //   this.webSocket_open()
+        // }
+        // if (autoRestart) {
+        //   this.webSocket_open()
+        // }
+      })
+      SocketTask.onError(onError => {
+        console.log('监听 WebSocket 错误。错误信息', onError)
+        session = null;
+      })
+      SocketTask.onMessage(onMessage => {
+        var onMessage_data = JSON.parse(onMessage.data);
+        console.log("onMessage:", onMessage_data)
+        // if (onMessage_data == 'session为空') {
+        //   if (submitTo_string) {
+        //     console.log('submitTo_string2222222222')
+        //     that.submitTo()
+        //   }
+        //   return;
+        // }
+        if (onMessage_data.minipTitle) {
+          wx.setTopBarText({
+            text: onMessage_data.minipTitle,
+          })
+        }
+        let is_ai_arr = onMessage_data.body;
+        // 登录。默认发送一条消息给用户展示，不展示已解决未解决
+        if (onMessage_data.cmd == 3) {
+          that.session_pro = new Promise(function (resolve) {
+            session = onMessage_data.session;
+            if (submitTo_string) {
+              console.log('submitTo_string11111111')
+              that.submitTo()
+            }
+            resolve(session)
+          })
+          var messageTime = util.formatTime(onMessage_data.messageTime);
+          // if (open_num < 2){
+
+          if (is_ai_arr.length == 1) {
+            that.data.allContentList.push({
+              is_ai: is_ai_arr,
+              solve_show: false,
+              show_answer: true,
+              messageTime: messageTime
+            });
+          } else {
+            console.log('is_ai_arr:', is_ai_arr)
+            that.data.allContentList.push({
+              is_ai: is_ai_arr,
+              show_answer: false,
+              solve_show: false,
+              messageTime: messageTime
+            });
+          }
+          // }
+          // this.setData({
+          //   listCustmerServiceBanner: onMessage_data.listCustmerServiceBanner,
+          //   staffServicePhone: onMessage_data.staffServicePhone,
+          //   allContentList: that.data.allContentList
+          // })
+        } else {
+          // 正常接收消息
+          uuid = onMessage_data.messageRecordUuid;
+          var messageTime;
+          time_ = onMessage_data.messageTime;
+          if (time_ + 1000 * 60 * 10 > onMessage_data.messageTime) {
+            messageTime = 0;
+          } else {
+            messageTime = util.formatTime(onMessage_data.messageTime);
+          }
+          let arr_list = that.data.allContentList
+          if (is_ai_arr.length == 1) {
+            arr_list.push({
+              show_answer: true,
+              is_ai: is_ai_arr,
+              messageTime: messageTime,
+              solve_show: true,
+              no_problem: false,
+              yse_problem: false
+            });
+          } else {
+            arr_list.push({
+              show_answer: false,
+              is_ai: is_ai_arr,
+              messageTime: messageTime,
+              solve_show: true,
+              no_problem: false,
+              yse_problem: false
+            });
+          }
+          // that.setData({
+          //   allContentList: arr_list
+          // })
+        }
+        that.bottom();
+      })
+
+    }
     recorder_all(){
       let that = this;
       recorder.onStart((res) => {
@@ -525,8 +668,10 @@
       voice_ing_move(e){
         if(this.start_loc  - e.touches[0].pageY  >30){
           this.cancel_voice = true;
-          tip.error('取消发送');
           this.$apply();
+          setTimeout(function() {
+            tip.error('取消发送');
+          },300);
           recorder.stop();
         }
       },

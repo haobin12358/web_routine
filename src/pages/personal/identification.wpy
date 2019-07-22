@@ -164,6 +164,18 @@
       },
       sureSubmit(){
         let that = this;
+        if(!this.form_data.gurealname){
+          tip.error('请填写真实姓名');
+          return;
+        }
+        if(!this.form_data.gutelphone){
+          tip.error('请填写手机号');
+          return;
+        }
+        if(!this.form_data.guidentification){
+          tip.error('请填写身份证号');
+          return;
+        }
         if(this.form_data.gutelphone != this.ustelphone){
           wx.showModal({
             title: '提示',
@@ -178,6 +190,7 @@
           })
 
         }else{
+
           that.postData();
         }
 

@@ -134,6 +134,7 @@
         // 请求成功后的回调函数
         success (p) {
           // 可以在这里对收到的响应数据对象进行加工处理
+          tip.loaded();
           if(p.data.status != 200){
             tip.error(p.data.message);
             if(p.data.status_code == 405007){
@@ -152,13 +153,14 @@
         fail (p) {
           // console.log('request fail: ', p);
           // 必须返回响应数据对象，否则后续无法对响应数据进行处理
+          tip.loaded();
           tip.error('服务器请求失败，请稍后再试');
           return p;
         },
         // 请求完成时的回调函数(请求成功或失败都会被执行)
         complete (p) {
           // console.log('request complete: ', p);
-          tip.loaded();
+
           // return p;
         }
       });

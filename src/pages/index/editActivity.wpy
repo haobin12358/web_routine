@@ -480,16 +480,17 @@
 
              if(options.plid){
                this.plid = options.plid;
+               this.getPlay(this.plid);
+               this.getCost(this.plid);
+               this.getInsureance(this.plid);
+               this.getDiscounts(this.plid);
              }
 
              this.$apply();
         }
 
         onShow(){
-          this.getPlay(this.plid);
-          this.getCost(this.plid);
-          this.getInsureance(this.plid);
-          this.getDiscounts(this.plid);
+
         }
         methods = {
             //路由

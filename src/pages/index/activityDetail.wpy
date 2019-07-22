@@ -16,6 +16,14 @@
                      color: @common-color;
                  }
              }
+           .m-icon{
+             width: 30rpx;
+             height: 30rpx;
+             margin-left: 10rpx;
+           }
+           .m-rule{
+             max-width: 400rpx;
+           }
              .m-info-text{
                  width: 300rpx;
                  .flex-col(space-between);
@@ -107,6 +115,13 @@
                    <image src="{{img_src}}common/icon-right.png" class="m-icon-more" alt="" />
                </view>
            </li>
+         <li wx:if="{{rule}}">
+           <view class="m-label">退款信息</view>
+           <view class="m-flex-end" >
+             <view class="m-rule">{{rule}}</view>
+             <image src="{{img_src}}common/icon-question.png" class="m-icon" alt="" @tap="showRule"/>
+           </view>
+         </li>
            <li class="m-no-flex">
                <view class="m-label">活动详情</view>
                <view class="m-info m-detail-text" wx:if="{{show_open}}">
@@ -168,7 +183,8 @@
             page_num: 1,
             page_size: 10
           },
-          total_count:0
+          total_count:0,
+          rule:''
         }
         getDetail(id){
             let that = this;
@@ -199,6 +215,24 @@
               }
             })
         }
+      //获取退款
+      getDiscounts(id){
+        let that = this;
+        wepy.request({
+          url: api.get_discount + '?token=' +wx.getStorageSync('token'),
+          data: {
+            plid: id
+          },
+          header: {
+            'content-type': 'application/json' // 默认值
+          }
+        }).then(res => {
+          if(res.data.status == 200){
+            that.rule = res.data.data.role;
+            that.$apply();
+          }
+        })
+      }
       getData(id){
         let that = this;
         tip.loading();
@@ -265,6 +299,7 @@
         onShow(){
           this.getDetail(this.plid);
           this.getData(this.plid);
+          this.getDiscounts(this.plid);
         }
 
         methods = {
@@ -322,6 +357,14 @@
               }
             })
           },
+          showRule(){
+            wx.showToast({
+              title: '费用扣减详情可询问领队',
+              icon: 'none',
+              duration: 2000
+            })
+
+          }
         }
     }
 </script>
