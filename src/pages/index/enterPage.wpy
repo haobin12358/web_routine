@@ -141,6 +141,10 @@
         postData(){
             let that = this;
             tip.loading();
+            for(let i=0;i<that.label_list.length;i++){
+              delete that.label_list[i].disabled;
+            }
+
             wepy.request({
                 url: api.play_join + '?token=' +wx.getStorageSync('token'),
                 method:"post",

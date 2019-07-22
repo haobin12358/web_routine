@@ -53,6 +53,7 @@
                   color: @grey-color;
                   /*width: 162rpx;*/
                   text-align: left;
+                flex-shrink: 0;
                   .flex-col(space-between);
                   .m-line{
                       color: @common-color;
@@ -64,7 +65,10 @@
               margin-left: 10rpx;
             }
             .m-rule{
-              max-width: 400rpx;
+              max-width: 410rpx;
+            }
+            .m-max-width{
+              max-width: 450rpx;
             }
               .m-info-text{
                   width: 300rpx;
@@ -233,7 +237,7 @@
 <template>
     <view class="m-activityDetail" wx:if="{{detail}}">
       <view class="m-btn" wx:if="{{detail.plstatus == 4 && detail.playtype}}"><span @tap="acceptTap">确认承接</span></view>
-      <view class="m-btn" wx:if="{{detail.plstatus == 5 && detail.playtype}}"><span @tap="pay">确认并支付</span></view>
+      <view class="m-btn" wx:if="{{detail.plstatus == 5 && !detail.playtype}}"><span @tap="pay">确认并支付</span></view>
         <view class="m-scheduling-info">
             <view class="m-flex-between m-name-title">
                 <span class="m-scheduling-name">{{detail.plname}}</span>
@@ -260,7 +264,7 @@
             </li>
             <li>
                 <view class="m-label">活动地点</view>
-                <view >{{detail.pllocation}}</view>
+                <view class="m-max-width">{{detail.pllocation}}</view>
             </li>
             <li>
                 <view class="m-label">参与人数</view>
@@ -277,7 +281,7 @@
             </li>
             <li>
                 <view class="m-label">推荐携带物品</view>
-                <view >{{detail.plproducts}}</view>
+                <view class="m-max-width">{{detail.plproducts}}</view>
             </li>
           <li wx:if="{{rule}}">
             <view class="m-label">退款信息</view>

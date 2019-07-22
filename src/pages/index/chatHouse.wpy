@@ -260,14 +260,8 @@
   import wepy from 'wepy';
   import api from '../../api/api';
   import tip from '../../utils/tip';
-
+  import io from 'weapp.socket.io'
   var recorder = wx.getRecorderManager();
-  let socketOpen = false;
-  var uuid = '',
-    time_ = "1";
-  var frameBuffer_Data, session, SocketTask, string_base64, open_num = 0, submitTo_string,
-    onUnload_num = 0,
-    autoRestart, onHide_s = false;
   export default class chatHouse extends wepy.page {
     config = {
       navigationBarTitleText: '聊天室'
@@ -298,6 +292,7 @@
       // this.webSocket_open()
       // }
 
+
     }
     onShow(e){
       // onHide_s = false
@@ -320,164 +315,17 @@
       this.recorder_all();
       this.bottom()
     }
-    // // 创建websocket
-    webSocket_open() {
-      var that = this;
-      console.log('开始创建')
-      // 创建Socket
-      SocketTask = wx.connectSocket({
-        url: 'wss://play.bigxingxing.com/',
-        header: {
-          'content-type': 'application/json'
-        },
-        method: 'post',
-        success: function(res) {
-          console.log('WebSocket连接创建', res)
-        },
-        fail: function(err) {
-          wx.showToast({
-            title: '网络异常！',
-            icon:'none'
-          })
-          console.log(err)
-        },
-      })
-      that.initSocket();
-    }
-    // socket监听事件
-    initSocket() {
-      let that = this;
-      console.log("aaa", SocketTask)
-      SocketTask.onOpen(res => {
-        socketOpen = true;
-        open_num++
-        if (session == undefined || session == null) {
-          // repositoryType = 1 联通 2 移动 3 电信
-          // ofType	int		进入客服小程序类型 1, 小程序跳转 2，搜索
-          //  ofOperatorType	int	否	运营商类型1，移动 2，联通 3，电信
-          //  wy_appid	String	否	小程序appid
-          if (app.appid) {
-            var data = {
-              cmd: 2,
-              ofType: 1,
-              wy_appid: app.appid
-            }
-          } else {
-            var data = {
-              cmd: 2,
-              ofType: 2,
-              ofOperatorType: that.data.ofOperatorType
-              // ofOperatorType: 1
-            }
-          }
-          sendSocketMessage(data)
-        }
-        console.log('监听 WebSocket 连接打开事件。', res)
-      })
-      SocketTask.onClose(onClose => {
-        console.log('监听 WebSocket 连接关闭事件。', onClose)
-        session = null;
-        SocketTask = false;
-        socketOpen = false;
-        // if (!autoRestart && onHide_s) {
-        //   this.webSocket_open()
-        // }
-        // if (autoRestart) {
-        //   this.webSocket_open()
-        // }
-      })
-      SocketTask.onError(onError => {
-        console.log('监听 WebSocket 错误。错误信息', onError)
-        session = null;
-      })
-      SocketTask.onMessage(onMessage => {
-        var onMessage_data = JSON.parse(onMessage.data);
-        console.log("onMessage:", onMessage_data)
-        // if (onMessage_data == 'session为空') {
-        //   if (submitTo_string) {
-        //     console.log('submitTo_string2222222222')
-        //     that.submitTo()
-        //   }
-        //   return;
-        // }
-        if (onMessage_data.minipTitle) {
-          wx.setTopBarText({
-            text: onMessage_data.minipTitle,
-          })
-        }
-        let is_ai_arr = onMessage_data.body;
-        // 登录。默认发送一条消息给用户展示，不展示已解决未解决
-        if (onMessage_data.cmd == 3) {
-          that.session_pro = new Promise(function (resolve) {
-            session = onMessage_data.session;
-            if (submitTo_string) {
-              console.log('submitTo_string11111111')
-              that.submitTo()
-            }
-            resolve(session)
-          })
-          var messageTime = util.formatTime(onMessage_data.messageTime);
-          // if (open_num < 2){
+    createConnect(){
+      const socket = io('https://play.bigxingxing.com')
 
-          if (is_ai_arr.length == 1) {
-            that.data.allContentList.push({
-              is_ai: is_ai_arr,
-              solve_show: false,
-              show_answer: true,
-              messageTime: messageTime
-            });
-          } else {
-            console.log('is_ai_arr:', is_ai_arr)
-            that.data.allContentList.push({
-              is_ai: is_ai_arr,
-              show_answer: false,
-              solve_show: false,
-              messageTime: messageTime
-            });
-          }
-          // }
-          // this.setData({
-          //   listCustmerServiceBanner: onMessage_data.listCustmerServiceBanner,
-          //   staffServicePhone: onMessage_data.staffServicePhone,
-          //   allContentList: that.data.allContentList
-          // })
-        } else {
-          // 正常接收消息
-          uuid = onMessage_data.messageRecordUuid;
-          var messageTime;
-          time_ = onMessage_data.messageTime;
-          if (time_ + 1000 * 60 * 10 > onMessage_data.messageTime) {
-            messageTime = 0;
-          } else {
-            messageTime = util.formatTime(onMessage_data.messageTime);
-          }
-          let arr_list = that.data.allContentList
-          if (is_ai_arr.length == 1) {
-            arr_list.push({
-              show_answer: true,
-              is_ai: is_ai_arr,
-              messageTime: messageTime,
-              solve_show: true,
-              no_problem: false,
-              yse_problem: false
-            });
-          } else {
-            arr_list.push({
-              show_answer: false,
-              is_ai: is_ai_arr,
-              messageTime: messageTime,
-              solve_show: true,
-              no_problem: false,
-              yse_problem: false
-            });
-          }
-          // that.setData({
-          //   allContentList: arr_list
-          // })
-        }
-        that.bottom();
+      socket.on('new_message', d => {
+        console.log('received news: ', d)
       })
 
+      socket.emit('send_msg',{
+        roid:'',
+        umsgtext:''
+      } )
     }
     recorder_all(){
       let that = this;

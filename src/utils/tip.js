@@ -95,7 +95,7 @@ export default class Tips {
         if (onHide) {
             setTimeout(() => {
                 onHide();
-            }, 500);
+            }, 1000);
         }
     }
 
