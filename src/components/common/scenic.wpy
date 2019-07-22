@@ -77,23 +77,18 @@
     }
     getScenic(){
       let that = this;
-      wx.request({
+      wepy.request({
         url: api.scenicspot_list + '?token=' +wx.getStorageSync('token'),
         data: {
           page_num: 1,
           page_size: 10000,
           option:'search',
           sspname:that.name
-        },
-        header: {
-          'content-type': 'application/json' // 默认值
-        },
-        success: function(res) {
+        }
+      }).then(res => {
+        if(res.data.status == 200){
           that.scenic_list = res.data.data;
           that.$apply();
-        },
-        error:function (error) {
-
         }
       })
     }

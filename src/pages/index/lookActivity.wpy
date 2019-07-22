@@ -126,6 +126,11 @@
               font-size: 30rpx;
               font-weight: 500;
               text-align: center;
+            &.active{
+              background-color: #fff;
+              border: 1px solid @common-color;
+
+            }
           }
 
       }
@@ -289,6 +294,7 @@
        <view class="m-scheduling-foot">
             <view class="m-btn" wx:if="{{detail.plstatus < 2 && !detail.playtype}}"><span @tap="changeActivity">转让活动</span></view>
            <view class="m-scheduling-btn" wx:if="{{detail.joinstatus}}" @tap="toEnter('/pages/index/enterPage')">我要报名</view>
+         <view class="m-scheduling-btn active" wx:if="{{detail.repaystatus}}" @tap="postReplay">继续支付</view>
            <ul class="m-icon-list" wx:if="{{!detail.playtype}}">
                <li wx:if="{{detail.plstatus > 1}}">
                    <image src="{{img_src}}index/icon-sign-in-active.png" class="m-icon-img"></image>
@@ -404,46 +410,39 @@
         getDetail(id){
             let that = this;
             tip.loading();
-            wx.request({
+            wepy.request({
                 url: api.get_play + '?token=' +wx.getStorageSync('token'),
                 data: {
                     plid:id || that.plid
                 },
                 header: {
                     'content-type': 'application/json' // 默认值
-                },
-                success: function(res) {
-                    let data = res.data.data;
-                    that.detail_info = data;
-
-                    console.log(that)
-
-                    if(data.joinstatus){
-                        wx.setNavigationBarTitle({
-                            title: '活动报名'
-                        })
-                    }else{
-                        wx.setNavigationBarTitle({
-                            title: '我创建的'
-                        })
-                    }
-
-                    data.time = data.plstarttime.slice(0,7) +'/' + data.plstarttime.slice(8,10) + '-' + data.plendtime.slice(5,7) +'/' + data.plendtime.slice(8,10)
-                    data.pllocation = data.pllocation.join('-');
-                    data.plproducts = data.plproducts.join('、');
-                    that.content1 = res.data.data.plcontent;
-                  that.content1 = that.content1.replace(/&quot;/g,'');
-                  that.content1 = that.content1.replace(/&nbsp;/g, '\xa0');
-                    that.detail = data;
-                    // WxParse.wxParse('htmlParserName2','html',res.data.data.plcontent,that,0);
-                    that.$apply();
-                    that.$invoke('htmlParser', 'htmlParserNotice');
-
-                    tip.loaded();
-                },
-                error:function (error) {
-                    tip.loaded();
                 }
+            }).then(res => {
+              if(res.data.status == 200){
+                let data = res.data.data;
+                that.detail_info = data;
+
+                if(data.joinstatus){
+                  wx.setNavigationBarTitle({
+                    title: '活动报名'
+                  })
+                }else{
+                  wx.setNavigationBarTitle({
+                    title: '我创建的'
+                  })
+                }
+                data.time = data.plstarttime.slice(0,7) +'/' + data.plstarttime.slice(8,10) + '-' + data.plendtime.slice(5,7) +'/' + data.plendtime.slice(8,10)
+                data.pllocation = data.pllocation.join('-');
+                data.plproducts = data.plproducts.join('、');
+                that.content1 = res.data.data.plcontent;
+                that.content1 = that.content1.replace(/&quot;/g,'');
+                that.content1 = that.content1.replace(/&nbsp;/g, '\xa0');
+                that.detail = data;
+                // WxParse.wxParse('htmlParserName2','html',res.data.data.plcontent,that,0);
+                that.$apply();
+                that.$invoke('htmlParser', 'htmlParserNotice');
+              }
             })
         }
         //修改活动
@@ -454,50 +453,30 @@
                 that.detail_info.plstatus = status;
             }
 
-            wx.request({
+            wepy.request({
                 url: api.set_play + '?token=' +wx.getStorageSync('token'),
                 method:"post",
-                data:that.detail_info,
-                success: function (resule){
-                    tip.loaded();
-                    if(resule.data.status == 200){
-                        wx.navigateTo({
-                            url: '/pages/index/manageActivity'
-                        });
-                    }else{
-                        wx.showToast({
-                            title: resule.data.message,
-                            icon: 'none',
-                            duration: 2000
-                        })
-                        that.$apply();
-                    }
-
-                }
+                data:that.detail_info
+            }).then(resule => {
+              if(resule.data.status == 200){
+                wx.navigateTo({
+                  url: '/pages/index/manageActivity'
+                });
+              }
             })
         }
         //获取支付参数
         getPay(){
           let that = this;
-          wx.request({
+          wepy.request({
             url: api.payment + '?token=' +wx.getStorageSync('token'),
             method:"post",
             data:{
               plid:that.plid
-            },
-            success: function (resule){
-              tip.loaded();
-              if(resule.data.status == 200){
-                that.payData(resule.data.data.args);
-              }else{
-                wx.showToast({
-                  title: resule.data.message,
-                  icon: 'none',
-                  duration: 2000
-                })
-                that.$apply();
-              }
-
+            }
+          }).then(resule => {
+            if(resule.data.status == 200){
+              that.payData(resule.data.data.args);
             }
           })
         }
@@ -529,6 +508,38 @@
             }
           })
         }
+      //继续支付
+      pay(params){
+        wx.requestPayment({
+          timeStamp: params.timeStamp,
+          nonceStr: params.nonceStr,
+          package: params.package,
+          signType: params.signType,
+          paySign: params.sign,
+          success (res) {
+
+            wx.showToast({
+              title: '报名成功',
+              icon: 'none',
+              duration: 2000
+            });
+            wx.redirectTo({
+              url: '/pages/index/manageActivity'
+            });
+
+
+          },
+          fail (res) {
+            wx.showToast({
+              title: '支付失败，请稍后再试',
+              icon: 'none',
+              duration: 2000
+            })
+          }
+        })
+      }
+
+
         onShareAppMessage(res) {
             if (res.from === 'button') {
 
@@ -546,11 +557,12 @@
                 this.plid = options.plid;
                 this.$apply();
             }
-
-            this.getDetail(this.plid);
             wx.showShareMenu({
                 withShareTicket: true
             })
+        }
+        onShow(){
+          this.getDetail(this.plid);
         }
 
         methods = {
@@ -566,7 +578,7 @@
             //报名
             toEnter(v){
                 let that = this;
-                console.log(that.plid)
+                // console.log(that.plid)
                 wx.navigateTo({
                     url: v + '?plid=' +that.plid
                 });
@@ -627,6 +639,7 @@
               url: '/pages/index/setNotice' + '?plid=' +that.plid
             });
           },
+
           //关闭弹框
           cancelModal(name){
               this[name] = false;
@@ -637,33 +650,22 @@
             let that = this;
             let params = that.form_data;
             params.plid = that.plid;
-            wx.request({
+            wepy.request({
               url: api.make_over + '?token=' +wx.getStorageSync('token'),
               method:"post",
               data:that.form_data,
-              success: function (resule){
-                tip.loaded();
-                console.log(resule)
-                if(resule.data.status == 200){
-                   tip.success('转让成功，等待承接人确认');
-                    wx.navigateTo({
-                      url: '/pages/index/manageActivity'
-                    });
-
-                }else if(resule.data.status == 405){
-                  that.show_result = true;
-                  that.$apply();
-                }else{
-                  wx.showToast({
-                    title: resule.data.message,
-                    icon: 'none',
-                    duration: 2000
-                  })
-                  that.$apply();
-                }
-
+            }).then(resule => {
+              if(resule.data.status == 200){
+                tip.success('转让成功，等待承接人确认');
+                wx.navigateTo({
+                  url: '/pages/index/manageActivity'
+                });
+              }else if(resule.data.status == 405){
+                that.show_result = true;
+                that.$apply();
               }
             })
+
 
           },
           //承接
@@ -672,41 +674,31 @@
             let params = {};
             params.plid = that.plid;
             params.mostatus = 1;
-            wx.request({
+            wepy.request({
               url: api.undertake + '?token=' +wx.getStorageSync('token'),
               method:"post",
               data:params,
-              success: function (resule){
-                tip.loaded();
-                console.log(resule)
-                if(resule.data.status == 200){
-                  tip.success('承接成功');
-                  that.detail.plstatus = 5;
-                  // that.args = resule.data.data;
-                  // that.payData();
-                  that.$apply();
-                  // wx.navigateTo({
-                  //   url: '/pages/index/manageActivity'
-                  // });
-
-                }else if(resule.data.status == 405){
-                  that.show_result = true;
-                  that.$apply();
-                }else{
-                  wx.showToast({
-                    title: resule.data.message,
-                    icon: 'none',
-                    duration: 2000
-                  })
-                  that.$apply();
-                }
+            }).then(resule => {
+              if(resule.data.status == 200){
+                tip.success('承接成功');
+                that.detail.plstatus = 5;
+                // that.args = resule.data.data;
+                // that.payData();
+                that.$apply();
+                // wx.navigateTo({
+                //   url: '/pages/index/manageActivity'
+                // });
 
               }
             })
+
           },
           //确定并支付
           pay(){
             this.getPay();
+          },
+          toPAY(){
+
           },
           //调起转让信息
           changeActivity(){
@@ -722,7 +714,29 @@
             wx.navigateTo({
               url: '/pages/index/manageActivity'
             });
-          }
+          },
+          //继续支付
+          postReplay(){
+            let that = this;
+            tip.loading();
+            wepy.request({
+              url: api.play_join + '?token=' +wx.getStorageSync('token'),
+              method:"post",
+              data:{
+                plid:that.plid,
+                repay:true
+              }
+            }).then(resule => {
+              if(resule.data.status == 200){
+                let params = resule.data.data.args;
+                that.pay(params);
+              }else if(resule.data.status == 405){
+                wx.navigateTo({
+                  url: '/pages/index/manageActivity'
+                });
+              }
+            })
+          },
         }
     }
 </script>

@@ -68,7 +68,7 @@
       </view>
       <view class="m-row">
         <view class="m-one-activity"  >
-          <image src="{{detail_info.plimg}}" class="m-activity-img" alt=""></image>
+          <image src="{{img_url}}{{detail_info.plimg}}" class="m-activity-img" alt=""></image>
           <view class="m-one-activity-info">
             <view class="m-one-activity-title">{{detail_info.plname}}</view>
             <view class="m-one-activity-time">
@@ -124,6 +124,7 @@
     };
     data = {
       img_src:api.img_src,
+      img_url:api.api,
       name1:'htmlParserName2',
       content1:"",
       detail_info:'',
@@ -132,7 +133,7 @@
     getDetail(){
       let that = this;
       tip.loading();
-      wx.request({
+      wepy.request({
         url: api.get_make_over,
         data: {
           moid:that.id,
@@ -140,21 +141,19 @@
         },
         header: {
           'content-type': 'application/json' // 默认值
-        },
-        success: function(res) {
+        }
+      }).then(res =>{
+        if(res.data.status == 200){
           that.content1 = res.data.data.agreemen.replace(/&quot;/g,'');
           that.content1 = that.content1.replace(/&nbsp;/g, '\xa0');
-            res.data.data.time =  res.data.data.plstarttime.slice(5,7) +'/' + res.data.data.plstarttime.slice(8,10) + '-' +  res.data.data.plendtime.slice(5,7) +'/' +  res.data.data.plendtime.slice(8,10)
+          res.data.data.time =  res.data.data.plstarttime.slice(5,7) +'/' + res.data.data.plstarttime.slice(8,10) + '-' +  res.data.data.plendtime.slice(5,7) +'/' +  res.data.data.plendtime.slice(8,10)
 
           that.detail_info = res.data.data;
           that.$apply();
           that.$invoke('htmlParser', 'htmlParserNotice');
 
-          tip.loaded();
-        },
-        error:function (error) {
-          tip.loaded();
         }
+
       })
     }
     onLoad(options) {

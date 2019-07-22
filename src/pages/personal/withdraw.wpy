@@ -66,29 +66,19 @@
     postData(){
       let that = this;
       tip.loading();
-      wx.request({
+      wepy.request({
         url: api.apply_cash + '?token=' +wx.getStorageSync('token'),
         method:"post",
         data:{
           cncashnum:that.money,
           applyplatform: '2'
-        },
-        success: function (resule){
-          tip.loaded();
-          if(resule.data.status == 200){
-            tip.success(resule.data.message);
-            wx.redirectTo({
-              url: '/pages/personal/myWallet'
-            });
-          }else{
-            wx.showToast({
-              title: resule.data.message,
-              icon: 'none',
-              duration: 2000
-            });
-            that.$apply();
-          }
-
+        }
+      }).then(resule => {
+        if(resule.data.status == 200){
+          tip.success(resule.data.message);
+          wx.redirectTo({
+            url: '/pages/personal/myWallet'
+          });
         }
       })
     }

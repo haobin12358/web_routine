@@ -105,7 +105,7 @@
           <view class="m-no-data" wx:if="{{data_list.length == 0}}">暂无数据</view>
           <view>
             <view class="m-one-activity" @tap="changeRoute('/pages/personal/ruleDetail',{{item}})" wx:for="{{data_list}}" wx:key="{{index}}">
-              <image src="{{item.plimg}}" class="m-activity-img" alt=""></image>
+              <image src="{{img_url}}{{item.plimg}}" class="m-activity-img" alt=""></image>
               <view class="m-one-activity-info">
                 <view class="m-one-activity-title">{{item.plname}}</view>
                 <view class="m-one-activity-time">
@@ -146,6 +146,7 @@
       ],
       index:0,
       img_src: api.img_src,
+      img_url:api.api,
       data_list:[],
       page_info:{
         page_size: 10,
@@ -156,7 +157,7 @@
     getData(){
       let that = this;
       tip.loading();
-      wx.request({
+      wepy.request({
         url: api.get_make_over_list + '?token=' +wx.getStorageSync('token'),
         data: {
           page_num: that.page_info.page_num,
@@ -166,8 +167,9 @@
         },
         header: {
           'content-type': 'application/json' // 默认值
-        },
-        success: function(res) {
+        }
+      }).then(res => {
+        if(res.data.status == 200){
           let data = res.data.data;
           if(that.page_info.page_num >1){
             that.data_list = that.data_list.concat(data);
@@ -176,15 +178,14 @@
           }
           that.total_count = res.data.total_count;
           that.$apply();
-          tip.loaded();
-        },
-        error:function (error) {
-          tip.loaded();
         }
       })
     }
     onLoad(options) {
-        this.getData();
+
+    }
+    onShow(){
+      this.getData();
     }
 
     methods = {

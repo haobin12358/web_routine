@@ -276,52 +276,47 @@
             tip.loading();
             that.loading = true;
 
-            wx.request({
+            wepy.request({
                 url: api.scenicspot_list + '?token=' +wx.getStorageSync('token'),
                 data: {
                     page_num: that.page_info.page_num,
                     page_size:that.page_info.page_size,
-                  ssparea:that.select_city.name || '',
-                  ssplevel: that.level_list[that.level_index].value
+                    ssparea:that.select_city.name || '',
+                    ssplevel: that.level_list[that.level_index].value
                 },
                 header: {
                     'content-type': 'application/json' // 默认值
-                },
-                success: function(res) {
-                  if(that.page_info.page_num > 1){
-                    that.scenic_data = that.scenic_data.concat(res.data.data);
-                  }else{
-                    that.scenic_data = res.data.data;
-                  }
-                  that.total_count = res.data.total_count;
-                  that.loading = false;
-                  that.$apply();
-                  wx.stopPullDownRefresh();
-                  tip.loaded();
-                },
-                error:function (error) {
-                    tip.loaded();
                 }
+            }).then(res => {
+              if(res.data.status == 200){
+                if(that.page_info.page_num > 1){
+                  that.scenic_data = that.scenic_data.concat(res.data.data);
+                }else{
+                  that.scenic_data = res.data.data;
+                }
+                that.total_count = res.data.total_count;
+                that.loading = false;
+                that.$apply();
+                wx.stopPullDownRefresh();
+              }
             })
         }
 
       //获取轮播图
       getImg(id){
         let that = this;
-        wx.request({
+        wepy.request({
           url: api.list_mp_banner + '?token=' +wx.getStorageSync('token'),
           data: {
             mpbposition: 1
           },
           header: {
             'content-type': 'application/json' // 默认值
-          },
-          success: function(res) {
+          }
+        }).then(res => {
+          if(res.data.status == 200){
             that.scroll_data = res.data.data;
             that.$apply();
-          },
-          error:function (error) {
-
           }
         })
       }

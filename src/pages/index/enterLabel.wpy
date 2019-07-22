@@ -40,7 +40,6 @@
             }
             if(options.data){
                 this.all_data = JSON.parse(decodeURIComponent(options.data));
-              console.log( this.all_data,'111')
             }
             // console.log(this.all_data)
             if(options.from){

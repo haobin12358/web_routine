@@ -81,7 +81,7 @@
           <span>小时</span>
         </view>
         <view class="m-item">
-          <span class="m-label">需扣除报名费用</span>
+          <span class="m-label">退款金额</span>
           <span class="m-num">{{item.pdprice}}</span>
           <span>元</span>
         </view>
@@ -122,54 +122,42 @@
     //获取退款
     getDiscounts(id){
       let that = this;
-      wx.request({
+      wepy.request({
         url: api.get_discount + '?token=' +wx.getStorageSync('token'),
         data: {
           plid: id
         },
         header: {
           'content-type': 'application/json' // 默认值
-        },
-        success: function(res) {
+        }
+      }).then(res => {
+        if(res.data.status == 200){
           that.discounts = res.data.data.discounts;
           that.rule = res.data.data.role;
           that.$apply();
-        },
-        error:function (error) {
-
         }
       })
     }
     postData(){
       let that = this;
       tip.loading();
-      wx.request({
+      wepy.request({
         url: api.cancel_play + '?token=' +wx.getStorageSync('token'),
         method:"post",
         data:{
           plid:that.plid
-        },
-        success: function (resule){
-          tip.loaded();
-          if(resule.data.status == 200){
-            wx.showToast({
-              title: resule.data.message,
-              icon: 'success',
-              duration: 2000
-            })
-            wx.navigateTo({
-              url: '/pages/personal/history'
-            });
+        }
+      }).then(resule =>{
+        if(resule.data.status == 200){
+          wx.showToast({
+            title: resule.data.message,
+            icon: 'success',
+            duration: 2000
+          })
+          wx.navigateTo({
+            url: '/pages/personal/history'
+          });
 
-
-          }else{
-            wx.showToast({
-              title: resule.data.message,
-              icon: 'none',
-              duration: 2000
-            })
-            that.$apply();
-          }
 
         }
       })

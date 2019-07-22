@@ -1,0 +1,145 @@
+<style scoped lang="less" rel="stylesheet/less">
+  .m-modal{
+    position: fixed;
+    top:0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.3);
+    .m-modal-state{
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 600rpx;
+      margin:  auto;
+      background-color: #fff;
+      height: 400rpx;
+      padding: 40rpx;
+      box-sizing: border-box;
+      text-align: center;
+      .m-login-log{
+        display: inline-block;
+        width: 90rpx;
+        height: 90rpx;
+        margin-bottom: 20rpx;
+      }
+      button{
+        width: 240rpx;
+        margin-top: 30rpx;
+        height: 80rpx;
+        line-height: 80rpx;
+        &.cancel{
+          background-color: #c1c1c1;
+        }
+      }
+    }
+  }
+
+</style>
+<template>
+  <view class="m-modal" wx:if="{{show_tel}}">
+    <view class="m-modal-state">
+      <image src="{{img_src}}common/logo.png" class="m-login-log"></image>
+      <view class="m-grey">为了更优质的服务，需要获取您的手机号</view>
+      <view class="m-flex-between">
+        <button @tap="cancelTel" class="cancel">拒绝</button>
+        <button open-type='getPhoneNumber' bindgetphonenumber='getPhoneNumber' >确认授权</button>
+      </view>
+
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import api from '../../api/api';
+
+  export default class phone extends wepy.component {
+    config = {
+      navigationBarTitleText: ''
+    };
+    props = {
+      show_tel:{
+        type:Boolean,
+        default:false,
+        twoWay:true
+      },
+      url:{
+        type:String,
+        default:'',
+        twoWay:true
+      }
+    };
+    data = {
+      img_src:api.img_src
+    };
+
+    onLoad(options) {
+
+    }
+
+    methods = {
+      getPhoneNumber(e){
+        let that = this;
+        wx.request({
+          url: api.bind_phone + '?token=' +wx.getStorageSync('token'),
+          method:"post",
+          data:{
+            phonenumber:{
+              encryptedData:e.detail.encryptedData,
+              cloudID:e.detail.cloudID,
+              iv:e.detail.iv
+            },
+            session_key:wx.getStorageSync('session_key')
+          },
+          success: function (resule){
+            if(resule.data.status == 200){
+              wx.clearStorageSync('bind_phone', resule.data.data.binded_phone);
+              that.show_tel = false;
+              console.log(that.url)
+              if(that.url.indexOf('signIn') > 0){
+
+              }else{
+                if(that.url){
+                  wx.navigateTo({
+                    url: that.url
+                  });
+                }else{
+                  wx.switchTab({
+                    url: '/pages/index/index'
+                  });
+                }
+              }
+              that.$apply();
+              wx.setStorageSync('token', resule.data.data.token);
+            }else{
+              wx.showToast({
+                title: resule.data.message,
+                icon: 'none',
+                duration: 2000
+              })
+              that.$apply();
+            }
+
+          }
+        })
+      },
+      cancelTel(){
+        //
+        if(this.url){
+          this.show_tel = false;
+          this.$apply();
+        }else{
+          wx.switchTab({
+            url: '/pages/index/index'
+          });
+        }
+
+      }
+    };
+  }
+</script>

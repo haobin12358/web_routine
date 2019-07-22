@@ -106,79 +106,56 @@
         getId(){
           let that = this;
           tip.loading();
-          wx.request({
+          wepy.request({
             url: api.get_current_play + '?token=' +wx.getStorageSync('token'),
             method:"get",
-            data:{},
-            success: function (resule){
-              if(resule.data.status == 200){
-                that.plid = resule.data.data.plid;
-                that.$apply();
-                that.getList();
-              }else{
-                wx.showToast({
-                  title: resule.data.message,
-                  icon: 'none',
-                  duration: 2000
-                })
-
-              }
+            data:{}
+          }).then(resule => {
+            if(resule.data.status == 200){
+              that.plid = resule.data.data.plid;
+              that.$apply();
+              that.getList();
             }
           })
         }
         getList(){
           let that = this;
-          wx.request({
+          wepy.request({
             url: api.get_signin + '?token=' +wx.getStorageSync('token'),
             method:"get",
             data:{
               plid:that.plid
-            },
-            success: function (resule){
-              tip.loaded();
-              if(resule.data.status == 200){
-                console.log(resule.data)
-                that.nosignin_list = resule.data.data.nosigninlist;
-                that.signin_list = resule.data.data.signinlist;
-                that.code = resule.data.data.silnum;
-                that.$apply();
-              }else{
-                wx.showToast({
-                  title: resule.data.message,
-                  icon: 'none',
-                  duration: 2000
-                })
-
-              }
+            }
+          }).then(resule => {
+            if(resule.data.status == 200){
+              console.log(resule.data)
+              that.nosignin_list = resule.data.data.nosigninlist;
+              that.signin_list = resule.data.data.signinlist;
+              that.code = resule.data.data.silnum;
+              that.$apply();
             }
           })
         }
         postData(){
           let that = this;
-          wx.request({
+          wepy.request({
             url: api.set_signin + '?token=' +wx.getStorageSync('token'),
             method:"post",
             data:{
               plid:that.plid
-            },
-            success: function (resule){
-              tip.loaded();
-              if(resule.data.status == 200){
-                that.code = resule.data.data.silnum;
-                that.getList();
-                that.$apply();
-              }else{
-                wx.showToast({
-                  title: resule.data.message,
-                  icon: 'none',
-                  duration: 2000
-                })
-
-              }
+            }
+          }).then(resule => {
+            if(resule.data.status == 200){
+              that.code = resule.data.data.silnum;
+              that.getList();
+              that.$apply();
             }
           })
         }
         onLoad(options) {
+
+        }
+        onShow(){
           this.getId();
         }
 

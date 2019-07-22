@@ -102,68 +102,53 @@
             page_num: 1,
             page_size: 10
           },
-          total_count:0
+          total_count:0,
+          plid:''
         }
       getId(){
         let that = this;
         tip.loading();
-        wx.request({
+        wepy.request({
           url: api.get_current_play + '?token=' +wx.getStorageSync('token'),
           method:"get",
-          data:{},
-          success: function (resule){
-            if(resule.data.status == 200){
-              that.plid = resule.data.data.plid;
-              that.$apply();
-              that.getNotice();
-              that.getLoc();
-              that.getData();
-            }else{
-              wx.showToast({
-                title: resule.data.message,
-                icon: 'none',
-                duration: 2000
-              })
-
-            }
+          data:{}
+        }).then(resule => {
+          if(resule.data.status == 200){
+            that.plid = resule.data.data.plid;
+            that.$apply();
+            that.getNotice();
+            that.getLoc();
+            that.getData();
           }
         })
       }
       getNotice(id){
         let that = this;
         tip.loading();
-        wx.request({
+        wepy.request({
           url: api.get_notice + '?token=' +wx.getStorageSync('token'),
           data: {
             plid:id || that.plid
-          },
-          header: {
-            'content-type': 'application/json' // 默认值
-          },
-          success: function(res) {
+          }
+        }).then(res => {
+          if(res.data.status == 200){
             let data = res.data.data;
-            console.log(data)
             that.notice_list = data.data;
             that.$apply();
-            tip.loaded();
-          },
-          error:function (error) {
-            tip.loaded();
+
           }
         })
       }
       getLoc(id){
         let that = this;
         tip.loading();
-        wx.request({
+        wepy.request({
           url: api.get_member_location + '?token=' +wx.getStorageSync('token'),
           data: {
             plid:id || that.plid
-          },
-          header: {
-            'content-type': 'application/json' // 默认值
-          },
-          success: function(res) {
+          }
+        }).then(res => {
+          if(res.data.status == 200){
             let data = res.data.data;
             // that.notice_list = data.data;
             that.markers =[];
@@ -189,17 +174,16 @@
 
             that.$apply();
             tip.loaded();
-          },
-          error:function (error) {
-            tip.loaded();
           }
         })
       }
       getLocation(){
         let that = this;
+        console.log('12312')
         wx.getLocation({
           type: 'wgs84',
           success (res) {
+
             that.latitude = res.latitude;
             that.longitude = res.longitude;
             that.all_points.push({
@@ -214,17 +198,15 @@
       getData(id){
         let that = this;
         tip.loading();
-        wx.request({
+        wepy.request({
           url: api.get_team_travelrecord +'?token='+wx.getStorageSync('token') ,
           data: {
             plid:id  || that.plid,
             page_num:that.page_info.page_num,
             page_size: that.page_info.page_size,
-          },
-          header: {
-            'content-type': 'application/json' // 默认值
-          },
-          success: function(res) {
+          }
+        }).then(res => {
+          if(res.data.status == 200){
             let data = res.data.data;
             if(that.page_info.page_num >1){
               that.list_data = that.list_data.concat(data);
@@ -238,10 +220,10 @@
         })
       }
         onLoad(options) {
+        }
+        onShow(){
           this.getId();
           this.getLocation();
-
-
         }
 
         methods = {

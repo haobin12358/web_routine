@@ -96,7 +96,7 @@
                             <textarea  placeholder="20字以内" value="{{cost_name == '费用' ? item.cosdetail :item.incontent}}" bindinput="detailInput" data-name="{{index}}" />
                         </view>
                         <view class="m-one-cost-row " wx:if="{{show_radio}}">
-                           <span class="m-mr"> 是否为必要保险</span>     <switch value="{{item.intype}}" data-name="{{index}}" bindchange="switchChange" color="#FFCE00"/>
+                           <span class="m-mr"> 是否为必要保险</span>     <switch value="{{item.intype}}" checked="{{item.intype}}" data-name="{{index}}" bindchange="switchChange" color="#FFCE00"/>
                         </view>
                     </view>
                     <view class="m-row-box" wx:else>
@@ -114,7 +114,7 @@
                         </picker>
                       </view>
                       <view class="m-one-cost-row">
-                        <span>扣款金额</span>
+                        <span>退款金额</span>
                         <input type="number" value="{{item.pdprice}}" class="m-tr" bindinput="moneyInput" data-name="{{index}}" placeholder="有人报名后不能修改" />
                       </view>
                     </view>
@@ -157,29 +157,20 @@
 
         setCost(){
             let that = this;
-            wx.request({
+            wepy.request({
                 url: api.set_cost + '?token=' +wx.getStorageSync('token'),
                 method:"post",
                 data:{
                     costs:that.cost_list
-                },
-                success: function (resule){
-                    if(resule.data.status == 200){
-                        that.all_data.form_data.costs = resule.data.data;
-                        that.all_data.cost_list = that.cost_list;
-                        wx.redirectTo({
-                            url: '/pages/index/editActivity?data=' + encodeURIComponent(JSON.stringify(that.all_data))
-                        });
-                    }else{
-                        wx.showToast({
-                            title: resule.data.message,
-                            icon: 'none',
-                            duration: 2000
-                        })
-                        that.$apply();
-                    }
-
                 }
+            }).then(resule => {
+              if(resule.data.status == 200){
+                that.all_data.form_data.costs = resule.data.data;
+                that.all_data.cost_list = that.cost_list;
+                wx.redirectTo({
+                  url: '/pages/index/editActivity?data=' + encodeURIComponent(JSON.stringify(that.all_data))
+                });
+              }
             })
         }
         setInsurance(){
@@ -193,117 +184,99 @@
                 }
             }
 
-            wx.request({
+            wepy.request({
                 url: api.set_insurance + '?token=' +wx.getStorageSync('token'),
                 method:"post",
                 data:{
                     insurance:that.cost_list
-                },
-                success: function (resule){
-                    if(resule.data.status == 200){
-                        that.all_data.form_data.insurances = resule.data.data;
-                        that.all_data.insurances_list = that.cost_list;
-                        wx.redirectTo({
-                            url: '/pages/index/editActivity?data=' + encodeURIComponent(JSON.stringify(that.all_data))
-                        });
-                    }else{
-                        wx.showToast({
-                            title: resule.data.message,
-                            icon: 'none',
-                            duration: 2000
-                        })
-                        that.$apply();
-                    }
-
                 }
+            }).then(resule => {
+              if(resule.data.status == 200){
+                that.all_data.form_data.insurances = resule.data.data;
+                that.all_data.insurances_list = that.cost_list;
+                wx.redirectTo({
+                  url: '/pages/index/editActivity?data=' + encodeURIComponent(JSON.stringify(that.all_data))
+                });
+              }
             })
         }
         setWithdraw(){
-        let that = this;
-          let params = [].concat(this.cost_list);
+          let that = this;
+            let params = [].concat(this.cost_list);
 
-          for(let i=0;i<params.length;i++){
-            params[i].pddeltaday  =  params[i].multiArray[0][params[i].multiIndex[0]].value;
-            if(params[i].multiArray[0][params[i].multiIndex[0]].value == 0){
-              params[i].multiArray[1] = arr;
-              params[i].pddeltahour  = params[i].multiArray[1][params[i].multiIndex[1]].value;
-            }else{
-              params[i].pddeltahour  = 0;
+            for(let i=0;i<params.length;i++){
+              params[i].pddeltaday  =  params[i].multiArray[0][params[i].multiIndex[0]].value;
+              if(params[i].multiArray[0][params[i].multiIndex[0]].value == 0){
+                params[i].multiArray[1] = arr;
+                params[i].pddeltahour  = params[i].multiArray[1][params[i].multiIndex[1]].value;
+              }else{
+                params[i].pddeltahour  = 0;
+              }
+              delete params[i].multiArray;
+              delete params[i].multiIndex;
             }
-            delete params[i].multiArray;
-            delete params[i].multiIndex;
-          }
 
-        wx.request({
-          url: api.set_discount + '?token=' +wx.getStorageSync('token'),
-          method:"post",
-          data:{
-            discounts:params
-          },
-          success: function (resule){
+          wepy.request({
+            url: api.set_discount + '?token=' +wx.getStorageSync('token'),
+            method:"post",
+            data:{
+              discounts:params
+            }
+          }).then(resule =>{
             if(resule.data.status == 200){
               that.all_data.form_data.discounts = resule.data.data;
               that.all_data.withdraw_list = that.cost_list;
               wx.redirectTo({
                 url: '/pages/index/editActivity?data=' + encodeURIComponent(JSON.stringify(that.all_data))
               });
-            }else{
-              wx.showToast({
-                title: resule.data.message,
-                icon: 'none',
-                duration: 2000
-              })
-              that.$apply();
             }
-
-          }
-        })
-      }
-      //生成时间选择
-      initArray(){
-        // multiArray
-        let start = new Date(this.all_data.plstarttime);
-        let end = new Date();
-        let arr1 =[];
-        if((start.getMonth() > end.getMonth()) || (end.getFullYear() > start.getFullYear()) ){
-          for(let i=0;i<31;i++){
-            arr1.push({
-              name:i+'天',
-              value:i
-            })
-          }
-        }else if(start.getDate() > end.getDate()){
-          for(let i=0;i<= (start.getDate() - end.getDate());i++){
-            arr1.push({
-              name:i+'天',
-              value:i
-            })
-          }
-        }else if(start.getHours() > end.getHours()){
-          arr = [];
-          arr1.push({
-            name:'0天',
-            value:0
-          });
-          for(let i=0;i< (start.getHours() - end.getHours());i++){
-            arr.push({
-              name:i+'小时',
-              value:i
-            })
-          }
-        }else{
-          arr1.push({
-            name:'0天',
-            value:0
-          });
-          // arr = [{
-          //   name:'0小时',
-          //   value:0
-          // }];
+          })
         }
-        this.multiArray = [arr1,arr];
-        this.$apply();
-      }
+        //生成时间选择
+        initArray(){
+          // multiArray
+          let start = new Date(this.all_data.plstarttime);
+          let end = new Date();
+          let arr1 =[];
+          if((start.getMonth() > end.getMonth()) || (end.getFullYear() > start.getFullYear()) ){
+            for(let i=0;i<31;i++){
+              arr1.push({
+                name:i+'天',
+                value:i
+              })
+            }
+          }else if(start.getDate() > end.getDate()){
+            for(let i=0;i<= (start.getDate() - end.getDate());i++){
+              arr1.push({
+                name:i+'天',
+                value:i
+              })
+            }
+          }else if(start.getHours() > end.getHours()){
+            arr = [];
+            arr1.push({
+              name:'0天',
+              value:0
+            });
+            for(let i=0;i< (start.getHours() - end.getHours());i++){
+              arr.push({
+                name:i+'小时',
+                value:i
+              })
+            }
+          }else{
+            arr1.push({
+              name:'0天',
+              value:0
+            });
+            // arr = [{
+            //   name:'0小时',
+            //   value:0
+            // }];
+          }
+          this.multiArray = [arr1,arr];
+          this.$apply();
+        }
         onLoad(options) {
 
             // if(options.cost_list){
@@ -339,7 +312,7 @@
                     }
                     this.cost_name = '退团';
                   wx.setNavigationBarTitle({
-                    title: '扣款金额'
+                    title: '退款金额'
                   })
                 }else{
                     this.cost_list =  this.all_data.cost_list;

@@ -184,77 +184,60 @@
     postData(){
       let that = this;
       tip.loading();
-      wx.request({
+      wepy.request({
         url: api.add_toilet + '?token=' +wx.getStorageSync('token'),
         method:"post",
         data:{
           longitude:that.select_loc.longitude,
           latitude:that.select_loc.latitude,
           toimage:that.select_img
-        },
-        success: function (resule){
-          tip.loaded();
-          if(resule.data.status == 200){
-            tip.success(resule.data.message);
-            that.select_loc = null;
-            that.select_img = '';
-            that.$apply();
-          }else{
-            wx.showToast({
-              title: resule.data.message,
-              icon: 'none',
-              duration: 2000
-            })
-            that.$apply();
-          }
-
+        }
+      }).then(resule => {
+        if(resule.data.status == 200){
+          tip.success(resule.data.message);
+          that.select_loc = null;
+          that.select_img = '';
+          that.$apply();
         }
       })
     }
     getData(){
       let that = this;
       tip.loading();
-      wx.request({
+      wepy.request({
         url: api.toilet_list + '?token=' +wx.getStorageSync('token'),
         method:"get",
         data:{
           scale:that.scale,
           latitude:that.latitude,
           longitude: that.longitude
-        },
-        success: function (resule){
-          tip.loaded();
-          if(resule.data.status == 200){
-            let data = resule.data.data;
-            that.markers = [];
-            for(let i=0;i<data.length;i++){
-              that.markers.push({
-                iconPath: api.img_src + "index/toilet-loc.png",
-                id: data[i].toid,
-                latitude: data[i].latitude,
-                longitude: data[i].longitude,
-                width: 45,
-                height: 45
-              })
-              // that.allpoint.push({
-              //   latitude:data[i].latitude,
-              //   longitude:data[i].longitude
-              // });
-            }
-            that.$apply();
-          }else{
-            wx.showToast({
-              title: resule.data.message,
-              icon: 'none',
-              duration: 2000
+        }
+      }).then(resule => {
+        if(resule.data.status == 200){
+          let data = resule.data.data;
+          that.markers = [];
+          for(let i=0;i<data.length;i++){
+            that.markers.push({
+              iconPath: api.img_src + "index/toilet-loc.png",
+              id: data[i].toid,
+              latitude: data[i].latitude,
+              longitude: data[i].longitude,
+              width: 45,
+              height: 45
             })
-            that.$apply();
+            // that.allpoint.push({
+            //   latitude:data[i].latitude,
+            //   longitude:data[i].longitude
+            // });
           }
-
+          that.$apply();
         }
       })
     }
     onLoad(options) {
+
+    }
+    onShow(){
       this.getLocation();
     }
 
@@ -312,27 +295,17 @@
         let id  = e.markerId;
         let that = this;
         tip.loading();
-        wx.request({
+        wepy.request({
           url: api.get_toilet + '?token=' +wx.getStorageSync('token'),
           method:"get",
           data:{
             toid:id
-          },
-          success: function (resule){
-            tip.loaded();
-            if(resule.data.status == 200){
-              let data = resule.data.data;
-              that.detail_info = data;
-              that.$apply();
-            }else{
-              wx.showToast({
-                title: resule.data.message,
-                icon: 'none',
-                duration: 2000
-              })
-              that.$apply();
-            }
-
+          }
+        }).then(resule => {
+          if(resule.data.status == 200){
+            let data = resule.data.data;
+            that.detail_info = data;
+            that.$apply();
           }
         })
 

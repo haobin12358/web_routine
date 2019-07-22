@@ -83,50 +83,30 @@
     postData(){
       let that = this;
       tip.loading();
-      wx.request({
+      wepy.request({
         url: api.guide_certification + '?token=' +wx.getStorageSync('token'),
         method:"post",
-        data:that.form_data,
-        success: function (resule){
-          tip.loaded();
-          if(resule.data.status == 200){
-            tip.success(resule.data.message);
-             that.disabled = true;
-             that.$apply();
-          }else{
-            wx.showToast({
-              title: resule.data.message,
-              icon: 'none',
-              duration: 2000
-            })
-            that.$apply();
-          }
-
+        data:that.form_data
+      }).then(resule => {
+        if(resule.data.status == 200){
+          tip.success(resule.data.message);
+          that.disabled = true;
+          that.$apply();
         }
       })
     }
     getData(){
       let that = this;
       tip.loading();
-      wx.request({
+      wepy.request({
         url: api.guide + '?token=' +wx.getStorageSync('token'),
         method:"get",
-        data:{},
-        success: function (resule){
-          tip.loaded();
-          if(resule.data.status == 200){
-            if(resule.data.data.gurealname){
-              that.form_data = resule.data.data;
-              that.disabled = true;
-              that.$apply();
-            }
-
-          }else{
-            wx.showToast({
-              title: resule.data.message,
-              icon: 'none',
-              duration: 2000
-            })
+        data:{}
+      }).then(resule => {
+        if(resule.data.status == 200){
+          if(resule.data.data.gurealname){
+            that.form_data = resule.data.data;
+            that.disabled = true;
             that.$apply();
           }
 
@@ -139,9 +119,10 @@
         this.form_data.gutelphone = options.tel;
         this.$apply();
       }
+    }
+    onShow(){
       this.getData();
     }
-
     methods = {
       inputChange(e){
         let name = e.currentTarget.dataset.name;

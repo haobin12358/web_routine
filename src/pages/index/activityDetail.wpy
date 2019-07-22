@@ -51,7 +51,34 @@
 
             }
         }
+      .m-scheduling-foot{
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        border-top: 1px solid @border-color;
+        z-index: 10;
+        width: 100%;
+        .m-icon-list{
+          .flex-row(space-around);
+          width: 750rpx;
+          padding: 30rpx 0;
+          background-color: #fff;
+          .m-icon-img{
+            display: inline-block;
+            width: 44rpx;
+            height: 44rpx;
+          }
+        }
+        .m-scheduling-btn{
+          padding: 30rpx 0;
+          width: 750rpx;
+          background-color: @common-color;
+          font-size: 30rpx;
+          font-weight: 500;
+          text-align: center;
+        }
 
+      }
     }
 
 </style>
@@ -106,6 +133,12 @@
             <view class="m-no-data" wx:if="{{list_data.length == 0}}">暂无信息</view>
         </view>
       </scroll-view>
+      <view class="m-scheduling-foot">
+<!--        <view class="m-btn" wx:if="{{detail.plstatus < 2 && !detail.playtype}}"><span @tap="changeActivity">转让活动</span></view>-->
+<!--        <view class="m-scheduling-btn" wx:if="{{detail.joinstatus}}" @tap="toEnter('/pages/index/enterPage')">我要报名</view>-->
+        <view class="m-scheduling-btn" wx:if="{{detail.repaystatus}}" @tap="postReplay">继续支付</view>
+
+      </view>
     </view>
 </template>
 
@@ -140,40 +173,36 @@
         getDetail(id){
             let that = this;
             tip.loading();
-            wx.request({
+            wepy.request({
                 url: api.get_play + '?token=' +wx.getStorageSync('token'),
                 data: {
                     plid:id || that.plid
                 },
                 header: {
                     'content-type': 'application/json' // 默认值
-                },
-                success: function(res) {
-                    let data = res.data.data;
-                    that.detail_info = data;
-
-                    data.time = data.plstarttime.slice(0,7) +'/' + data.plstarttime.slice(8,10) + '-' + data.plendtime.slice(5,7) +'/' + data.plendtime.slice(8,10)
-                    data.pllocation = data.pllocation.join('-');
-                    data.plproducts = data.plproducts.join('、');
-                    that.content1 = res.data.data.plcontent;
-                  that.content1 = that.content1.replace(/&quot;/g,'');
-                  that.content1 = that.content1.replace(/&nbsp;/g, '\xa0');
-                    that.detail = data;
-                    // WxParse.wxParse('htmlParserName2','html',res.data.data.plcontent,that,0);
-                    that.$apply();
-                    that.$invoke('htmlParser', 'htmlParserNotice');
-
-                    tip.loaded();
-                },
-                error:function (error) {
-                    tip.loaded();
                 }
+            }).then(res => {
+              if(res.data.status == 200){
+                let data = res.data.data;
+                that.detail_info = data;
+
+                data.time = data.plstarttime.slice(0,7) +'/' + data.plstarttime.slice(8,10) + '-' + data.plendtime.slice(5,7) +'/' + data.plendtime.slice(8,10)
+                data.pllocation = data.pllocation.join('-');
+                data.plproducts = data.plproducts.join('、');
+                that.content1 = res.data.data.plcontent;
+                that.content1 = that.content1.replace(/&quot;/g,'');
+                that.content1 = that.content1.replace(/&nbsp;/g, '\xa0');
+                that.detail = data;
+                // WxParse.wxParse('htmlParserName2','html',res.data.data.plcontent,that,0);
+                that.$apply();
+                that.$invoke('htmlParser', 'htmlParserNotice');
+              }
             })
         }
       getData(id){
         let that = this;
         tip.loading();
-        wx.request({
+        wepy.request({
           url: api.get_team_travelrecord +'?token='+wx.getStorageSync('token') ,
           data: {
             plid:id  || that.plid,
@@ -182,8 +211,9 @@
           },
           header: {
             'content-type': 'application/json' // 默认值
-          },
-          success: function(res) {
+          }
+        }).then(res => {
+          if(res.data.status == 200){
             let data = res.data.data;
             if(that.page_info.page_num >1){
               that.list_data = that.list_data.concat(data);
@@ -192,7 +222,36 @@
             }
             that.total_count = res.data.total_count;
             that.$apply();
-            tip.loaded();
+          }
+        })
+      }
+      //支付
+      pay(params){
+        wx.requestPayment({
+          timeStamp: params.timeStamp,
+          nonceStr: params.nonceStr,
+          package: params.package,
+          signType: params.signType,
+          paySign: params.sign,
+          success (res) {
+
+            wx.showToast({
+              title: '报名成功',
+              icon: 'none',
+              duration: 2000
+            });
+            wx.redirectTo({
+              url: '/pages/index/manageActivity'
+            });
+
+
+          },
+          fail (res) {
+            wx.showToast({
+              title: '支付失败，请稍后再试',
+              icon: 'none',
+              duration: 2000
+            })
           }
         })
       }
@@ -200,10 +259,12 @@
             if(options.plid){
                 this.plid = options.plid;
                 this.$apply();
-              this.getDetail(this.plid);
-              this.getData(this.plid);
             }
 
+        }
+        onShow(){
+          this.getDetail(this.plid);
+          this.getData(this.plid);
         }
 
         methods = {
@@ -238,7 +299,29 @@
               this.$apply();
               this.getData();
             }
-          }
+          },
+          //继续支付
+          postReplay(){
+            let that = this;
+            tip.loading();
+            wepy.request({
+              url: api.play_join + '?token=' +wx.getStorageSync('token'),
+              method:"post",
+              data:{
+                plid:that.plid,
+                repay:true
+              }
+            }).then(resule => {
+              if(resule.data.status == 200){
+                let params = resule.data.data.args;
+                that.pay(params);
+              }else if(resule.data.status == 405){
+                wx.switchTab({
+                  url: '/pages/index/index'
+                });
+              }
+            })
+          },
         }
     }
 </script>

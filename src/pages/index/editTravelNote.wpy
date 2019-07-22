@@ -72,7 +72,7 @@
       let that = this;
       tip.loading();
 
-      wx.request({
+      wepy.request({
         url: api.add_travelrecord + '?token=' +wx.getStorageSync('token'),
         method:"post",
         data:{
@@ -81,23 +81,13 @@
           trtitle:that.trtitle,
           trstatus:status || 1,
           trtype:1
-        },
-        success: function (resule){
-          tip.loaded();
-          if(resule.data.status == 200){
-            tip.success('发布成功');
-              wx.redirectTo({
-                url: '/pages/personal/mainIndex'
-              });
-          }else{
-            wx.showToast({
-              title: resule.data.message,
-              icon: 'none',
-              duration: 2000
-            })
-            that.$apply();
-          }
-
+        }
+      }).then(resule => {
+        if(resule.data.status == 200){
+          tip.success('发布成功');
+          wx.redirectTo({
+            url: '/pages/personal/mainIndex'
+          });
         }
       })
     }

@@ -230,7 +230,7 @@
         getData(){
             let that = this;
             tip.loading();
-            wx.request({
+            wepy.request({
                 url: api.get_play_list + '?token=' +wx.getStorageSync('token'),
                 data: {
                     page_num: that.page_info.page_num,
@@ -238,36 +238,32 @@
                     playtype:that.select_value.value,
                     createtime: that.createtime,
                     plstatus: that.plstatus
-                },
-                header: {
-                    'content-type': 'application/json' // 默认值
-                },
-                success: function(res) {
-                    let data = res.data.data;
-                    for(let i in data){
-                        data[i].time = data[i].plstarttime.slice(5,7) +'/' + data[i].plstarttime.slice(8,10) + '-' + data[i].plendtime.slice(5,7) +'/' + data[i].plendtime.slice(8,10)
-                    }
-                    if(that.page_info.page_num > 1){
-                      that.data_list = that.data_list.concat(res.data.data);
-                    }else{
-                      that.data_list = res.data.data;
-                    }
-                    that.total_count = res.data.total_count;
-                    that.$apply();
-                    tip.loaded();
-                },
-                error:function (error) {
-                    tip.loaded();
                 }
+            }).then(res => {
+              if(res.data.status == 200){
+                let data = res.data.data;
+                for(let i in data){
+                  data[i].time = data[i].plstarttime.slice(5,7) +'/' + data[i].plstarttime.slice(8,10) + '-' + data[i].plendtime.slice(5,7) +'/' + data[i].plendtime.slice(8,10)
+                }
+                if(that.page_info.page_num > 1){
+                  that.data_list = that.data_list.concat(res.data.data);
+                }else{
+                  that.data_list = res.data.data;
+                }
+                that.total_count = res.data.total_count;
+                that.$apply();
+              }
             })
         }
         onLoad(options) {
-            this.getData();
+
+        }
+        onShow(){
+          this.getData();
         }
 
         methods = {
             changeRoute(v,item){
-              console.log(item)
                 wx.navigateTo({
                     url: v + '?plid=' +item.plid
                 });

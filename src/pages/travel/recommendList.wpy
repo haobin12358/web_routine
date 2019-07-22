@@ -35,18 +35,16 @@
     getData(id){
       let that = this;
       tip.loading();
-      wx.request({
+      wepy.request({
         url: api.raiders_list,
         data: {
           sspid:id,
           token:wx.getStorageSync('token'),
           page_num:that.page_info.page_num,
           page_size:that.page_info.page_size
-        },
-        header: {
-          'content-type': 'application/json' // 默认值
-        },
-        success: function(res) {
+        }
+      }).then(res => {
+        if(res.data.status == 200){
           if(that.page_info.page_num > 1){
             that.recommend_raiders = that.recommend_raiders.concat(res.data.data);
           }else{
@@ -54,11 +52,6 @@
           }
           that.total_count = res.data.total_count;
           that.$apply();
-
-          tip.loaded();
-        },
-        error:function (error) {
-          tip.loaded();
         }
       })
     }

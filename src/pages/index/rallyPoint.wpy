@@ -116,88 +116,70 @@
         getPoint(){
             let that = this;
             tip.loading();
-            wx.request({
+            wepy.request({
                 url: api.get_gather + '?token=' +wx.getStorageSync('token'),
                 data: {
                     latitude:that.latitude,
                     longitude:that.longitude
-                },
-                header: {
-                    'content-type': 'application/json' // 默认值
-                },
-                success: function(res) {
-                    let data = res.data.data;
-                    that.can_post = data.can_post;
-                    that.button_show = data.button_name;
-                    that.allpoint.push({
-                        latitude:that.latitude,
-                        longitude:that.longitude
-                    });
-                    if(data.gather_location){
-                        that.markers = [
-                            {
-                                iconPath: "/images/index/icon-point.png",
-                                id: 0,
-                                latitude: data.gather_location.latitude,
-                                longitude: data.gather_location.longitude,
-                                width: 45,
-                                height: 45,
-                                callout:{
-                                    content:data.gather_location.content,
-                                    display:'ALWAYS',
-                                    padding:10
-                                }
-                            }
-                        ]
-                        that.allpoint.push({
-                            latitude:data.gather_location.latitude,
-                            longitude:data.gather_location.longitude
-                        });
-                        that.mapCtx.includePoints({
-                            padding: [80, 50, 80, 50],
-                            points: that.allpoint
-                        })
-                        that.select_loc = null;
-                    }
-                    that.$apply();
-                    tip.loaded();
-                },
-                error:function (error) {
-                    tip.loaded();
                 }
+            }).then(res => {
+              if(res.data.status ==200){
+                let data = res.data.data;
+                that.can_post = data.can_post;
+                that.button_show = data.button_name;
+                that.allpoint.push({
+                  latitude:that.latitude,
+                  longitude:that.longitude
+                });
+                if(data.gather_location){
+                  that.markers = [
+                    {
+                      iconPath: "/images/index/icon-point.png",
+                      id: 0,
+                      latitude: data.gather_location.latitude,
+                      longitude: data.gather_location.longitude,
+                      width: 45,
+                      height: 45,
+                      callout:{
+                        content:data.gather_location.content,
+                        display:'ALWAYS',
+                        padding:10
+                      }
+                    }
+                  ]
+                  that.allpoint.push({
+                    latitude:data.gather_location.latitude,
+                    longitude:data.gather_location.longitude
+                  });
+                  that.mapCtx.includePoints({
+                    padding: [80, 50, 80, 50],
+                    points: that.allpoint
+                  })
+                  that.select_loc = null;
+                }
+                that.$apply();
+              }
             })
         }
         postData(){
             let that = this;
             tip.loading();
 
-            wx.request({
+            wepy.request({
                 url: api.set_gather + '?token=' +wx.getStorageSync('token'),
                 method:"post",
                 data:{
                     latitude:that.select_loc.latitude,
                     longitude: that.select_loc.longitude,
                     time:that.time
-                },
-                success: function (resule){
-                    tip.loaded();
-                    let data = resule.data.data;
-                    if(resule.data.status == 200){
-                        that.getPoint();
-                    }else{
-                        wx.showToast({
-                            title: resule.data.message,
-                            icon: 'none',
-                            duration: 2000
-                        })
-                        that.$apply();
-                    }
-
                 }
+            }).then(resule => {
+              if(resule.data.status == 200){
+                that.getPoint();
+              }
             })
         }
         onLoad(options) {
-            this.getLocation();
             //初始时间
             let date = new Date();
             this.time = (date.getHours()>9? date.getHours(): '0'+date.getHours()) +':' +(date.getMinutes()>9? date.getMinutes(): '0'+date.getMinutes());
@@ -205,13 +187,15 @@
             this.$apply();
         }
 
+        onShow(){
+          this.getLocation();
+        }
         methods = {
             //点击地图获取地理位置
             onMapTap(e){
                 let that  = this;
                 wx.chooseLocation({
                     success:function (res) {
-                        console.log(res)
                         that.select_loc = res;
                         that.latitude = res.latitude;
                         that.longitude = res.longitude;
@@ -238,7 +222,7 @@
                 })
             },
             bindTimeChange: function(e) {
-                console.log('picker发送选择改变，携带值为', e.detail.value)
+
                 this.time = e.detail.value;
                 this.markers[0].callout.content = this.time;
                 this.select_time = e.detail.value;

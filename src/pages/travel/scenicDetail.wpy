@@ -77,29 +77,22 @@
         getDetail(id){
             let that = this;
             tip.loading();
-            wx.request({
+            wepy.request({
                 url: api.scenicspot_get,
                 data: {
                     sspid:id,
                     token:wx.getStorageSync('token')
-                },
-                header: {
-                    'content-type': 'application/json' // 默认值
-                },
-                success: function(res) {
-                    that.scenic_name = res.data.data.sspname;
-                    that.recommend_raiders = res.data.data.recommend_raiders;
-                    that.content1 = res.data.data.sspcontent;
-                    that.content1 = that.content1.replace(/&quot;/g,'');
-                     that.content1 = that.content1.replace(/&nbsp;/g, '\xa0');
-                    that.$apply();
-                    that.$invoke('htmlParser', 'htmlParserNotice');
-
-                    tip.loaded();
-                },
-                error:function (error) {
-                    tip.loaded();
                 }
+            }).then(res => {
+              if(res.data.status == 200){
+                that.scenic_name = res.data.data.sspname;
+                that.recommend_raiders = res.data.data.recommend_raiders;
+                that.content1 = res.data.data.sspcontent;
+                that.content1 = that.content1.replace(/&quot;/g,'');
+                that.content1 = that.content1.replace(/&nbsp;/g, '\xa0');
+                that.$apply();
+                that.$invoke('htmlParser', 'htmlParserNotice');
+              }
             })
         }
         onLoad(options) {

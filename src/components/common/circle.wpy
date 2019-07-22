@@ -141,35 +141,26 @@
         }
       postData(id,index){
         let that = this;
-        wx.request({
+        wepy.request({
           url: api.collect + '?token=' +wx.getStorageSync('token'),
           method:"post",
           data:{
             uclcotype:2,
             uclcollection:id
-          },
-          success: function (resule){
-            tip.loaded();
-            if(resule.data.status == 200){
-              for(let i =0;i<that.list.length;i++){
-                if(that.list[i].author.usid == id){
-                  that.list[i].followed = !that.list[i].followed
-                }
+          }
+        }).then(resule => {
+          if(resule.data.status == 200){
+            for(let i =0;i<that.list.length;i++){
+              if(that.list[i].author.usid == id){
+                that.list[i].followed = !that.list[i].followed
               }
-              wx.showToast({
-                title: resule.data.message,
-                icon: 'success',
-                duration: 2000
-              })
-              that.$apply();
-            }else{
-              wx.showToast({
-                title: resule.data.message,
-                icon: 'none',
-                duration: 2000
-              })
-
             }
+            wx.showToast({
+              title: resule.data.message,
+              icon: 'success',
+              duration: 2000
+            })
+            that.$apply();
           }
         })
       }

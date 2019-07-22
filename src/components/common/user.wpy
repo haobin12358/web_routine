@@ -120,42 +120,33 @@
     }
     postData(id,index){
       let that = this;
-      wx.request({
+      wepy.request({
         url: api.collect + '?token=' +wx.getStorageSync('token'),
         method:"post",
         data:{
           uclcotype:2,
           uclcollection:id
-        },
-        success: function (resule){
-          tip.loaded();
-          if(resule.data.status == 200){
-            if(that.user_list[index].follow_status == 0){
-              that.user_list[index].follow_status = 2
-            }else if(that.user_list[index].follow_status == 1){
-              that.user_list[index].follow_status = 2
-            }else if(that.user_list[index].follow_status == 2){
-              if(that.user_list[index].mutual_concern){
-                that.user_list[index].follow_status = 1
-              }else{
-                that.user_list[index].follow_status = 0
-              }
-
+        }
+      }).then(resule => {
+        if(resule.data.status == 200){
+          if(that.user_list[index].follow_status == 0){
+            that.user_list[index].follow_status = 2
+          }else if(that.user_list[index].follow_status == 1){
+            that.user_list[index].follow_status = 2
+          }else if(that.user_list[index].follow_status == 2){
+            if(that.user_list[index].mutual_concern){
+              that.user_list[index].follow_status = 1
+            }else{
+              that.user_list[index].follow_status = 0
             }
-            wx.showToast({
-              title: resule.data.message,
-              icon: 'success',
-              duration: 2000
-            })
-            that.$apply();
-          }else{
-            wx.showToast({
-              title: resule.data.message,
-              icon: 'none',
-              duration: 2000
-            })
 
           }
+          wx.showToast({
+            title: resule.data.message,
+            icon: 'success',
+            duration: 2000
+          })
+          that.$apply();
         }
       })
     }

@@ -86,14 +86,14 @@
       </block>
     </swiper>
     <view class="m-top-icon">
-      <view class="m-top-one-icon" @tap="changeRoute('/pages/index/editActivity')">
+      <view class="m-top-one-icon" @tap="changeRoute('/pages/index/editActivity','phone')">
         <image src="{{img_src}}index/index-bg1.png" class="m-icon-bg"></image>
         <view class="m-icon-info">
           <image src="{{img_src}}index/index-initiate.png" class="m-icon-top"></image>
           <view>发起活动</view>
         </view>
       </view>
-      <view class="m-top-one-icon" @tap="changeRoute('/pages/index/manageActivity')">
+      <view class="m-top-one-icon" @tap="changeRoute('/pages/index/manageActivity','phone')">
         <image src="{{img_src}}index/index-bg2.png" class="m-icon-bg"></image>
         <view class="m-icon-info">
           <image src="{{img_src}}index/index-manage.png" class="m-icon-top"></image>
@@ -107,7 +107,7 @@
           <p><image src="{{img_src}}index/index-team-sign.png" class="m-index-icon" alt="" /></p>
           <p>团队签到</p>
         </li>
-        <li  @tap="changeRoute('/pages/index/enterTeam')">
+        <li  @tap="changeRoute('/pages/index/enterTeam','phone')">
           <p><image src="{{img_src}}index/index-add-team.png" class="m-index-icon" alt="" /></p>
           <p>进入团队</p>
         </li>
@@ -115,26 +115,27 @@
           <p><image src="{{img_src}}index/index-tel.png" class="m-index-icon" alt="" /></p>
           <p>一键求救</p>
         </li>
-        <li  @tap="changeRoute('/pages/index/findToilet')">
+        <li  @tap="changeRoute('/pages/index/findToilet','no')">
           <p><image src="{{img_src}}index/index-find.png" class="m-index-icon" alt="" /></p>
           <p>找厕所</p>
         </li>
-<!--      @tap="changeRoute('/pages/index/chatList')" -->
+<!--      @tap="changeRoute('/pages/index/chatList','phone')" -->
         <li  @tap="showTip"  >
           <p><image src="{{img_src}}index/index-chat.png" class="m-index-icon" alt="" /></p>
           <p>聊天室</p>
         </li>
-        <li @tap="changeRoute('/pages/index/timeIndex')">
+        <li @tap="changeRoute('/pages/index/timeIndex','phone')">
           <p><image src="{{img_src}}index/index-time.png" class="m-index-icon" alt="" /></p>
           <p>时光记录</p>
         </li>
-        <li @tap="changeRoute('/pages/index/rallyPoint')">
+        <li @tap="changeRoute('/pages/index/rallyPoint','phone')">
           <p><image src="{{img_src}}index/index-gather.png" class="m-index-icon" alt="" /></p>
           <p>集合点</p>
         </li>
         <li></li>
       </ul>
     </view>
+    <phone :show_tel.sync="show_tel" :url.sync="url"></phone>
   </view>
 </template>
 
@@ -144,14 +145,15 @@
   import tip from '../../utils/tip';
 
   import Counter from '../../components/common/timePicker'
-
+  import Phone from '../../components/common/phone';
   export default class IndexIndex extends wepy.page {
     config = {
       navigationBarTitleText: '旗行',
         enablePullDownRefresh:true
     }
     components = {
-      counter : Counter
+      counter : Counter,
+      phone:Phone
     }
     data = {
         mynum:'2019-06-27 12:22',
@@ -161,27 +163,42 @@
         autoplay: false,
         interval: 3000,
         duration: 1000,
-        all_phone:[]
+        all_phone:[],
+      show_tel:false,
+      url:''
 
     }
     //获取轮播图
     getImg(id){
       let that = this;
-      wx.request({
+      // wepy.request({
+      //   url: api.list_mp_banner + '?token=' +wx.getStorageSync('token'),
+      //   data: {
+      //     mpbposition: 0
+      //   },
+      //   header: {
+      //     'content-type': 'application/json' // 默认值
+      //   },
+      //   success: function(res) {
+      //     that.scroll_data = res.data.data;
+      //     that.$apply();
+      //   },
+      //   error:function (error) {
+      //
+      //   }
+      // })
+      wepy.request({
         url: api.list_mp_banner + '?token=' +wx.getStorageSync('token'),
         data: {
           mpbposition: 0
         },
         header: {
           'content-type': 'application/json' // 默认值
-        },
-        success: function(res) {
+        }
+      }).then(res => {
+        console.log(res)
           that.scroll_data = res.data.data;
           that.$apply();
-        },
-        error:function (error) {
-
-        }
       })
     }
 
@@ -196,6 +213,8 @@
       }
       onShow(){
 
+        this.show_tel = false;
+        this.$apply();
       }
     methods = {
       showTip(){
@@ -211,36 +230,60 @@
           url: item.contentlink
         });
       },
-        changeRoute(v,name){
+        changeRoute(v,name) {
+        if(wx.getStorageSync('bind_phone') == 'false' && name != 'no'){
+            this.show_tel = true;
+            this.url = v;
+            this.$apply();
+            return;
+        }
           switch (name) {
             case 'team':
-              wx.request({
+              // wx.request({
+              //   url: api.identity + '?token=' +wx.getStorageSync('token'),
+              //   method:"get",
+              //   data:{},
+              //   success: function (resule){
+              //     tip.loaded();
+              //     if(resule.data.status == 200){
+              //       if(resule.data.data.is_leader){
+              //         wx.navigateTo({
+              //           url: '/pages/index/signIn'
+              //         });
+              //       }else{
+              //         wx.navigateTo({
+              //           url: '/pages/index/personSignin'
+              //         });
+              //       }
+              //
+              //     }else{
+              //       wx.showToast({
+              //         title: resule.data.message,
+              //         icon: 'none',
+              //         duration: 2000
+              //       })
+              //
+              //     }
+              //   }
+              // })
+              wepy.request({
                 url: api.identity + '?token=' +wx.getStorageSync('token'),
                 method:"get",
                 data:{},
-                success: function (resule){
-                  tip.loaded();
-                  if(resule.data.status == 200){
-                    if(resule.data.data.is_leader){
-                      wx.navigateTo({
-                        url: '/pages/index/signIn'
-                      });
-                    }else{
-                      wx.navigateTo({
-                        url: '/pages/index/personSignin'
-                      });
-                    }
-
+              }).then(res =>{
+                if(res.data.status == 200){
+                  if(res.data.data.is_leader){
+                    wx.navigateTo({
+                      url: '/pages/index/signIn'
+                    });
                   }else{
-                    wx.showToast({
-                      title: resule.data.message,
-                      icon: 'none',
-                      duration: 2000
-                    })
-
+                    wx.navigateTo({
+                      url: '/pages/index/personSignin'
+                    });
                   }
+
                 }
-              })
+              });
               break;
             default:
               wx.navigateTo({
@@ -251,45 +294,41 @@
 
         },
         getCell(){
+          if(wx.getStorageSync('bind_phone') == 'false'){
+            this.show_tel = true;
+            this.$apply();
+            return;
+          }
           let that = this;
-          wx.getLocation({
+          wepy.getLocation({
             type: 'wgs84',
             success (res) {
               // that.latitude = res.latitude;
               // that.longitude = res.longitude;
-              wx.request({
+              wepy.request({
                 url: api.help + '?token=' +wx.getStorageSync('token'),
                 method:"post",
                 data:{
                   latitude:res.latitude,
                   longitude:res.longitude
-                },
-                success: function (resule){
-                  tip.loaded();
-                  if(resule.data.status == 200){
-                    that.all_phone = resule.data.data.phone;
-                    wx.showActionSheet({
-                      itemList: resule.data.data.phone,
-                      success (res) {
-                        // that.call(res.tapIndex);
-                        wx.makePhoneCall({
-                          phoneNumber: that.all_phone[res.tapIndex]
-                        })
-                      },
-                      fail (res) {
-                        console.log(res.errMsg)
-                      }
-                    });
-                    that.$apply();
-                  }else{
-                    wx.showToast({
-                      title: resule.data.message,
-                      icon: 'none',
-                      duration: 2000
-                    })
-
-                  }
                 }
+              }).then(resule => {
+                if(resule.data.status == 200){
+                that.all_phone = resule.data.data.phone;
+                wx.showActionSheet({
+                  itemList: resule.data.data.phone,
+                  success (res) {
+                    // that.call(res.tapIndex);
+                    wx.makePhoneCall({
+                      phoneNumber: that.all_phone[res.tapIndex]
+                    })
+                  },
+                  fail (res) {
+                    console.log(res.errMsg)
+                  }
+                });
+                that.$apply();
+              }
               })
             }
           })

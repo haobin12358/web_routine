@@ -103,7 +103,7 @@
                         <span>个人信息</span>
                     </view>
                 </li>
-                <li @tap="changeRoute('/pages/personal/myWallet')">
+                <li @tap="changeRoute('/pages/personal/myWallet','phone')">
                     <view class="m-flex-start">
                         <image src="{{img_src}}personal/icon-wallet.png" class="m-icon"></image>
                         <span>我的钱包</span>
@@ -116,7 +116,7 @@
                         <span>任务中心</span>
                     </view>
                 </li>
-                <li @tap="changeRoute('/pages/personal/history')">
+                <li @tap="changeRoute('/pages/personal/history','phone')">
                     <view class="m-flex-start">
                         <image src="{{img_src}}personal/icon-history.png" class="m-icon"></image>
                         <span>历史团队</span>
@@ -138,7 +138,7 @@
                         <span>导游认证</span>
                     </view>
                 </li>
-              <li @tap="changeRoute('/pages/personal/ruleList')">
+              <li @tap="changeRoute('/pages/personal/ruleList','phone')">
                 <view class="m-flex-start">
                   <image src="{{img_src}}personal/icon-rule.png" class="m-icon"></image>
                   <span>协议管理</span>
@@ -147,47 +147,69 @@
             </ul>
         </view>
 
-
+      <phone :show_tel.sync="show_tel" :url.sync="url"></phone>
     </view>
 </template>
 <script >
     import wepy from 'wepy';
     import tip from '../../utils/tip';
     import api from '../../api/api';
-
+    import Phone from '../../components/common/phone';
     export default class personalIndex extends wepy.page{
         config = {
             navigationBarTitleText: '我的'
         }
+      components = {
+        phone:Phone
+      }
         data = {
             img_src: api.img_src,
             user_info: {},
-            all_phone:['15079564151']
+            all_phone:['15079564151'],
+          show_tel:false,
+          url:''
         }
         onLoad(){
+          // this.getData();
+        }
+      onShow(){
+        if(!this.user_info.ustelphone){
           this.getData();
         }
+        this.show_tel = false;
+        this.$apply();
+      }
         getData(){
           let that = this;
-          wx.request({
+          // wx.request({
+          //   url: api.get_home + '?token=' +wx.getStorageSync('token'),
+          //   method:"get",
+          //   data:{
+          //
+          //   },
+          //   success: function (resule){
+          //     tip.loaded();
+          //     if(resule.data.status == 200){
+          //       that.user_info = resule.data.data;
+          //       that.$apply();
+          //     }else{
+          //       wx.showToast({
+          //         title: resule.data.message,
+          //         icon: 'none',
+          //         duration: 2000
+          //       })
+          //
+          //     }
+          //   }
+          // })
+          wepy.request({
             url: api.get_home + '?token=' +wx.getStorageSync('token'),
             method:"get",
-            data:{
-
-            },
-            success: function (resule){
-              tip.loaded();
-              if(resule.data.status == 200){
-                that.user_info = resule.data.data;
-                that.$apply();
-              }else{
-                wx.showToast({
-                  title: resule.data.message,
-                  icon: 'none',
-                  duration: 2000
-                })
-
-              }
+            data:{}
+          }).then(res => {
+            if(res.data.status == 200){
+              that.user_info = res.data.data;
+              that.$apply();
             }
           })
         }
@@ -204,8 +226,25 @@
                   });
                   break;
                 case 'info':
+                  if(wx.getStorageSync('bind_phone') == 'false'){
+                    this.show_tel = true;
+                    this.url = v;
+                    this.$apply();
+                    return;
+                  }
                   wx.navigateTo({
                     url: v + '?tel=' + that.user_info.ustelphone
+                  });
+                  break;
+                case 'phone':
+                  if(wx.getStorageSync('bind_phone') == 'false'){
+                    this.show_tel = true;
+                    this.url = v;
+                    this.$apply();
+                    return;
+                  }
+                  wx.navigateTo({
+                    url: v
                   });
                   break;
                 default:

@@ -222,7 +222,7 @@
     getData(){
       let that = this;
       tip.loading();
-      wx.request({
+      wepy.request({
         url: api.travelrecord_list +'?token='+wx.getStorageSync('token') ,
         data: {
           usid:that.usid,
@@ -232,11 +232,9 @@
           page_num:that.page_info.page_num,
           page_size: that.page_info.page_size,
           option:that.option
-        },
-        header: {
-          'content-type': 'application/json' // 默认值
-        },
-        success: function(res) {
+        }
+      }).then(res => {
+        if(res.data.status == 200){
           let data = res.data.data;
           that.num_list[0].value = data.top.followed;
           that.num_list[1].value = data.top.fens;
@@ -254,7 +252,6 @@
           }
           that.total_count = res.data.total_count;
           that.$apply();
-          tip.loaded();
         }
       })
     }
@@ -267,17 +264,15 @@
           type = that.num_list[i].type
         }
       }
-      wx.request({
+      wepy.request({
         url: api.collection_show +'?token='+wx.getStorageSync('token') ,
         data: {
           showtype:type,
           page_num:that.page_info.page_num,
           page_size: that.page_info.page_size
-        },
-        header: {
-          'content-type': 'application/json' // 默认值
-        },
-        success: function(res) {
+        }
+      }).then(res => {
+        if(res.data.status == 200){
           let data = res.data.data;
           if(that.page_info.page_num >1){
             that.user_list =  that.user_list.concat(data);
@@ -286,31 +281,22 @@
           }
           that.total_count = res.data.total_count;
           that.$apply();
-          tip.loaded();
         }
       })
     }
     postData(){
       let that = this;
-      wx.request({
+      wepy.request({
         url: api.collect + '?token=' +wx.getStorageSync('token'),
         method:"post",
         data:{
           uclcotype:2,
           uclcollection:that.usid
-        },
-        success: function (resule){
-          if(resule.data.status == 200){
-            that.user_info.concerned = !that.user_info.concerned;
-            that.$apply();
-          }else{
-            wx.showToast({
-              title: resule.data.message,
-              icon: 'none',
-              duration: 2000
-            })
-
-          }
+        }
+      }).then(resule => {
+        if(resule.data.status == 200){
+          that.user_info.concerned = !that.user_info.concerned;
+          that.$apply();
         }
       })
     }
@@ -319,6 +305,8 @@
         this.usid = options.usid;
         this.$apply();
       }
+    }
+    onShow(){
       this.getData();
     }
     onUnload(){

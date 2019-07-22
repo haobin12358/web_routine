@@ -35,9 +35,11 @@
                             flex-wrap: wrap;
                             span{
                                 display: inline-block;
-                                width: 180rpx;
+                                min-width: 180rpx;
                                 height: 60rpx;
                                 line-height: 60rpx;
+                                box-sizing: border-box;
+                               padding: 0 20rpx;
                                 border: 1px solid @common-color;
                                 text-align: center;
                                 margin: 20rpx 40rpx 10rpx 0;
@@ -176,7 +178,7 @@
             <span class="m-grey">退团信息</span>
           </li>
           <li>
-            <span class="m-edit-label">扣款金额</span>
+            <span class="m-edit-label">退款金额</span>
             <span class="m-flex-end" @tap="changeRoute('/pages/index/editCost','withdraw')">
                         <span class="m-grey">{{withdraw_list.length?withdraw_list.length:'未设置'}}</span>
                         <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>
@@ -297,120 +299,113 @@
             ],
             recommend_list:[],
             location_list:[],
-            agree:false
+            agree:false,
+           plid:''
         }
         //获取费用
         getCost(id){
             let that = this;
-            wx.request({
+            wepy.request({
                 url: api.get_cost + '?token=' +wx.getStorageSync('token'),
                 data: {
                     plid: id
                 },
                 header: {
                     'content-type': 'application/json' // 默认值
-                },
-                success: function(res) {
-                    that.cost_list = res.data.data;
-                    that.$apply();
-                },
-                error:function (error) {
-
                 }
+            }).then(res => {
+              if(res.data.status == 200){
+                that.cost_list = res.data.data;
+                that.$apply();
+              }
             })
         }
         //获取保险
         getInsureance(id){
             let that = this;
-            wx.request({
+            wepy.request({
                 url: api.get_insurance + '?token=' +wx.getStorageSync('token'),
                 data: {
                     plid: id
                 },
                 header: {
                     'content-type': 'application/json' // 默认值
-                },
-                success: function(res) {
-                    that.insurances_list = res.data.data;
-                    that.$apply();
-                },
-                error:function (error) {
-
                 }
+            }).then(res => {
+              if(res.data.status == 200){
+                that.insurances_list = res.data.data;
+                that.$apply();
+              }
             })
         }
 
       //获取退款
       getDiscounts(id){
         let that = this;
-        wx.request({
+        wepy.request({
           url: api.get_discount + '?token=' +wx.getStorageSync('token'),
           data: {
             plid: id
           },
           header: {
             'content-type': 'application/json' // 默认值
-          },
-          success: function(res) {
+          }
+        }).then(res => {
+          if(res.data.status == 200){
             that.withdraw_list = res.data.data.discounts;
             that.$apply();
-          },
-          error:function (error) {
-
           }
         })
       }
          getPlay(id){
             let that = this;
-            wx.request({
+            wepy.request({
                 url: api.get_play + '?token=' +wx.getStorageSync('token'),
                 data: {
                     plid: id
                 },
                 header: {
                     'content-type': 'application/json' // 默认值
-                },
-                success: function(res) {
-                    let data = res.data.data;
-
-                    that.plstarttime =data.plstarttime;
-                    that.plendtime = data.plendtime;
-                    that.plcontent = data.plcontent;
-                    that.$broadcast('eventName', data);
-                    that.$invoke('time','numNotice');
-                    that.$invoke('time2','numNotice');
-                    // that.$invoke('edit','editNotice');
-                    that.$broadcast('index-broadcast', data.plcontent);
-                    that.form_data = data;
-                    let enter_list =[],recommend_list=[],location_list=[];
-
-                    for(let i = 0; i<data.pllocation.length;i++){
-                        location_list.push({
-                            name:data.pllocation[i],
-                            active:true
-                        })
-                    }
-                    for(let i = 0; i<data.plproducts.length;i++){
-                        recommend_list.push({
-                            name:data.plproducts[i],
-                            active:true
-                        })
-                    }
-                    for(let i = 0; i<data.playrequires.length;i++){
-                        enter_list.push({
-                            name:data.playrequires[i],
-                            active:true
-                        })
-                    }
-                    that.enter_list = enter_list;
-                    that.recommend_list =recommend_list;
-                    that.location_list= location_list;
-
-                    that.$apply();
-                },
-                error:function (error) {
-
                 }
+            }).then(res =>{
+              if(res.data.status == 200){
+                let data = res.data.data;
+
+                that.plstarttime =data.plstarttime;
+                that.plendtime = data.plendtime;
+                that.plcontent = data.plcontent;
+                that.$broadcast('eventName', data);
+                that.$invoke('time','numNotice');
+                that.$invoke('time2','numNotice');
+                // that.$invoke('edit','editNotice');
+                that.$broadcast('index-broadcast', data.plcontent);
+                that.form_data = data;
+                let enter_list =[],recommend_list=[],location_list=[];
+
+                for(let i = 0; i<data.pllocation.length;i++){
+                  location_list.push({
+                    name:data.pllocation[i],
+                    active:true
+                  })
+                }
+                for(let i = 0; i<data.plproducts.length;i++){
+                  recommend_list.push({
+                    name:data.plproducts[i],
+                    active:true
+                  })
+                }
+                for(let i = 0; i<data.playrequires.length;i++){
+                  enter_list.push({
+                    name:data.playrequires[i],
+                    active:true
+                  })
+                }
+                that.enter_list = enter_list;
+                that.recommend_list =recommend_list;
+                that.location_list= location_list;
+
+                that.$apply();
+              }
             })
         }
         postData(status){
@@ -436,33 +431,23 @@
             that.form_data.plproducts = recommend;
             that.form_data.playrequires = enter;
             that.form_data.plstatus = status;
-            wx.request({
+            wepy.request({
                 url: api.set_play + '?token=' +wx.getStorageSync('token'),
                 method:"post",
-                data:that.form_data,
-                success: function (resule){
-                    tip.loaded();
-                    if(resule.data.status == 200){
-                        if(status == 0){
-                            wx.redirectTo({
-                                url: '/pages/index/manageActivity'
-                            });
-                        }else if(status == 1){
-                            wx.redirectTo({
-                                url: '/pages/index/lookActivity?plid=' + resule.data.data
-                            });
-                        }
-
-                    }else{
-                        wx.showToast({
-                            title: resule.data.message,
-                            icon: 'none',
-                            duration: 2000
-                        })
-                        that.$apply();
-                    }
-
+                data:that.form_data
+            }).then(resule => {
+              if(resule.data.status == 200){
+                if(status == 0){
+                  wx.redirectTo({
+                    url: '/pages/index/manageActivity'
+                  });
+                }else if(status == 1){
+                  wx.redirectTo({
+                    url: '/pages/index/lookActivity?plid=' + resule.data.data
+                  });
                 }
+
+              }
             })
         }
 
@@ -494,15 +479,18 @@
              }
 
              if(options.plid){
-                 this.getPlay(options.plid);
-                 this.getCost(options.plid);
-                 this.getInsureance(options.plid);
-                 this.getDiscounts(options.plid);
+               this.plid = options.plid;
              }
 
              this.$apply();
         }
 
+        onShow(){
+          this.getPlay(this.plid);
+          this.getCost(this.plid);
+          this.getInsureance(this.plid);
+          this.getDiscounts(this.plid);
+        }
         methods = {
             //路由
             changeRoute(v,from){

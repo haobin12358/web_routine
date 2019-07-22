@@ -57,64 +57,47 @@
         }
       getList(){
         let that = this;
-        wx.request({
+        tip.loading();
+        wepy.request({
           url: api.get_enter_user + '?token=' +wx.getStorageSync('token'),
           method:"get",
           data:{
             plid:that.plid,
             page_num: that.page_info.page_num,
             page_size: that.page_info.page_size
-          },
-          success: function (resule){
-            tip.loaded();
-            if(resule.data.status == 200){
-              if(that.page_info.page_num >1){
-                that.user_list =  that.user_list.concat(resule.data.data);
-              }else{
-                that.user_list = resule.data.data;
-              }
-              that.total_count = resule.data.total_count;
-              that.$apply();
+          }
+        }).then(resule => {
+          if(resule.data.status == 200){
+            if(that.page_info.page_num >1){
+              that.user_list =  that.user_list.concat(resule.data.data);
             }else{
-              wx.showToast({
-                title: resule.data.message,
-                icon: 'none',
-                duration: 2000
-              })
-
+              that.user_list = resule.data.data;
             }
+            that.total_count = resule.data.total_count;
+            that.$apply();
           }
         })
       }
       postData(id,index){
         let that = this;
-        wx.request({
+        wepy.request({
           url: api.collect + '?token=' +wx.getStorageSync('token'),
           method:"post",
           data:{
             uclcotype:2,
             uclcollection:id
-          },
-          success: function (resule){
-            tip.loaded();
-            if(resule.data.status == 200){
-              if(that.user_list[index].follow_status == 0){
-                that.user_list[index].follow_status = 2
-              }else if(that.user_list[index].follow_status == 1){
-                that.user_list[index].follow_status = 2
-              }else if(that.user_list[index].follow_status == 2){
-                that.user_list[index].follow_status = 0
-              }
-
-              that.$apply();
-            }else{
-              wx.showToast({
-                title: resule.data.message,
-                icon: 'none',
-                duration: 2000
-              })
-
+          }
+        }).then(resule => {
+          if(resule.data.status == 200){
+            if(that.user_list[index].follow_status == 0){
+              that.user_list[index].follow_status = 2
+            }else if(that.user_list[index].follow_status == 1){
+              that.user_list[index].follow_status = 2
+            }else if(that.user_list[index].follow_status == 2){
+              that.user_list[index].follow_status = 0
             }
+
+            that.$apply();
           }
         })
       }
@@ -122,13 +105,14 @@
           if(options.plid){
             this.plid = options.plid;
             this.$apply();
-            this.getList();
           }
+        }
+        onShow(){
+          this.getList();
         }
 
         methods = {
           collectTap(index){
-            console.log(index)
             this.postData(this.user_list[index].usid,index)
           },
           lower(){
@@ -142,16 +126,6 @@
             } else {
               this.page_info.page_num += 1;
 
-              wx.showLoading({ //期间为了显示效果可以添加一个过度的弹出框提示“加载中”
-                title: '加载中',
-                icon: 'loading',
-              });
-              // setTimeout(() => {
-              //   this.setData({
-              //     res: cont
-              //   });
-              //   wx.hideLoading();
-              // }, 1500)
             }
           }
         }

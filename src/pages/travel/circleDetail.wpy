@@ -135,15 +135,16 @@
     };
     getData(){
       let that = this;
-      wx.request({
+      wepy.request({
         url: api.get_travelrecord +'?token='+wx.getStorageSync('token') ,
         data: {
           trid:that.trid
         },
         header: {
           'content-type': 'application/json' // 默认值
-        },
-        success: function(res) {
+        }
+      }).then(res => {
+        if(res.data.status){
           let data = res.data.data;
           if(data.trtype == 0){
             wx.setNavigationBarTitle({
@@ -155,8 +156,6 @@
             })
           }
           that.item = data;
-
-
           that.content1 = res.data.data.trcontent;
           that.content1 = that.content1.replace(/&quot;/g,'');
           that.content1 = that.content1.replace(/&nbsp;/g, '\xa0');
@@ -168,31 +167,22 @@
     }
     postData(id,index){
       let that = this;
-      wx.request({
+      wepy.request({
         url: api.collect + '?token=' +wx.getStorageSync('token'),
         method:"post",
         data:{
           uclcotype:2,
           uclcollection:id
-        },
-        success: function (resule){
-          tip.loaded();
-          if(resule.data.status == 200){
-            that.item.followed = !that.item.followed;
-            wx.showToast({
-              title: resule.data.message,
-              icon: 'success',
-              duration: 2000
-            })
-            that.$apply();
-          }else{
-            wx.showToast({
-              title: resule.data.message,
-              icon: 'none',
-              duration: 2000
-            })
-
-          }
+        }
+      }).then(resule => {
+        if(resule.data.status == 200){
+          that.item.followed = !that.item.followed;
+          wx.showToast({
+            title: resule.data.message,
+            icon: 'success',
+            duration: 2000
+          })
+          that.$apply();
         }
       })
     }

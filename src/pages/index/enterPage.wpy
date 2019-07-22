@@ -62,76 +62,50 @@
         }
         getInsurance(id){
             let that = this;
-            wx.request({
+            wepy.request({
                 url: api.get_insurance + '?token=' +wx.getStorageSync('token'),
                 data: {
                     plid: id || that.plid
-                },
-                header: {
-                    'content-type': 'application/json' // 默认值
-                },
-                success: function(res) {
-                  // res.data.data = [
-                  //   {
-                  //     "incontent": "incontent",
-                  //     "incost": 0.01,
-                  //     "inid": "49edb308-97e4-11e9-8a08-0242ac110002",
-                  //     "inname": "inname",
-                  //     "intype": 0,
-                  //     "plid": "3c43aa9e-97d7-11e9-9b26-0242ac110002"
-                  //   },
-                  //   {
-                  //     "incontent": "incontent",
-                  //     "incost": 0.01,
-                  //     "inid": "49edb308-97e4-11e9-8a08-0242ac110002",
-                  //     "inname": "inname",
-                  //     "intype": 1,
-                  //     "plid": "3c43aa9e-97d7-11e9-9b26-0242ac110002"
-                  //   }
-                  // ];
-                    for(let i=0;i<res.data.data.length;i++){
-                      if(res.data.data[i].intype == 1){
-                        res.data.data[i].checked = true;
-                        that.insurances.push(res.data.data[i].inid);
-                      }else{
-                        res.data.data[i].checked = false;
-                      }
-                    }
-                    that.insurances_list = res.data.data;
-                    that.$apply();
-                },
-                error:function (error) {
-
                 }
+            }).then(res => {
+              if(res.data.status == 200){
+                for(let i=0;i<res.data.data.length;i++){
+                  if(res.data.data[i].intype == 1){
+                    res.data.data[i].checked = true;
+                    that.insurances.push(res.data.data[i].inid);
+                  }else{
+                    res.data.data[i].checked = false;
+                  }
+                }
+                that.insurances_list = res.data.data;
+                that.$apply();
+              }
             })
         }
         getLabel(id){
             let that = this;
-            wx.request({
+            wepy.request({
                 url: api.get_playrequire + '?token=' +wx.getStorageSync('token'),
                 data: {
                     plid: id || that.plid
-                },
-                header: {
-                    'content-type': 'application/json' // 默认值
-                },
-                success: function(res) {
-                    let data = res.data.data;
-                    let _arr = [];
-                    for(let i=0;i<data.length;i++){
-                        _arr.push({
-                            preid:data[i].preid,
-                            prename:data[i].prename,
-                            value:data[i].prevalue || '',
-                            disabled:data[i].prevalue ? true : false
-                        })
-                    }
-                    that.label_list = _arr;
-                    that.$apply();
-                },
-                error:function (error) {
-
                 }
+            }).then(res => {
+
+              if(res.data.status == 200){
+                let data = res.data.data;
+                let _arr = [];
+                for(let i=0;i<data.length;i++){
+                  _arr.push({
+                    preid:data[i].preid,
+                    prename:data[i].prename,
+                    value:data[i].prevalue || '',
+                    disabled:data[i].prevalue ? true : false
+                  })
+                }
+                that.label_list = _arr;
+                that.$apply();
+              }
+
             })
         }
         //支付
@@ -167,7 +141,7 @@
         postData(){
             let that = this;
             tip.loading();
-            wx.request({
+            wepy.request({
                 url: api.play_join + '?token=' +wx.getStorageSync('token'),
                 method:"post",
                 data:{
@@ -175,40 +149,14 @@
                     insurances:that.insurances,
                     elvalue:that.label_list,
                     elid:''
-                },
-                success: function (resule){
-                    tip.loaded();
-                    if(resule.data.status == 200){
-                      // if( !resule.data.data.change_name){
-                      //   wx.showModal({
-                      //     title: '提示',
-                      //     content: '这是一个模态弹窗',
-                      //     confirmText:'同意',
-                      //     cancelText:'拒绝',
-                      //     confirmColor:'#FFCE00',
-                      //     success (res) {
-                      //       if (res.confirm) {
-                      //         console.log('用户点击确定')
-                      //       } else if (res.cancel) {
-                      //         console.log('用户点击取消')
-                      //       }
-                      //     }
-                      //   })
-                      //
-                      // }else{
-                        let params = resule.data.data.args;
-                        that.pay(params);
-                      // }
-                    }else{
-                        wx.showToast({
-                            title: resule.data.message,
-                            icon: 'none',
-                            duration: 2000
-                        })
-                        that.$apply();
-                    }
-
                 }
+            }).then(resule => {
+              if(resule.data.status == 200){
+
+                let params = resule.data.data.args;
+                that.pay(params);
+
+              }
             })
         }
 
@@ -216,11 +164,14 @@
             if(options.plid){
               this.plid= options.plid;
               this.$apply();
-              this.getInsurance(options.plid);
-              this.getLabel(options.plid);
+
             }
 
 
+        }
+        onShow(){
+          this.getInsurance(this.plid);
+          this.getLabel(this.plid);
         }
 
         methods = {
