@@ -144,10 +144,11 @@
         .flex-col(center);
         border-radius: 10rpx;
         .m-voice-icon{
-          width: 120rpx;
-          height: 150rpx;
+          width: 158rpx;
+          height: 158rpx;
           background-color: #fff;
           margin-bottom: 20rpx;
+          border-radius: 50%;
         }
       }
     }
@@ -247,9 +248,9 @@
 
         </view>
       </view>
-      <cover-view class="m-voice-alert" wx:if="{{on_voice}}">
+      <cover-view class="m-voice-alert" wx:if="{{tap_voice}}">
         <cover-view class="m-voice-state">
-          <cover-image src="" class="m-voice-icon" />
+          <cover-image src="{{img_src}}index/chat-on-audio.gif" class="m-voice-icon" />
           <cover-view>手指上滑，取消发送</cover-view>
         </cover-view>
       </cover-view>
@@ -278,7 +279,6 @@
       scrollTop:100,
       toView:'',
       voice_ing_start_date:'',
-      on_voice:false,
       cancel_voice:false,
       start_loc:'',
       longitude:'120.3',
@@ -516,6 +516,7 @@
       voice_ing_move(e){
         if(this.start_loc  - e.touches[0].pageY  >30){
           this.cancel_voice = true;
+          this.tap_voice = false;
           this.$apply();
           setTimeout(function() {
             tip.error('取消发送');
@@ -527,7 +528,6 @@
       on_recorder(){
         this.tap_voice = true;
         this.voice_ing_start_date = new Date().getTime();
-        this.on_voice = true;
         this.$apply();
         this.bottom();
         recorder.start();
@@ -536,7 +536,6 @@
       //松开录音
       voice_ing_end(e){
         this.tap_voice = false;
-        this.on_voice = false;
         this.$apply();
         recorder.stop();
       },
