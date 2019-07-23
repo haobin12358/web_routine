@@ -133,7 +133,7 @@
         }).then(res => {
           if(res.data.status == 200){
             let data = res.data.data;
-            that.notice_list = data.data;
+            that.notice_list = data;
             that.$apply();
 
           }

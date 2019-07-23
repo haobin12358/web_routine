@@ -185,10 +185,12 @@
             this.time = (date.getHours()>9? date.getHours(): '0'+date.getHours()) +':' +(date.getMinutes()>9? date.getMinutes(): '0'+date.getMinutes());
             this.mapCtx = wx.createMapContext('map'); // map为地图的id
             this.$apply();
+          this.getLocation();
+
         }
 
         onShow(){
-          this.getLocation();
+
         }
         methods = {
             //点击地图获取地理位置
@@ -214,6 +216,7 @@
                                 }
                             }
                         ]
+                        // that.can_post = true;
                         that.$apply();
                     },
                     error:function (res) {

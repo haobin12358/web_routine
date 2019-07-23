@@ -316,7 +316,7 @@
            <view class="m-scheduling-btn" wx:if="{{detail.joinstatus}}" @tap="toEnter('/pages/index/enterPage')">我要报名</view>
          <view class="m-scheduling-btn active" wx:if="{{detail.repaystatus}}" @tap="postReplay">继续支付</view>
            <ul class="m-icon-list" wx:if="{{!detail.playtype}}">
-               <li wx:if="{{detail.plstatus > 1}}">
+               <li wx:if="{{detail.plstatus > 1}}" @tap="changeRoute('/pages/index/signIn')">
                    <image src="{{img_src}}index/icon-sign-in-active.png" class="m-icon-img"></image>
                </li>
                <li wx:else>
@@ -784,6 +784,12 @@
               duration: 2000
             })
 
+          },
+          changeRoute(v){
+              let that = this;
+            wx.navigateTo({
+              url: v + '?plid=' + that.plid
+            });
           }
         }
     }

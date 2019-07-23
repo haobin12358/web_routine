@@ -153,10 +153,18 @@
           })
         }
         onLoad(options) {
-
+          if(options.plid){
+            this.plid = options.plid;
+            this.$apply();
+          }
         }
         onShow(){
-          this.getId();
+          if(!this.plid){
+            this.getId();
+          }else{
+            this.getList();
+          }
+
         }
 
         methods = {
