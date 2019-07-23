@@ -55,6 +55,7 @@
             <view class="m-bd-bottom">
                 <span class="m-border-back">团队广场</span>
             </view>
+          <view class="m-no-data" wx:if="{{list_data.length == 0}}">暂无动态</view>
             <circle :list.sync="list_data"></circle>
         </view>
       </scroll-view>
