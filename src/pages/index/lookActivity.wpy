@@ -110,7 +110,7 @@
           line-height: 52rpx;
           image{
               width: 690rpx;
-              height: 388rpx!important;
+              /*height: 388rpx!important;*/
           }
       }
       .m-scheduling-foot{
