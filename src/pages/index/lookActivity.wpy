@@ -490,6 +490,8 @@
             tip.loading();
             if(status){
                 that.detail_info.plstatus = status;
+                that.detail_info.pllocation = that.detail_info.pllocation.split('-');
+                that.detail_info.plproducts = that.detail_info.plproducts.split('、');
             }
 
             wepy.request({
