@@ -1,0 +1,365 @@
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../../styles/common";
+  .m-personalData{
+    .m-search-box{
+      .flex-row(space-between);
+      padding: 26rpx 50rpx;
+      .m-year-month{
+        border: 1px solid @common-color;
+        border-radius: 50rpx;
+        width: 202rpx;
+        height: 40rpx;
+        line-height: 40rpx;
+        span{
+          display: inline-block;
+          width: 100rpx;
+          text-align: center;
+          &.active{
+            background-color: @common-color;
+          }
+        }
+      }
+      .m-date-more{
+        padding: 0 20rpx;
+        background-color: #F5F5F5;
+        border-radius: 30rpx;
+        height: 40rpx;
+        line-height: 40rpx;
+        color: #666666;
+      }
+    }
+    .m-echarts{
+      padding: 20rpx 0;
+      margin: 0 40rpx;
+      width: 670rpx;
+      height: 500rpx;
+      border-bottom: 2px solid #F4F4F4;
+    }
+    .m-user-box{
+      padding: 20rpx 50rpx;
+      .m-title{
+        font-weight: 500;
+        font-size: 34rpx;
+      }
+      .m-grey{
+        font-size: 24rpx;
+        font-weight: 300;
+      }
+      .m-user-list{
+        margin-top: 20rpx;
+        .flex-row(flex-start);
+        width: 100%;
+        overflow: hidden;
+        li{
+          flex-shrink: 0;
+          width: 108rpx;
+          margin-right: 22rpx;
+          text-align: center;
+          position: relative;
+          .m-num{
+            position: absolute;
+            top:0;
+            right: 5rpx;
+            width: 25rpx;
+            height: 25rpx;
+            line-height: 25rpx;
+            font-size: 18rpx;
+            border-radius: 100%;
+            background-color: @common-color;
+          }
+          .m-img{
+            width: 108rpx;
+            height: 108rpx;
+            border-radius: 50%;
+            box-shadow:0px 3px 4px rgba(0,0,0,0.1);
+          }
+          .m-name{
+            width: 100rpx;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
+        }
+      }
+    }
+  }
+</style>
+<template>
+  <view class="m-personalData">
+    <view class="m-search-box">
+      <view class="m-year-month">
+        <span class="active">月</span>
+        <span>年</span>
+      </view>
+      <picker mode="date" value="{{date}}" start="2018" fields="year"  bindchange="bindDateChange">
+        <view class="m-date-more">
+          <span>{{date}}年</span>
+          <image src="{{img_src}}common/icon-down-solid.png" class="m-icon-down"></image>
+        </view>
+      </picker>
+
+    </view>
+    <view class="m-echarts">
+      <ec-canvas id="mychart-dom-bar"  canvas-id="alldata-bar" ec="{{ ec }}"></ec-canvas>
+    </view>
+    <view class="m-echarts">
+      <ec-canvas id="mychart-bar"  canvas-id="mychart-bar" ec="{{ el }}"></ec-canvas>
+    </view>
+   <view class="m-user-box">
+     <view class="m-flex-between">
+       <span class="m-title">参团2次及以上用户</span>
+       <view class="m-flex-end">
+         <span class="m-grey">更多用户</span>
+         <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>
+       </view>
+     </view>
+     <ul class="m-user-list">
+       <li>
+         <span class="m-num">2</span>
+         <image src="" class="m-img"></image>
+         <view class="m-name">1231q24142142525543</view>
+       </li>
+       <li>
+         <span class="m-num">20</span>
+         <image src="" class="m-img"></image>
+         <view class="m-name">1231q24142142525543</view>
+       </li>
+       <li>
+         <image src="" class="m-img"></image>
+         <view class="m-name">1231q24142142525543</view>
+       </li>
+       <li>
+         <image src="" class="m-img"></image>
+         <view class="m-name">1231q24142142525543</view>
+       </li>
+       <li>
+         <image src="" class="m-img"></image>
+         <view class="m-name">1231q24142142525543</view>
+       </li>
+     </ul>
+   </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import * as echarts from '../ec-canvas/echarts';
+  import api from '../../api/api';
+  let chart = null;
+  let allOption = {
+    title: {
+      text: '参团总人次'
+    },
+    color:['#FFCE00'],
+    tooltip : {
+      trigger: 'axis',
+      axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+        type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+      },
+      formatter: function (params) {
+        var tar = params[1];
+        return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
+      }
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
+    },
+    xAxis: {
+      type : 'category',
+      splitLine: {show:false},
+      data : ['总费用','房租','水电费','交通费','伙食费','日用品数']
+    },
+    yAxis: {
+      type : 'value'
+    },
+    series: [
+      {
+        name: '生活费',
+        type: 'bar',
+        stack: '总量',
+        label: {
+          normal: {
+            show: true,
+            position: 'top',
+            color:'#999999'
+          }
+        },
+        data:[2900, 1200, 300, 200, 900, 300]
+      }
+    ]
+  };
+  let option = {
+    title: {
+      text: '参团用户数\n' +
+        '参团2次及以上用户数',
+      textStyle:{
+        fontSize:17
+      }
+    },
+    color:['#EA8700','#FFCE00'],
+    tooltip : {
+      trigger: 'axis',
+      axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+        type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+      },
+      formatter: function (params) {
+        var tar = params[1];
+        return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
+      }
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
+    },
+    xAxis: {
+      type : 'category',
+      splitLine: {show:false},
+      data : ['总费用','房租','水电费','交通费','伙食费','日用品数']
+    },
+    yAxis: {
+      type : 'value'
+    },
+    series: [
+      {
+        name: '辅助',
+        type: 'bar',
+        stack:  '总量',
+        label: {
+          normal: {
+            show: true,
+            position: 'inside',
+            color:'#999999'
+          }
+        },
+        data: [0, 1700, 1400, 1200, 300, 0]
+      },
+      {
+        name: '生活费',
+        type: 'bar',
+        stack: '总量',
+        label: {
+          normal: {
+            show: true,
+            position: 'top',
+            color:'#999999'
+          }
+        },
+        data:[2900, 1200, 300, 200, 900, 300]
+      }
+    ]
+  };
+  function initChart(canvas, width, height) {
+    console.log(canvas)
+    chart = echarts.init(canvas, null, {
+      width: width,
+      height: height
+    })
+    canvas.setChart(chart)
+    if(canvas.canvasId == 'alldata-bar'){
+      chart.setOption(allOption)
+    }else{
+      chart.setOption(option)
+    }
+
+    return chart
+  }
+  export default class personalData extends wepy.page {
+    config = {
+      navigationBarTitleText: '人员数据统计',
+      'usingComponents': {
+        'ec-canvas': '../ec-canvas/ec-canvas'
+      }
+    };
+    components = {};
+    data = {
+      img_src:api.img_src,
+      ec: {
+        onInit: initChart
+      },
+      el: {
+        onInit: initChart
+      },
+      date:'2018'
+
+    };
+
+    onLoad(options) {
+
+    }
+    onShow(){
+
+    }
+    methods = {
+      changeTap(){
+        console.log(option,chart)
+        option = {
+          tooltip : {
+            trigger: 'axis',
+            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+              type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            },
+            formatter: function (params) {
+              var tar = params[1];
+              return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
+            }
+          },
+          grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          xAxis: {
+            type : 'category',
+            splitLine: {show:false},
+            data : ['总费用','房租','水电费','交通费','伙食费','日用品数']
+          },
+          yAxis: {
+            type : 'value'
+          },
+          series: [
+            {
+              name: '辅助',
+              type: 'bar',
+              stack:  '总量',
+              itemStyle: {
+                normal: {
+                  barBorderColor: 'rgba(0,0,0,0)',
+                  color: 'rgba(0,0,0,0)'
+                },
+                emphasis: {
+                  barBorderColor: 'rgba(0,0,0,0)',
+                  color: 'rgba(0,0,0,0)'
+                }
+              },
+              data: [0, 1700, 1400, 1200, 300, 0]
+            },
+            {
+              name: '生活费',
+              type: 'bar',
+              stack: '总量',
+              label: {
+                normal: {
+                  show: true,
+                  position: 'inside'
+                }
+              },
+              data:[100, 1200, 300, 200, 900, 300]
+            }
+          ]
+        }
+        chart.setOption(option)
+      },
+      bindDateChange(e){
+        console.log(e)
+        this.date = e.detail.value;
+        this.$apply();
+      }
+    };
+  }
+</script>

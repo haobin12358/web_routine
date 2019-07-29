@@ -144,6 +144,12 @@
                   <span>协议管理</span>
                 </view>
               </li>
+              <li @tap="changeRoute('/pages/personal/allData','phone')">
+                <view class="m-flex-start">
+                  <image src="{{img_src}}personal/icon-data.png" class="m-icon"></image>
+                  <span>数据统计</span>
+                </view>
+              </li>
             </ul>
         </view>
 

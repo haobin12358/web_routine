@@ -1,0 +1,115 @@
+<style scoped lang="less" rel="stylesheet/less">
+@import "../../styles/common";
+.m-allData{
+  ul{
+    .flex-row(flex-start);
+    flex-wrap: wrap;
+    li{
+      width: 340rpx;
+      height: 400rpx;
+      margin-left: 25rpx;
+      text-align: center;
+      font-size: 32rpx;
+      font-weight: 500;
+      .m-img-box{
+        position: relative;
+      }
+      .m-img{
+        width: 340rpx;
+        height: 340rpx;
+      }
+      .m-icon{
+        width: 112rpx;
+        height: 112rpx;
+        position: absolute;
+        top:114rpx;
+        left: 114rpx;
+      }
+    }
+  }
+}
+</style>
+<template>
+    <view class="m-allData">
+      <ul>
+          <li @tap="changeRoute('/pages/personal/personalData','done')">
+            <view class="m-img-box">
+              <image src="{{img_src}}personal/personal-total-bg.png" class="m-img"></image>
+              <image src="{{img_src}}personal/personal-total-icon.png" class="m-icon"></image>
+            </view>
+            <p>
+              <span class="m-border-back">人员数据</span>
+            </p>
+          </li>
+        <li @tap="changeRoute('/pages/personal/allData','none')">
+          <view class="m-img-box">
+            <image src="{{img_src}}personal/team-total-bg.png" class="m-img"></image>
+            <image src="{{img_src}}personal/team-total-icon.png" class="m-icon"></image>
+          </view>
+          <p>
+            <span class="m-border-back">团队数据</span>
+          </p>
+        </li>
+        <li @tap="changeRoute('/pages/personal/allData','none')">
+          <view class="m-img-box">
+            <image src="{{img_src}}personal/income-total-bg.png" class="m-img"></image>
+            <image src="{{img_src}}personal/income-total-icon.png" class="m-icon"></image>
+          </view>
+          <p>
+            <span class="m-border-back">收支统计</span>
+          </p>
+        </li>
+        <li @tap="changeRoute('/pages/personal/allData','none')">
+          <view class="m-img-box">
+            <image src="{{img_src}}personal/scenic-total-bg.png" class="m-img"></image>
+            <image src="{{img_src}}personal/scenic-total-icon.png" class="m-icon"></image>
+          </view>
+          <p>
+            <span class="m-border-back">景区数据</span>
+          </p>
+        </li>
+      </ul>
+
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import api from '../../api/api';
+  export default class allData extends wepy.page {
+    config = {
+      navigationBarTitleText: '数据统计',
+
+    };
+    components = {};
+    data = {
+      img_src:api.img_src
+    };
+
+    onLoad(options) {
+
+    }
+
+    methods = {
+      changeRoute(v,show){
+        let that = this;
+        switch (show) {
+          case 'none':
+            wx.showToast({
+              title: '功能尚未开放，敬请期待',
+              icon: "none",
+              mask: true,
+              duration: 1000
+            });
+            break;
+          default:
+            wx.navigateTo({
+              url: v
+            });
+            break;
+        }
+
+      },
+    };
+  }
+</script>

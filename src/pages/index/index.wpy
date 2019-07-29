@@ -294,6 +294,7 @@
 
         },
         getCell(){
+
           if(wx.getStorageSync('bind_phone') == 'false'){
             this.show_tel = true;
             this.$apply();
@@ -303,6 +304,7 @@
           wepy.getLocation({
             type: 'wgs84',
             success (res) {
+              console.log(res )
               // that.latitude = res.latitude;
               // that.longitude = res.longitude;
               wepy.request({
@@ -330,6 +332,9 @@
                 that.$apply();
               }
               })
+            },
+            fail(error){
+              console.log(error)
             }
           })
 

@@ -33,7 +33,8 @@
 
     config = {
       pages: [
-
+        'pages/personal/allData',
+        'pages/personal/personalData',
         'pages/personal/login',
         'pages/index/enterPage',
         'pages/index/lookActivity',
