@@ -33,11 +33,7 @@
 
     config = {
       pages: [
-        'pages/personal/incomeDataLine',
-        'pages/personal/incomeData',
-        'pages/personal/allData',
-        'pages/personal/personalData',
-        'pages/personal/teamData',
+
         'pages/personal/login',
         'pages/index/enterPage',
         'pages/index/lookActivity',
@@ -76,6 +72,11 @@
         'pages/index/findToilet',
         'pages/index/chatHouse',
         'pages/index/chatList',
+        'pages/personal/incomeDataLine',
+        'pages/personal/incomeData',
+        'pages/personal/personalData',
+        'pages/personal/teamData',
+        'pages/personal/allData',
       ],
       permission: {
         "scope.userLocation": {

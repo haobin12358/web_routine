@@ -55,17 +55,23 @@
         margin-right: 20rpx;
       }
       .m-info{
-        height: 100rpx;
+        height: 130rpx;
         display: flex;
         flex-flow: column;
         align-items: flex-start;
         justify-content: space-between;
+        .m-price-name{
+          width: 560rpx;
+        }
         .m-name{
           display: block;
           width: 400rpx;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
+        }
+        .m-price{
+          text-align: right;
         }
       }
     }
@@ -94,22 +100,25 @@
       <view class="m-detail">
         <view class="m-title-box">
           <span class="m-title">收支详情</span>
-          <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
+          <picker bindchange="bindPickerChange" value="{{index}}" range-key="name" range="{{array}}">
             <view class="m-date-more">
-              <span>{{array[index]}}</span>
+              <span>{{array[index].name}}</span>
               <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
             </view>
           </picker>
         </view>
-        <view class="m-item">
+        <view class="m-no-data" wx:if="{{detail_list.length == 0}}">暂无详情</view>
+        <view class="m-item" wx:for="{{detail_list}}" wx:key="{{index}}">
           <view class="m-flex-start">
-            <image src="{{img_src}}personal/income-active.png" class="m-icon"></image>
+            <image src="{{img_src}}personal/income-active.png" wx:if="{{item.income}}" class="m-icon"></image>
+            <image src="{{img_src}}personal/income-out.png" wx:else class="m-icon"></image>
             <view class="m-info">
-              <view class="m-flex-between">
-                <span class="m-name">杭州-富阳一日游</span>
-                <span>+ 11110.00</span>
+              <view class="m-flex-between m-price-name">
+                <span class="m-name">{{item.title}}</span>
+                <span class="m-price">{{item.amount}}</span>
               </view>
-              <view class="m-grey">2018-0-20  14:12:31</view>
+              <view>付款人：{{item.usname}}</view>
+              <view class="m-grey">{{item.time}}</view>
             </view>
           </view>
         </view>
@@ -153,7 +162,7 @@
     xAxis: {
       type: 'category',
       boundaryGap: false,
-      data: ['周一','周二','周三','周四','周五','周六','周日']
+      data: []
     },
     yAxis: {
       type: 'value'
@@ -173,7 +182,7 @@
             color: '#000'
           }
         },
-        data:[120, 132, 101, 134, 90, 230, 210]
+        data:[]
       },
       {
         name:'支出',
@@ -189,12 +198,12 @@
             color: '#000'
           }
         },
-        data:[220, 182, 191, 234, 290, 330, 310]
+        data:[]
       }
     ]
   };
   function initChart(canvas, width, height) {
-    console.log(canvas)
+
     chart = echarts.init(canvas, null, {
       width: width,
       height: height
@@ -204,7 +213,7 @@
     chart.setOption(option)
 
     chart.on('click',  function (params) {
-      that.getData();
+      // that.getData();
       console.log(params,that);
     });
     return chart
@@ -227,14 +236,48 @@
       },
       date:'2018-01',
       status:'month',
-      array:['全部','收入','支出'],
-      index:0
+      array:[{
+        name:'全部',
+        value:''
+      },{
+        name:'收入',
+        value:'income'
+      },{
+        name:'支出',
+        value:'expenditure'
+      }],
+      index:0,
+      detail_list:[]
     };
     getData(){
-      console.log('32123')
+      let that = this;
+      wepy.request({
+        url: api.data_statistics + '?token=' +wx.getStorageSync('token'),
+        data: {
+          option:'transaction',
+          year: that.status == 'month' ? that.date.split('-')[0]:'',
+          month:that.status == 'month' ? that.date.split('-')[1]:'',
+          filter:that.array[that.index].value
+        },
+        header: {
+          'content-type': 'application/json' // 默认值
+        }
+      }).then(res => {
+        if(res.data.status == 200){
+          option.xAxis.data = res.data.data.date;
+          option.series[0].data = res.data.data.income;
+          option.series[1].data = res.data.data.expenditure;
+          chart.setOption(option);
+          that.detail_list = res.data.data.details;
+          that.$apply();
+        }
+
+      })
     }
     onLoad(options) {
-
+      let date = new Date();
+      this.date = date.getFullYear() + '-' + (date.getMonth() > 8 ? date.getMonth() +1 : '0' + (date.getMonth() +1));
+      this.getData();
     }
     onShow(){
       that = this;
@@ -303,18 +346,19 @@
 
       },
       bindDateChange(e){
-        console.log(e)
         this.date = e.detail.value;
         this.$apply();
+        this.getData();
       },
       statusChange(v){
         this.status = v;
         this.$apply();
+        this.getData();
       },
       bindPickerChange: function(e) {
-
         this.index = e.detail.value;
         this.$apply();
+        this.getData();
       },
     };
   }

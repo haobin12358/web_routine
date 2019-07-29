@@ -75,6 +75,7 @@ const get_home = api2 + 'user/get_home';//获取个人中心主页信息
 const guide_certification = api2 +'personalcenter/guide_certification';//导游认证
 const guide = api2 +'personalcenter/guide';//获取导游认证
 const get_room_list = api2 + 'message/get_room_list';//获取消息列表
+const data_statistics = api2 + 'personalcenter/data_statistics';//数据统计
 
 
 
@@ -88,6 +89,6 @@ module.exports = {
   get_enter_user,collect,add_travelrecord,upload,batch_upload,create_notice,get_notice,get_provinces,get_citys,get_areas,get_member_location,
   travelrecord_list,get_travelrecord,collection_show,raiders_list,get_team_travelrecord,set_discount,get_discount,list_mp_banner,get_play_history,
   cancel_play,make_over,my_wallet,undertake,apply_cash,payment,get_make_over_list,get_make_over,get_home,guide_certification,guide,
-  add_toilet,toilet_list,get_toilet,get_room_list
+  add_toilet,toilet_list,get_toilet,get_room_list,data_statistics
 
 }

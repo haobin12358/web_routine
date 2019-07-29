@@ -66,21 +66,23 @@
             <view class="m-status">收入</view>
             <view class="m-num-box">
               <span>¥</span>
-              <span class="m-num">1231</span>
+              <span class="m-num" wx:if="{{all_data.show}}">{{all_data.income}}</span>
+              <span class="m-num" wx:else>{{all_data.income_no}}</span>
             </view>
           </view>
           <view class="m-part m-border">
-            <view class="m-status">收入</view>
+            <view class="m-status">支出</view>
             <view class="m-num-box">
               <span>¥</span>
-              <span class="m-num">1231</span>
+              <span class="m-num" wx:if="{{all_data.show}}">{{all_data.expenditure}}</span>
+              <span class="m-num" wx:else>{{all_data.expenditure_no}}</span>
             </view>
           </view>
         </view>
       </view>
       <view class="m-item">
         <view class="m-item-top">
-          <span class="m-border-back">7月账单</span>
+          <span class="m-border-back">{{now_data.month}}</span>
           <image src="{{img_src}}personal/icon-look-active.png" wx:if="{{now_data.show}}" class="m-icon" @tap="changeShow('now_data',false)"></image>
           <image src="{{img_src}}personal/icon-look.png" wx:else class="m-icon" @tap="changeShow('now_data',true)"></image>
         </view>
@@ -89,14 +91,17 @@
             <view class="m-status">收入</view>
             <view class="m-num-box">
               <span>¥</span>
-              <span class="m-num">*****</span>
+              <span class="m-num" wx:if="{{now_data.show}}">{{now_data.income}}</span>
+              <span class="m-num" wx:else >{{now_data.income_no}}</span>
+
             </view>
           </view>
           <view class="m-part m-border">
-            <view class="m-status">收入</view>
+            <view class="m-status">支出</view>
             <view class="m-num-box">
               <span>¥</span>
-              <span class="m-num">****</span>
+              <span class="m-num" wx:if="{{now_data.show}}">{{now_data.expenditure}}</span>
+              <span class="m-num" wx:else >{{now_data.expenditure_no}}</span>
             </view>
           </view>
         </view>
@@ -115,33 +120,59 @@
 
   export default class incomeData extends wepy.page {
     config = {
-      navigationBarTitleText: '收支统计',
-      enablePullDownRefresh: true
+      navigationBarTitleText: '收支统计'
     };
     components = {};
     data = {
       img_src:api.img_src,
-      all_data:{
-        show:true,
-        data:{
-
-        }
-      },
-      now_data:{
-        show:false,
-        data:{
-
-        }
-      }
+      all_data:{},
+      now_data:{}
     };
 
-    onLoad(options) {
+    getData(){
+      let that = this;
+      wepy.request({
+        url: api.data_statistics + '?token=' +wx.getStorageSync('token'),
+        data: {
+          option:'finance'
+        },
+        header: {
+          'content-type': 'application/json' // 默认值
+        }
+      }).then(res => {
+        if(res.data.status == 200){
+          that.all_data = res.data.data.total;
+          that.all_data.show = false;
+          that.all_data.income_no = that.dealNum(that.all_data.income);
+          that.all_data.expenditure_no = that.dealNum(that.all_data.expenditure);
+          that.now_data = res.data.data.current;
+          that.now_data.show = false;
+          that.now_data.income_no = that.dealNum(that.now_data.income);
+          that.now_data.expenditure_no = that.dealNum(that.now_data.expenditure);
+          that.$apply();
+        }
 
+
+      })
+    }
+    dealNum(data){
+      let arr = [];
+      data =String(data);
+      for(let i =0;i<data.length;i++){
+        if(data[i] == '.'){
+          arr.push(data[i])
+        }else{
+          arr.push('*')
+        }
+      }
+      return arr.join('');
+    }
+    onLoad(options) {
+      this.getData();
     }
 
     methods = {
       changeShow(name,bool){
-        console.log(name,bool)
         this[name].show = bool == 'false'?false:true;
         this.$apply();
       },
