@@ -7,7 +7,7 @@
       .m-year-month{
         border: 1px solid @common-color;
         border-radius: 50rpx;
-        width: 202rpx;
+        /*width: 202rpx;*/
         height: 40rpx;
         line-height: 40rpx;
         span{
@@ -88,13 +88,13 @@
   <view class="m-personalData">
     <view class="m-search-box">
       <view class="m-year-month">
-        <span class="active">月</span>
-        <span>年</span>
+        <span class="{{status == 'month' ?'active':''}}" @tap="statusChange('month')">月</span>
+        <span class="{{status == 'year' ?'active':''}}" @tap="statusChange('year')">年</span>
       </view>
-      <picker mode="date" value="{{date}}" start="2018" fields="year"  bindchange="bindDateChange">
+      <picker mode="date" wx:if="{{status == 'month'}}" value="{{date}}" start="2018" fields="year"  bindchange="bindDateChange">
         <view class="m-date-more">
           <span>{{date}}年</span>
-          <image src="{{img_src}}common/icon-down-solid.png" class="m-icon-down"></image>
+          <image src="{{img_src}}common/icon-down-solid.png" class="m-down-solid"></image>
         </view>
       </picker>
 
@@ -114,7 +114,7 @@
        </view>
      </view>
      <ul class="m-user-list">
-       <li>
+       <li @tap="changeTap">
          <span class="m-num">2</span>
          <image src="" class="m-img"></image>
          <view class="m-name">1231q24142142525543</view>
@@ -146,21 +146,22 @@
   import * as echarts from '../ec-canvas/echarts';
   import api from '../../api/api';
   let chart = null;
+  let that = '';
   let allOption = {
     title: {
       text: '参团总人次'
     },
     color:['#FFCE00'],
-    tooltip : {
-      trigger: 'axis',
-      axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-        type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-      },
-      formatter: function (params) {
-        var tar = params[1];
-        return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
-      }
-    },
+    // tooltip : {
+    //   trigger: 'axis',
+    //   axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+    //     type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+    //   },
+    //   formatter: function (params) {
+    //     // var tar = params[1];
+    //     // return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
+    //   }
+    // },
     grid: {
       left: '3%',
       right: '4%',
@@ -206,8 +207,8 @@
         type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
       },
       formatter: function (params) {
-        var tar = params[1];
-        return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
+        // var tar = params[1];
+        // return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
       }
     },
     grid: {
@@ -265,7 +266,10 @@
     }else{
       chart.setOption(option)
     }
-
+    chart.on('click',  function (params) {
+      that.getData();
+      console.log(params,that);
+    });
     return chart
   }
   export default class personalData extends wepy.page {
@@ -284,15 +288,19 @@
       el: {
         onInit: initChart
       },
-      date:'2018'
+      date:'2018',
+      status:'month'
 
-    };
+    }
+    getData(){
+      console.log('32123')
+    }
 
     onLoad(options) {
 
     }
     onShow(){
-
+      that = this;
     }
     methods = {
       changeTap(){
@@ -353,11 +361,16 @@
             }
           ]
         }
-        chart.setOption(option)
+        chart.setOption(option);
+
       },
       bindDateChange(e){
         console.log(e)
         this.date = e.detail.value;
+        this.$apply();
+      },
+      statusChange(v){
+        this.status = v;
         this.$apply();
       }
     };
