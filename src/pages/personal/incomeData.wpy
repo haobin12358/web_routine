@@ -1,0 +1,155 @@
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../../styles/common";
+.m-incomeData{
+  padding: 25rpx;
+  .m-item{
+    width: 100%;
+    box-shadow:0 0 20rpx rgba(0,0,0,0.08);
+    box-sizing: border-box;
+    padding: 0 20rpx;
+    margin-bottom: 20rpx;
+    .m-item-top{
+      padding: 20rpx 0;
+      border-bottom: 1px solid @border-color;
+      .flex-row(space-between);
+      .m-icon{
+        width: 48rpx;
+        height: 48rpx;
+      }
+    }
+    .m-item-content{
+      .flex-row(space-between);
+      padding: 20rpx 0;
+      border-bottom: 1px solid @border-color;
+      .m-part{
+        width: 49%;
+        box-sizing: border-box;
+        font-size: 34rpx;
+        padding-right: 30rpx;
+        &.m-border{
+          border-left: 1px solid @border-color;
+          padding-left: 20rpx;
+        }
+        .m-status{
+          font-weight: 400;
+        }
+        .m-num-box{
+          text-align: right;
+          font-weight: 500;
+          margin-top: 30rpx;
+          .m-num{
+            font-size: 60rpx;
+            margin-left: 20rpx;
+          }
+        }
+      }
+    }
+    .m-item-foot{
+      .flex-row(flex-end);
+      font-size: 24rpx;
+      padding: 10rpx 0 20rpx;
+    }
+  }
+}
+
+</style>
+<template>
+    <view class="m-incomeData">
+      <view class="m-item">
+        <view class="m-item-top">
+          <span class="m-border-back">总收支</span>
+          <image src="{{img_src}}personal/icon-look-active.png" wx:if="{{all_data.show}}" class="m-icon" @tap="changeShow('all_data',false)"></image>
+          <image src="{{img_src}}personal/icon-look.png" wx:else class="m-icon" @tap="changeShow('all_data',true)"></image>
+        </view>
+        <view class="m-item-content">
+          <view class="m-part ">
+            <view class="m-status">收入</view>
+            <view class="m-num-box">
+              <span>¥</span>
+              <span class="m-num">1231</span>
+            </view>
+          </view>
+          <view class="m-part m-border">
+            <view class="m-status">收入</view>
+            <view class="m-num-box">
+              <span>¥</span>
+              <span class="m-num">1231</span>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="m-item">
+        <view class="m-item-top">
+          <span class="m-border-back">7月账单</span>
+          <image src="{{img_src}}personal/icon-look-active.png" wx:if="{{now_data.show}}" class="m-icon" @tap="changeShow('now_data',false)"></image>
+          <image src="{{img_src}}personal/icon-look.png" wx:else class="m-icon" @tap="changeShow('now_data',true)"></image>
+        </view>
+        <view class="m-item-content">
+          <view class="m-part ">
+            <view class="m-status">收入</view>
+            <view class="m-num-box">
+              <span>¥</span>
+              <span class="m-num">*****</span>
+            </view>
+          </view>
+          <view class="m-part m-border">
+            <view class="m-status">收入</view>
+            <view class="m-num-box">
+              <span>¥</span>
+              <span class="m-num">****</span>
+            </view>
+          </view>
+        </view>
+        <view class="m-item-foot" @tap="changeRoute('/pages/personal/incomeDataLine')">
+          <span class="m-grey">统计详情</span>
+          <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>
+        </view>
+      </view>
+
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import api from '../../api/api'
+
+  export default class incomeData extends wepy.page {
+    config = {
+      navigationBarTitleText: '收支统计',
+      enablePullDownRefresh: true
+    };
+    components = {};
+    data = {
+      img_src:api.img_src,
+      all_data:{
+        show:true,
+        data:{
+
+        }
+      },
+      now_data:{
+        show:false,
+        data:{
+
+        }
+      }
+    };
+
+    onLoad(options) {
+
+    }
+
+    methods = {
+      changeShow(name,bool){
+        console.log(name,bool)
+        this[name].show = bool == 'false'?false:true;
+        this.$apply();
+      },
+      changeRoute(v){
+        wx.navigateTo({
+          url: v
+        });
+      }
+    };
+  }
+</script>

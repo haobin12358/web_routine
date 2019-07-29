@@ -41,7 +41,7 @@
               <span class="m-border-back">人员数据</span>
             </p>
           </li>
-        <li @tap="changeRoute('/pages/personal/allData','none')">
+        <li @tap="changeRoute('/pages/personal/teamData','done')">
           <view class="m-img-box">
             <image src="{{img_src}}personal/team-total-bg.png" class="m-img"></image>
             <image src="{{img_src}}personal/team-total-icon.png" class="m-icon"></image>
@@ -50,7 +50,7 @@
             <span class="m-border-back">团队数据</span>
           </p>
         </li>
-        <li @tap="changeRoute('/pages/personal/allData','none')">
+        <li @tap="changeRoute('/pages/personal/incomeData','done')">
           <view class="m-img-box">
             <image src="{{img_src}}personal/income-total-bg.png" class="m-img"></image>
             <image src="{{img_src}}personal/income-total-icon.png" class="m-icon"></image>
