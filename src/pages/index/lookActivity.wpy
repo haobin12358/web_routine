@@ -517,7 +517,18 @@
             }
           }).then(resule => {
             if(resule.data.status == 200){
-              that.payData(resule.data.data.args);
+              if(resule.data.data.redirect){
+                wx.showToast({
+                  title: '支付成功',
+                  icon: 'none',
+                  duration: 1000
+                });
+                that.show_look = true;
+                that.$apply();
+              }else{
+                that.payData(resule.data.data.args);
+              }
+
             }
           })
         }
@@ -770,8 +781,20 @@
               }
             }).then(resule => {
               if(resule.data.status == 200){
-                let params = resule.data.data.args;
-                that.pay(params);
+                if(resule.data.data.redirect){
+                  wx.showToast({
+                    title: '报名成功',
+                    icon: 'none',
+                    duration: 2000
+                  });
+                  wx.redirectTo({
+                    url: '/pages/index/manageActivity'
+                  });
+                }else{
+                  let params = resule.data.data.args;
+                  that.pay(params);
+                }
+
               }else if(resule.data.status == 405){
                 wx.navigateTo({
                   url: '/pages/index/manageActivity'

@@ -108,34 +108,19 @@
    <view class="m-user-box">
      <view class="m-flex-between">
        <span class="m-title">参团2次及以上用户</span>
-       <view class="m-flex-end">
+       <view class="m-flex-end" wx:if="{{user_list.length >= 5}}" @tap="changeRoute('/pages/personal/personalDataList')">
          <span class="m-grey">更多用户</span>
          <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>
        </view>
      </view>
+     <view class="m-no-data" wx:if="{{user_list.length == 0}}}">暂无用户</view>
      <ul class="m-user-list">
-       <li @tap="changeTap">
-         <span class="m-num">2</span>
-         <image src="" class="m-img"></image>
-         <view class="m-name">1231q24142142525543</view>
+       <li  wx:for="{{user_list}}" wx:key="{{index}}">
+         <span class="m-num">{{item.repeat}}</span>
+         <image src="{{img_url}}{{item.usheader}}" class="m-img"></image>
+         <view class="m-name">{{item.usname}}</view>
        </li>
-       <li>
-         <span class="m-num">20</span>
-         <image src="" class="m-img"></image>
-         <view class="m-name">1231q24142142525543</view>
-       </li>
-       <li>
-         <image src="" class="m-img"></image>
-         <view class="m-name">1231q24142142525543</view>
-       </li>
-       <li>
-         <image src="" class="m-img"></image>
-         <view class="m-name">1231q24142142525543</view>
-       </li>
-       <li>
-         <image src="" class="m-img"></image>
-         <view class="m-name">1231q24142142525543</view>
-       </li>
+
      </ul>
    </view>
   </view>
@@ -304,6 +289,7 @@
     components = {};
     data = {
       img_src:api.img_src,
+      img_url:api.api,
       ec: {
         onInit: initAllChart
       },
@@ -311,8 +297,8 @@
         onInit: initChart
       },
       date:'2018',
-      status:'month'
-
+      status:'month',
+      user_list:[],
     }
     getData(){
       let that = this;
@@ -339,6 +325,7 @@
           }else{
             that.no_data = false;
           }
+          that.user_list = res.data.data.repeat_user;
           that.$apply();
         }
 
@@ -363,7 +350,17 @@
         this.status = v;
         this.$apply();
         this.getData();
-      }
+      },
+      changeRoute(v){
+        let that = this;
+
+        wx.navigateTo({
+          url: v +'?year=' + that.date
+        });
+
+
+
+      },
     };
   }
 </script>

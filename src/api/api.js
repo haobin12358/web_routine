@@ -79,9 +79,9 @@ const data_statistics = api2 + 'personalcenter/data_statistics';//数据统计
 
 
 
-// const img_src = 'https://pre2.bigxingxing.com/icon/';
+const img_src = 'https://play.bigxingxing.com/icon/';
 // const img_src = 'https://www.bigxingxing.com/icon/';
-const img_src = '../../images/';
+// const img_src = '../../images/';
 //评价
 module.exports = {
   api,img_src,login,bind_phone,set_cost,set_insurance,scenicspot_list,scenicspot_get,set_play,get_cost,get_insurance,get_play,

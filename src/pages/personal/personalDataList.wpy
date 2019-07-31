@@ -1,0 +1,115 @@
+<style scoped lang="less" rel="stylesheet/less">
+@import "../../styles/common";
+  .m-personalDataList{
+    .m-user-box{
+      padding: 20rpx 0;
+      .m-title{
+        font-weight: 500;
+        font-size: 34rpx;
+        padding: 0 33rpx;
+      }
+      .m-grey{
+        font-size: 24rpx;
+        font-weight: 300;
+      }
+      .m-user-list{
+        margin-top: 20rpx;
+        li{
+          padding: 22rpx 33rpx;
+          border-bottom: 1px solid @border-color;
+          .flex-row(space-between);
+          .m-num{
+            min-width: 40rpx;
+            height: 40rpx;
+            line-height: 40rpx;
+            text-align: center;
+            font-size: 24rpx;
+            border-radius: 40rpx;
+            background-color: @common-color;
+          }
+          .m-img{
+            width: 108rpx;
+            height: 108rpx;
+            border-radius: 50%;
+            margin-right: 20rpx;
+          }
+          .m-name{
+            width: 100rpx;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
+        }
+      }
+    }
+  }
+
+</style>
+<template>
+    <view class="m-personalDataList">
+
+      <view class="m-user-box">
+        <view class="m-flex-between">
+          <span class="m-title">参团2次及以上用户</span>
+        </view>
+        <view class="m-no-data" wx:if="{{user_list.length == 0}}}">暂无用户</view>
+        <ul class="m-user-list">
+          <li  wx:for="{{user_list}}" wx:key="{{index}}">
+            <view class="m-flex-start">
+              <image src="{{img_url}}{{item.usheader}}" class="m-img"></image>
+              <view class="m-name">{{item.usname}}</view>
+            </view>
+            <span class="m-num">{{item.repeat}}</span>
+          </li>
+
+        </ul>
+      </view>
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import api from '../../api/api';
+
+  export default class personalDataList extends wepy.page {
+    config = {
+      navigationBarTitleText: '人员统计'
+    };
+    components = {};
+    data = {
+      user_list:[
+        {
+
+        },
+        {
+
+        }
+      ]
+    };
+    getData(year){
+      let that = this;
+      wepy.request({
+        url: api.data_statistics + '?token=' +wx.getStorageSync('token'),
+        data: {
+          option:'repeat',
+          year:year
+        },
+        header: {
+          'content-type': 'application/json' // 默认值
+        }
+      }).then(res => {
+        if(res.data.status == 200){
+
+          that.user_list = res.data.data;
+          that.$apply();
+        }
+
+      })
+    }
+    onLoad(options) {
+      this.getData(options.year);
+    }
+
+    methods = {};
+  }
+</script>

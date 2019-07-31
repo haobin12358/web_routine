@@ -156,9 +156,19 @@
                 }
             }).then(resule => {
               if(resule.data.status == 200){
-
-                let params = resule.data.data.args;
-                that.pay(params);
+                if(resule.data.data.redirect){
+                  wx.showToast({
+                    title: '报名成功',
+                    icon: 'none',
+                    duration: 2000
+                  });
+                  wx.redirectTo({
+                    url: '/pages/index/manageActivity'
+                  });
+                }else{
+                  let params = resule.data.data.args;
+                  that.pay(params);
+                }
 
               }
             })
