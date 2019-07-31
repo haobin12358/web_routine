@@ -113,8 +113,8 @@
          <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>
        </view>
      </view>
-     <view class="m-no-data" wx:if="{{user_list.length == 0}}}">暂无用户</view>
-     <ul class="m-user-list">
+     <view class="m-no-data" wx:if="{{user_list.length == 0}}">暂无用户</view>
+     <ul class="m-user-list" wx:else>
        <li  wx:for="{{user_list}}" wx:key="{{index}}">
          <span class="m-num">{{item.repeat}}</span>
          <image src="{{img_url}}{{item.usheader}}" class="m-img"></image>
@@ -137,16 +137,15 @@
       text: '参团总人次'
     },
     color:['#FFCE00'],
-    // tooltip : {
-    //   trigger: 'axis',
-    //   axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-    //     type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-    //   },
-    //   formatter: function (params) {
-    //     // var tar = params[1];
-    //     // return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
-    //   }
-    // },
+    tooltip : {
+      trigger: 'axis',
+      position: function (pos, params, dom, rect, size) {
+        // 鼠标在左侧时 tooltip 显示到右侧，鼠标在右侧时 tooltip 显示到左侧。
+        var obj = {top: 60};
+        obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 5;
+        return obj;
+      }
+    },
     grid: {
       left: '3%',
       right: '4%',
@@ -188,16 +187,15 @@
       }
     },
     color:['#EA8700','#FFCE00'],
-    // tooltip : {
-    //   trigger: 'axis',
-    //   axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-    //     type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-    //   },
-    //   formatter: function (params) {
-    //     // var tar = params[1];
-    //     // return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
-    //   }
-    // },
+    tooltip : {
+      trigger: 'axis',
+      position: function (pos, params, dom, rect, size) {
+        // 鼠标在左侧时 tooltip 显示到右侧，鼠标在右侧时 tooltip 显示到左侧。
+        var obj = {top: 60};
+        obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 5;
+        return obj;
+      }
+    },
     legend: {
       data: ['参团用户数', '参团2次及以上用户数'],
       align: 'right',
@@ -222,11 +220,10 @@
       {
         name: '参团用户数',
         type: 'bar',
-        stack:  '总量',
         label: {
           normal: {
             show: true,
-            position: 'inside',
+            position: 'top',
             color:'#999999'
           },
           emphasis: {
@@ -238,7 +235,6 @@
       {
         name: '参团2次及以上用户数',
         type: 'bar',
-        stack: '总量',
         label: {
           normal: {
             show: true,
@@ -254,29 +250,28 @@
     ]
   };
   function initAllChart(canvas, width, height) {
-    console.log(canvas)
     allChart = echarts.init(canvas, null, {
       width: width,
       height: height
     })
     canvas.setChart(allChart)
-    allChart.setOption(allOption)
+    allChart.setOption(allOption,true)
     return chart
   }
   function initChart(canvas, width, height) {
-    console.log(canvas)
+
     chart = echarts.init(canvas, null, {
       width: width,
       height: height
     })
     canvas.setChart(chart)
+    console.log(chart,'adads')
+    chart.setOption(option,true)
 
-    chart.setOption(option)
-
-    chart.on('click',  function (params) {
-      that.getData();
-      console.log(params,that);
-    });
+    // chart.on('click',  function (params) {
+    //   that.getData();
+    //   console.log(params,that);
+    // });
     return chart
   }
   export default class personalData extends wepy.page {
@@ -313,13 +308,14 @@
         }
       }).then(res => {
         if(res.data.status == 200){
-          allOption.xAxis.data = res.data.data.date;
-          allOption.series[0].data = res.data.data.total_num;
-          allChart.setOption(allOption);
           option.xAxis.data = res.data.data.date;
           option.series[0].data = res.data.data.people_num;
           option.series[1].data = res.data.data.repeat_num;
-          chart.setOption(option);
+          allOption.xAxis.data = res.data.data.date;
+          allOption.series[0].data = res.data.data.total_num;
+          allChart.setOption(allOption,true);
+          chart.setOption(option,true);
+
           if(option.series[0].data.length ==0 ){
             that.no_data = true;
           }else{

@@ -132,7 +132,7 @@
                         <span>客服中心</span>
                     </view>
                 </li>
-                <li @tap="changeRoute('/pages/personal/identification','info')">
+                <li wx:if="{{!user_info.guide}}" @tap="changeRoute('/pages/personal/identification','info')">
                     <view class="m-flex-start">
                         <image src="{{img_src}}personal/icon-guide.png" class="m-icon"></image>
                         <span>导游认证</span>
@@ -144,7 +144,7 @@
                   <span>协议管理</span>
                 </view>
               </li>
-              <li @tap="changeRoute('/pages/personal/allData','phone')">
+              <li wx:if="{{user_info.guide}}" @tap="changeRoute('/pages/personal/allData','phone')">
                 <view class="m-flex-start">
                   <image src="{{img_src}}personal/icon-data.png" class="m-icon"></image>
                   <span>数据统计</span>
@@ -163,7 +163,8 @@
     import Phone from '../../components/common/phone';
     export default class personalIndex extends wepy.page{
         config = {
-            navigationBarTitleText: '我的'
+            navigationBarTitleText: '我的',
+          enablePullDownRefresh:true
         }
       components = {
         phone:Phone
@@ -175,6 +176,13 @@
           show_tel:false,
           url:''
         }
+      onPullDownRefresh() {
+        // 上拉刷新
+        if (!this.loading) {
+          this. getData();
+            // 处理完成后，终止下拉刷新
+        }
+      }
         onLoad(){
           // this.getData();
         }

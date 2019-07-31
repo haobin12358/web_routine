@@ -120,10 +120,10 @@
           <p>找厕所</p>
         </li>
 <!--      @tap="changeRoute('/pages/index/chatList','phone')" -->
-        <li   @tap="showTip" >
-          <p><image src="{{img_src}}index/index-chat.png" class="m-index-icon" alt="" /></p>
-          <p>聊天室</p>
-        </li>
+<!--        <li   @tap="showTip" >-->
+<!--          <p><image src="{{img_src}}index/index-chat.png" class="m-index-icon" alt="" /></p>-->
+<!--          <p>聊天室</p>-->
+<!--        </li>-->
         <li @tap="changeRoute('/pages/index/timeIndex','phone')">
           <p><image src="{{img_src}}index/index-time.png" class="m-index-icon" alt="" /></p>
           <p>时光记录</p>
@@ -132,6 +132,7 @@
           <p><image src="{{img_src}}index/index-gather.png" class="m-index-icon" alt="" /></p>
           <p>集合点</p>
         </li>
+        <li></li>
         <li></li>
       </ul>
     </view>
