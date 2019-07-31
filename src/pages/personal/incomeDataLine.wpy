@@ -280,7 +280,7 @@
             option.series[0].data = res.data.data.income;
             option.series[1].data = res.data.data.expenditure;
             console.log(option)
-            chart.setOption(option);
+            chart.setOption(option,true);
             that.detail_list = res.data.data.details;
           }
           that.total_count = res.data.total_count;

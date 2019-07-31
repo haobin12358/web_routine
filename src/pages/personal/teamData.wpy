@@ -171,7 +171,7 @@
           option.xAxis.data = res.data.data.date;
           option.series[0].data = res.data.data.team_num;
           // option.series[1].data = res.data.data.expenditure;
-          chart.setOption(option);
+          chart.setOption(option,true);
           if(option.series[0].data.length ==0 ){
             that.no_data = true;
           }else{
