@@ -99,10 +99,10 @@ Component({
       if (this.chart && e.touches.length > 0) {
         var touch = e.touches[0];
         var handler = this.chart.getZr().handler;
-        handler.dispatch('mousemove', {
-          zrX: touch.x,
-          zrY: touch.y
-        });
+        // handler.dispatch('mousemove', {
+        //   zrX: touch.x,
+        //   zrY: touch.y
+        // });
         handler.processGesture(wrapTouch(e), 'change');
       }
     },
