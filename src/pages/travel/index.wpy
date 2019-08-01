@@ -104,7 +104,7 @@
 
 </style>
 <template>
-    <view class="m-travel">
+    <view class="m-travel" wx:if="{{img_src}}">
 <!--      <scroll-view scroll-y style="height: 100vh;" bindscrolltolower="lower">-->
         <swiper
                 indicator-dots="{{indicatorDots}}"
@@ -202,7 +202,7 @@
            city:City
         }
         data = {
-            img_src:api.img_src,
+            img_src:null,
             scroll_data: [],
             indicatorDots: true,
             autoplay: false,
@@ -323,6 +323,8 @@
         onLoad(options) {
             this.getScenic();
             this.getImg();
+            this.img_src = api.img_src;
+            this.$apply();
         }
       // onPullDownRefresh() {
       //     console.log(this,'asdada')

@@ -128,7 +128,7 @@
    onLoad(){
 
      if(this.num){
-       date = new Date(this.num);
+       date = new Date(this.num.replace(/-/g, "/"));
      }
      this.initTime(date)
 
@@ -136,7 +136,7 @@
     methods = {
       numNotice(){
         if(this.num){
-          date = new Date(this.num);
+          date = new Date(this.num.replace(/-/g, "/"));
         }
 
         this.initTime()

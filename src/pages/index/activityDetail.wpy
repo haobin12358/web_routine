@@ -38,7 +38,7 @@
                  align-items: flex-start;
              }
              .m-detail-text{
-                 text-indent: 2em;
+                 /*text-indent: 2em;*/
                  line-height: 56rpx;
                  font-size: 24rpx;
              }
@@ -91,7 +91,7 @@
 
 </style>
 <template>
-    <view class="m-activityDetail">
+    <view class="m-activityDetail" wx:if="{{detail}}">
       <scroll-view scroll-y style="height: 100vh;" bindscrolltolower="lower"  >
        <ul class="m-activityDetail-info">
            <li>

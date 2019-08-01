@@ -77,7 +77,7 @@
 
 </style>
 <template>
-    <view class="m-editCost">
+    <view class="m-editCost" wx:if="{{img_src}}">
         <view class="m-title m-grey">费用明细</view>
         <view class="m-one-cost " wx:for="{{cost_list}}" wx:key="{{index}}" wx:if="{{!item.delete}}">
                 <view class="m-cost-info">
@@ -145,7 +145,7 @@
         }
         components = {}
         data = {
-          img_src:api.img_src,
+          img_src:null,
             show_radio:false,
             cost_list:[],
             cost_name:'费用',
@@ -319,6 +319,7 @@
                 }
 
             }
+            this.img_src = api.img_src;
 
             this.$apply();
 

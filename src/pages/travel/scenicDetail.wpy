@@ -30,7 +30,7 @@
 
 </style>
 <template>
-    <view class="m-scenicDetail">
+    <view class="m-scenicDetail" wx:if="{{img_src}}">
         <view class="m-scenicDetail-intro">
             <view class="m-title">{{scenic_name}}</view>
             <view class="m-info">
@@ -66,7 +66,7 @@
             recommend:Recommend
         }
         data = {
-          img_src:api.img_src,
+          img_src:null,
             name1:'htmlParserName2',
             content1:"",
             scenic_name:'',
@@ -100,6 +100,8 @@
             // WxParse.wxParse('htmlParserName1','html',"<p style='font-size: 32rpx;padding: 30rpx 0;'>1231242</p>",that,0);
             if(options.sspid){
               that.sspid = options.sspid;
+              that.img_src = api.img_src;
+              that.$apply();
                 this.getDetail(options.sspid)
             }
 
