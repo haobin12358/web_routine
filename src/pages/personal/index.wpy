@@ -188,9 +188,9 @@
           // this.getData();
         }
       onShow(){
-        if(!this.user_info.ustelphone){
+        // if(!this.user_info.ustelphone){
           this.getData();
-        }
+        // }
         this.img_src = api.img_src;
         this.show_tel = false;
         this.$apply();

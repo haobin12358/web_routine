@@ -108,7 +108,7 @@
                   name:data[i].acname
                 });
               }
-              that.getCountry(that.multiArray[0][0].acid);
+              that.getCountry(that.multiArray[1][0].acid);
             }
 
             that.$apply();
@@ -122,7 +122,7 @@
             name:'不限'
           });
         }
-        that.getCountry(that.multiArray[0][0].acid);
+        that.getCountry(that.multiArray[1][0].acid);
         that.$apply();
       }
 
