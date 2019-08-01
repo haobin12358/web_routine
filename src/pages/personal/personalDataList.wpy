@@ -46,7 +46,7 @@
 
 </style>
 <template>
-    <view class="m-personalDataList">
+    <view class="m-personalDataList" wx:if="{{user_list}}">
 
       <view class="m-user-box">
         <view class="m-flex-between">
@@ -77,14 +77,7 @@
     };
     components = {};
     data = {
-      user_list:[
-        {
-
-        },
-        {
-
-        }
-      ]
+      user_list:null
     };
     getData(year){
       let that = this;

@@ -32,7 +32,7 @@
 }
 </style>
 <template>
-    <view class="m-withdraw">
+    <view class="m-withdraw" wx:if="{{img_src}}">
       <view class="m-top">
         <view class="m-grey">提现金额</view>
         <view class="m-withdraw-input">
@@ -83,7 +83,8 @@
       })
     }
     onLoad(options) {
-
+      this.img_src = api.img_sr;
+      this.$apply();
     }
 
     methods = {

@@ -63,7 +63,7 @@
 
 </style>
 <template>
-    <view class="m-outTeam">
+    <view class="m-outTeam" wx:if="{{discounts}}">
         <view class="m-row m-item">
           <span>退团扣费</span>
           <view class="m-flex-end" @tap="showRule('show_rule')">
@@ -117,7 +117,7 @@
       show_rule:false,
       rule:'',
       plid:'',
-      discounts:[]
+      discounts:null
     };
     //获取退款
     getDiscounts(id){

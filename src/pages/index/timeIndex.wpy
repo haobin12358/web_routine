@@ -25,9 +25,9 @@
 <template>
     <view class="m-timeIndex">
       <view class="m-grey m-title">先选择时光记录的类型哦</view>
-      <view class="m-time-icon-box">
+      <view class="m-time-icon-box" wx:if="{{img_src}}">
         <view class="m-one-icon" @tap="changeRoute('/pages/index/editTravelNote')">
-          <image src="{{img_src}}index/time-travel-notes.png" class="m-icon"></image>
+          <image src="{{img_src}}index/time-travel-notes.png"  class="m-icon"></image>
           <view>游记</view>
         </view>
         <view class="m-one-icon" @tap="changeRoute('/pages/index/editStrategy')">
@@ -56,7 +56,8 @@
     };
 
     onLoad(options) {
-
+      this.img_src = api.img_src;
+      this.$apply();
     }
 
     methods = {

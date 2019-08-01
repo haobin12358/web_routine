@@ -78,7 +78,7 @@
 
 </style>
 <template>
-    <view class="m-mainIndex">
+    <view class="m-mainIndex" wx:if="{{user_info}}">
       <scroll-view scroll-y style="height: 100vh;" bindscrolltolower="lower"  >
         <view class="m-mainIndex-top">
           <image src="{{img_src}}personal/personal-bg.png" class="m-personal-bg"></image>
@@ -165,7 +165,7 @@
       city:City
     };
     data = {
-      user_info:{},
+      user_info:null,
       num_list:[
         {
           name:'关注',

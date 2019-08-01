@@ -32,7 +32,7 @@
 
 </style>
 <template>
-    <view class="m-identification">
+    <view class="m-identification" wx:if="{{img_src}}">
       <view class="m-row m-grey">认证信息</view>
       <view class="m-row">
         <span>真实姓名</span>
@@ -70,7 +70,7 @@
     };
     components = {};
     data = {
-      img_src:api.img_src,
+      img_src:null,
       form_data:{
         gurealname:'',
         gutelphone:'',
@@ -114,6 +114,7 @@
       })
     }
     onLoad(options) {
+      this.img_src = api.img_src;
       if(options.tel){
         this.ustelphone = options.tel;
         this.form_data.gutelphone = options.tel;
@@ -122,6 +123,8 @@
     }
     onShow(){
       this.getData();
+
+
     }
     methods = {
       inputChange(e){

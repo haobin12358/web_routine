@@ -85,7 +85,7 @@
   }
 </style>
 <template>
-  <view class="m-personalData">
+  <view class="m-personalData" wx:if="{{img_src}}">
     <view class="m-search-box">
       <view class="m-year-month">
         <span class="{{status == 'month' ?'active':''}}" @tap="statusChange('month')">月</span>

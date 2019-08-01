@@ -62,7 +62,7 @@
 }
 </style>
 <template>
-    <view class="m-ruleDetail">
+    <view class="m-ruleDetail" wx:if="{{detail_info}}">
       <view class="m-row">
         <span class="m-grey">协议活动</span>
       </view>
@@ -127,7 +127,7 @@
       img_url:api.api,
       name1:'htmlParserName2',
       content1:"",
-      detail_info:'',
+      detail_info:null,
       id:''
     };
     getDetail(){

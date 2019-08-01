@@ -86,7 +86,7 @@
 
 </style>
 <template>
-    <view class="m-editActivity">
+    <view class="m-editActivity" wx:if="{{img_src}}">
       <view class="m-alert-text">
           <span>使用电脑版https://blog.bigxingxing.com输入更方便</span>
 <!--          <span class="m-alert-btn">草稿箱</span>-->
@@ -253,7 +253,7 @@
             edit:Edit
         }
         data = {
-          img_src:api.img_src,
+          img_src:null,
             type:'play',
             show_detail:false,
             plstarttime:'',
@@ -485,7 +485,7 @@
                this.getInsureance(this.plid);
                this.getDiscounts(this.plid);
              }
-
+            this.img_src = api.img_src;
              this.$apply();
         }
 

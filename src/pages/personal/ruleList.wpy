@@ -84,7 +84,7 @@
 
 </style>
 <template>
-    <view class="m-ruleList">
+    <view class="m-ruleList" wx:if="{{data_list}}">
       <scroll-view scroll-y style="height: 100vh;" bindscrolltolower="lower"  >
         <view class="m-search-box">
           <picker mode="date" value="{{createtime}}" fields="month" start="2018-09"  bindchange="bindDateChange">
@@ -147,7 +147,7 @@
       index:0,
       img_src: api.img_src,
       img_url:api.api,
-      data_list:[],
+      data_list:null,
       page_info:{
         page_size: 10,
         page_num: 1

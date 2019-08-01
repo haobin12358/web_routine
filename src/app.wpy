@@ -28,13 +28,14 @@
   import api from './api/api';
   import tip from './utils/tip';
 
-  import { setStore } from 'wepy-redux'
+  import { setStore } from 'wepy-redux';
   export default class extends wepy.app {
 
     config = {
       pages: [
 
         'pages/personal/login',
+        'pages/personal/personalInfo',
         'pages/index/enterPage',
         'pages/index/lookActivity',
         'pages/index/setNotice',
@@ -59,7 +60,7 @@
         'pages/index/editEssay',
         'pages/index/timeIndex',
         'pages/personal/mainIndex',
-        'pages/personal/personalInfo',
+
         'pages/personal/myWallet',
         'pages/personal/withdraw',
         'pages/personal/outTeam',
@@ -125,8 +126,8 @@
 
     constructor () {
       super();
-      this.use('requestfix')
-      this.use('promisify')
+      this.use('requestfix');
+      this.use('promisify');
       // 拦截request请求
       this.intercept('request', {
         // 发出请求时的回调函数

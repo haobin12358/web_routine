@@ -408,7 +408,7 @@
         }
         components = {circle:circle,    htmlParser:htmlParser}
         data = {
-            img_src:api.img_src,
+            img_src:null,
             detail:null,
             name1:'htmlParserName1',
             detail_info:null,
@@ -607,6 +607,7 @@
         onLoad(options) {
             if(options.plid){
                 this.plid = options.plid;
+                this.img_src = api.img_src;
                 this.$apply();
             }
             wx.showShareMenu({

@@ -67,7 +67,7 @@
 
 </style>
 <template>
-    <view class="m-history">
+    <view class="m-history" wx:if="{{now_team}}">
       <scroll-view scroll-y style="height: 100vh;" bindscrolltolower="lower"  >
         <view class="m-history-item" wx:if="{{now_team.length >0}}"  >
           <view class="m-row">正在组队</view>
@@ -127,7 +127,7 @@
     data = {
       img_src:api.img_src,
       data_list:[],
-      now_team:[],
+      now_team:null,
       page_info:{
         page_size:10,
         page_num:1

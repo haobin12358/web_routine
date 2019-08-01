@@ -96,7 +96,7 @@
 }
 </style>
 <template>
-    <view class="m-manageActivity">
+    <view class="m-manageActivity" wx:if="{{data_list}}">
       <scroll-view scroll-y style="height: 100vh;" bindscrolltolower="lower"  >
          <ul class="m-nav">
              <li wx:for="{{nav_list}}" wx:key="{{index}}">
@@ -175,7 +175,7 @@
           img_src:api.img_src,
             plstatus:'',
             createtime:'',
-            data_list:[],
+            data_list:null,
             nav_list:[
                 {
                     name:'我创建的',

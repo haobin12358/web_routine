@@ -30,7 +30,7 @@
 }
 </style>
 <template>
-    <view class="m-allData">
+    <view class="m-allData" wx:if="{{img_src}}">
       <ul>
           <li @tap="changeRoute('/pages/personal/personalData','done')">
             <view class="m-img-box">
@@ -83,11 +83,12 @@
     };
     components = {};
     data = {
-      img_src:api.img_src
+      img_src:null
     };
 
     onLoad(options) {
-
+      this.img_src = api.img_src;
+      this.$apply();
     }
 
     methods = {
