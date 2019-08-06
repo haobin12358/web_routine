@@ -37,7 +37,7 @@
         <view class="m-grey">提现金额</view>
         <view class="m-withdraw-input">
           <span>¥</span>
-          <input type="number" class="m-input m-common" value="{{money}}" data-name="money" bindinput="inputChange" placeholder="请输入金额"/>
+          <input type="digit" class="m-input m-common" value="{{money}}" data-name="money" bindinput="inputChange" placeholder="请输入金额"/>
           <image src="{{img_src}}common/icon-delete.png" class="m-icon-delete" @tap="clearInput"></image>
         </view>
       </view>

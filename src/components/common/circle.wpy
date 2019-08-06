@@ -84,8 +84,8 @@
         <view class="m-text"  wx:if="{{item.trtype == 2 }}">
           <view>{{item.text}}</view>
           <view class="m-img-box">
-            <image wx:for="{{item.image}}" wx:key="{{i}}" wx:for-index="i" wx:for-item="key" src="{{img_url}}{{key}}" class="m-img" wx:if="{{item.showtype == 'image'}}"  @tap.stop="previewImage({{key}})"></image>
-            <video  wx:if="{{item.showtype == 'video'}}" src="{{img_url}}{{item.video.url}}" poster="{{img_url}}{{item.video.thumbnail}}"  controls></video>
+            <image wx:for="{{item.image}}" wx:key="{{i}}" mode="aspectFill" wx:for-index="i" wx:for-item="key" src="{{key}}" class="m-img" wx:if="{{item.showtype == 'image'}}"  @tap.stop="previewImage({{key}})"></image>
+            <video  wx:if="{{item.showtype == 'video'}}" src="{{item.video.url}}" poster="{{item.video.thumbnail}}"  controls></video>
           </view>
         </view>
         <view class="m-text" wx:else >
@@ -95,8 +95,8 @@
           <span wx:if="{{item.text}}">{{item.text}}</span>
 
         </view>
-        <image src="{{img_url}}{{item.picture}}" wx:if="{{item.picture}}" class="m-one-img" @tap.stop="previewImage({{item.picture}})"></image>
-
+        <image src="{{item.picture}}" wx:if="{{item.picture}}" class="m-one-img" @tap.stop="previewImage({{item.picture}})"></image>
+<!--        <image src="{{item.picture}}" wx:if="{{item.picture && item.picture.indexOf('https:') > -1}}" class="m-one-img" @tap.stop="previewImage({{item.picture}})"></image>-->
         <!--      <image src="" class="m-one-img" ></image>-->
         <view class="m-info" wx:if="{{item.trproducts_str}}">推荐携带物品：{{item.trproducts_str}}</view>
         <view class="m-info" wx:if="{{item.trbudget}}">预算：¥{{item.trbudget}}</view>
@@ -168,6 +168,7 @@
 
 
         }
+
 
         methods = {
           changeRoute(item){

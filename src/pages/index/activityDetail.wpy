@@ -41,6 +41,13 @@
                  /*text-indent: 2em;*/
                  line-height: 56rpx;
                  font-size: 24rpx;
+               &.m-info{
+                 max-height: 400rpx;
+                 &.m-all{
+                   height: auto;
+                   max-height: none;
+                 }
+               }
              }
              .m-open{
                  width: 100%;
@@ -124,7 +131,7 @@
          </li>
            <li class="m-no-flex">
                <view class="m-label">活动详情</view>
-               <view class="m-info m-detail-text" wx:if="{{show_open}}">
+               <view class="m-info m-detail-text  {{show_open?'m-all':''}}" >
                    <htmlParser :parserName.sync="name1" :parserContent.sync="content1" />
 <!--                   <template id="wxParse" data="{{wxParseData:htmlParserName2.nodes}}"></template>-->
                </view>
@@ -253,6 +260,30 @@
               that.list_data = that.list_data.concat(data);
             }else{
               that.list_data = data;
+            }
+            for(let i=0;i<that.list_data.length;i++){
+              if(that.list_data[i].picture){
+                if(that.list_data[i].picture.indexOf('https://') < 0){
+                  that.list_data[i].picture = api.api + that.list_data[i].picture;
+                }
+              }
+              if(that.list_data[i].trtype == 2){
+                if(that.list_data[i].showtype == 'image'){
+                  for(let a =0;a<that.list_data[i].image.length;a++){
+                    if(that.list_data[i].image[a].indexOf('https://') < 0){
+                      that.list_data[i].image[a] = api.api +that.list_data[i].image[a]
+                    }
+                  }
+                }
+                if(that.list_data[i].showtype == 'video'){
+                  if(that.list_data[i].video.url.indexOf('https://') < 0){
+                    that.list_data[i].video.url = api.api + that.list_data[i].video.url;
+                  }
+                  if(that.list_data[i].video.thumbnail.indexOf('https://') < 0){
+                    that.list_data[i].video.thumbnail = api.api + that.list_data[i].video.thumbnail;
+                  }
+                }
+              }
             }
             that.total_count = res.data.total_count;
             that.$apply();

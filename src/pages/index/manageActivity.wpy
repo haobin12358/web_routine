@@ -96,8 +96,9 @@
 }
 </style>
 <template>
-    <view class="m-manageActivity" wx:if="{{data_list}}">
-      <scroll-view scroll-y style="height: 100vh;" bindscrolltolower="lower"  >
+    <view class="m-manageActivity" >
+      <login wx:if="{{no_login}}"></login>
+      <scroll-view scroll-y style="height: 100vh;" wx:if="{{data_list}}" bindscrolltolower="lower"  >
          <ul class="m-nav">
              <li wx:for="{{nav_list}}" wx:key="{{index}}">
   <!--                class="m-border-back"-->
@@ -158,6 +159,7 @@
             </view>
          </view>
       </scroll-view>
+
     </view>
 </template>
 
@@ -165,12 +167,13 @@
     import wepy from 'wepy';
     import tip from '../../utils/tip';
     import api from '../../api/api';
+    import Login from '../../components/common/noLogin';
     export default class manageActivity extends wepy.page {
         config = {
             navigationBarTitleText: '管理活动',
             enablePullDownRefresh: true
         }
-        components = {}
+        components = {login:Login}
         data = {
           img_src:api.img_src,
             plstatus:'',
@@ -225,7 +228,8 @@
                 name: '待支付'
               }
             ],
-            index:0
+            index:0,
+          no_login:true,
         }
         getData(){
             let that = this;
@@ -251,6 +255,7 @@
                   that.data_list = res.data.data;
                 }
                 that.total_count = res.data.total_count;
+                that.no_login = false;
                 that.$apply();
               }
             })
@@ -259,7 +264,9 @@
 
         }
         onShow(){
-          this.getData();
+          if(wx.getStorageSync('token')){
+            this.getData();
+          }
         }
 
         methods = {

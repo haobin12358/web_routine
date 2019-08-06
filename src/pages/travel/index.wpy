@@ -205,8 +205,8 @@
             img_src:null,
             scroll_data: [],
             indicatorDots: true,
-            autoplay: false,
-            interval: 3000,
+            autoplay: true,
+            interval: 5000,
             duration: 1000,
             icon_list:[
                 {
@@ -326,17 +326,17 @@
             this.img_src = api.img_src;
             this.$apply();
         }
-      // onPullDownRefresh() {
-      //     console.log(this,'asdada')
-      //   this.select_city = {};
-      //   this.level_index = 0;
-      //   this.$apply();
-      //   // 上拉刷新
-      //   if (!this.loading) {
-      //     this. getScenic();
-      //       // 处理完成后，终止下拉刷新
-      //   }
-      // }
+      onPullDownRefresh() {
+        this.select_city = {};
+        this.level_index = 0;
+        this.$apply();
+        // 上拉刷新
+        if (!this.loading) {
+          this. getScenic();
+          this.getImg();
+            // 处理完成后，终止下拉刷新
+        }
+      }
       onReachBottom() {
         // 下拉触底，先判断是否有请求正在进行中
         // 以及检查当前请求页数是不是小于数据总页数，如符合条件，则发送请求

@@ -94,7 +94,7 @@
       <view class="m-row">
         <span>预算</span>
         <view class="m-flex-end">
-          <input type="number" placeholder="请输入预算金额" value="{{trbudget}}"  data-name="trbudget" bindinput="inputChange"/>
+          <input type="digit" placeholder="请输入预算金额" value="{{trbudget}}"  data-name="trbudget" bindinput="inputChange"/>
 <!--          <span class="m-grey">可多选</span>-->
 <!--          <image src="../../images/common/icon-more.png" class="m-icon-more"></image>-->
         </view>

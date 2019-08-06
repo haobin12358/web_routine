@@ -1,0 +1,143 @@
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../../styles/common";
+  .m-image-list{
+    padding: 20rpx;
+    .m-btn{
+      width: 150rpx;
+      height: 50rpx;
+      text-align: center;
+      line-height: 50rpx;
+      border-radius: 30rpx;
+      background-color: @common-color;
+    }
+    .m-image-box{
+      padding: 20rpx 0;
+      width: 100%;
+      checkbox-group{
+        .flex-row(flex-start);
+        flex-wrap: wrap;
+      }
+      .m-one-image{
+        width: 233rpx;
+        height: 250rpx;
+        margin-right: 5rpx;
+        position: relative;
+        &:nth-child(3n){
+          margin-right: 0;
+        }
+        image{
+          width: 233rpx;
+          height: 233rpx;
+        }
+        .m-check{
+          position: absolute;
+          top:5rpx;
+          right: 5rpx;
+        }
+      }
+    }
+  }
+
+</style>
+<template>
+    <view class="m-image-list">
+     <view class="m-flex-between">
+       <view  >
+         <checkbox-group bindchange="checkChange" wx:if="{{show_edit}}">
+             <checkbox value="{{all}}" checked="{{all_check}}" color="#FFCE00" />全选
+         </checkbox-group>
+       </view>
+       <view wx:if="{{!show_edit}}" class="m-btn" @tap="showEdit">编辑</view>
+       <view wx:else class="m-btn" @tap="showEdit">确定</view>
+     </view>
+      <view class="m-image-box">
+        <checkbox-group bindchange="checkboxChange" >
+
+          <view class="m-one-image" wx:for="{{items}}" wx:key="{{index}}">
+            <image src=""></image>
+            <checkbox value="{{item.name}}" wx:if="{{show_edit}}" color="#FFCE00" class="m-check" checked="{{item.checked}}"/>
+          </view>
+        </checkbox-group>
+      </view>
+
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import api from '../../api/api';
+
+  export default class imageList extends wepy.page {
+    config = {
+      navigationBarTitleText: '照片列表'
+    };
+    components = {};
+    data = {
+      all:'all',
+      all_check:false,
+      items: [
+        {name: 'USA', value: '美国'},
+        {name: 'CHN', value: '中国'},
+        {name: 'BRA', value: '巴西'},
+        {name: 'JPN', value: '日本'},
+        {name: 'ENG', value: '英国'},
+        {name: 'TUR', value: '法国'},
+      ],
+      show_edit:false,
+      select_box:[]
+    };
+    onShareAppMessage(res) {
+      if (res.from === 'button') {
+
+      }
+      return {
+        title: '转发',
+        path: '/pages/index/imageList',
+        success: function (res) {
+          console.log('成功', res)
+        }
+      }
+    }
+    onLoad(options) {
+
+    }
+
+    methods = {
+      //每个图片的选择
+      checkboxChange(e){
+        if(e.detail.value.length  == this.items.length){
+          this.all_check = true;
+        }else{
+          this.all_check = false;
+        }
+        this.$apply();
+      },
+      //全选
+      checkChange(e){
+
+        for(let i=0;i<this.items.length;i++){
+          if(e.detail.value.length > 0){
+            this.items[i].checked = true;
+          }else{
+            this.items[i].checked = false;
+          }
+        }
+        this.$apply();
+      },
+      //是否编辑
+      showEdit(){
+        this.show_edit = !this.show_edit;
+        if(this.show_edit){
+          let arr = [];
+          for(let i=0;i<this.items.length;i++){
+            if(this.items[i].checked){
+              arr.push(this.items[i])
+            }
+          }
+          this.select_box = arr;
+          this.$apply();
+        }
+      }
+    };
+  }
+</script>

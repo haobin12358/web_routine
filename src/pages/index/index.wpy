@@ -162,8 +162,8 @@
         img_src:null,
         scroll_data: [],
         indicatorDots: true,
-        autoplay: false,
-        interval: 3000,
+        autoplay: true,
+        interval: 5000,
         duration: 1000,
         all_phone:[],
       show_tel:false,
@@ -183,12 +183,15 @@
           'content-type': 'application/json' // 默认值
         }
       }).then(res => {
-        console.log(res)
           that.scroll_data = res.data.data;
+           wx.stopPullDownRefresh();
           that.$apply();
       })
     }
-
+    onPullDownRefresh() {
+      // 上拉刷新
+      this.getImg();
+    }
     onLoad(options){
         // this.getMedicalList();
         // this.getScienceList();
@@ -289,7 +292,7 @@
             return;
           }
           let that = this;
-          wepy.getLocation({
+          wx.getLocation({
             type: 'wgs84',
             success (res) {
               console.log(res )

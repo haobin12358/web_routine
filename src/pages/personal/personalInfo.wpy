@@ -29,54 +29,58 @@
 
 </style>
 <template>
-    <view class="m-personalInfo" wx:if="{{user_info}}">
-      <view class="m-personalInfo-top">
-        <image src="{{user_info.usheader}}" @tap="chooseImg" class="m-user-head"></image>
-        <span class="m-user-name" wx:if="{{!show_edit}}">{{user_info.usname}}</span>
-        <input type="text" class="m-user-name" bindinput="inputChange" data-name="usname" wx:else value="{{user_info.usname}}">
-        <image src="{{img_src}}index/icon-edit.png" @tap="changeEdit" class="m-icon-edit"></image>
-      </view>
-      <view class="m-row">
-        <span class="m-grey">基本信息</span>
-      </view>
-      <view class="m-row">
-        <span class="m-label">生日</span>
-        <view class="m-flex-end" wx:if="{{!show_edit}}">
-          <span >{{user_info.usbirthday}}</span>
-<!--          <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>-->
+    <view class="m-personalInfo" >
+      <login wx:if="{{no_login}}"></login>
+      <view wx:if="{{user_info}}">
+        <view class="m-personalInfo-top">
+          <image src="{{user_info.usheader}}" wx:if="{{!no_login}}" @tap="chooseImg" class="m-user-head"></image>
+          <image src="{{img_src}}common/logo.png" wx:if="{{no_login}}" class="m-user-head"></image>
+          <span class="m-user-name" wx:if="{{!show_edit}}">{{user_info.usname}}</span>
+          <input type="text" class="m-user-name" bindinput="inputChange" data-name="usname" wx:else value="{{user_info.usname}}">
+          <image src="{{img_src}}index/icon-edit.png" @tap="changeEdit" class="m-icon-edit"></image>
         </view>
-        <picker mode="date" wx:else value="{{user_info.usbirthday}}"  bindchange="bindDateChange">
-          <view class="m-flex-end">
+        <view class="m-row">
+          <span class="m-grey">基本信息</span>
+        </view>
+        <view class="m-row">
+          <span class="m-label">生日</span>
+          <view class="m-flex-end" wx:if="{{!show_edit}}">
             <span >{{user_info.usbirthday}}</span>
-            <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>
+            <!--          <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>-->
           </view>
-        </picker>
+          <picker mode="date" wx:else value="{{user_info.usbirthday}}"  bindchange="bindDateChange">
+            <view class="m-flex-end">
+              <span >{{user_info.usbirthday}}</span>
+              <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>
+            </view>
+          </picker>
 
-      </view>
-      <view class="m-row">
-        <span class="m-label">地区</span>
-        <view class="m-flex-end">
-          <span wx:if="{{!show_edit}}">{{select}}</span>
-          <city @citySelect.user="citySelect" wx:else :select.sync="select" :horizontal.sync="horizontal" ></city>
-<!--          <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>-->
         </view>
+        <view class="m-row">
+          <span class="m-label">地区</span>
+          <view class="m-flex-end">
+            <span wx:if="{{!show_edit}}">{{select}}</span>
+            <city @citySelect.user="citySelect" wx:else :select.sync="select" :horizontal.sync="horizontal" ></city>
+            <!--          <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>-->
+          </view>
+        </view>
+        <view class="m-row">
+          <span class="m-grey">报名信息</span>
+        </view>
+        <view class="m-row">
+          <span class="m-label">真实姓名</span>
+          <input type="text" value="{{user_info.usrealname}}" bindinput="inputChange" data-name="usrealname" disabled="{{!show_edit}}" placeholder="请填写真实姓名"  class="m-input"/>
+        </view>
+        <view class="m-row">
+          <span class="m-label">手机号</span>
+          <input type="text" value="{{user_info.ustelphone}}" bindinput="inputChange" data-name="ustelphone" disabled="{{!show_edit}}" placeholder="请填写手机号" class="m-input"/>
+        </view>
+        <view class="m-row">
+          <span class="m-label">身份证号</span>
+          <input type="text" value="{{user_info.usidentification}}" bindinput="inputChange" data-name="usidentification" disabled="{{!show_edit}}" placeholder="请填写身份证号"  class="m-input"/>
+        </view>
+        <view class="m-foot-btn m-one" wx:if="{{show_edit}}" @tap="saveTap">保存</view>
       </view>
-      <view class="m-row">
-        <span class="m-grey">报名信息</span>
-      </view>
-      <view class="m-row">
-        <span class="m-label">真实姓名</span>
-        <input type="text" value="{{user_info.usrealname}}" bindinput="inputChange" data-name="usrealname" disabled="{{!show_edit}}" placeholder="请填写真实姓名"  class="m-input"/>
-      </view>
-      <view class="m-row">
-        <span class="m-label">手机号</span>
-        <input type="text" value="{{user_info.ustelphone}}" bindinput="inputChange" data-name="ustelphone" disabled="{{!show_edit}}" placeholder="请填写手机号" class="m-input"/>
-      </view>
-      <view class="m-row">
-        <span class="m-label">身份证号</span>
-        <input type="text" value="{{user_info.usidentification}}" bindinput="inputChange" data-name="usidentification" disabled="{{!show_edit}}" placeholder="请填写身份证号"  class="m-input"/>
-      </view>
-      <view class="m-foot-btn m-one" wx:if="{{show_edit}}" @tap="saveTap">保存</view>
     </view>
 </template>
 
@@ -85,12 +89,14 @@
   import api from '../../api/api';
   import City from '../../components/common/city';
 import tip from '../../utils/tip';
+  import Login from '../../components/common/noLogin';
   export default class personalInfo extends wepy.page {
     config = {
       navigationBarTitleText: '个人信息'
     };
     components = {
-      city:City
+      city:City,
+      login:Login
     };
     data = {
       img_src:api.img_src,
@@ -98,7 +104,8 @@ import tip from '../../utils/tip';
       horizontal:true,
       select:'',
       select_info:null,
-      show_edit:false
+      show_edit:false,
+      no_login:true,
     };
     getData(){
       let that = this;
@@ -110,6 +117,7 @@ import tip from '../../utils/tip';
         if(res.data.status == 200){
           that.user_info = res.data.data;
           that.select = res.data.data.usarea_str;
+          that.no_login = false;
           that.$apply();
         }
       })
@@ -138,10 +146,11 @@ import tip from '../../utils/tip';
       })
     }
     onLoad(options) {
-      this.getData();
     }
     onShow(){
-
+      if(wx.getStorageSync('token')){
+        this.getData();
+      }
     }
 
     methods = {

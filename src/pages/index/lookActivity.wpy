@@ -298,7 +298,7 @@
                 <span class="m-border-back">行程介绍</span>
             </h3>
             <view class="m-scheduling-detail">
-                <view class="m-info" wx:if="{{show_open}}">
+                <view class="m-info"  wx:if="{{show_open}}">
                     <htmlParser :parserName.sync="name1" :parserContent.sync="content1" />
 <!--                    <template id="wxParse" data="{{wxParseData:htmlParserName2.nodes}}"></template>-->
                 </view>
@@ -366,7 +366,7 @@
           </view>
           <view class="m-row">
             <span class="m-label">转让费用<span class="m-grey">(支付转让对象的费用)</span></span>
-            <input type="number" class="m-input m-input-s" value="{{form_data.moprice}}" data-name="moprice" bindinput="inputChange" placeholder="0"/>
+            <input type="digit" class="m-input m-input-s" value="{{form_data.moprice}}" data-name="moprice" bindinput="inputChange" placeholder="0"/>
           </view>
           <view class="m-btn-box">
             <span @tap="cancelModal('show_modal')">取消</span>

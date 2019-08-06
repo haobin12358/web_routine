@@ -25,6 +25,12 @@
                 margin-right: 20rpx;
                 margin-left: 0;
             }
+          .m-login-btn{
+            padding: 2rpx 10rpx;
+            background-color: @common-color;
+            font-size: 22rpx;
+            border-radius: 30rpx;
+          }
         }
     }
     .m-personal-item{
@@ -73,10 +79,11 @@
 </style>
 
 <template>
-    <view class="m-personal">
+    <view class="m-personal" wx:if="{{img_src}}">
         <view class="m-personal-top">
-            <image src="{{user_info.usheader}}" class="m-user-avator"></image>
-            <view class="m-user-info">
+            <image src="{{user_info.usheader}}" wx:if="{{!no_login}}" class="m-user-avator"></image>
+          <image src="{{img_src}}common/logo.png" wx:if="{{no_login}}" class="m-user-avator"></image>
+            <view class="m-user-info" wx:if="{{!no_login}}">
                 <view class="m-flex-between">
                     <view class="m-flex-start">
                         <span class="m-user-name">{{user_info.usname}}</span>
@@ -93,6 +100,14 @@
                     <image src="{{img_src}}common/icon-more.png" wx:if="{{img_src}}"  class="m-icon-more"></image>
                 </view>
             </view>
+          <view class="m-user-info" wx:if="{{no_login}}">
+            <view class="m-flex-between">
+              <view class="m-flex-start">
+                <span class="m-login-btn" @tap="toLogin">登录/注册</span>
+              </view>
+              <!--                   <image src="{{img_src}}personal/icon-code.png" class="m-icon"></image>-->
+            </view>
+          </view>
         </view>
 
         <view class="m-personal-item">
@@ -108,7 +123,7 @@
                         <image src="{{img_src}}personal/icon-wallet.png" wx:if="{{img_src}}"  class="m-icon"></image>
                         <span>我的钱包</span>
                     </view>
-                    <span class="m-grey">¥ {{user_info.uscash}}</span>
+                    <span class="m-grey">¥ {{user_info.uscash || 0}}</span>
                 </li>
 <!--                <li @tap="changeRoute('/pages/personal/taskIndex','true')">-->
 <!--                    <view class="m-flex-start">-->
@@ -175,7 +190,8 @@
             all_phone:['15079564151'],
           show_tel:false,
           url:'',
-          new_img:null
+          new_img:null,
+          no_login:true
         }
       onPullDownRefresh() {
         // 上拉刷新
@@ -189,7 +205,10 @@
         }
       onShow(){
         // if(!this.user_info.ustelphone){
+        if(wx.getStorageSync('token')){
           this.getData();
+        }
+
         // }
         this.img_src = api.img_src;
         this.show_tel = false;
@@ -205,7 +224,9 @@
           }).then(res => {
             if(res.data.status == 200){
               that.user_info = res.data.data;
+              that.no_login = false;
               that.$apply();
+              wx.stopPullDownRefresh();
             }
           })
         }
@@ -251,6 +272,11 @@
               }
 
             },
+          toLogin(){
+            wx.navigateTo({
+              url: '/pages/personal/login'
+            });
+          },
           getCell(){
             let that = this;
                 //

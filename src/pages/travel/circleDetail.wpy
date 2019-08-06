@@ -146,6 +146,7 @@
       }).then(res => {
         if(res.data.status){
           let data = res.data.data;
+          console.log(data)
           if(data.trtype == 0){
             wx.setNavigationBarTitle({
               title: '攻略'

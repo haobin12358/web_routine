@@ -67,8 +67,9 @@
 
 </style>
 <template>
-    <view class="m-history" wx:if="{{now_team}}">
-      <scroll-view scroll-y style="height: 100vh;" bindscrolltolower="lower"  >
+    <view class="m-history">
+      <login wx:if="{{no_login}}"></login>
+      <scroll-view scroll-y style="height: 100vh;" bindscrolltolower="lower"  wx:if="{{now_team}}" >
         <view class="m-history-item" wx:if="{{now_team.length >0}}"  >
           <view class="m-row">正在组队</view>
           <view class="m-row" wx:for="{{now_team}}" wx:key="{{index}}" @tap="changeRoute('/pages/index/lookActivity',{{item}},'detail')">
@@ -118,12 +119,12 @@
   import wepy from 'wepy';
   import api from '../../api/api';
   import tip from '../../utils/tip';
-
+  import Login from '../../components/common/noLogin';
   export default class history extends wepy.page {
     config = {
       navigationBarTitleText: '历史团队'
     };
-    components = {};
+    components = {login:Login};
     data = {
       img_src:api.img_src,
       data_list:[],
@@ -133,7 +134,8 @@
         page_num:1
       },
       total_count:0,
-      createtime:''
+      createtime:'',
+      no_login:true,
     };
     getId(){
       let that = this;
@@ -148,6 +150,7 @@
         }
       }).then(resule => {
         if(resule.data.status == 200){
+          that.no_login = false;
           that.now_team = resule.data.data;
           that.$apply();
         }
@@ -178,11 +181,12 @@
       })
     }
     onLoad(options) {
-
     }
     onShow(){
-      this.getId();
-      this.getData();
+      if(wx.getStorageSync('token')){
+        this.getId();
+        this.getData();
+      }
     }
 
 

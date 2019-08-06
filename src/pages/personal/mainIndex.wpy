@@ -245,6 +245,31 @@
           }else{
             that.list_data = data.travelrecord;
           }
+
+          for(let i=0;i<that.list_data.length;i++){
+            if(that.list_data[i].picture){
+              if(that.list_data[i].picture.indexOf('https://') < 0){
+                that.list_data[i].picture = api.api + that.list_data[i].picture;
+              }
+            }
+            if(that.list_data[i].trtype == 2){
+              if(that.list_data[i].showtype == 'image'){
+                for(let a =0;a<that.list_data[i].image.length;a++){
+                  if(that.list_data[i].image[a].indexOf('https://') < 0){
+                    that.list_data[i].image[a] = api.api +that.list_data[i].image[a]
+                  }
+                }
+              }
+              if(that.list_data[i].showtype == 'video'){
+                if(that.list_data[i].video.url.indexOf('https://') < 0){
+                  that.list_data[i].video.url = api.api + that.list_data[i].video.url;
+                }
+                if(that.list_data[i].video.thumbnail.indexOf('https://') < 0){
+                  that.list_data[i].video.thumbnail = api.api + that.list_data[i].video.thumbnail;
+                }
+              }
+            }
+          }
           if(that.usid){
             wx.setNavigationBarTitle({
               title: data.top.usname +'的主页'
@@ -312,6 +337,13 @@
     onUnload(){
       this.usid = '';
       this.$apply();
+      this.gotoHomePage();
+    }
+// 在订单详情 点击小程序的返回 自定其他跳页方法
+    gotoHomePage() {//自定义页面跳转方法
+      wx.switchTab({
+        url: '/pages/personal/index',
+      });
     }
     methods = {
       //类型选择

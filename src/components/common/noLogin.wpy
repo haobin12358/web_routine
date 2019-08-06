@@ -1,0 +1,43 @@
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../../styles/common";
+.m-no-login{
+  .flex-row(center);
+  padding: 20rpx;
+  .m-btn{
+    text-decoration: underline;
+    color: @common-color;
+  }
+}
+
+</style>
+<template>
+    <view class="m-no-login">
+      <view class="m-grey">您暂时还未登录，如须使用请</view>
+      <view class="m-btn" @tap="toLogin">登录</view>
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class IndexIndex extends wepy.component {
+    config = {
+      navigationBarTitleText: '',
+      enablePullDownRefresh: true
+    };
+    components = {};
+    data = {};
+
+    onLoad(options) {
+
+    }
+
+    methods = {
+      toLogin(){
+        wx.navigateTo({
+          url: '/pages/personal/login?page=relogin'
+        });
+      },
+    };
+  }
+</script>

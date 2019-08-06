@@ -34,12 +34,13 @@
     config = {
       pages: [
 
+        'pages/index/index',
         'pages/personal/login',
         'pages/personal/personalInfo',
         'pages/index/enterPage',
         'pages/index/lookActivity',
         'pages/index/setNotice',
-        'pages/index/index',
+        'pages/index/enterTeam',
         'pages/index/manageActivity',
         'pages/travel/index',
         'pages/travel/recommendList',
@@ -51,7 +52,7 @@
         'pages/index/signIn',
         'pages/index/personSignin',
         'pages/index/enterLabel',
-        'pages/index/enterTeam',
+        'pages/index/imageList',
         'pages/index/joinNum',
         'pages/index/rallyPoint',
         'pages/travel/scenicDetail',

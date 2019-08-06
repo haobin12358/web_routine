@@ -84,8 +84,9 @@
 
 </style>
 <template>
-    <view class="m-ruleList" wx:if="{{data_list}}">
-      <scroll-view scroll-y style="height: 100vh;" bindscrolltolower="lower"  >
+    <view class="m-ruleList" >
+      <login wx:if="{{no_login}}"></login>
+      <scroll-view scroll-y style="height: 100vh;" wx:if="{{data_list}}" bindscrolltolower="lower"  >
         <view class="m-search-box">
           <picker mode="date" value="{{createtime}}" fields="month" start="2018-09"  bindchange="bindDateChange">
             <view class="m-time-btn">
@@ -127,12 +128,14 @@
   import wepy from 'wepy';
   import api from '../../api/api';
   import tip from '../../utils/tip';
+  import Login from '../../components/common/noLogin';
   export default class ruleList extends wepy.page {
     config = {
       navigationBarTitleText: '协议管理'
     };
-    components = {};
+    components = {login:Login};
     data = {
+      no_login:true,
       createtime:'',
       array: [
         {
@@ -177,6 +180,7 @@
             that.data_list = data;
           }
           that.total_count = res.data.total_count;
+          that.no_login = false;
           that.$apply();
         }
       })
@@ -185,7 +189,9 @@
 
     }
     onShow(){
-      this.getData();
+      if(wx.getStorageSync('token')){
+        this.getData();
+      }
     }
 
     methods = {

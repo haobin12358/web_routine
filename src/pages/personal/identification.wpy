@@ -33,6 +33,7 @@
 </style>
 <template>
     <view class="m-identification" wx:if="{{img_src}}">
+      <login wx:if="{{no_login}}"></login>
       <view class="m-row m-grey">认证信息</view>
       <view class="m-row">
         <span>真实姓名</span>
@@ -64,11 +65,12 @@
   import wepy from 'wepy';
   import api from '../../api/api';
   import tip from '../../utils/tip';
+  import Login from '../../components/common/noLogin';
   export default class identification extends wepy.page {
     config = {
       navigationBarTitleText: '导游认证'
     };
-    components = {};
+    components = {login:Login};
     data = {
       img_src:null,
       form_data:{
@@ -78,7 +80,8 @@
         guimg:''
       },
       ustelphone:'',
-      disabled:false
+      disabled:false,
+      no_login:true,
     };
     postData(){
       let that = this;
@@ -107,6 +110,7 @@
           if(resule.data.data.gurealname){
             that.form_data = resule.data.data;
             that.disabled = true;
+            that.no_login = false;
             that.$apply();
           }
 
@@ -115,15 +119,17 @@
     }
     onLoad(options) {
       this.img_src = api.img_src;
-      if(options.tel){
-        this.ustelphone = options.tel;
-        this.form_data.gutelphone = options.tel;
+      if(options.tel != 'undefined'){
+        this.ustelphone = options.tel || '';
+        this.form_data.gutelphone = options.tel || '';
         this.$apply();
       }
+
     }
     onShow(){
-      this.getData();
-
+      if(wx.getStorageSync('token')){
+        this.getData();
+      }
 
     }
     methods = {

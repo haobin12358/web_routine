@@ -82,7 +82,8 @@
       <view class="m-row m-no-flex">
         <textarea bindinput="bindinput" value="{{text}}" data-name="text" auto-height style="min-height: 300rpx;" placeholder="这一刻的旅游心情…" />
         <view class="m-img-box">
-          <image src="{{item}}" class="m-img" wx:for="{{image}}" wx:key="{{index}}" @tap="previewImage({{item}})"></image>
+          <image src="{{item}}" class="m-img"
+                 @longpress="handleLongPress({{index}})" mode="aspectFill" wx:for="{{image}}" wx:key="{{index}}" @tap="previewImage({{item}})"></image>
           <video id="myVideo" wx:if="{{video}}" src="{{video.url}}" poster="{{video.thumbnail}}"  controls></video>
           <span class="m-upload-img" @tap="uploadTap">+</span>
         </view>
@@ -184,6 +185,7 @@
           success (res) {
             // tempFilePath可以作为img标签的src属性显示图片
             const tempFilePaths = res.tempFilePaths;
+
             for(let i=0;i<tempFilePaths.length;i++ ){
               wx.uploadFile({
                 url: api.upload, //仅为示例，非真实的接口地址
@@ -263,6 +265,22 @@
       cancelSelect(){
         this.show_select = false;
         this.$apply();
+      },
+      handleLongPress(v){
+        let that = this;
+        wx.showModal({
+          title: '提示',
+          content: '需要删除这张照片吗？',
+          success (res) {
+            if (res.confirm) {
+              that.image.splice(v,1);
+              that.$apply();
+            } else if (res.cancel) {
+
+            }
+          }
+        })
+
       }
     };
   }
