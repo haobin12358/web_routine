@@ -144,7 +144,7 @@
                 <view class="m-one-image" wx:for="{{photo_album}}" wx:key="{{index}}">
                   <image src="" ></image>
                   <view class="m-image-more" wx:if="{{ (photo_album.length-1 > 10 && index == 10 )|| index == photo_album.length-1 }}" @tap.stop="changeRoute('/pages/index/imageList')">
-                    <view>39</view>
+                    <view>{{photo_album.length}}</view>
                     <view>...</view>
                   </view>
                 </view>
@@ -224,7 +224,7 @@
           plid:'',
           show_map:false,
           show_edit:false,
-          photo_album:[{}]
+          photo_album:[]
         }
       getId(){
         let that = this;

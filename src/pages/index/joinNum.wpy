@@ -13,7 +13,7 @@
 </style>
 <template>
     <view class="m-joinNum">
-      <scroll-view scroll-y='true' style="height:100vh;" bindscrolltolower='lower' wx:if="{{user_list.length > 0}}">
+<!--      <scroll-view scroll-y='true' style="height:100vh;" bindscrolltolower='lower' wx:if="{{user_list.length > 0}}">-->
 <!--        <view class="m-one-person m-flex-between" wx:for="{{user_list}}" wx:key="{{index}}">-->
 <!--            <view class="m-user-box">-->
 <!--                <image src="{{item.usheader}}" class="m-user-head"></image>-->
@@ -28,7 +28,7 @@
 <!--            </view>-->
 <!--        </view>-->
         <user :user_list.sync="user_list"></user>
-      </scroll-view>
+<!--      </scroll-view>-->
       <view class="m-no-data" wx:if="{{user_list.length == 0}}">暂无参与人员</view>
     </view>
 </template>
@@ -53,10 +53,12 @@
             page_size:20,
             page_num:1
           },
-          total_count:0
+          total_count:0,
+          loading:false
         }
       getList(){
         let that = this;
+        that.loading = true;
         tip.loading();
         wepy.request({
           url: api.get_enter_user + '?token=' +wx.getStorageSync('token'),
@@ -67,6 +69,8 @@
             page_size: that.page_info.page_size
           }
         }).then(resule => {
+          that.loading = false;
+          that.$apply();
           if(resule.data.status == 200){
             if(that.page_info.page_num >1){
               that.user_list =  that.user_list.concat(resule.data.data);
@@ -110,24 +114,34 @@
         onShow(){
           this.getList();
         }
+        onReachBottom() {
+          // 下拉触底，先判断是否有请求正在进行中
+          // 以及检查当前请求页数是不是小于数据总页数，如符合条件，则发送请求
+          if(!this.loading && this.total_count > this.user_list.length) {
+            this.page_info.page_num += 1;
+            this.$apply();
+            this.getList();
+          }
+        }
 
         methods = {
           collectTap(index){
             this.postData(this.user_list[index].usid,index)
           },
-          lower(){
-            if (this.user_list.length >= this.total_count) {
-              wx.showToast({ //期间为了显示效果可以添加一个过度的弹出框提示“加载中”
-                title: '我也是有底线的',
-                icon: 'success',
-                duration: 300
-              });
-              return false;
-            } else {
-              this.page_info.page_num += 1;
-
-            }
-          }
+          // lower(){
+          //   if (this.user_list.length >= this.total_count) {
+          //     wx.showToast({ //期间为了显示效果可以添加一个过度的弹出框提示“加载中”
+          //       title: '我也是有底线的',
+          //       icon: 'success',
+          //       duration: 300
+          //     });
+          //     return false;
+          //   } else {
+          //     this.page_info.page_num += 1;
+          //     this.$apply();
+          //     this.getList();
+          //   }
+          // }
         }
     }
 </script>
