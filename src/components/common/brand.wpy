@@ -81,7 +81,7 @@
 
 </style>
 <template>
-  <view class="m-brand-content">
+  <view class="m-brand-content" @tap="changeRoute('/pages/brand/brandDetail')">
     <view class="m-one-brand">
       <view class="m-one-brand-info">
         <view class="m-brand-info">
@@ -141,6 +141,12 @@
 
     }
 
-    methods = {};
+    methods = {
+      changeRoute(v){
+        wx.navigateTo({
+          url: v
+        });
+      }
+    };
   }
 </script>

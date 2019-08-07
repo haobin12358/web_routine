@@ -83,7 +83,7 @@
             <image src="" class="m-brand-logo"></image>
             <view class="m-brand-title">品牌名</view>
           </view>
-          <view class="m-btn-more">了解更多</view>
+          <view class="m-btn-more" @tap="changeRoute('/pages/brand/brandMain')">了解更多</view>
         </view>
         <view class="m-brand-content">
           <view class="m-image-box">
@@ -127,6 +127,12 @@
       this.$apply();
     }
 
-    methods = {};
+    methods = {
+      changeRoute(v){
+        wx.navigateTo({
+          url: v
+        });
+      }
+    };
   }
 </script>
