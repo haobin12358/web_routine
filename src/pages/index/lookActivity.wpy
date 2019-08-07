@@ -725,7 +725,7 @@
                   url: '/pages/index/manageActivity'
                 });
               }else if(resule.data.status == 405){
-                that.show_result = true;
+                // that.show_result = true;
                 that.$apply();
               }
             })

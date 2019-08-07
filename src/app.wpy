@@ -33,8 +33,10 @@
 
     config = {
       pages: [
-
+        'pages/brand/brandMain',
+        'pages/brand/brandList',
         'pages/index/index',
+
         'pages/personal/login',
         'pages/personal/personalInfo',
         'pages/index/enterPage',

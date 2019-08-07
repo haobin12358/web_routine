@@ -107,13 +107,12 @@
         data:{}
       }).then(resule => {
         if(resule.data.status == 200){
+          that.no_login = false;
           if(resule.data.data.gurealname){
             that.form_data = resule.data.data;
             that.disabled = true;
-            that.no_login = false;
-            that.$apply();
           }
-
+          that.$apply();
         }
       })
     }
