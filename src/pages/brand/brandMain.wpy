@@ -73,83 +73,8 @@
         }
       }
     }
-    .m-brand-content{
+    .m-title{
       padding: 0 45rpx;
-      border-bottom: 10rpx solid #F4F4F4;
-      .m-one-brand{
-        padding: 20rpx 0;
-        .m-one-brand-info{
-          padding-bottom: 20rpx;
-          border-bottom: 1px solid @border-color;
-        }
-        .m-brand-info{
-          .flex-row(flex-start);
-          .m-logo-small{
-            width: 84rpx;
-            height: 84rpx;
-            background-color: @common-color;
-            margin-right: 20rpx;
-          }
-          .m-brand-name{
-            font-weight: 500;
-            font-size: 36rpx;
-          }
-        }
-        .m-brand-circle{
-          .flex-row(flex-start);
-          padding-left: 105rpx;
-          padding-top: 10rpx;
-          overflow: hidden;
-          width: 580rpx;
-          .m-image-box{
-            width: 160rpx;
-            height: 170rpx;
-            margin-right: 7rpx;
-            flex-shrink: 0;
-            position: relative;
-            .m-img{
-              width: 160rpx;
-              height: 160rpx;
-              background-color: @common-color;
-            }
-            .m-icon-play{
-              width: 80rpx;
-              height: 80rpx;
-              position: absolute;
-              top:0;
-              left: 0;
-              right: 0;
-              bottom: 0;
-              margin: auto;
-              background-color: #0BB20C;
-            }
-          }
-          .m-icon-loc{
-            width: 33rpx;
-            height: 33rpx;
-            margin-right: 20rpx;
-          }
-          .m-loc{
-            font-weight: 300;
-          }
-        }
-        .m-icon-box{
-          .flex-row(space-between);
-          padding: 20rpx 65rpx 0  105rpx;
-          .m-one-icon{
-            .flex-row(center);
-            color: @grey-color;
-            .m-active{
-              color: @common-color;
-            }
-            .m-icon{
-              width: 30rpx;
-              height: 30rpx;
-              margin-right: 10rpx;
-            }
-          }
-        }
-      }
     }
   }
 
@@ -192,91 +117,23 @@
          </view>
         </view>
       </view>
-      <view class="m-brand-content">
-        <view class="m-title"><span class="m-border-back">品牌故事</span></view>
-        <view class="m-one-brand">
-          <view class="m-one-brand-info">
-            <view class="m-brand-info">
-              <image class="m-logo-small"></image>
-              <view class="m-brand-name">品牌名</view>
-            </view>
-            <view class="m-brand-circle">阿迪达斯2019秋季上新阿迪达斯2019
-              秋季上新</view>
-            <view class="m-brand-circle">
-              <view class="m-image-box">
-                <image src="" class="m-img"></image>
-              </view>
-              <view class="m-image-box">
-                <image src="" class="m-img"></image>
-              </view>
-              <view class="m-image-box">
-                <image src="" class="m-img"></image>
-                <image src="" class="m-icon-play"></image>
-              </view>
-            </view>
-            <view class="m-brand-circle">
-              <image src="{{img_src}}common/icon-loc.png" class="m-icon-loc"></image>
-              <view class="m-loc">杭州·杭州西湖风景名胜区</view>
-            </view>
-          </view>
-          <view class="m-icon-box">
-            <view class="m-one-icon">
-              <image src="{{img_src}}common/circle-like-active.png" class="m-icon"></image>
-              <view class="m-active">123</view>
-            </view>
-            <view class="m-one-icon">
-              <image src="{{img_src}}common/circle-comment.png" class="m-icon"></image>
-              <view >123</view>
-            </view>
-            <view class="m-one-icon">
-              <image src="{{img_src}}common/circle-delete.png" class="m-icon"></image>
-              <view ></view>
-            </view>
-          </view>
-        </view>
-      </view>
-      <view class="m-brand-content">
-        <view class="m-one-brand">
-          <view class="m-one-brand-info">
-            <view class="m-brand-info">
-              <image class="m-logo-small"></image>
-              <view class="m-brand-name">品牌名</view>
-            </view>
-            <view class="m-brand-circle">阿迪达斯2019秋季上新阿迪达斯2019
-              秋季上新</view>
-            <view class="m-brand-circle">
-              <image src="{{img_src}}common/icon-loc.png" class="m-icon-loc"></image>
-              <view class="m-loc">杭州·杭州西湖风景名胜区</view>
-            </view>
-          </view>
-          <view class="m-icon-box">
-            <view class="m-one-icon">
-              <image src="{{img_src}}common/circle-like-active.png" class="m-icon"></image>
-              <view class="m-active">123</view>
-            </view>
-            <view class="m-one-icon">
-              <image src="{{img_src}}common/circle-comment.png" class="m-icon"></image>
-              <view >123</view>
-            </view>
-            <view class="m-one-icon">
-              <image src="{{img_src}}common/circle-delete.png" class="m-icon"></image>
-              <view ></view>
-            </view>
-          </view>
-        </view>
-      </view>
+      <view class="m-title"><span class="m-border-back">品牌故事</span></view>
+      <brand></brand>
     </view>
 </template>
 
 <script>
   import wepy from 'wepy';
   import api from '../../api/api';
+  import Brand from '../../components/common/brand';
 
   export default class brandMain extends wepy.page {
     config = {
       navigationBarTitleText: '品牌馆'
     };
-    components = {};
+    components = {
+      brand:Brand
+    };
     data = {
       img_src:null,
       show_task:false

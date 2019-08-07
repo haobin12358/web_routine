@@ -1,0 +1,228 @@
+<style scoped lang="less" rel="stylesheet/less">
+@import "../../styles/common";
+.m-brandDetail{
+  .m-like-comment{
+    .m-nav{
+      padding: 0 23rpx;
+      border-bottom: 1px solid @border-color;
+      .flex-row(felx-start);
+      .m-one-nav{
+        height: 76rpx;
+        line-height: 76rpx;
+        padding: 0 16rpx;
+        margin-right: 20rpx;
+        color: #C1C1C1;
+        border-bottom: 2px solid transparent;
+        &.m-active{
+          color: #000;
+          border-bottom: 2px solid #000;
+        }
+      }
+    }
+    .m-user-list{
+      .m-one-user{
+        padding: 20rpx 36rpx;
+        border-bottom: 1px solid @border-color;
+        .flex-row(flex-start);
+      }
+    }
+    .m-comment-list{
+      padding: 0 30rpx;
+      .m-one-comment{
+        padding: 30rpx 0;
+        border-bottom: 1px solid @border-color;
+        .m-user{
+          .flex-row(flex-start);
+          margin-bottom: 20rpx;
+          .m-user-head{
+            width: 80rpx;
+            height: 80rpx;
+            margin-right: 30rpx;
+            background-color: @common-color;
+          }
+          .m-user-name-box{
+            width: 500rpx;
+            height: 80rpx;
+            .flex(column,space-between,flex-start);
+            .m-user-name{
+              width: 480rpx;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              margin: 0;
+            }
+          }
+          .m-like{
+            color: #c1c1c1;
+            &.active{
+              color: @common-color;
+            }
+            .m-icon{
+              width: 30rpx;
+              height: 30rpx;
+            }
+          }
+        }
+        .m-comment-content{
+          padding-left: 110rpx;
+        }
+        .m-text{
+          padding-bottom: 20rpx;
+        }
+        .m-img{
+          width: 300rpx;
+          height: 300rpx;
+          margin-bottom: 20rpx;
+          background-color: @common-color;
+        }
+        .m-rely{
+          padding: 10rpx 17rpx;
+          background-color: #EBEBEB;
+          .m-blue{
+            color: #006FCE;
+          }
+          .m-one-reply{
+            padding-bottom: 10rpx;
+          }
+        }
+      }
+    }
+  }
+  .m-comment-input{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    padding: 15rpx 0;
+    background-color: #fff;
+    z-index: 100;
+    width: 100%;
+    box-sizing: border-box;
+    border-top: 1px solid @border-color;
+    .flex-row(flex-start);
+    .m-icon{
+      width: 60rpx;
+      height: 60rpx;
+      margin: 0 45rpx;
+      background-color: @common-color;
+    }
+    .m-input{
+      width: 480rpx;
+      box-sizing: border-box;
+      padding: 0 20rpx;
+
+    }
+    .m-btn{
+      padding: 0 30rpx;
+      font-weight: 500;
+      color: @grey-color;
+      border-left: 1px solid @border-color;
+    }
+  }
+}
+</style>
+<template>
+    <view class="m-brandDetail">
+      <brand></brand>
+      <view class="m-like-comment">
+        <view class="m-nav">
+          <view class="m-active m-one-nav">赞 122</view>
+          <view class=" m-one-nav">评论 122</view>
+        </view>
+        <view class="m-user-list">
+          <view class="m-one-user m-user-box">
+            <image class="m-user-head"></image>
+            <view class="m-user-name">131</view>
+          </view>
+          <view class="m-one-user m-user-box">
+            <image class="m-user-head"></image>
+            <view class="m-user-name">131</view>
+          </view>
+          <view class="m-one-user m-user-box">
+            <image class="m-user-head"></image>
+            <view class="m-user-name">131</view>
+          </view>
+        </view>
+        <view class="m-comment-list">
+          <view class="m-one-comment">
+            <view class="m-user">
+              <image src="" class="m-user-head"></image>
+              <view class="m-user-name-box">
+                <view class="m-user-name">12</view>
+                <view class="m-grey">04-01 23:11:56</view>
+              </view>
+              <view class="m-flex-end m-like">
+                <span>12</span>
+                <image src="{{img_src}}common/circle-like.png" class="m-icon"></image>
+              </view>
+            </view>
+            <view class="m-comment-content">
+              <view class="m-text">
+                12312
+              </view>
+              <image src="" class="m-img"></image>
+              <view class="m-rely">
+                <view class="m-one-reply">
+                  <span class="m-blue">某某某</span>:123123123
+                </view>
+                <view class="m-one-reply">
+                  <span class="m-blue">某某某</span>:回复<span class="m-blue">@1231</span>123123123
+                </view>
+                <view class="m-one-reply">
+                  <span class="m-blue">共3条回复></span>
+                </view>
+              </view>
+            </view>
+
+
+          </view>
+          <view class="m-one-comment">
+            <view class="m-user">
+              <image src="" class="m-user-head"></image>
+              <view class="m-user-name-box">
+                <view class="m-user-name">12</view>
+                <view class="m-grey">04-01 23:11:56</view>
+              </view>
+              <view class="m-flex-end m-like">
+                <span>12</span>
+                <image src="{{img_src}}common/circle-like.png" class="m-icon"></image>
+              </view>
+            </view>
+            <view class="m-comment-content">
+              <view class="m-text">
+                12312
+              </view>
+
+            </view>
+
+          </view>
+        </view>
+      </view>
+      <view class="m-comment-input">
+        <image src="" class="m-icon"></image>
+        <input type="text" placeholder="写评论…" class="m-input"/>
+        <view class="m-btn">发送</view>
+      </view>
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import api from '../../api/api';
+  import Brand from '../../components/common/brand';
+
+  export default class brandDetail extends wepy.page {
+    config = {
+      navigationBarTitleText: '品牌馆'
+    };
+    components = {brand:Brand};
+    data = {
+      img_src:api.img_src
+    };
+
+    onLoad(options) {
+
+    }
+
+    methods = {};
+  }
+</script>
