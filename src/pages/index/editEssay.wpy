@@ -126,7 +126,7 @@
     postData(status){
       let that = this;
       tip.loading();
-
+      console.log(that.plid)
       wepy.request({
         url: api.add_travelrecord + '?token=' +wx.getStorageSync('token'),
         method:"post",
@@ -142,9 +142,16 @@
       }).then(resule => {
         if(resule.data.status == 200){
           tip.success('发布成功');
-          wx.navigateTo({
-            url: '/pages/personal/mainIndex'
-          });
+          if(that.plid){
+            wx.redirectTo({
+              url: '/pages/index/enterTeam'
+            });
+          }else{
+            wx.navigateTo({
+              url: '/pages/personal/mainIndex'
+            });
+          }
+
         }
       })
     }

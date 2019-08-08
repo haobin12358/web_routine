@@ -150,9 +150,15 @@
       }).then(resule => {
         if(resule.data.status == 200){
           tip.success('发布成功');
-          wx.navigateTo({
-            url: '/pages/personal/mainIndex'
-          });
+          if(that.plid){
+            wx.redirectTo({
+              url: '/pages/index/enterTeam'
+            });
+          }else{
+            wx.navigateTo({
+              url: '/pages/personal/mainIndex'
+            });
+          }
         }
       })
     }

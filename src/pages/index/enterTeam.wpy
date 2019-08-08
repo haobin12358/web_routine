@@ -41,7 +41,7 @@
       .m-one-image{
         position: relative;
         width: 135rpx;
-        height: 135rpx;
+        height: 145rpx;
         margin-right: 4rpx;
         margin-bottom: 4rpx;
         &:nth-child(5n){
@@ -165,10 +165,10 @@
               </view>
               <view class="m-image-box" wx:if="{{photo_album.length>0 }}">
                 <view class="m-one-image" wx:for="{{photo_album}}" wx:key="{{index}}">
-                  <image src="{{item.url}}" wx:if="{{item.type == 'image'}}"></image>
+                  <image src="{{item.url}}" @tap="previewImage({{item.url}})" wx:if="{{item.type == 'image'}}"></image>
                   <image src="{{item.thumbnail}}" wx:if="{{item.type == 'video'}}" @tap="playVideo({{item}})"></image>
                   <image src="{{img_src}}common/icon-play.png" wx:if="{{item.type == 'video'}}" @tap="playVideo({{item}})" class="m-icon-play"></image>
-                  <view class="m-image-more" wx:if="{{ (photo_album.length-1 > 10 && index == 10 )|| index == photo_album.length-1 }}" @tap.stop="changeRoute('/pages/index/imageList')">
+                  <view class="m-image-more" wx:if="{{ (photo_album.length-1 > 10 && index == 9 )|| index == photo_album.length-1 }}" @tap.stop="changeRoute('/pages/index/imageList')">
                     <view>{{photo_album.length}}</view>
                     <view>...</view>
                   </view>
@@ -429,6 +429,8 @@
           },
           changeRoute(v){
             let that = this;
+            that.show_edit = false;
+            that.$apply();
             wx.navigateTo({
               url: v + '?plid=' + that.plid
             });
@@ -437,7 +439,15 @@
             this.show_video = true;
             this.video_url = v.url;
             this.$apply();
-          }
+          },
+          //预览图片
+          previewImage(item){
+            let that = this;
+            wx.previewImage({
+              current: item, // 当前显示图片的http链接
+              urls: [item] // 需要预览的图片http链接列表
+            })
+          },
         }
     }
 </script>

@@ -76,20 +76,20 @@
 </style>
 <template>
     <view class="m-image-list" wx:if="{{items}}">
-     <view class="m-flex-between">
-       <view  >
-         <checkbox-group bindchange="checkChange" wx:if="{{show_edit}}">
-             <checkbox value="{{all}}" checked="{{all_check}}" color="#FFCE00" />全选
-         </checkbox-group>
-       </view>
-       <view wx:if="{{!show_edit}}" class="m-btn" @tap="showEdit">编辑</view>
-       <view wx:else class="m-btn" @tap="showEdit">确定</view>
-     </view>
+<!--     <view class="m-flex-between">-->
+<!--       <view  >-->
+<!--         <checkbox-group bindchange="checkChange" wx:if="{{show_edit}}">-->
+<!--             <checkbox value="{{all}}" checked="{{all_check}}" color="#FFCE00" />全选-->
+<!--         </checkbox-group>-->
+<!--       </view>-->
+<!--       <view wx:if="{{!show_edit}}" class="m-btn" @tap="showEdit">编辑</view>-->
+<!--       <view wx:else class="m-btn" @tap="showEdit">确定</view>-->
+<!--     </view>-->
       <view class="m-image-box">
         <checkbox-group bindchange="checkboxChange" >
 
           <view class="m-one-image" wx:for="{{items}}" wx:key="{{index}}">
-            <image src="{{item.url}}" wx:if="{{item.type == 'image'}}"></image>
+            <image src="{{item.url}}" @tap="previewImage({{item.url}})" wx:if="{{item.type == 'image'}}"></image>
             <image src="{{item.thumbnail}}" wx:if="{{item.type == 'video'}}" @tap="playVideo({{item}})"></image>
             <image src="{{img_src}}common/icon-play.png" wx:if="{{item.type == 'video'}}" @tap="playVideo({{item}})" class="m-icon-play"></image>
             <checkbox value="{{item.name}}" wx:if="{{show_edit}}" color="#FFCE00" class="m-check" checked="{{item.checked}}"/>
@@ -217,7 +217,15 @@
         this.show_video = true;
         this.video_url = v.url;
         this.$apply();
-      }
+      },
+      //预览图片
+      previewImage(item){
+        let that = this;
+        wx.previewImage({
+          current: item, // 当前显示图片的http链接
+          urls: [item] // 需要预览的图片http链接列表
+        })
+      },
     };
   }
 </script>
