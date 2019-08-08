@@ -120,7 +120,8 @@
       show_select:false,
       image:[],
       video:null,
-      type:'essay'
+      type:'essay',
+      plid:''
     };
     postData(status){
       let that = this;
@@ -135,7 +136,8 @@
           trstatus:status || 1,
           trtype:2,
           image:that.image,
-          video:that.video
+          video:that.video,
+          plid:that.plid
         }
       }).then(resule => {
         if(resule.data.status == 200){
@@ -147,7 +149,10 @@
       })
     }
     onLoad(options) {
-
+      if(options.plid){
+        this.plid = options.plid;
+        this.$apply();
+      }
     }
 
     methods = {

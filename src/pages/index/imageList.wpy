@@ -29,6 +29,16 @@
           width: 233rpx;
           height: 233rpx;
         }
+        .m-icon-play{
+          width: 80rpx;
+          height: 80rpx;
+          position: absolute;
+          top:0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          margin: auto;
+        }
         .m-check{
           position: absolute;
           top:5rpx;
@@ -36,11 +46,36 @@
         }
       }
     }
+    .m-modal{
+      position: fixed;
+      top:0;
+      left: 0;
+      right: 0;
+      bottom:0;
+      width: 100%;
+      height: 100vh;
+      background-color: rgba(0,0,0,0.16);
+      .flex-row(center);
+      &.m-video{
+        background-color: rgba(0,0,0,1);
+        color: #c1c1c1;
+        display: block;
+        .m-btn{
+          display: block;
+          padding: 20rpx;
+          background-color: transparent;
+        }
+      }
+      video{
+        width: 750rpx;
+        height: 90vh;
+      }
+    }
   }
 
 </style>
 <template>
-    <view class="m-image-list">
+    <view class="m-image-list" wx:if="{{items}}">
      <view class="m-flex-between">
        <view  >
          <checkbox-group bindchange="checkChange" wx:if="{{show_edit}}">
@@ -54,19 +89,26 @@
         <checkbox-group bindchange="checkboxChange" >
 
           <view class="m-one-image" wx:for="{{items}}" wx:key="{{index}}">
-            <image src=""></image>
+            <image src="{{item.url}}" wx:if="{{item.type == 'image'}}"></image>
+            <image src="{{item.thumbnail}}" wx:if="{{item.type == 'video'}}" @tap="playVideo({{item}})"></image>
+            <image src="{{img_src}}common/icon-play.png" wx:if="{{item.type == 'video'}}" @tap="playVideo({{item}})" class="m-icon-play"></image>
             <checkbox value="{{item.name}}" wx:if="{{show_edit}}" color="#FFCE00" class="m-check" checked="{{item.checked}}"/>
           </view>
         </checkbox-group>
       </view>
-
+      <view class="m-modal m-video" wx:if="{{show_video}}">
+        <view class="m-flex-end">
+          <span class="m-btn" @tap="changeModal('show_video',false)">关闭</span>
+        </view>
+        <video src="{{video_url}}" autoplay="true"></video>
+      </view>
     </view>
 </template>
 
 <script>
   import wepy from 'wepy';
   import api from '../../api/api';
-
+ import tip from '../../utils/tip';
   export default class imageList extends wepy.page {
     config = {
       navigationBarTitleText: '照片列表'
@@ -84,22 +126,46 @@
         {name: 'TUR', value: '法国'},
       ],
       show_edit:false,
-      select_box:[]
+      select_box:[],
+      video_url:'',
+      show_video:false,
+      img_src:api.img_src
     };
     onShareAppMessage(res) {
       if (res.from === 'button') {
 
       }
       return {
-        title: '转发',
+        title: '相册',
         path: '/pages/index/imageList',
         success: function (res) {
           console.log('成功', res)
         }
       }
     }
-    onLoad(options) {
+    getPhoto(){
+      let that = this;
+      tip.loading();
+      wepy.request({
+        url: api.get_team_album + '?token=' +wx.getStorageSync('token'),
+        data: {
+          plid:that.plid
+        }
+      }).then(res => {
+        if(res.data.status == 200){
+          let data = res.data.data;
+          that.items = data;
+          that.$apply();
 
+        }
+      })
+    }
+    onLoad(options) {
+      if(options.plid){
+        this.plid = options.plid;
+        this.$apply();
+        this.getPhoto();
+      }
     }
 
     methods = {
@@ -137,6 +203,20 @@
           this.select_box = arr;
           this.$apply();
         }
+      },
+      changeModal(name,bool){
+
+        if(bool == 'true'){
+          this[name] = bool;
+        }else{
+          this[name] = false;
+        }
+        this.$apply();
+      },
+      playVideo(v){
+        this.show_video = true;
+        this.video_url = v.url;
+        this.$apply();
       }
     };
   }

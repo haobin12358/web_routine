@@ -52,6 +52,16 @@
           height: 135rpx;
           /*background-color: #0BB20C;*/
         }
+        .m-icon-play{
+          width: 80rpx;
+          height: 80rpx;
+          position: absolute;
+          top:0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          margin: auto;
+        }
         .m-image-more{
           position: absolute;
           top:0;
@@ -77,6 +87,15 @@
     height: 100vh;
     background-color: rgba(0,0,0,0.16);
     .flex-row(center);
+    &.m-video{
+      background-color: rgba(0,0,0,1);
+      color: #c1c1c1;
+      display: block;
+      .m-btn{
+        display: block;
+        padding: 20rpx;
+      }
+    }
     .m-edit-icon-box{
       width: 414rpx;
       padding: 20rpx;
@@ -90,6 +109,10 @@
           height: 110rpx;
         }
       }
+    }
+    video{
+      width: 750rpx;
+      height: 90vh;
     }
   }
 }
@@ -142,7 +165,9 @@
               </view>
               <view class="m-image-box" wx:if="{{photo_album.length>0 }}">
                 <view class="m-one-image" wx:for="{{photo_album}}" wx:key="{{index}}">
-                  <image src="" ></image>
+                  <image src="{{item.url}}" wx:if="{{item.type == 'image'}}"></image>
+                  <image src="{{item.thumbnail}}" wx:if="{{item.type == 'video'}}" @tap="playVideo({{item}})"></image>
+                  <image src="{{img_src}}common/icon-play.png" wx:if="{{item.type == 'video'}}" @tap="playVideo({{item}})" class="m-icon-play"></image>
                   <view class="m-image-more" wx:if="{{ (photo_album.length-1 > 10 && index == 10 )|| index == photo_album.length-1 }}" @tap.stop="changeRoute('/pages/index/imageList')">
                     <view>{{photo_album.length}}</view>
                     <view>...</view>
@@ -173,7 +198,12 @@
 
         </view>
       </view>
-
+      <view class="m-modal m-video" wx:if="{{show_video}}">
+        <view class="m-flex-end">
+          <span class="m-btn" @tap="changeModal('show_video',false)">关闭</span>
+        </view>
+        <video src="{{video_url}}" autoplay="true"></video>
+      </view>
     </view>
 </template>
 
@@ -224,7 +254,9 @@
           plid:'',
           show_map:false,
           show_edit:false,
-          photo_album:[]
+          photo_album:[],
+          video_url:'',
+          show_video:false
         }
       getId(){
         let that = this;
@@ -238,11 +270,28 @@
           that.$apply();
           if(resule.data.status == 200){
             that.plid = resule.data.data.plid;
-
             that.$apply();
             that.getNotice();
             that.getLoc();
             that.getData();
+            that.getPhoto();
+          }
+        })
+      }
+      getPhoto(id){
+        let that = this;
+        tip.loading();
+        wepy.request({
+          url: api.get_team_album + '?token=' +wx.getStorageSync('token'),
+          data: {
+            plid:id || that.plid
+          }
+        }).then(res => {
+          if(res.data.status == 200){
+            let data = res.data.data;
+            that.photo_album = data;
+            that.$apply();
+
           }
         })
       }
@@ -303,7 +352,6 @@
       }
       getLocation(){
         let that = this;
-        console.log('12312')
         wx.getLocation({
           type: 'wgs84',
           success (res) {
@@ -371,6 +419,7 @@
             this.$apply();
           },
           changeModal(name,bool){
+
             if(bool == 'true'){
               this[name] = bool;
             }else{
@@ -379,10 +428,16 @@
             this.$apply();
           },
           changeRoute(v){
+            let that = this;
             wx.navigateTo({
-              url: v
+              url: v + '?plid=' + that.plid
             });
           },
+          playVideo(v){
+            this.show_video = true;
+            this.video_url = v.url;
+            this.$apply();
+          }
         }
     }
 </script>

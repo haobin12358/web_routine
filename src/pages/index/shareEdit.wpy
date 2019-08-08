@@ -1,0 +1,393 @@
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../../styles/common";
+  .m-shareEdit{
+    .m-btn{
+      width: 100%;
+      background-color: #fff;
+      padding-top: 10rpx;
+      text-align: center;
+      span{
+        display: inline-block;
+        width: 300rpx;
+        height: 60rpx;
+        line-height: 60rpx;
+        background-color: @common-color;
+      }
+
+    }
+    .m-scheduling-info{
+      padding: 30rpx;
+      .m-scheduling-name{
+        font-weight: 600;
+        width: 560rpx;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+      .m-price{
+        color: #EB0000;
+        font-weight: 600;
+        font-size: 32rpx;
+      }
+      .m-name-title{
+        margin-bottom: 25rpx;
+      }
+      .m-name{
+        max-width: 300rpx;
+        overflow: hidden;
+        text-overflow:ellipsis;
+        white-space: nowrap;
+      }
+    }
+    .m-scheduling-img{
+      display: block;
+      width: 100%;
+      height: 420rpx;
+      /*height: auto;*/
+    }
+    .m-activityDetail-info{
+      li{
+        padding: 20rpx 30rpx;
+        border-bottom: 1px solid @border-color;
+        .flex-row(space-between);
+        .m-label{
+          color: @grey-color;
+          /*width: 162rpx;*/
+          text-align: left;
+          flex-shrink: 0;
+          .flex-col(space-between);
+          .m-line{
+            color: @common-color;
+          }
+        }
+        .m-icon{
+          width: 30rpx;
+          height: 30rpx;
+          margin-left: 10rpx;
+        }
+        .m-rule{
+          max-width: 410rpx;
+        }
+        .m-max-width{
+          max-width: 450rpx;
+        }
+        .m-info-text{
+          width: 300rpx;
+          .flex-col(space-between);
+          .m-line{
+            color: @common-color;
+          }
+        }
+        &.m-no-flex{
+          display: flex;
+          flex-flow: column;
+          justify-content: flex-start;
+          align-items: flex-start;
+        }
+        .m-detail-text{
+          /*text-indent: 2em;*/
+          line-height: 56rpx;
+          font-size: 24rpx;
+        }
+      }
+    }
+    .m-activity-scheduling{
+      /*padding-bottom: 240rpx;*/
+      .m-activity-scheduling-h3{
+        font-size: 32rpx;
+        padding: 20rpx 30rpx 0;
+        .flex-row(space-between);
+      }
+      .m-scheduling-detail{
+        padding-bottom: 20rpx;
+
+      }
+    }
+    .m-open{
+      width: 100%;
+      text-align: center;
+      color: @grey-color;
+    }
+    .m-info{
+      padding: 20rpx 30rpx;
+      line-height: 42rpx;
+      image{
+        width: 690rpx;
+        margin: 0;
+        /*height: 388rpx!important;*/
+      }
+    }
+    .m-circle-box{
+      padding: 20rpx 30rpx;
+      .m-border-back{
+        font-size: 32rpx;
+        font-weight: 500;
+      }
+    }
+    .m-select-box{
+      padding: 20rpx 0;
+    }
+    .m-blue{
+      color: #006FCE;
+    }
+    .m-check-label{
+      font-size: 28rpx;
+      font-weight: 400;
+      color: @grey-color;
+      &.active{
+        color: @common-color;
+      }
+    }
+    .m-bd-bottom{
+      border-bottom: 1px solid @border-color;
+    }
+    .m-image-box{
+      .flex-row(flex-start);
+      flex-wrap: wrap;
+      box-sizing: border-box;
+      width: 100%;
+      max-height: 275rpx;
+      overflow: hidden;
+      &.m-all{
+        max-height: none;
+      }
+      .m-one-image{
+        position: relative;
+        width: 135rpx;
+        height: 135rpx;
+        margin-right: 4rpx;
+        margin-bottom: 4rpx;
+        &:nth-child(5n){
+          margin-right: 0;
+        }
+        image{
+          width: 135rpx;
+          height: 135rpx;
+          /*background-color: #0BB20C;*/
+        }
+        .m-image-more{
+          position: absolute;
+          top:0;
+          left:0;
+          width: 135rpx;
+          height: 135rpx;
+          background-color: rgba(0,0,0,0.2);
+          .flex-col(center);
+          color: #fff;
+          font-size: 28rpx;
+          font-weight: 500;
+          line-height: 40rpx;
+        }
+      }
+    }
+  }
+
+</style>
+<template>
+    <view class="m-shareEdit">
+
+      <view class="m-scheduling-info">
+        <view class="m-flex-between m-name-title">
+          <span class="m-scheduling-name">{{detail.plname}}</span>
+          <span class="m-price">¥ {{detail.playsum}}</span>
+        </view>
+        <view class="m-flex-between ">
+          <span>出游时间：{{detail.time}}</span>
+          <span class="m-name">组织者：{{detail.plcreate}}</span>
+        </view>
+      </view>
+      <image src="{{detail.plimg}}"   @tap="previewImg({{detail.plimg}})" class="m-scheduling-img"></image>
+      <ul class="m-activityDetail-info">
+        <li>
+          <view class="m-label">
+            <p>开始时间</p>
+            <p class="m-line">|</p>
+            <p>结束时间</p>
+          </view>
+          <view class="m-info-text">
+            <p>{{detail.plstarttime}}</p>
+            <p class="m-line">|</p>
+            <p>{{detail.plendtime}}</p>
+          </view>
+        </li>
+        <li>
+          <view class="m-label">活动地点</view>
+          <view class="m-max-width">{{detail.pllocation}}</view>
+        </li>
+        <li>
+          <view class="m-label">参与人数</view>
+          <view class="m-flex-end" @tap="lookNum('/pages/index/joinNum')">
+                   <span>
+                       <span class="m-common">{{detail.enternum}}</span>/{{detail.plnum}}
+                   </span>
+            <image src="{{img_src}}common/icon-right.png" class="m-icon-more" alt="" />
+          </view>
+        </li>
+        <li>
+          <view class="m-label">活动费用</view>
+          <view >{{detail.playsum}}</view>
+        </li>
+        <li>
+          <view class="m-label">推荐携带物品</view>
+          <view class="m-max-width">{{detail.plproducts}}</view>
+        </li>
+        <li wx:if="{{rule}}">
+          <view class="m-label">退款信息</view>
+          <view class="m-flex-end" >
+            <view class="m-rule">{{rule}}</view>
+            <image src="{{img_src}}common/icon-question.png" class="m-icon" alt="" @tap="showRule"/>
+          </view>
+        </li>
+      </ul>
+      <view class="m-activity-scheduling">
+        <h3 class="m-activity-scheduling-h3">
+          <span class="m-border-back">行程介绍</span>
+          <view >
+            <span class="m-check-label active">分享</span><checkbox value="" checked="true" color="#FFCE00"/>
+          </view>
+        </h3>
+        <view class="m-scheduling-detail">
+          <view class="m-info"  wx:if="{{show_open}}">
+            <htmlParser :parserName.sync="name1" :parserContent.sync="content1" />
+            <!--                    <template id="wxParse" data="{{wxParseData:htmlParserName2.nodes}}"></template>-->
+          </view>
+          <view class="m-open" wx:if="{{!show_open}}" @tap="openClick('show_open',true)">
+            <span>点击展开</span>
+            <image src="{{img_src}}common/icon-down.png" class="m-icon-down" alt="" />
+          </view>
+          <view class="m-open" wx:if="{{show_open}}"  @tap="openClick('show_open',false)">
+            <span>点击收起</span>
+            <image src="{{img_src}}common/icon-up.png" class="m-icon-down" alt="" />
+          </view>
+        </view>
+      </view>
+      <view class="m-circle-box m-bd-bottom">
+          <view class="m-flex-between">
+            <span class="m-border-back">团队广场</span>
+          </view>
+          <view class="m-flex-between m-select-box">
+            <view >
+              <checkbox value="" checked="true" color="#FFCE00"/>全选
+            </view>
+            <view class="m-blue">选择</view>
+          </view>
+          <view class="m-image-box {{all_photo?'m-all':''}}" wx:if="{{photo_album.length>0 }}">
+            <view class="m-one-image" wx:for="{{photo_album}}" wx:key="{{index}}">
+              <image src="" ></image>
+              <view class="m-image-more" wx:if="{{!all_photo && ((photo_album.length > 10 &&  index == 9 ) || (photo_album.length <= 10 &&  index == photo_album.length-1 ))}}" @tap.stop="changeRoute('/pages/index/imageList')">
+                <view>{{photo_album.length}}</view>
+                <view>...</view>
+              </view>
+            </view>
+          </view>
+          <view class="m-open" wx:if="{{!all_photo && photo_album.length-1 > 10}}" @tap="openClick('all_photo',true)">
+            <span>点击展开</span>
+            <image src="{{img_src}}common/icon-down.png" class="m-icon-down" alt="" />
+          </view>
+          <view class="m-open" wx:if="{{all_photo && photo_album.length-1 > 10}}"  @tap="openClick('all_photo',false)">
+            <span>点击收起</span>
+            <image src="{{img_src}}common/icon-up.png" class="m-icon-down" alt="" />
+          </view>
+      </view>
+      <view class="m-no-data" wx:if="{{list_data.length == 0}}">暂无动态</view>
+      <circle :list.sync="list_data"></circle>
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import api from '../../api/api';
+  import tip from '../../utils/tip';
+  import htmlParser from '../../components/common/htmlParser';
+  import circle from '../../components/common/scrollCircle';
+  export default class shareEdit extends wepy.page {
+    config = {
+      navigationBarTitleText: '活动详情'
+    };
+    components = {circle:circle,  htmlParser:htmlParser};
+    data = {
+      img_src:null,
+      detail:null,
+      name1:'htmlParserName1',
+      detail_info:null,
+      content1:"",
+      plid:'c088f41c-b27b-11e9-8ca3-0242ac110002',
+      show_open:false,
+      photo_album:[],
+      list_data:[],
+      all_photo:false
+    };
+    //获取活动详情
+    getDetail(id){
+      let that = this;
+      tip.loading();
+      wepy.request({
+        url: api.get_play + '?token=' +wx.getStorageSync('token'),
+        data: {
+          plid:id || that.plid
+        },
+        header: {
+          'content-type': 'application/json' // 默认值
+        }
+      }).then(res => {
+        if(res.data.status == 200){
+          let data = res.data.data;
+          that.detail_info = data;
+
+          if(data.joinstatus){
+            wx.setNavigationBarTitle({
+              title: '活动报名'
+            })
+          }else{
+            wx.setNavigationBarTitle({
+              title: '我创建的'
+            })
+          }
+          data.time = data.plstarttime.slice(0,7) +'/' + data.plstarttime.slice(8,10) + '-' + data.plendtime.slice(5,7) +'/' + data.plendtime.slice(8,10)
+          data.pllocation = data.pllocation.join('-');
+          data.plproducts = data.plproducts.join('、');
+          that.content1 = res.data.data.plcontent;
+          that.content1 = that.content1.replace(/&quot;/g,'');
+          that.content1 = that.content1.replace(/&nbsp;/g, '\xa0');
+          that.detail = data;
+          // WxParse.wxParse('htmlParserName2','html',res.data.data.plcontent,that,0);
+          that.$apply();
+          that.$invoke('htmlParser', 'htmlParserNotice');
+        }
+      })
+    }
+    onLoad(options) {
+      // if(options.plid){
+      //   this.plid = options.plid;
+        this.img_src = api.img_src;
+        this.$apply();
+      // }
+      // wx.showShareMenu({
+      //   withShareTicket: true
+      // })
+    }
+    onShow(){
+      this.getDetail(this.plid);
+    }
+
+    methods = {
+      previewImg(item){
+        let that = this;
+        console.log(item)
+        wx.previewImage({
+          current: item, // 当前显示图片的http链接
+          urls: [item] // 需要预览的图片http链接列表
+        })
+      },
+      openClick(v,bool){
+        if(bool == 'false'){
+          this[v] = false;
+        }else{
+          this[v] = bool;
+        }
+
+        this.$apply();
+      },
+    };
+  }
+</script>

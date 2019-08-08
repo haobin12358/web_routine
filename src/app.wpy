@@ -34,8 +34,8 @@
     config = {
       pages: [
 
-
         'pages/index/index',
+        'pages/index/shareEdit',
         'pages/personal/login',
         'pages/personal/personalInfo',
         'pages/index/enterPage',

@@ -123,7 +123,8 @@
       recommend_list:[],
       trlocation:'',
       trbudget:'',
-      type:'raiders'
+      type:'raiders',
+      plid:''
     };
     postData(status){
       let that = this;
@@ -143,7 +144,8 @@
           trbudget:that.trbudget,
           trproducts:products,
           trstatus:status || 1,
-          trtype:0
+          trtype:0,
+          plid:that.plid
         }
       }).then(resule => {
         if(resule.data.status == 200){
@@ -165,6 +167,10 @@
           this.$apply();
          this.$broadcast('index-broadcast', data.trcontent);
         // this.$invoke('edit','onEditorReady');
+      }
+      if(options.plid){
+        this.plid = options.plid;
+        this.$apply();
       }
 
     }

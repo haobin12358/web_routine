@@ -247,6 +247,7 @@
           }
 
           for(let i=0;i<that.list_data.length;i++){
+
             if(that.list_data[i].picture){
               if(that.list_data[i].picture.indexOf('https://') < 0){
                 that.list_data[i].picture = api.api + that.list_data[i].picture;
@@ -269,7 +270,14 @@
                 }
               }
             }
+
           }
+          let _data = [].concat(that.list_data);
+          for(let j=0;j<_data.length;j++){
+            _data[j]['height'] = j *200;
+          }
+
+          that.list_data = [].concat(_data);
           if(that.usid){
             wx.setNavigationBarTitle({
               title: data.top.usname +'的主页'

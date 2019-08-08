@@ -66,7 +66,8 @@
       trlocation:'',
       trcontent:'',
       trtitle:'',
-      type:'travels'
+      type:'travels',
+      plid:''
     };
     postData(status){
       let that = this;
@@ -80,7 +81,9 @@
           trcontent:that.trcontent,
           trtitle:that.trtitle,
           trstatus:status || 1,
-          trtype:1
+          trtype:1,
+          plid:that.plid
+
         }
       }).then(resule => {
         if(resule.data.status == 200){
@@ -99,6 +102,10 @@
         this.trcontent = data.trcontent;
         this.trlocation =data.trlocation;
         this.trtitle = data.trtitle;
+        this.$apply();
+      }
+      if(options.plid){
+        this.plid = options.plid;
         this.$apply();
       }
     }
