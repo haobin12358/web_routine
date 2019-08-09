@@ -51,7 +51,8 @@
             width: 380rpx;
             color: @grey-color;
             .m-evaluate-btn{
-              padding: 0 14rpx;
+              padding: 0 5rpx;
+              font-size: 24rpx;
               border: 1px solid #C1C1C1;
               color: #C1C1C1;
               &.active{
@@ -106,7 +107,7 @@
               </view>
               <view class="m-bottom m-flex-between">
                 <span>报名人数：{{item.enternum}}/{{item.plnum}}</span>
-                <span class="m-evaluate-btn" @tap.stop="changeRoute('/pages/personal/evaluate')">{{item.plstatus_zh}}</span>
+                <span class="m-evaluate-btn" @tap.stop="changeRoute('/pages/index/lookActivity',{{item}},'detail')">{{item.plstatus_zh}}</span>
               </view>
             </view>
           </view>

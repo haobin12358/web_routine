@@ -34,14 +34,14 @@
 </style>
 <template>
     <view>
-      <span class="m-grey" @tap="showTap">{{scenic_name || '请输入景区'}}</span>
+      <span class="m-grey" @tap="showTap">{{scenic_name || '点击输入景区'}}</span>
       <view class="m-scenic-box" wx:if="{{show_scenic}}">
         <view class="m-state">
           <view class="m-flex-between">
             <span class="m-grey" @tap="cancelTap">取消</span>
             <span @tap="sureTap">确定</span>
           </view>
-          <input type="text" placeholder="请输入景区" value="{{name}}" data-name="name" bindinput="inputChange"/>
+          <input type="text" placeholder="点击输入景区" value="{{name}}" data-name="name" bindinput="inputChange"/>
           <picker-view indicator-style="height: 50rpx;" style="width: 100%; height: 300rpx;" value="{{scenic_index}}" bindchange="bindChange">
             <picker-view-column>
               <view wx:for="{{scenic_list}}" wx:key="{{index}}" style="line-height: 80rpx;">{{item.sspname}}</view>

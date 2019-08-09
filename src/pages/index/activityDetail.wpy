@@ -94,6 +94,84 @@
         }
 
       }
+      .m-circle-box{
+        padding: 20rpx 30rpx;
+        .m-border-back{
+          font-size: 32rpx;
+          font-weight: 500;
+        }
+      }
+      .m-image-box{
+        .flex-row(flex-start);
+        flex-wrap: wrap;
+        padding: 40rpx 0 10rpx;
+        box-sizing: border-box;
+        width: 100%;
+        max-height: 315rpx;
+        overflow: hidden;
+        .m-one-image{
+          position: relative;
+          width: 135rpx;
+          height: 145rpx;
+          margin-right: 4rpx;
+          margin-bottom: 4rpx;
+          &:nth-child(5n){
+            margin-right: 0;
+          }
+          image{
+            width: 135rpx;
+            height: 135rpx;
+            /*background-color: #0BB20C;*/
+          }
+          .m-icon-play{
+            width: 80rpx;
+            height: 80rpx;
+            position: absolute;
+            top:0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+          }
+          .m-image-more{
+            position: absolute;
+            top:0;
+            left:0;
+            width: 135rpx;
+            height: 135rpx;
+            background-color: rgba(0,0,0,0.2);
+            .flex-col(center);
+            color: #fff;
+            font-size: 28rpx;
+            font-weight: 500;
+            line-height: 40rpx;
+          }
+        }
+      }
+      .m-modal{
+        width: 100%;
+        height: 100vh;
+        background-color: rgba(0,0,0,0.16);
+        position: fixed;
+        top:0;
+        left: 0;
+        z-index: 100;
+        &.m-video{
+          background-color: rgba(0,0,0,1);
+          color: #c1c1c1;
+          display: block;
+          .m-btn{
+            display: block;
+            padding: 20rpx;
+            background-color: #000;
+            text-align: right;
+          }
+          video{
+            width: 750rpx;
+            height: 90vh;
+          }
+        }
+      }
     }
 
 </style>
@@ -145,6 +223,23 @@
                </view>
            </li>
        </ul>
+        <view class="m-circle-box">
+          <view class="m-flex-between">
+            <span class="m-border-back">团队相册</span>
+          </view>
+          <view class="m-no-data" wx:if="{{photo_album.length == 0}}">暂无相片</view>
+          <view class="m-image-box" wx:if="{{photo_album.length>0 }}">
+            <view class="m-one-image" wx:for="{{photo_album}}" wx:key="{{index}}">
+              <image src="{{item.url}}" @tap="previewImg({{item.url}})" wx:if="{{item.type == 'image'}}"></image>
+              <image src="{{item.thumbnail}}" wx:if="{{item.type == 'video'}}" @tap="playVideo({{item}})"></image>
+              <image src="{{img_src}}common/icon-play.png" wx:if="{{item.type == 'video'}}" @tap="playVideo({{item}})" class="m-icon-play"></image>
+              <view class="m-image-more" wx:if="{{ (photo_album.length-1 > 10 && index == 9 )|| index == photo_album.length-1 }}" @tap.stop="changeRoute('/pages/index/imageList')">
+                <view>{{photo_album.length}}</view>
+                <view>...</view>
+              </view>
+            </view>
+          </view>
+        </view>
         <view class="m-activity-circle">
             <h3 class="m-activity-circle-h3">
                 <span class="m-border-back">团队广场</span>
@@ -160,6 +255,12 @@
 <!--        <view class="m-scheduling-btn" wx:if="{{detail.joinstatus}}" @tap="toEnter('/pages/index/enterPage')">我要报名</view>-->
         <view class="m-scheduling-btn" wx:if="{{detail.repaystatus}}" @tap="postReplay">继续支付</view>
         <view class="m-scheduling-btn" wx:if="{{detail.is_join}}" >已报名</view>
+      </view>
+      <view class="m-modal m-video" wx:if="{{show_video}}">
+        <view class="m-flex-end">
+          <span class="m-btn" @tap="changeModal('show_video',false)">关闭</span>
+        </view>
+        <video src="{{video_url}}" autoplay="true"></video>
       </view>
     </view>
 </template>
@@ -191,7 +292,10 @@
             page_size: 10
           },
           total_count:0,
-          rule:''
+          rule:'',
+          photo_album:[],
+          video_url:'',
+          show_video:false
         }
         getDetail(id){
             let that = this;
@@ -290,6 +394,23 @@
           }
         })
       }
+      getPhoto(id){
+        let that = this;
+        tip.loading();
+        wepy.request({
+          url: api.get_team_album + '?token=' +wx.getStorageSync('token'),
+          data: {
+            plid:id || that.plid
+          }
+        }).then(res => {
+          if(res.data.status == 200){
+            let data = res.data.data;
+            that.photo_album = data;
+            that.$apply();
+
+          }
+        })
+      }
       //支付
       pay(params){
         wx.requestPayment({
@@ -331,23 +452,15 @@
           this.getDetail(this.plid);
           this.getData(this.plid);
           this.getDiscounts(this.plid);
+          this.getPhoto(this.plid);
         }
 
         methods = {
             changeRoute(v,name){
               let that = this;
-              switch (name) {
-                case 'num':
-                  wx.navigateTo({
-                    url: v +'?plid=' + that.plid
-                  });
-                  break;
-                default:
-                  wx.navigateTo({
-                    url: v
-                  });
-                  break;
-              }
+              wx.navigateTo({
+                url: v +'?plid=' + that.plid
+              });
 
             },
             openClick(bool){
@@ -408,7 +521,29 @@
               duration: 2000
             })
 
-          }
+          },
+          playVideo(v){
+            this.show_video = true;
+            this.video_url = v.url;
+            this.$apply();
+          },
+          changeModal(name,bool){
+
+            if(bool == 'true'){
+              this[name] = bool;
+            }else{
+              this[name] = false;
+            }
+            this.$apply();
+          },
+          previewImg(item){
+            let that = this;
+            console.log(item)
+            wx.previewImage({
+              current: item, // 当前显示图片的http链接
+              urls: [item] // 需要预览的图片http链接列表
+            })
+          },
         }
     }
 </script>
