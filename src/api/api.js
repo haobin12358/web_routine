@@ -79,6 +79,8 @@ const data_statistics = api2 + 'personalcenter/data_statistics';//数据统计
 const update_usinfo = api2 +'user/update_usinfo';//编辑个人信息
 const download_team = api2 +'play/download_team';//下载用户数据
 const get_team_album = api2 +'scenicspot/get_team_album';//获取团队相册
+const secret_usid = api2 + 'user/secret_usid';//获取分享id
+const share_content = api2 +'scenicspot/share_content';//分享
 
 
 
@@ -92,6 +94,6 @@ module.exports = {
   get_enter_user,collect,add_travelrecord,upload,batch_upload,create_notice,get_notice,get_provinces,get_citys,get_areas,get_member_location,
   travelrecord_list,get_travelrecord,collection_show,raiders_list,get_team_travelrecord,set_discount,get_discount,list_mp_banner,get_play_history,
   cancel_play,make_over,my_wallet,undertake,apply_cash,payment,get_make_over_list,get_make_over,get_home,guide_certification,guide,
-  add_toilet,toilet_list,get_toilet,get_room_list,data_statistics,update_usinfo,download_team,get_team_album
+  add_toilet,toilet_list,get_toilet,get_room_list,data_statistics,update_usinfo,download_team,get_team_album,secret_usid,share_content
 
 }

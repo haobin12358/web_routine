@@ -35,6 +35,7 @@
       pages: [
 
         'pages/index/index',
+        'pages/index/scrollCircle',
         'pages/index/shareEdit',
         'pages/personal/login',
         'pages/personal/personalInfo',
