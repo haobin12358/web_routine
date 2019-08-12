@@ -302,6 +302,22 @@
           }
         }
       }
+      .m-share-fixed{
+        width: 110rpx;
+        background-color: #fff;
+        position: fixed;
+        right: 30rpx;
+        bottom:200rpx;
+        box-shadow:0 3rpx 30rpx rgba(0,0,0,0.1);
+        border-radius: 10rpx;
+        font-size: 20rpx;
+        font-weight: 300;
+        .flex-col(center);
+        .m-logo{
+          width: 80rpx;
+          height: 80rpx;
+        }
+      }
     }
 
 </style>
@@ -491,6 +507,12 @@
           <span class="m-btn" @tap="changeModal('show_video',false)">关闭</span>
         </view>
         <video src="{{video_url}}" autoplay="true"></video>
+      </view>
+
+      <view class="m-share-fixed" @tap.stop="changeRoute('/pages/index/shareEdit')">
+        <image class="m-logo" src="{{img_src}}common/logo.png"></image>
+        <view>分享团队</view>
+        <view>精彩内容</view>
       </view>
     </view>
 </template>

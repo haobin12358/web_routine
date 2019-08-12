@@ -1,6 +1,7 @@
 <style scoped lang="less" rel="stylesheet/less">
   @import "../../styles/common";
   .m-shareEdit{
+    padding-bottom: 100rpx;
     .m-btn{
       width: 100%;
       background-color: #fff;
@@ -111,6 +112,10 @@
     .m-info{
       padding: 20rpx 30rpx;
       line-height: 42rpx;
+      max-height: 200rpx;
+      &.m-all{
+        max-height: none;
+      }
       image{
         width: 690rpx;
         margin: 0;
@@ -147,8 +152,11 @@
       padding: 40rpx 0 10rpx;
       box-sizing: border-box;
       width: 100%;
-      max-height: 315rpx;
+      max-height: 334rpx;
       overflow: hidden;
+      &.m-all{
+        max-height: none;
+      }
       .m-one-image{
         position: relative;
         width: 135rpx;
@@ -186,14 +194,46 @@
           font-weight: 500;
           line-height: 40rpx;
         }
+        .m-check{
+          position: absolute;
+          top:5rpx;
+          right: 5rpx;
+        }
       }
     }
-
+    .m-modal{
+      width: 100%;
+      height: 100vh;
+      background-color: rgba(0,0,0,0.16);
+      position: fixed;
+      top:0;
+      left: 0;
+      z-index: 100;
+      &.m-video{
+        background-color: rgba(0,0,0,1);
+        color: #c1c1c1;
+        display: block;
+        .m-btn{
+          display: block;
+          padding: 20rpx;
+          background-color: #000;
+          text-align: right;
+        }
+        video{
+          width: 750rpx;
+          height: 90vh;
+        }
+      }
+    }
   }
 
 </style>
 <template>
     <view class="m-shareEdit">
+      <view class="m-alert-text">
+        <span>用户可根据需要调整分享内容</span>
+        <!--          <span class="m-alert-btn">草稿箱</span>-->
+      </view>
 
       <view class="m-scheduling-info">
         <view class="m-flex-between m-name-title">
@@ -251,12 +291,14 @@
       <view class="m-activity-scheduling">
         <h3 class="m-activity-scheduling-h3">
           <span class="m-border-back">行程介绍</span>
-          <view >
-            <span class="m-check-label active">分享</span><checkbox value="" checked="true" color="#FFCE00"/>
+          <view class="m-flex-end">
+            <span class="m-check-label active">分享</span>   <checkbox-group bindchange="checkDetailChange" >
+            <checkbox value="{{show_detail}}" checked="{{show_detail}}" color="#FFCE00" />
+          </checkbox-group>
           </view>
         </h3>
         <view class="m-scheduling-detail">
-          <view class="m-info"  wx:if="{{show_open}}">
+          <view class="m-info {{show_open?'m-all':''}}"  >
             <htmlParser :parserName.sync="name1" :parserContent.sync="content1" />
             <!--                    <template id="wxParse" data="{{wxParseData:htmlParserName2.nodes}}"></template>-->
           </view>
@@ -274,21 +316,29 @@
           <view class="m-flex-between">
             <span class="m-border-back">团队相册</span>
           </view>
-          <view class="m-flex-between m-select-box">
+          <view class="m-flex-between m-select-box" wx:if="{{photo_album.length > 0}}">
             <view >
-              <checkbox value="" checked="true" color="#FFCE00"/>全选
+              <checkbox-group bindchange="checkChange" >
+                <checkbox value="{{all_check}}" checked="{{all_check}}" color="#FFCE00" />全选
+              </checkbox-group>
             </view>
-            <view class="m-blue">选择</view>
+            <view class="m-blue" @tap="deletePhoto">删除</view>
           </view>
+        <view class="m-no-data" wx:if="{{photo_album.length == 0}}">暂无照片</view>
+        <checkbox-group bindchange="checkboxChange" >
           <view class="m-image-box {{all_photo?'m-all':''}}" wx:if="{{photo_album.length>0 }}">
             <view class="m-one-image" wx:for="{{photo_album}}" wx:key="{{index}}">
-              <image src="" ></image>
-              <view class="m-image-more" wx:if="{{!all_photo && ((photo_album.length > 10 &&  index == 9 ) || (photo_album.length <= 10 &&  index == photo_album.length-1 ))}}" @tap.stop="changeRoute('/pages/index/imageList')">
+              <image src="{{item.url}}" @tap="previewImg({{item.url}})" wx:if="{{item.type == 'image'}}"></image>
+              <image src="{{item.thumbnail}}" wx:if="{{item.type == 'video'}}" @tap="playVideo({{item}})"></image>
+              <image src="{{img_src}}common/icon-play.png" wx:if="{{item.type == 'video'}}" @tap="playVideo({{item}})" class="m-icon-play"></image>
+              <view class="m-image-more" wx:if="{{!all_photo && ((photo_album.length-1 > 10 && index == 9 )|| index == photo_album.length-1 )}}" >
                 <view>{{photo_album.length}}</view>
                 <view>...</view>
               </view>
+              <checkbox value="{{index}}"  color="#FFCE00" class="m-check" checked="{{item.checked}}"/>
             </view>
           </view>
+        </checkbox-group>
           <view class="m-open" wx:if="{{!all_photo && photo_album.length-1 > 10}}" @tap="openClick('all_photo',true)">
             <span>点击展开</span>
             <image src="{{img_src}}common/icon-down.png" class="m-icon-down" alt="" />
@@ -301,14 +351,20 @@
       <view class="m-circle-box">
         <view class="m-flex-between">
           <span class="m-border-back">团队广场</span>
-          <view class="m-blue" @tap="changeCircle">编辑</view>
+          <view class="m-blue" wx:if="{{list_data.length > 0}}" @tap="changeCircle">编辑</view>
         </view>
         <view class="m-no-data" wx:if="{{list_data.length == 0}}">暂无动态</view>
         <circle :list.sync="list_data"></circle>
       </view>
 
+      <view class="m-modal m-video" wx:if="{{show_video}}">
+        <view class="m-flex-end">
+          <span class="m-btn" @tap="changeModal('show_video',false)">关闭</span>
+        </view>
+        <video src="{{video_url}}" autoplay="true"></video>
+      </view>
 
-
+      <view class="m-foot-btn m-one" @tap.stop="shareSubmit">完成并分享</view>
 
     </view>
 </template>
@@ -321,7 +377,7 @@
   import circle from '../../components/common/circle';
   export default class shareEdit extends wepy.page {
     config = {
-      navigationBarTitleText: '活动详情'
+      navigationBarTitleText: '分享团队精彩内容'
     };
     components = {circle:circle,  htmlParser:htmlParser};
     data = {
@@ -330,12 +386,41 @@
       name1:'htmlParserName1',
       detail_info:null,
       content1:"",
-      plid:'c088f41c-b27b-11e9-8ca3-0242ac110002',
+      plid:'e9d45eee-b80a-11e9-82fc-0242ac110002',
       show_open:false,
       photo_album:[],
       list_data:[],
       all_photo:false,
+      page_info:{
+        page_num:1,
+        page_size:20
+      },
+      show_video : false,
+      video_url : '',
+      all_check:false,
+      show_detail:true,
+      secret_usid:''
     };
+    getPhoto(){
+      let that = this;
+      tip.loading();
+      wepy.request({
+        url: api.get_team_album + '?token=' +wx.getStorageSync('token'),
+        data: {
+          plid: that.plid
+        }
+      }).then(res => {
+        if(res.data.status == 200){
+          let data = res.data.data;
+          for(let i=0;i<data.length;i++){
+            data[i].checked = false;
+          }
+          that.photo_album = data;
+          that.$apply();
+
+        }
+      })
+    }
     //获取活动详情
     getDetail(id){
       let that = this;
@@ -353,15 +438,6 @@
           let data = res.data.data;
           that.detail_info = data;
 
-          if(data.joinstatus){
-            wx.setNavigationBarTitle({
-              title: '活动报名'
-            })
-          }else{
-            wx.setNavigationBarTitle({
-              title: '我创建的'
-            })
-          }
           data.time = data.plstarttime.slice(0,7) +'/' + data.plstarttime.slice(8,10) + '-' + data.plendtime.slice(5,7) +'/' + data.plendtime.slice(8,10)
           data.pllocation = data.pllocation.join('-');
           data.plproducts = data.plproducts.join('、');
@@ -375,22 +451,210 @@
         }
       })
     }
+    //获取广场
+    getData(){
+      var that=this;
+      tip.loading();
+      let optionsList = [].concat(that.list_data);
+      wepy.request({
+        url: api.get_team_travelrecord +'?token='+wx.getStorageSync('token') ,
+        data: {
+          plid: that.plid,
+          page_num:that.page_info.page_num,
+          page_size: that.page_info.page_size,
+          detail:that.show_detail
+        },
+        header: {
+          'content-type': 'application/json' // 默认值
+        }
+      }).then(res => {
+        if(res.data.status == 200){
+          let data = res.data.data;
+          if(that.page_info.page_num >1){
+            optionsList = optionsList.concat(data);
+          }else{
+            optionsList = data;
+          }
+          for(let i=0;i<optionsList.length;i++){
+            if(optionsList[i].picture){
+              if(optionsList[i].picture.indexOf('https://') < 0){
+                optionsList[i].picture = api.api + optionsList[i].picture;
+              }
+            }
+            if(optionsList[i].trtype == 2){
+              if(optionsList[i].showtype == 'image'){
+                for(let a =0;a<optionsList[i].image.length;a++){
+                  if(optionsList[i].image[a].indexOf('https://') < 0){
+                    optionsList[i].image[a] = api.api +optionsList[i].image[a]
+                  }
+                }
+              }
+              if(optionsList[i].showtype == 'video'){
+                if(optionsList[i].video.url.indexOf('https://') < 0){
+                  optionsList[i].video.url = api.api + optionsList[i].video.url;
+                }
+                if(optionsList[i].video.thumbnail.indexOf('https://') < 0){
+                  optionsList[i].video.thumbnail = api.api + optionsList[i].video.thumbnail;
+                }
+              }
+            }
+            optionsList[i].id = i;
+            optionsList[i].checked = false;
+          }
+          that.total_count = res.data.total_count;
+          that.list_data = optionsList;
+          that.$apply();
+        }
+      })
+
+    }
+    postData(){
+      let that = this;
+      tip.loading();
+      for(let i=0;i<this.photo_album.length;i++){
+        delete this.photo_album[i].checked;
+      }
+      for(let i=0;i<this.list_data.length;i++){
+        delete this.list_data[i].checked;
+      }
+      wepy.request({
+        url:api.share_content + '?token=' +wx.getStorageSync('token'),
+        method:"post",
+        data:{
+          type:2,
+          plid:that.plid,
+          album:that.select_box,
+          trids:that.list_data,
+
+        }
+      }).then(resule => {
+        if(resule.data.status == 200){
+          tip.toast('可点击右上角分享')
+
+        }
+      })
+
+    }
     onLoad(options) {
-      // if(options.plid){
-      //   this.plid = options.plid;
+      if(options.plid){
+        this.plid = options.plid;
       this.img_src = api.img_src;
         this.$apply();
-      // }
-      // wx.showShareMenu({
-      //   withShareTicket: true
-      // })
+      }
+      let data = null;
+      if(options.data){
+        data = JSON.parse(decodeURIComponent(options.data));
+        this.data = data;
+        for(let i in data){
+          this[i] = data[i];
+        }
+        this.$apply();
+      }else{
+        this.getDetail(this.plid);
+        this.getData();
+        this.getPhoto();
+        this.getId();
+      }
+
+      wx.showShareMenu({
+        withShareTicket: true
+      })
     }
 
     onShow(){
-      this.getDetail(this.plid);
-    }
 
+    }
+    onShareAppMessage(res) {
+      if (res.from === 'button') {
+
+      }
+      let that = this;
+      return {
+        title: '精彩瞬间',
+        path: '/pages/index/activityDetail?secret_usid='+ that.secret_usid +'&plid=' + that.plid,
+        success: function (res) {
+          console.log('成功', res)
+        }
+      }
+    }
+    getId(){
+      let that = this;
+      wepy.request({
+        url:api.secret_usid + '?token=' +wx.getStorageSync('token'),
+        method:"get",
+        data:{}
+      }).then(resule => {
+        if(resule.data.status == 200){
+          that.secret_usid = resule.data.data.secret_usid;
+          that.$apply();
+        }
+      })
+    }
     methods = {
+      shareSubmit(){
+        console.log(this.show_detail)
+      },
+      //每个图片的选择
+      checkboxChange(e){
+        if(e.detail.value.length  == this.photo_album.length){
+          this.all_check = true;
+        }else{
+          this.all_check = false;
+        }
+        this.select_index = e.detail.value;
+        for(let i=0;i<this.photo_album.length;i++){
+          for(let j=0;j<e.detail.value.length;j++){
+            this.photo_album[i].checked = false;
+            if(i == e.detail.value[j]){
+              this.photo_album[i].checked = true;
+              break;
+            }
+          }
+        }
+        this.$apply();
+      },
+      checkDetailChange(e){
+        if(e.detail.value.length >0){
+          this.show_detail = true;
+        }else{
+          this.show_detail = false;
+        }
+        this.$apply();
+      },
+      //全选
+      checkChange(e){
+        for(let i=0;i<this.photo_album.length;i++){
+          if(e.detail.value.length > 0){
+            this.photo_album[i].checked = true;
+          }else{
+            this.photo_album[i].checked = false;
+          }
+        }
+        this.$apply();
+      },
+      //删除相册
+      deletePhoto(){
+        let that =this;
+        wx.showModal({
+          title: '删除',
+          content: '确定删除这些内容吗？',
+          success (res) {
+            if (res.confirm) {
+              let arr =[];
+              for(let i=0;i<that.photo_album.length;i++){
+                if(!that.photo_album[i].checked){
+                  arr.push(that.photo_album[i]);
+                }
+              }
+              that.photo_album = [].concat(arr);
+              // that.show_edit = false;
+              that.$apply();
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+      },
       previewImg(item){
         let that = this;
         console.log(item)
@@ -409,10 +673,25 @@
         this.$apply();
       },
       changeCircle(){
+        let that = this;
         wx.navigateTo({
-          url: '/pages/index/scrollCircle'
+          url: `/pages/index/scrollCircle?data=${encodeURIComponent(JSON.stringify(that.data))}`
         });
-      }
+      },
+      playVideo(v){
+        this.show_video = true;
+        this.video_url = v.url;
+        this.$apply();
+      },
+      changeModal(name,bool){
+
+        if(bool == 'true'){
+          this[name] = bool;
+        }else{
+          this[name] = false;
+        }
+        this.$apply();
+      },
 
     };
   }

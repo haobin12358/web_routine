@@ -295,7 +295,8 @@
           rule:'',
           photo_album:[],
           video_url:'',
-          show_video:false
+          show_video:false,
+          secret_usid:''
         }
         getDetail(id){
             let that = this;
@@ -303,7 +304,8 @@
             wepy.request({
                 url: api.get_play + '?token=' +wx.getStorageSync('token'),
                 data: {
-                    plid:id || that.plid
+                    plid:id || that.plid,
+                  secret_usid:that.secret_usid
                 },
                 header: {
                     'content-type': 'application/json' // 默认值
@@ -353,6 +355,7 @@
             plid:id  || that.plid,
             page_num:that.page_info.page_num,
             page_size: that.page_info.page_size,
+            secret_usid:that.secret_usid
           },
           header: {
             'content-type': 'application/json' // 默认值
@@ -400,7 +403,8 @@
         wepy.request({
           url: api.get_team_album + '?token=' +wx.getStorageSync('token'),
           data: {
-            plid:id || that.plid
+            plid:id || that.plid,
+            secret_usid:that.secret_usid
           }
         }).then(res => {
           if(res.data.status == 200){
@@ -445,6 +449,10 @@
             if(options.plid){
                 this.plid = options.plid;
                 this.$apply();
+            }
+            if(options.secret_usid){
+              this.secret_usid = options.secret_usid;
+              this.$apply();
             }
 
         }

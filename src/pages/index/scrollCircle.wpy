@@ -8,7 +8,7 @@
 
   .touchView{z-index: 200; width: 350rpx;position: absolute;top: 0;left:0;z-index:999;}
 
-  .edit_row{ position:relative;z-index:777; margin: 20rpx; background-color: #fff; height: 222px; box-sizing: border-box;    box-shadow: 0 30rpx 30rpx 0 rgba(0,0,0,0.12);
+  .edit_row{ position:relative;z-index:777; margin: 20rpx; background-color: #fff; height: 180px; box-sizing: border-box;    box-shadow: 0 30rpx 30rpx 0 rgba(0,0,0,0.12);
   }
 
 
@@ -24,7 +24,10 @@
   }
   .edit_row{
     border-bottom: 1px solid @border-color;
-    padding: 20rpx ;
+    padding: 0  ;
+    .m-scale{
+      transform: scale(0.9);
+    }
     .m-one-circle-title{
       .flex-row(space-between);
       padding-bottom: 10rpx;
@@ -86,9 +89,9 @@
     }
   }
   .m-btn-box{
-    height: 80px;
+    height: 40px;
     padding:0 20rpx ;
-    .flex-row(flex-end);
+    .flex-row(space-between);
     .m-btn{
       display: block;
       width: 120rpx;
@@ -96,7 +99,13 @@
       line-height: 50rpx;
       text-align: center;
       border-radius: 30rpx;
-      background-color: @common-color;
+      border: 1px solid @common-color;
+      color: @common-color;
+      margin-left: 20rpx;
+      &.active{
+        background-color: @common-color;
+        color: #000;
+      }
     }
   }
 
@@ -105,12 +114,24 @@
   <view >
     <!-- 页面card -->
     <view class="m-btn-box">
-      <span class="m-btn">保存</span>
+      <view >
+        <checkbox-group bindchange="checkChange" wx:if="{{show_edit}}">
+          <checkbox value="{{all_check}}" checked="{{all_check}}" color="#FFCE00" />全选
+        </checkbox-group>
+      </view>
+      <view class="m-flex-end" wx:if="{{!show_edit}}">
+        <span class="m-btn" @tap="showEdit">编辑</span>
+        <span class="m-btn active" @tap="saveTap">保存</span>
+      </view>
+      <view class="m-flex-end" wx:else>
+        <span class="m-btn" @tap="showEdit">确定</span>
+        <span class="m-btn active" @tap="deleteTap">删除</span>
+      </view>
     </view>
     <view style="position: relative;z-index:199;">
       <view class="touchView" style="height:{{scrollPosition.scrollViewHeight}}px;" @longpress="longpressfuc"
             @touchstart="draggleTouch"
-            @touchmove="draggleTouch" @touchend="draggleTouch">
+            @touchmove="draggleTouch" @tap="completedown" @touchend="draggleTouch">
       </view>
       <!-- 用于展示给用户的移动item -->
       <movable-area class="moveable_row move_row {{movableViewPosition.className}}"
@@ -125,9 +146,10 @@
                 <span class="m-user-name" >{{item.movableViewPosition.data.usname}}</span>
                 <span class="m-user-label">{{item.movableViewPosition.data.usminilevel}}</span>
               </view>
-              <view>
-                <!--                  <image src="{{img_src}}index/icon-add-look-active.png" class="m-recommend-icon" wx:if="{{!movableViewPosition.data.is_own && !movableViewPosition.data.followed}}" @tap.stop="follow({{index}})"></image>-->
+              <view class="m-flex-end">
+                <!--                  <image src="{{img_src}}index/icon-add-look-active.png" class="m-recommend-icon" wx:if="{{!item.is_own && !item.followed}}" @tap.stop="follow({{index}})"></image>-->
                 <view class="m-circle-label">{{movableViewPosition.data.travelrecordtype_zh}}</view>
+                <checkbox value="{{movableViewPosition.data.trid}}" checked="{{movableViewPosition.data.checked}}" wx:if="{{show_edit}}" color="#FFCE00"/>
               </view>
             </view>
             <view >
@@ -175,56 +197,60 @@
         <!--      <view style="position: relative; ">-->
 
         <!-- 用户信息 end -->
-        <block wx:for="{{optionsListData}}" wx:key="id">
-          <view class="edit_row  {{item.selectClass}}" data-index="{{index}}" bindtouchmove="handletouchmove" bindtouchstart="handletouchstart" bindtouchend="handletouchend" animation="{{animation_flag == index ? animationData :''}}">
+        <checkbox-group bindchange="checkboxChange">
+          <block wx:for="{{optionsListData}}" wx:key="id">
+            <view class="edit_row  {{item.selectClass}}" data-index="{{index}}" bindtouchmove="handletouchmove" bindtouchstart="handletouchstart" bindtouchend="handletouchend" animation="{{animation_flag == index ? animationData :''}}">
+              <view class="m-scale">
+                <view class="m-one-circle-title">
+                  <view class="m-flex-start"  >
+                    <image src="{{img_url}}{{item.author.usheader}}" class="m-user-head"></image>
+                    <span class="m-user-name" >{{item.author.usname}}</span>
+                    <span class="m-user-label">{{item.author.usminilevel}}</span>
+                  </view>
+                  <view class="m-flex-end">
+                    <!--                  <image src="{{img_src}}index/icon-add-look-active.png" class="m-recommend-icon" wx:if="{{!item.is_own && !item.followed}}" @tap.stop="follow({{index}})"></image>-->
+                    <view class="m-circle-label">{{item.travelrecordtype_zh}}</view>
+                    <checkbox value="{{item.trid}}" checked="{{item.checked}}" wx:if="{{show_edit}}" color="#FFCE00"/>
+                  </view>
+                </view>
+                <view >
+                  <!--      <view class="m-info">杭州-富阳</view>-->
+                  <view class="m-text"  wx:if="{{item.trtype == 2 }}">
+                    <view>{{item.text}}</view>
+                    <view class="m-img-box">
+                      <image wx:for="{{item.image}}" wx:key="{{i}}" @tap.stop="previewImage({{key}})" mode="aspectFill" wx:for-index="i" wx:for-item="key" src="{{key}}" class="m-img" wx:if="{{item.showtype == 'image'}}"  ></image>
+                      <video  wx:if="{{item.showtype == 'video'}}" src="{{item.video.url}}" poster="{{item.video.thumbnail}}"  controls></video>
+                    </view>
+                  </view>
+                  <view class="m-text" wx:else >
+                <span class="m-topic">
+                    #{{item.trtitle}}#
+                </span>
+                    <span wx:if="{{item.text}}">{{item.text}}</span>
 
-            <view class="m-one-circle-title">
-              <view class="m-flex-start"  >
-                <image src="{{img_url}}{{item.author.usheader}}" class="m-user-head"></image>
-                <span class="m-user-name" >{{item.author.usname}}</span>
-                <span class="m-user-label">{{item.author.usminilevel}}</span>
-              </view>
-              <view>
-                <!--                  <image src="{{img_src}}index/icon-add-look-active.png" class="m-recommend-icon" wx:if="{{!item.is_own && !item.followed}}" @tap.stop="follow({{index}})"></image>-->
-                <view class="m-circle-label">{{item.travelrecordtype_zh}}</view>
-              </view>
-            </view>
-            <view >
-              <!--      <view class="m-info">杭州-富阳</view>-->
-              <view class="m-text"  wx:if="{{item.trtype == 2 }}">
-                <view>{{item.text}}</view>
-                <view class="m-img-box">
-                  <image wx:for="{{item.image}}" wx:key="{{i}}" mode="aspectFill" wx:for-index="i" wx:for-item="key" src="{{key}}" class="m-img" wx:if="{{item.showtype == 'image'}}"  ></image>
-                  <video  wx:if="{{item.showtype == 'video'}}" src="{{item.video.url}}" poster="{{item.video.thumbnail}}"  controls></video>
+                  </view>
+                  <image src="{{item.picture}}" @tap.stop="previewImage({{item.picture}})" wx:if="{{item.picture}}" class="m-one-img" ></image>
+                  <!--        <image src="{{item.picture}}" wx:if="{{item.picture && item.picture.indexOf('https:') > -1}}" class="m-one-img" @tap.stop="previewImage({{item.picture}})"></image>-->
+                  <!--      <image src="" class="m-one-img" ></image>-->
+                  <view class="m-info" wx:if="{{item.trproducts_str}}">推荐携带物品：{{item.trproducts_str}}</view>
+                  <view class="m-info" wx:if="{{item.trbudget}}">预算：¥{{item.trbudget}}</view>
+                  <view class="m-flex-between" >
+                    <view class="m-loc-box" wx:if="{{item.trlocation}}">
+                      <image src="{{img_src}}common/icon-loc.png" class="m-icon-loc"></image>
+                      <span >{{item.trlocation}}</span>
+                    </view>
+                    <!--                  <view class="m-grey m-flex-end" wx:if="{{item.trtype != 2 }}" @tap="changeRoute({{item}})">-->
+                    <!--                    <span>查看详情</span>-->
+                    <!--                    <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>-->
+                    <!--                  </view>-->
+                  </view>
                 </view>
               </view>
-              <view class="m-text" wx:else >
-              <span class="m-topic">
-                  #{{item.trtitle}}#
-              </span>
-                <span wx:if="{{item.text}}">{{item.text}}</span>
 
-              </view>
-              <image src="{{item.picture}}" wx:if="{{item.picture}}" class="m-one-img" ></image>
-              <!--        <image src="{{item.picture}}" wx:if="{{item.picture && item.picture.indexOf('https:') > -1}}" class="m-one-img" @tap.stop="previewImage({{item.picture}})"></image>-->
-              <!--      <image src="" class="m-one-img" ></image>-->
-              <view class="m-info" wx:if="{{item.trproducts_str}}">推荐携带物品：{{item.trproducts_str}}</view>
-              <view class="m-info" wx:if="{{item.trbudget}}">预算：¥{{item.trbudget}}</view>
-              <view class="m-flex-between" >
-                <view class="m-loc-box" wx:if="{{item.trlocation}}">
-                  <image src="{{img_src}}common/icon-loc.png" class="m-icon-loc"></image>
-                  <span >{{item.trlocation}}</span>
-                </view>
-                <!--                  <view class="m-grey m-flex-end" wx:if="{{item.trtype != 2 }}" @tap="changeRoute({{item}})">-->
-                <!--                    <span>查看详情</span>-->
-                <!--                    <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>-->
-                <!--                  </view>-->
-              </view>
+
             </view>
-
-          </view>
-        </block>
-
+          </block>
+        </checkbox-group>
         <!--      </view>-->
       </scroll-view>
     </view>
@@ -242,11 +268,15 @@
   import tip from '../../utils/tip';
 
   export default class scrollCircle extends wepy.page {
-
+    config = {
+      navigationBarTitleText: '长按左边拖拽排序'
+    }
     components = {
 
     }
     data = {
+      all_check:false,
+      show_edit:false,
       img_src:api.img_src,
       pageStatus:'',
       optionsListData:[],
@@ -260,7 +290,7 @@
         }
       },
       scrollPosition:{
-        everyOptionCell:222,
+        everyOptionCell:188,
         top:0,
         scrollTop:0,
         scrollY:true,
@@ -293,42 +323,18 @@
         page_size: 10
       },
       total_count:0,
-      img_url:api.api
-
+      img_url:api.api,
+      select_box:[],
+      all_data:null
     }
 
-    postData(id,index){
-      let that = this;
-      wepy.request({
-        url: api.collect + '?token=' +wx.getStorageSync('token'),
-        method:"post",
-        data:{
-          uclcotype:2,
-          uclcollection:id
-        }
-      }).then(resule => {
-        if(resule.data.status == 200){
-          for(let i =0;i<that.list.length;i++){
-            if(that.list[i].author.usid == id){
-              that.list[i].followed = !that.list[i].followed
-            }
-          }
-          wx.showToast({
-            title: resule.data.message,
-            icon: 'success',
-            duration: 2000
-          })
-          that.$apply();
-        }
-      })
-    }
     onLoad(options) {
       var systemInfo= wx.getSystemInfoSync();
       // 开始加载页面
       var scrollViewHeight = systemInfo.windowHeight;
       var scrollViewWidth = systemInfo.windowWidth;
       this.scrollPosition.scrollViewWidth = scrollViewWidth;
-        this.scrollPosition.scrollViewHeight = scrollViewHeight-80;
+        this.scrollPosition.scrollViewHeight = scrollViewHeight-40;
         this.scrollPosition.windowViewHeight = systemInfo.windowHeight;
 
       this.img_path = '';
@@ -336,6 +342,10 @@
       let that = this;
       that.page = 0;
       this.$apply();
+      if(options.data){
+        this.all_data = JSON.parse(decodeURIComponent(options.data));
+        this.$apply();
+      }
       that.getData();
       that.pageInit();
 
@@ -386,6 +396,7 @@
               }
             }
             optionsList[i].id = i;
+            optionsList[i].checked = false;
           }
           that.total_count = res.data.total_count;
           that.pageStatus = 'ok';
@@ -511,11 +522,11 @@
       that.$apply();
     }
     scrollTouchEnd(event) {
-      // console.log('结束');
+      console.log('结束');
       var that=this;
       var optionsListData = that.optionsDataTranlate(that.data.optionsListData,"");
 
-      that.optionsListData = optionsListData
+      that.optionsListData = optionsListData;
       that.scrollPosition.scrollY = true;
       that.movableViewPosition.className ="none";
       that.movableViewPosition.is_complete = true
@@ -528,6 +539,7 @@
           is_complete:true
         }
       };
+
       if(that.data.move_type != 'reset_status'){
         // console.log('排序');
         that.movableViewPosition =movableViewPosition
@@ -561,11 +573,13 @@
             }
           }
         }
-
+        that.$apply();
       }else{
-        that.movableViewPosition = movableViewPosition
+        that.movableViewPosition = movableViewPosition;
+
+        that.$apply();
       }
-      that.$apply();
+
       // console.log(that.data);
     }
     getOptionInfo(id) {
@@ -579,7 +593,7 @@
       return {};
     }
     getPositionDomByXY(potions) {
-      var y = potions.y-this.data.scrollPosition.top+this.data.scrollPosition.scrollTop - 80;
+      var y = potions.y-this.data.scrollPosition.top+this.data.scrollPosition.scrollTop - 40;
       var optionsListData = this.data.optionsListData;
       var everyOptionCell = this.data.scrollPosition.everyOptionCell;
       for(var i=0,j=optionsListData.length;i<j;i++){
@@ -616,6 +630,74 @@
 
   }
     methods = {
+      //删除
+      deleteTap(){
+        let that =this;
+        wx.showModal({
+          title: '删除',
+          content: '确定删除这些内容吗？',
+          success (res) {
+            if (res.confirm) {
+              let arr =[];
+              for(let i=0;i<that.optionsListData.length;i++){
+                if(!that.optionsListData[i].checked){
+                  arr.push(that.optionsListData[i]);
+                }
+              }
+              that.optionsListData = [].concat(arr);
+              // that.show_edit = false;
+              that.$apply();
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+      },
+      //保存
+      saveTap(){
+        let that = this;
+        that.all_data.list_data = that.optionsListData;
+        // that.all_data.cost_list = that.cost_list;
+        wx.redirectTo({
+          url: '/pages/index/shareEdit?data=' + encodeURIComponent(JSON.stringify(that.all_data))
+        });
+      },
+      //每个多选框
+      checkboxChange(e){
+
+        for(let i=0;i<this.optionsListData.length;i++){
+          for(let j=0;j<e.detail.value.length;j++){
+            this.optionsListData[i].checked = false;
+            if(this.optionsListData[i].trid == e.detail.value[j]){
+              this.optionsListData[i].checked = true;
+              break;
+            }
+          }
+        }
+        if(e.detail.value.length == this.optionsListData.length){
+          this.all_check =  true;
+        }else{
+          this.all_check =  false;
+        }
+        this.$apply();
+      },
+      //全选
+      checkChange(e){
+
+        for(let i=0;i<this.optionsListData.length;i++){
+          if(e.detail.value.length > 0){
+            this.optionsListData[i].checked = true;
+          }else{
+            this.optionsListData[i].checked = false;
+          }
+        }
+        this.$apply();
+      },
+      //编辑确定
+      showEdit(){
+        this.show_edit = !this.show_edit;
+        this.$apply();
+      },
       changeRoute(item){
         if(item.trtype != 2){
           wx.navigateTo({
@@ -635,24 +717,22 @@
       previewImage(item){
 
         let that = this;
-        if(this.list.length > 0){
-          for(let i=0;i<this.list.length;i++){
-            if(this.list[i].picture){
-              this.img_list.push(this.list[i].picture);
+        let img_list = [];
+        if(this.optionsListData.length > 0){
+          for(let i=0;i<this.optionsListData.length;i++){
+            if(this.optionsListData[i].picture){
+              img_list.push(this.optionsListData[i].picture);
             }
-            if(this.list[i].image){
-              this.img_list = this.img_list.concat(this.list[i].image);
+            if(this.optionsListData[i].image){
+              img_list = img_list.concat(this.optionsListData[i].image);
             }
           }
           this.$apply();
         }
         wx.previewImage({
           current: item, // 当前显示图片的http链接
-          urls: that.img_list // 需要预览的图片http链接列表
+          urls: img_list // 需要预览的图片http链接列表
         })
-      },
-      follow(index){
-        this.postData(this.list[index].author.usid,index);
       },
 
       handletouchmove: function(event) {
@@ -917,11 +997,11 @@
         this.scrollPosition.scrollTop = scrollTop;
         // this.movableViewPosition.y = scrollTop;
         if(scrollTop >= 61){
-          if(this.data.navigationBarTitle != '拖拽排序+左滑删除'){
+          if(this.data.navigationBarTitle != '长按左边拖拽排序'){
             wx.setNavigationBarTitle({
-              title: '拖拽排序+左滑删除'
+              title: '长按左边拖拽排序'
             })
-            this.navigationBarTitle = '拖拽排序+左滑删除'
+            this.navigationBarTitle = '长按左边拖拽排序'
 
           }
 
