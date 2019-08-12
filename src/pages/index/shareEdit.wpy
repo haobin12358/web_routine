@@ -523,7 +523,7 @@
         data:{
           type:2,
           plid:that.plid,
-          album:that.select_box,
+          album:that.photo_album,
           trids:that.list_data,
 
         }
@@ -592,7 +592,7 @@
     }
     methods = {
       shareSubmit(){
-        console.log(this.show_detail)
+        this.postData();
       },
       //每个图片的选择
       checkboxChange(e){
