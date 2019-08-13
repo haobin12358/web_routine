@@ -1,0 +1,37 @@
+<style scoped lang="less" rel="stylesheet/less">
+
+
+</style>
+<template>
+    <view>
+      <web-view src="{{src}}" bindmessage="changeMessage"></web-view>
+
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class shareView extends wepy.page {
+    config = {
+      navigationBarTitleText: '精彩内容'
+    };
+    components = {};
+    data = {
+      src:''
+    };
+
+    onLoad(options) {
+        if(options.src){
+          this.src = decodeURIComponent(options.src);
+          this.$apply();
+        }
+    }
+
+    methods = {
+      changeMessage(e){
+        console.log(e)
+      }
+    };
+  }
+</script>

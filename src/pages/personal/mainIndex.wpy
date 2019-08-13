@@ -216,7 +216,8 @@
         page_size:20
       },
       total_count:0,
-      option:''
+      option:'',
+      from:''
     };
     //
     getData(){
@@ -334,8 +335,13 @@
       })
     }
     onLoad(options) {
+      console.log(options,'dasdad')
       if(options.usid){
         this.usid = options.usid;
+        this.$apply();
+      }
+      if(options.from){
+        this.from = options.from;
         this.$apply();
       }
     }
@@ -345,10 +351,14 @@
     onUnload(){
       this.usid = '';
       this.$apply();
-      this.gotoHomePage();
+      if(this.from == ''){
+        this.gotoHomePage();
+      }
+
     }
 // 在订单详情 点击小程序的返回 自定其他跳页方法
     gotoHomePage() {//自定义页面跳转方法
+
       wx.switchTab({
         url: '/pages/personal/index',
       });

@@ -207,7 +207,7 @@
              <image src="{{img_src}}common/icon-question.png" class="m-icon" alt="" @tap="showRule"/>
            </view>
          </li>
-           <li class="m-no-flex">
+           <li class="m-no-flex" wx:if="{{content1}}">
                <view class="m-label">活动详情</view>
                <view class="m-info m-detail-text  {{show_open?'m-all':''}}" >
                    <htmlParser :parserName.sync="name1" :parserContent.sync="content1" />

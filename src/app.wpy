@@ -37,6 +37,7 @@
         'pages/index/index',
         'pages/index/scrollCircle',
         'pages/index/shareEdit',
+        'pages/index/shareView',
         'pages/personal/login',
         'pages/personal/personalInfo',
         'pages/index/enterPage',
