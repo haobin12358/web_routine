@@ -373,7 +373,7 @@
               <image src="{{item.url}}" @tap="previewImg({{item.url}})" wx:if="{{item.type == 'image'}}"></image>
               <image src="{{item.thumbnail}}" wx:if="{{item.type == 'video'}}" @tap="playVideo({{item}})"></image>
               <image src="{{img_src}}common/icon-play.png" wx:if="{{item.type == 'video'}}" @tap="playVideo({{item}})" class="m-icon-play"></image>
-              <view class="m-image-more" wx:if="{{!all_photo && ((photo_album.length-1 > 10 && index == 9 )|| index == photo_album.length-1 )}}" >
+              <view class="m-image-more" wx:if="{{!all_photo && (photo_album.length-1 > 10 && index == 9 )}}" >
                 <view>{{photo_album.length}}</view>
                 <view>...</view>
               </view>
@@ -409,7 +409,7 @@
       <view class="m-foot-btn m-one" @tap.stop="shareSubmit">完成并分享</view>
       <view class="m-modal" wx:if="{{show_share}}" @tap="changeModal('show_share',false)">
         <view class="m-modal-state">
-          <view class="m-share-title">12312</view>
+          <view class="m-share-title">{{detail.plname}}</view>
           <image src="{{detail.plimg}}" class="m-share-img"></image>
           <view class="m-share-btn-box">
             <span class="m-btn " @tap.stop="copy">复制链接</span>
@@ -583,7 +583,7 @@
         }
       }).then(resule => {
         if(resule.data.status == 200){
-          that.share_src = `https://playshare.bigxingxing.com/?plid=${that.plid}&secret_usid=${that.secret_usid}#/`;
+          that.share_src = `https://playshare.bigxingxing.com/?plid=${that.plid}&plname=${that.detail.plname}&secret_usid=${that.secret_usid}#/`;
           that.show_share = true;
           that.$apply();
         }
@@ -625,7 +625,7 @@
       }
       let that = this;
       return {
-        title: '精彩瞬间',
+        title: that.detail.plname+ '精彩瞬间',
         path: '/pages/index/activityDetail?secret_usid='+ that.secret_usid +'&plid=' + that.plid,
         success: function (res) {
           console.log('成功', res)
@@ -655,8 +655,9 @@
         let that = this;
         that.show_share = false;
         that.$apply();
+        console.log(that.share_src)
         wx.navigateTo({
-          url: v +'?src=' + encodeURIComponent(that.share_src)
+          url: v +'?src=' + encodeURIComponent(that.share_src)+'&plid=' + that.plid +'&secret_usid='+ that.secret_usid +'&plname='+that.detail.plname
         });
       },
       /**
@@ -754,7 +755,7 @@
       changeCircle(){
         let that = this;
         wx.navigateTo({
-          url: `/pages/index/scrollCircle?data=${encodeURIComponent(JSON.stringify(that.data))}`
+          url: `/pages/index/scrollCircle?data=${encodeURIComponent(JSON.stringify(that.data))}&plid=${that.plid}`
         });
       },
       playVideo(v){

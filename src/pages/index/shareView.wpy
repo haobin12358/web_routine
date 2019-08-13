@@ -18,14 +18,48 @@
     };
     components = {};
     data = {
-      src:''
+      src:'',
+      secret_usid:'',
+      plid:'',
+      plname:''
     };
+    onShareAppMessage(res) {
+      if (res.from === 'button') {
 
+      }
+      let that = this;
+      return {
+        title: that.plname + '精彩内容',
+        path: '/pages/index/activityDetail?secret_usid='+ that.secret_usid +'&plid=' + that.plid,
+        success: function (res) {
+          console.log('成功', res)
+        }
+      }
+    }
     onLoad(options) {
         if(options.src){
           this.src = decodeURIComponent(options.src);
           this.$apply();
         }
+        if(options.secret_usid){
+          this.secret_usid = options.secret_usid;
+          this.$apply();
+        }
+      if(options.plid){
+        this.plid = options.plid;
+        this.$apply();
+      }
+      if(options.plname){
+        this.plname = options.plname;
+        wx.setNavigationBarTitle({
+          title: options.plname+'精彩内容'
+        })
+        this.$apply();
+      }
+
+      wx.showShareMenu({
+        withShareTicket: true
+      })
     }
 
     methods = {

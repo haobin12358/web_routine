@@ -317,7 +317,8 @@
         expected_birth_week:''
       },
       navigationBarTitle:'',
-      plid:'e9d45eee-b80a-11e9-82fc-0242ac110002',
+      // plid:'e9d45eee-b80a-11e9-82fc-0242ac110002',
+      plid:'',
       page_info:{
         page_num: 1,
         page_size: 10
@@ -344,6 +345,10 @@
       this.$apply();
       if(options.data){
         this.all_data = JSON.parse(decodeURIComponent(options.data));
+        this.$apply();
+      }
+      if(options.plid){
+        this.plid = options.plid;
         this.$apply();
       }
       that.getData();
