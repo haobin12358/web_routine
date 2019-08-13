@@ -583,7 +583,8 @@
         }
       }).then(resule => {
         if(resule.data.status == 200){
-          that.share_src = `https://playshare.bigxingxing.com/?plid=${that.plid}&plname=${that.detail.plname}&secret_usid=${that.secret_usid}#/`;
+          that.share_src = `https://playshare.bigxingxing.com/?plid=${that.plid}&plname=${encodeURIComponent(that.detail.plname)}&secret_usid=${that.secret_usid}#/`;
+          console.log(that.share_src)
           that.show_share = true;
           that.$apply();
         }
