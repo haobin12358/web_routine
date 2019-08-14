@@ -173,7 +173,7 @@
 <!--        </li>-->
 
 <!--        @tap="changeRoute('/pages/index/timeIndex','phone')"/-->
-        <li @tap="selectTeam('/pages/index/timeIndex','phone')">
+        <li @tap="changeRoute('/pages/index/timeIndex','time')">
           <p><image src="{{img_src}}index/index-time.png" wx:if="{{img_src}}" class="m-index-icon" alt="" /></p>
           <p>时光记录</p>
         </li>
@@ -340,6 +340,11 @@
             }
           });
           break;
+        case 'time':
+          wx.navigateTo({
+            url: v
+          });
+          break;
         default:
           wx.navigateTo({
             url: v+'?plid='+that.plid
@@ -422,6 +427,10 @@
 
         //选择团队
       selectTeam(v,name){
+        if(this.id_list.length == 0){
+          tip.error('暂无团队');
+          return;
+        }
         this.show_team = true;
         this.page_info.page_num = 1;
         this.route = v;
