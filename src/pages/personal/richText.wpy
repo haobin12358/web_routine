@@ -7,7 +7,6 @@
 </style>
 <template>
     <view class="m-richText">
-
       <htmlParser :parserName.sync="name1" :parserContent.sync="content1" />
     </view>
 </template>

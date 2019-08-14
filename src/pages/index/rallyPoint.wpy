@@ -93,7 +93,8 @@
             can_post:false,
             button_show:'发起集合',
             mapCtx:null,
-            allpoint:[]
+            allpoint:[],
+          plid:''
         }
 
         getLocation(){
@@ -120,7 +121,8 @@
                 url: api.get_gather + '?token=' +wx.getStorageSync('token'),
                 data: {
                     latitude:that.latitude,
-                    longitude:that.longitude
+                    longitude:that.longitude,
+                    plid:that.plid
                 }
             }).then(res => {
               if(res.data.status ==200){
@@ -171,7 +173,8 @@
                 data:{
                     latitude:that.select_loc.latitude,
                     longitude: that.select_loc.longitude,
-                    time:that.time
+                    time:that.time,
+                    plid:that.plid
                 }
             }).then(resule => {
               if(resule.data.status == 200){
@@ -185,6 +188,10 @@
             this.time = (date.getHours()>9? date.getHours(): '0'+date.getHours()) +':' +(date.getMinutes()>9? date.getMinutes(): '0'+date.getMinutes());
             this.mapCtx = wx.createMapContext('map'); // map为地图的id
             this.$apply();
+            if(options.plid){
+              this.plid = options.plid;
+              this.$apply();
+            }
           this.getLocation();
 
         }

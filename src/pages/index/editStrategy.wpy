@@ -152,7 +152,7 @@
           tip.success('发布成功');
           if(that.plid){
             wx.redirectTo({
-              url: '/pages/index/enterTeam'
+              url: '/pages/index/enterTeam?plid=' +that.plid
             });
           }else{
             wx.navigateTo({
@@ -170,12 +170,14 @@
           this.recommend_list = data.recommend_list;
           this.trlocation =data.trlocation;
           this.trbudget = data.trbudget;
+        this.plid = data.plid;
           this.$apply();
          this.$broadcast('index-broadcast', data.trcontent);
         // this.$invoke('edit','onEditorReady');
       }
       if(options.plid){
         this.plid = options.plid;
+
         this.$apply();
       }
 

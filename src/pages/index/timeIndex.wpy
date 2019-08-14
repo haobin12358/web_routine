@@ -52,18 +52,23 @@
     };
     components = {};
     data = {
-      img_src:api.img_src
+      img_src:api.img_src,
+      plid:''
     };
 
     onLoad(options) {
       this.img_src = api.img_src;
+      if(options.plid){
+        this.plid = options.plid;
+      }
       this.$apply();
     }
 
     methods = {
       changeRoute(v){
+        let that = this;
         wx.navigateTo({
-          url: v
+          url: v +'?plid=' +that.plid
         });
       },
 

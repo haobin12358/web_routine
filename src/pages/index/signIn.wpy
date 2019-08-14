@@ -103,21 +103,7 @@
           signin_list:[],
           code:''
         }
-        getId(){
-          let that = this;
-          tip.loading();
-          wepy.request({
-            url: api.get_current_play + '?token=' +wx.getStorageSync('token'),
-            method:"get",
-            data:{}
-          }).then(resule => {
-            if(resule.data.status == 200){
-              that.plid = resule.data.data.plid;
-              that.$apply();
-              that.getList();
-            }
-          })
-        }
+
         getList(){
           let that = this;
           wepy.request({
@@ -159,11 +145,9 @@
           }
         }
         onShow(){
-          if(!this.plid){
-            this.getId();
-          }else{
-            this.getList();
-          }
+
+          this.getList();
+
 
         }
 

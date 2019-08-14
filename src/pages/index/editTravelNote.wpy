@@ -90,7 +90,7 @@
           tip.success('发布成功');
           if(that.plid){
             wx.redirectTo({
-              url: '/pages/index/enterTeam'
+              url: '/pages/index/enterTeam?plid=' +that.plid
             });
           }else{
             wx.navigateTo({

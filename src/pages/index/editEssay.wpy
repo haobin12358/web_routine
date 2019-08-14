@@ -126,7 +126,6 @@
     postData(status){
       let that = this;
       tip.loading();
-      console.log(that.plid)
       wepy.request({
         url: api.add_travelrecord + '?token=' +wx.getStorageSync('token'),
         method:"post",
@@ -144,7 +143,7 @@
           tip.success('发布成功');
           if(that.plid){
             wx.redirectTo({
-              url: '/pages/index/enterTeam'
+              url: '/pages/index/enterTeam?plid=' +that.plid
             });
           }else{
             wx.navigateTo({
