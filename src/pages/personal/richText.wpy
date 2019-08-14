@@ -26,7 +26,7 @@
     data = {
       name1:'htmlParserName2',
       content1:"",
-      lcid:'cb2db128-be4c-11e9-bb1b-0242ac110002'
+      lcid:''
     };
 
     onLoad(options) {
