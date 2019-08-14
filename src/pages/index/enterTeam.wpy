@@ -402,7 +402,17 @@
           }
 
         }
+          onUnload(){
 
+            this.gotoHomePage();
+
+          }
+          // 在订单详情 点击小程序的返回 自定其他跳页方法
+          gotoHomePage() {//自定义页面跳转方法
+            wx.switchTab({
+              url: '/pages/index/index',
+            });
+          }
         methods = {
           markertap(e){
                 // console.log(e)

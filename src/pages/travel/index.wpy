@@ -321,6 +321,7 @@
         })
       }
         onLoad(options) {
+
             this.getScenic();
             this.getImg();
             this.img_src = api.img_src;

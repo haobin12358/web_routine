@@ -193,11 +193,23 @@
       this.getImg();
     }
     onLoad(options){
-        // this.getMedicalList();
-        // this.getScienceList();
-        // this.getScroll();
-        // this.getTel();
-        //
+
+      //分享重定向
+      if(options.page){
+        let url = options.page;
+        let arr = [];
+        for(let i in options){
+          if(i != 'page'){
+            arr.push(i + '=' +options[i])
+          }
+        }
+        if(arr.length >0){
+          url = url + '?' + arr.join('&');
+        }
+        wx.navigateTo({
+          url: url
+        });
+      }
         this.getImg();
         this.img_src = api.img_src;
         this.$apply();

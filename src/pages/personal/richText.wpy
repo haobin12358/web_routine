@@ -1,0 +1,79 @@
+<style scoped lang="less" rel="stylesheet/less">
+
+  .m-richText{
+    padding: 30rpx;
+  }
+
+</style>
+<template>
+    <view class="m-richText">
+
+      <htmlParser :parserName.sync="name1" :parserContent.sync="content1" />
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import api from '../../api/api';
+  import tip from '../../utils/tip';
+  import htmlParser from '../../components/common/htmlParser';
+  import WxParse from '../../wxParse/wxParse';
+  export default class richText extends wepy.page {
+    config = {
+      navigationBarTitleText: '旗行'
+    };
+    components = {htmlParser:htmlParser};
+    data = {
+      name1:'htmlParserName2',
+      content1:"",
+      lcid:'cb2db128-be4c-11e9-bb1b-0242ac110002'
+    };
+
+    onLoad(options) {
+      if(options.lcid){
+        this.lcid = options.lcid;
+        this.$apply();
+      }
+      this.getData();
+      wx.showShareMenu({
+        withShareTicket: true
+      })
+    }
+    getData(){
+      let that = this;
+      wepy.request({
+        url: api.get_linkcontent +'?token='+wx.getStorageSync('token') ,
+        data: {
+          lcid:that.lcid
+        },
+        header: {
+          'content-type': 'application/json' // 默认值
+        }
+      }).then(res => {
+        if(res.data.status){
+          let data = res.data.data;
+          that.content1 = res.data.data.lccontent;
+          that.content1 = that.content1.replace(/&quot;/g,'');
+          that.content1 = that.content1.replace(/&nbsp;/g, '\xa0');
+          that.$apply();
+          that.$invoke('htmlParser', 'htmlParserNotice');
+        }
+      })
+    }
+    onShareAppMessage(res) {
+      if (res.from === 'button') {
+
+      }
+      let that = this;
+      let params = `?page=/pages/personal/richText&lcid=${that.lcid}`;
+      return {
+        title:  that.item.trtitle,
+        path: '/pages/index/index'+params,
+        success: function (res) {
+          console.log('成功', res)
+        }
+      }
+    }
+    methods = {};
+  }
+</script>

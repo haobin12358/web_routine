@@ -178,6 +178,10 @@
 <template>
     <view class="m-activityDetail" wx:if="{{detail}}">
       <scroll-view scroll-y style="height: 100vh;" bindscrolltolower="lower"  >
+        <view class="m-alert-text" wx:if="{{detail.is_join}}">
+          <span>报名成功！</span>
+          <span class="m-alert-btn" @tap="changeRoute('/pages/index/enterTeam')">进入团队</span>
+        </view>
        <ul class="m-activityDetail-info">
            <li>
              <view class="m-label">
@@ -254,7 +258,7 @@
 <!--        <view class="m-btn" wx:if="{{detail.plstatus < 2 && !detail.playtype}}"><span @tap="changeActivity">转让活动</span></view>-->
 <!--        <view class="m-scheduling-btn" wx:if="{{detail.joinstatus}}" @tap="toEnter('/pages/index/enterPage')">我要报名</view>-->
         <view class="m-scheduling-btn" wx:if="{{detail.repaystatus}}" @tap="postReplay">继续支付</view>
-        <view class="m-scheduling-btn" wx:if="{{detail.is_join}}" >已报名</view>
+<!--        <view class="m-scheduling-btn"  >已报名</view>-->
       </view>
       <view class="m-modal m-video" wx:if="{{show_video}}">
         <view class="m-flex-end">
@@ -282,7 +286,6 @@
             img_src:api.img_src,
             detail:null,
             name1:'htmlParserName1',
-            detail_info:null,
             content1:"",
             show_open:false,
             plid:'',
@@ -313,7 +316,7 @@
             }).then(res => {
               if(res.data.status == 200){
                 let data = res.data.data;
-                that.detail_info = data;
+                // that.detail_info = data;
 
                 data.time = data.plstarttime.slice(0,7) +'/' + data.plstarttime.slice(8,10) + '-' + data.plendtime.slice(5,7) +'/' + data.plendtime.slice(8,10)
                 data.pllocation = data.pllocation.join('-');
@@ -322,6 +325,11 @@
                 that.content1 = that.content1.replace(/&quot;/g,'');
                 that.content1 = that.content1.replace(/&nbsp;/g, '\xa0');
                 that.detail = data;
+                if(!that.detail.playtype){
+                  wx.setNavigationBarTitle({
+                    title: '活动详情'
+                  })
+                }
                 // WxParse.wxParse('htmlParserName2','html',res.data.data.plcontent,that,0);
                 that.$apply();
                 that.$invoke('htmlParser', 'htmlParserNotice');

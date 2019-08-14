@@ -39,6 +39,7 @@
         'pages/index/shareEdit',
         'pages/index/shareView',
         'pages/personal/login',
+        'pages/personal/richText',
         'pages/personal/personalInfo',
         'pages/index/enterPage',
         'pages/index/lookActivity',
@@ -126,10 +127,31 @@
     }
 
     data = {
-      show_login:false
+      show_login:false,
+      version:'1.0.4'
     }
     onLaunch(options){
-      console.log(options)
+      let that = this;
+      if(wx.getStorageSync('version')){
+        if(that.data.version != wx.getStorageSync('version')){
+          wx.showModal({
+            title: '旗行小程序版本更新',
+            content: '为了您更好的体验，请先清除缓存再重新登录',
+            success (res) {
+              if (res.confirm) {
+                wx.clearStorageSync();
+                wx.clearStorage();
+                wx.setStorageSync('version',that.data.version)
+              } else if (res.cancel) {
+                console.log('用户点击取消')
+              }
+            }
+          })
+        }
+      }else{
+        wx.setStorageSync('version',that.data.version)
+      }
+
     }
 
     constructor () {
