@@ -43,7 +43,11 @@
     .m-index-content{
       background-color: #fff;
       .flex-row(space-between);
-      padding: 20rpx 30rpx;
+      padding: 0 30rpx 0;
+      &.m-top-border{
+        border-top: 10rpx solid #F4F4F4;
+        padding: 20rpx 30rpx;
+      }
       .m-icon-list{
         /*width: 50%;*/
         overflow:hidden;
@@ -172,18 +176,42 @@
 <!--          <p>聊天室</p>-->
 <!--        </li>-->
 
-<!--        @tap="changeRoute('/pages/index/timeIndex','phone')"/-->
-        <li @tap="changeRoute('/pages/index/timeIndex','time')">
-          <p><image src="{{img_src}}index/index-time.png" wx:if="{{img_src}}" class="m-index-icon" alt="" /></p>
-          <p>时光记录</p>
-        </li>
+
 <!--        @tap="changeRoute('/pages/index/rallyPoint','phone')"-->
         <li @tap="selectTeam('/pages/index/rallyPoint','phone')">
           <p><image src="{{img_src}}index/index-gather.png" wx:if="{{img_src}}" class="m-index-icon" alt="" /></p>
           <p>集合点</p>
         </li>
+        <!--        @tap="changeRoute('/pages/index/timeIndex','phone')"/-->
+<!--        <li @tap="showTip">-->
+<!--          <p><image src="{{img_src}}index/index-brand.png" wx:if="{{img_src}}" class="m-index-icon" alt="" /></p>-->
+<!--          <p>品牌馆</p>-->
+<!--        </li>-->
+<!--        <li @tap="showTip">-->
+<!--          <p><image src="{{img_src}}index/index-free.png" wx:if="{{img_src}}" class="m-index-icon" alt="" /></p>-->
+<!--          <p>免费门票</p>-->
+<!--        </li>-->
         <li></li>
         <li></li>
+        <li></li>
+      </ul>
+    </view>
+    <view class="m-index-content m-top-border">
+      <ul class="m-icon-list">
+        <!--       @tap="changeRoute('/pages/index/signIn','team')" -->
+        <li  @tap="changeRoute('/pages/index/editTravelNote','time')">
+          <p><image src="{{img_src}}index/index-time.png" wx:if="{{img_src}}" class="m-index-icon" alt="" /></p>
+          <p>游记</p>
+        </li>
+        <!--        @tap="changeRoute('/pages/index/enterTeam','phone')"-->
+        <li  @tap="changeRoute('/pages/index/editStrategy','time')">
+          <p><image src="{{img_src}}index/index-strategy.png" wx:if="{{img_src}}" class="m-index-icon" alt="" /></p>
+          <p>攻略</p>
+        </li>
+        <li @tap="changeRoute('/pages/index/editEssay','time')">
+          <p><image src="{{img_src}}index/index-essay.png" wx:if="{{img_src}}" class="m-index-icon" alt="" /></p>
+          <p>随笔</p>
+        </li>
       </ul>
     </view>
     <phone :show_tel.sync="show_tel" :url.sync="url"></phone>
