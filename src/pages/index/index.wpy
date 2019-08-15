@@ -332,7 +332,8 @@
         });
       }
         this.getImg();
-        this.getId();
+
+
         this.img_src = api.img_src;
         this.$apply();
       }
@@ -382,7 +383,9 @@
 
     }
       onShow(){
-
+        if(wx.getStorageSync('token')){
+          this.getId();
+        }
         this.show_tel = false;
         this.$apply();
       }
