@@ -289,6 +289,7 @@
     //获取已有的团队id
     getId(){
       let that = this;
+      tip.loading();
       wepy.request({
         url: api.get_play_history + '?token=' +wx.getStorageSync('token'),
         data: {
@@ -305,6 +306,11 @@
         }else{
           that.id_list = res.data.data;
         }
+        if(that.id_list.length == 0){
+          tip.error('暂无团队');
+          return;
+        }
+        that.show_team = true;
         that.total_count = res.data.total_count;
         that.$apply();
       })
@@ -383,9 +389,9 @@
 
     }
       onShow(){
-        if(wx.getStorageSync('token')){
-          this.getId();
-        }
+        // if(wx.getStorageSync('token')){
+        //   this.getId();
+        // }
         this.show_tel = false;
         this.$apply();
       }
@@ -458,11 +464,7 @@
 
         //选择团队
       selectTeam(v,name){
-        if(this.id_list.length == 0){
-          tip.error('暂无团队');
-          return;
-        }
-        this.show_team = true;
+        this.getId();
         this.page_info.page_num = 1;
         this.route = v;
         this.route_name = name;

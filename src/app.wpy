@@ -33,6 +33,7 @@
 
     config = {
       pages: [
+
         'pages/index/index',
         'pages/index/scrollCircle',
         'pages/index/shareEdit',

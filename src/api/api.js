@@ -5,9 +5,9 @@
 const api2 = 'https://www.bigxingxing.com/api/v2/';
 
 
-// const api = 'https://play.bigxingxing.com' ;
+const api = 'https://play.bigxingxing.com' ;
 // const api = 'https://pre2.bigxingxing.com';
-const api = 'https://www.bigxingxing.com';
+// const api = 'https://www.bigxingxing.com';
 //登录 注册
 
 const login = api2+'user/mp_login';//登录
@@ -85,8 +85,8 @@ const get_linkcontent = api2 + 'index/get_linkcontent';//富文本详情
 
 
 
-// const img_src = 'https://play.bigxingxing.com/icon/';
-const img_src = 'https://www.bigxingxing.com/icon/';
+const img_src = 'https://play.bigxingxing.com/icon/';
+// const img_src = 'https://www.bigxingxing.com/icon/';
 // const img_src = '../../images/';
 //评价
 module.exports = {
