@@ -1,0 +1,62 @@
+<style scoped lang="less" rel="stylesheet/less">
+
+  .m-bottom-line{
+    width: 100%;
+    position: relative;
+    height: 35rpx;
+    &:after{
+      content: '';
+      position: absolute;
+      height: 0;
+      width: 99%;
+      margin: auto;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top:0;
+      border-top: 1px dashed #C1C1C1;
+
+    }
+    .m-text{
+      position: absolute;
+      margin: auto;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top:0;
+      text-align: center;
+      color: #C1C1C1;
+      font-size: 24rpx;
+      z-index: 100;
+      span{
+        display: inline-block;
+        padding: 0 20rpx;
+        background-color: #fff;
+      }
+    }
+  }
+</style>
+<template>
+  <view class="m-bottom-line">
+    <view class="m-text"><span>暂无更多</span></view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class bottom extends wepy.component {
+    config = {
+
+
+    };
+    components = {};
+    data = {};
+
+    onLoad(options) {
+
+    }
+
+    methods = {};
+  }
+</script>

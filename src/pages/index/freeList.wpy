@@ -1,0 +1,140 @@
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../../styles/common";
+.m-freeList{
+  padding: 25rpx;
+  .m-freeList-content{
+    padding: 20rpx 0;
+    .m-one-free{
+      position: relative;
+      width: 700rpx;
+      height: 350rpx;
+      margin-bottom: 30rpx;
+      .m-back{
+        position: absolute;
+        top:0;
+        left: 0;
+        width:700rpx;
+        height: 350rpx;
+        background-color: #FFCE00;
+      }
+      .m-free-content{
+        position: absolute;
+        top:0;
+        left: 0;
+        z-index: 10;
+        width:700rpx;
+        height: 350rpx;
+        padding: 30rpx 40rpx;
+        box-sizing: border-box;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%,rgba(0,0,0,0.05) 100%);
+        .m-label{
+          position: absolute;
+          top:0;
+          right: 10rpx;
+          width: 74rpx;
+          height: 60rpx;
+          background-color: @common-color;
+          font-size: 24rpx;
+          text-align: center;
+          line-height: 45rpx;
+          border-radius:0 0 50rpx 50rpx;
+        }
+        .m-name{
+          font-size: 40rpx;
+          line-height: 56rpx;
+          font-weight: 600;
+          color: #fff;
+          width: 440rpx;
+        }
+        .m-info{
+          .flex-row(flex-start);
+          color: #fff;
+          .m-line{
+            display: block;
+            width: 1px;
+            height: 24rpx;
+            background-color: #fff;
+            margin: 0 15rpx;
+          }
+        }
+        .m-label-list{
+          .flex-row(flex-start);
+          span{
+            display: block;
+            padding: 0 7rpx;
+            font-size: 18rpx;
+            background-color: #fff;
+            border-radius: 3rpx;
+            margin-right: 17rpx;
+            color: #333;
+          }
+        }
+      }
+    }
+  }
+
+}
+
+</style>
+<template>
+    <view class="m-freeList">
+      <view>
+        <span class="m-border-back">免费领取</span>
+      </view>
+      <view class="m-freeList-content">
+        <view class="m-one-free">
+          <image class="m-back"></image>
+          <view class="m-free-content">
+            <span class="m-label">推荐</span>
+            <view class="m-name">免费!! 打卡杭州富阳野生
+              动物园</view>
+            <view class="m-info">
+              <span>9.20抢票开启</span>
+              <span class="m-line"></span>
+              <span>亲子游必选</span>
+            </view>
+            <view class="m-label-list">
+              <span>自然</span>
+              <span>自然</span>
+            </view>
+          </view>
+        </view>
+        <view class="m-one-free">
+          <image class="m-back"></image>
+          <view class="m-free-content">
+            <span class="m-label">推荐</span>
+            <view class="m-name">免费!! 打卡杭州富阳野生
+              动物园</view>
+            <view class="m-info">
+              <span>9.20抢票开启</span>
+              <span class="m-line"></span>
+              <span>亲子游必选</span>
+            </view>
+            <view class="m-label-list">
+              <span>自然</span>
+              <span>自然</span>
+            </view>
+          </view>
+        </view>
+      </view>
+      <bottom></bottom>
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+import bottom from '../../components/common/bottom';
+  export default class freeList extends wepy.page {
+    config = {
+      navigationBarTitleText: '免费领取门票'
+    };
+    components = {bottom};
+    data = {};
+
+    onLoad(options) {
+
+    }
+
+    methods = {};
+  }
+</script>

@@ -1,8 +1,8 @@
 
 
-// const api2 = 'https://play.bigxingxing.com/api/v2/' ;
+const api2 = 'https://play.bigxingxing.com/api/v2/' ;
 // const api2 = 'https://pre2.bigxingxing.com/api/v2/';
-const api2 = 'https://www.bigxingxing.com/api/v2/';
+// const api2 = 'https://www.bigxingxing.com/api/v2/';
 
 
 const api = 'https://play.bigxingxing.com' ;
