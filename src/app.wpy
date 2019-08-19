@@ -33,9 +33,12 @@
 
     config = {
       pages: [
-        'pages/index/freeDetail',
+
         'pages/index/index',
+        'pages/personal/codeDetail',
+        'pages/personal/codeList',
         'pages/index/freeList',
+        'pages/index/freeDetail',
         'pages/index/scrollCircle',
         'pages/index/shareEdit',
         'pages/index/shareView',

@@ -1,0 +1,44 @@
+<style scoped lang="less" rel="stylesheet/less">
+
+.m-codeDetail{
+  padding: 183rpx 65rpx;
+  .m-code{
+    width: 616rpx;
+    height: 616rpx;
+    background-color: #C1C1C1;
+  }
+  .m-foot-btn{
+    &.m-one{
+      &.disable{
+        background-color: #E0E0E0;
+        color: #999999;
+      }
+    }
+  }
+}
+</style>
+<template>
+    <view class="m-codeDetail ">
+      <image class="m-code"></image>
+      <view class="m-foot-btn m-one">提交活动记录</view>
+<!--      <view class="m-foot-btn m-one disable">已提交待审核</view>-->
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class codeDetail extends wepy.page {
+    config = {
+      navigationBarTitleText: '二维码'
+    };
+    components = {};
+    data = {};
+
+    onLoad(options) {
+
+    }
+
+    methods = {};
+  }
+</script>

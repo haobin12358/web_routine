@@ -82,7 +82,7 @@
         <span class="m-border-back">免费领取</span>
       </view>
       <view class="m-freeList-content">
-        <view class="m-one-free">
+        <view class="m-one-free" @tap="changeRoute('/pages/index/freeDetail')">
           <image class="m-back"></image>
           <view class="m-free-content">
             <span class="m-label">推荐</span>
@@ -135,6 +135,13 @@ import bottom from '../../components/common/bottom';
 
     }
 
-    methods = {};
+    methods = {
+      changeRoute(v){
+        let that = this;
+        wx.navigateTo({
+          url: v
+        });
+      }
+    };
   }
 </script>

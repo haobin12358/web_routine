@@ -167,7 +167,7 @@
     <view class="m-freeDetail">
 <!--      <view class="m-top-img-box">-->
         <image class="m-top-img"></image>
-        <view class="m-return m-flex-center">
+        <view class="m-return m-flex-center" @tap="changeRoute('/pages/index/freeList')">
           <image src="{{img_src}}index/icon-return.png" class="m-icon-more"></image>
           <span>查看更多</span>
         </view>
@@ -257,6 +257,12 @@
           this[name] = true;
         }
         this.$apply();
+      },
+      changeRoute(v){
+        let that = this;
+        wx.redirectTo({
+          url: v
+        });
       }
     };
   }
