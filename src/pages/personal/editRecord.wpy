@@ -1,0 +1,318 @@
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../../styles/common";
+  .m-editEssay{
+    font-size: 28rpx;
+    .m-row{
+      padding: 20rpx 30rpx;
+      border: 1px solid @border-color;
+      .flex-row(space-between);
+      .m-btn{
+        display: inline-block;
+        width: 160rpx;
+        height: 50rpx;
+        line-height: 50rpx;
+        text-align: center;
+        background-color: @common-color;
+      }
+      .m-icon-share{
+        width: 40rpx;
+        height: 40rpx;
+        margin-right: 10rpx;
+      }
+      &.m-no-flex{
+        display: block;
+      }
+      .m-img-box{
+        .flex-row(flex-start);
+        flex-wrap: wrap;
+        margin-top: 20rpx;
+        .m-img{
+          width: 200rpx;
+          height: 200rpx;
+          margin: 0 20rpx 20rpx 0;
+        }
+        .m-upload-img{
+          display: block;
+          width: 200rpx;
+          height: 200rpx;
+          line-height: 200rpx;
+          text-align: center;
+          background-color: #f2f2f2;
+          color: #c1c1c1;
+          font-size: 100rpx;
+          font-weight: 100;
+        }
+        video{
+          width: 690rpx;
+          height: 388rpx;
+          margin-bottom: 20rpx;
+        }
+      }
+    }
+    .m-modal{
+      position: fixed;
+      top:0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background-color: rgba(0,0,0,0.16);
+      .m-modal-state{
+        position: fixed;
+        top: 48%;
+        left: 200rpx;
+        width: 350rpx;
+        padding: 30rpx 0;
+        background-color: #fff;
+        text-align: center;
+        .m-line{
+          border-bottom: 1px solid @border-color;
+          padding: 20rpx;
+        }
+      }
+    }
+  }
+
+</style>
+<template>
+  <view class="m-editEssay">
+    <!--      <view class="m-alert-text">-->
+    <!--        <span>使用电脑版www.bigxingxing.com输入更方便</span>-->
+    <!--        &lt;!&ndash;        <span class="m-alert-btn">草稿箱</span>&ndash;&gt;-->
+    <!--      </view>-->
+    <view class="m-row">
+      <span @tap="cancelContent">取消</span>
+      <span class="m-btn" @tap="submitNote">发布</span>
+    </view>
+
+    <view class="m-row m-no-flex">
+      <textarea bindinput="bindinput" value="{{text}}" data-name="text" auto-height style="min-height: 300rpx;" placeholder="这一刻的旅游心情…" />
+      <view class="m-img-box">
+        <image src="{{item}}" class="m-img"
+               @longpress="handleLongPress({{index}})" mode="aspectFill" wx:for="{{image}}" wx:key="{{index}}" @tap="previewImage({{item}})"></image>
+        <video id="myVideo" wx:if="{{video}}" src="{{video.url}}" poster="{{video.thumbnail}}"  controls></video>
+        <span class="m-upload-img" @tap="uploadTap">+</span>
+      </view>
+    </view>
+    <view class="m-row m-grey">
+      <view class="m-flex-start">
+        <image src="{{img_src}}common/icon-loc-grey.png" class="m-icon-share"></image>
+        <span>景区</span>
+      </view>
+      <scenic :scenic_name.sync="trlocation" @sureTap.user="sureTap"></scenic>
+    </view>
+    <view class="m-row m-grey">
+      <view class="m-flex-start">
+        <image src="{{img_src}}personal/icon-link.png" class="m-icon-share"></image>
+        <span>联动平台</span>
+      </view>
+
+      <view class="m-flex-end">
+        <span>可多选</span>
+        <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>
+      </view>
+    </view>
+    <view class="m-modal" wx:if="{{show_select}}" @tap="cancelSelect">
+      <view class="m-modal-state">
+        <view class="m-grey">二选一</view>
+        <view class="m-line" @tap.stop="chooseImg" wx:if="{{!video}}">图片</view>
+        <view class="m-line" @tap.stop="chooseVideo" wx:if="{{image.length == 0}}">视频</view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import Scenic from '../../components/common/scenic';
+  import tip from '../../utils/tip';
+  import api from '../../api/api';
+  export default class editRecord extends wepy.page {
+    config = {
+      navigationBarTitleText: '活动记录'
+    };
+    components = {
+      scenic:Scenic
+    };
+    data = {
+      img_src:api.img_src,
+      trlocation:'',
+      text:'',
+      show_select:false,
+      image:[],
+      video:null,
+      type:'essay',
+      plid:''
+    };
+    postData(status){
+      let that = this;
+      tip.loading();
+      wepy.request({
+        url: api.add_travelrecord + '?token=' +wx.getStorageSync('token'),
+        method:"post",
+        data:{
+          trlocation:that.trlocation,
+          text:that.text,
+          trstatus:status || 1,
+          trtype:2,
+          image:that.image,
+          video:that.video,
+          plid:that.plid
+        }
+      }).then(resule => {
+        if(resule.data.status == 200){
+          tip.success('发布成功');
+          if(that.plid){
+            wx.redirectTo({
+              url: '/pages/index/enterTeam?plid=' +that.plid
+            });
+          }else{
+            wx.navigateTo({
+              url: '/pages/personal/mainIndex'
+            });
+          }
+
+        }
+      })
+    }
+    onLoad(options) {
+      if(options.plid){
+        this.plid = options.plid;
+        this.$apply();
+      }
+    }
+
+    methods = {
+      //景区点击确定
+      sureTap(e){
+        this.trlocation = e;
+        this.$apply();
+      },
+      //文本框内容变化，绑定数据
+      bindinput(e){
+        let name = e.currentTarget.dataset.name;
+        this[name] = e.detail.value;
+        this.$apply();
+      },
+      //发布
+      submitNote(){
+        if(!this.text){
+          tip.error('请输入随笔内容');
+          return false;
+        }
+        this.postData(1);
+      },
+      //+点击
+      uploadTap(){
+        this.show_select = true;
+        this.$apply();
+      },
+      //上传图片
+      chooseImg(){
+        let that = this;
+        wx.chooseImage({
+          count: 9,
+          sizeType: ['original', 'compressed'],
+          sourceType: ['album', 'camera'],
+          success (res) {
+            // tempFilePath可以作为img标签的src属性显示图片
+            const tempFilePaths = res.tempFilePaths;
+
+            for(let i=0;i<tempFilePaths.length;i++ ){
+              wx.uploadFile({
+                url: api.upload, //仅为示例，非真实的接口地址
+                filePath: tempFilePaths[i],
+                name: 'file',
+                formData: {
+                  token:wx.getStorageSync('token'),
+                  type:that.type
+                },
+                success (res1){
+                  // const data = res.data
+                  let data = JSON.parse(res1.data);
+                  //do something
+                  that.image.push(api.api + data.data);
+                  that.show_select = false;
+                  that.$apply();
+                }
+              })
+            }
+
+          }
+        })
+
+      },
+      //上传视频
+      chooseVideo(){
+        let that =this;
+        wx.chooseVideo({
+          sourceType: ['album','camera'],
+          maxDuration: 60,
+          camera: 'back',
+          success(res) {
+            console.log(res.tempFilePath,'sgdgfd')
+            wx.uploadFile({
+              url: api.upload, //仅为示例，非真实的接口地址
+              filePath: res.tempFilePath,
+              name: 'file',
+              formData: {
+                token:wx.getStorageSync('token'),
+                type:that.type
+              },
+              success (res1){
+                // const data = res.data
+                let data = JSON.parse(res1.data);
+                //do something
+                that.video = {
+                  url: api.api + data.data,
+                  thumbnail: api.api +data.video_thum,
+                  duration: data.video_dur
+                };
+                that.show_select = false;
+                that.$apply();
+              }
+            })
+          }
+        })
+
+      },
+      //预览图片
+      previewImage(item){
+        let that = this;
+        wx.previewImage({
+          current: item, // 当前显示图片的http链接
+          urls: that.image // 需要预览的图片http链接列表
+        })
+      },
+      //点击取消，页面数据init
+      cancelContent(){
+        this.trlocation = '';
+        this.text = '';
+        this.show_select = false;
+        this.image = [];
+        this.video = null;
+        this.$apply();
+      },
+      //点击选择视频和图片的背景隐藏选择
+      cancelSelect(){
+        this.show_select = false;
+        this.$apply();
+      },
+      handleLongPress(v){
+        let that = this;
+        wx.showModal({
+          title: '提示',
+          content: '需要删除这张照片吗？',
+          success (res) {
+            if (res.confirm) {
+              that.image.splice(v,1);
+              that.$apply();
+            } else if (res.cancel) {
+
+            }
+          }
+        })
+
+      }
+    };
+  }
+</script>

@@ -20,7 +20,7 @@
 <template>
     <view class="m-codeDetail ">
       <image class="m-code"></image>
-      <view class="m-foot-btn m-one">提交活动记录</view>
+      <view class="m-foot-btn m-one" @tap="changeRoute('/pages/personal/editRecord')">提交活动记录</view>
 <!--      <view class="m-foot-btn m-one disable">已提交待审核</view>-->
     </view>
 </template>
@@ -39,6 +39,13 @@
 
     }
 
-    methods = {};
+    methods = {
+      changeRoute(v){
+        let that = this;
+        wx.navigateTo({
+          url: v
+        });
+      }
+    };
   }
 </script>
