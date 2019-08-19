@@ -33,7 +33,7 @@
 
     config = {
       pages: [
-
+        'pages/index/freeDetail',
         'pages/index/index',
         'pages/index/freeList',
         'pages/index/scrollCircle',

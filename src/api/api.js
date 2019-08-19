@@ -85,9 +85,9 @@ const get_linkcontent = api2 + 'index/get_linkcontent';//富文本详情
 
 
 
-const img_src = 'https://play.bigxingxing.com/icon/';
+// const img_src = 'https://play.bigxingxing.com/icon/';
 // const img_src = 'https://www.bigxingxing.com/icon/';
-// const img_src = '../../images/';
+const img_src = '../../images/';
 //评价
 module.exports = {
   api,img_src,login,bind_phone,set_cost,set_insurance,scenicspot_list,scenicspot_get,set_play,get_cost,get_insurance,get_play,

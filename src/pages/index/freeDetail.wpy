@@ -1,0 +1,263 @@
+<style scoped lang="less" rel="stylesheet/less">
+@import "../../styles/common";
+.m-freeDetail{
+  padding-bottom: 100rpx;
+  /*.m-top-img-box{*/
+    position: relative;
+    /*width: 100%;*/
+    /*height: 750rpx;*/
+    .m-top-img{
+      width: 100%;
+      height: 750rpx;
+      /*background-color: #FFCE00;*/
+    }
+    .m-return{
+      position: absolute;
+      top: 20rpx;
+      left: 20rpx;
+      padding: 0 18rpx;
+      height: 60rpx;
+      line-height: 60rpx;
+      background-color: rgba(0,0,0,0.5);
+      border-radius: 50rpx;
+      color: #fff;
+      .m-icon-more{
+        margin-right: 10rpx;
+        margin-left: 0;
+      }
+    }
+    .m-icon-share{
+      position: absolute;
+      top: 20rpx;
+      right: 20rpx;
+      width: 60rpx;
+      height: 60rpx;
+    }
+  /*}*/
+  .m-time-box{
+    position: absolute;
+    top:702rpx;
+    right: 0;
+    height: 96rpx;
+    line-height: 96rpx;
+    text-align: center;
+    .flex-row(flex-end);
+    .m-tra{
+      width: 0;
+      height: 0;
+      border: 96rpx solid @common-color;
+      border-left-color: transparent ;
+      border-top-color: transparent ;
+      border-bottom-color: transparent ;
+    }
+    .m-time-text{
+      width: 410rpx;
+      background-color: #FFCE00;
+      .m-time{
+        display: inline-block;
+        width: 50rpx;
+        height: 50rpx;
+        line-height: 50rpx;
+        border-radius: 5rpx;
+        background-color: #fff;
+        text-align: center;
+        margin: 0 4rpx;
+      }
+    }
+  }
+  .m-freeDetail-content{
+    .m-detail-info{
+      padding: 20rpx;
+      border-bottom: 1px solid @border-color;
+      .m-red{
+        font-size: 32rpx;
+        .m-price{
+          font-size: 48rpx;
+          font-weight: 600;
+        }
+      }
+      .m-progress-box{
+        width: 210rpx;
+        .m-bold{
+          font-size: 32rpx;
+          font-weight: 400;
+        }
+      }
+      .m-name{
+        font-weight: 500;
+        /*padding: ;*/
+      }
+    }
+    .m-rule{
+      padding: 20rpx;
+      border-bottom: 1px solid @border-color;
+      .m-alert{
+        width: 30rpx;
+        height: 30rpx;
+        margin-right: 20rpx;
+      }
+    }
+    .m-rule-text{
+      width: 577rpx;
+      margin-left: 20rpx;
+      color: @grey-color;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .m-image-box{
+      .m-img{
+        width: 750rpx;
+        height: auto;
+      }
+    }
+  }
+  .m-modal{
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.16);
+    position: fixed;
+    top:0;
+    left:0;
+    .m-modal-state{
+      padding: 30rpx;
+      background-color: #fff;
+      position: fixed;
+      top:0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+      width: 600rpx;
+      height: 750rpx;
+      box-sizing: border-box;
+    }
+    &.m-result{
+        .m-modal-state{
+          padding: 65rpx 144rpx;
+          .m-icon-success{
+            width: 56rpx;
+            height: 56rpx;
+            margin-right: 30rpx;
+          }
+          .m-success-text{
+            font-size: 40rpx;
+            font-weight: 500;
+          }
+          .m-code{
+            width: 313rpx;
+            height: 313rpx;
+            margin: 40rpx 0 20rpx;
+          }
+          .m-btn{
+            width: 300rpx;
+            height: 60rpx;
+            line-height: 60rpx;
+            background-color: @common-color;
+            text-align: center;
+            font-weight: 500;
+            margin-top: 40rpx;
+          }
+        }
+    }
+  }
+}
+</style>
+<template>
+    <view class="m-freeDetail">
+<!--      <view class="m-top-img-box">-->
+        <image class="m-top-img"></image>
+        <view class="m-return m-flex-center">
+          <image src="{{img_src}}index/icon-return.png" class="m-icon-more"></image>
+          <span>查看更多</span>
+        </view>
+        <image src="{{img_src}}index/icon-share.png" class="m-icon-share"></image>
+<!--        <view class="m-time-box">-->
+<!--          <span class="m-tra"></span>-->
+<!--          <view class="m-time-text">-->
+<!--            距抢票开始<span class="m-time">48</span>:<span class="m-time">20</span>:<span class="m-time">10</span>.<span class="m-time">2</span>-->
+<!--          </view>-->
+<!--        </view>-->
+<!--      </view>-->
+      <view class="m-freeDetail-content">
+        <view class="m-detail-info">
+          <view class="m-flex-between">
+            <view class="m-red">
+              <span>押金 ¥ </span>
+              <span class="m-price">160</span>
+            </view>
+            <view class="m-progress-box">
+              <view>剩余数量 <span class="m-bold"> 39 </span> 张</view>
+              <progress percent="40"  border-radius="20" backgroundColor="rgba(255,206,0,0.3)" color="#FFCE00" />
+            </view>
+          </view>
+          <view class="m-name">杭州富阳野生动物园门票1张杭州富阳野生动物园门票1张杭州富阳野生动物园门票1张</view>
+        </view>
+        <view class="m-flex-start m-rule" @tap.stop="changeModal('show_rule',true)">
+          <image src="{{img_src}}index/icon-alert.png" class="m-alert" ></image>
+          <view> 规则 </view>
+          <view class="m-rule-text">押金发布图文后返还押金发布图文后返还押金…</view>
+        </view>
+        <view class="m-image-box">
+          <image class="m-img"></image>
+        </view>
+      </view>
+      <view class="m-foot-btn m-one" @tap="submitTap">支付押金</view>
+
+
+<!--      支付成功-->
+      <view class="m-modal m-result" wx:if="{{show_result}}" >
+        <view class="m-modal-state">
+          <view class="m-flex-center">
+            <image src="{{img_src}}index/icon-success.png" class="m-icon-success"></image>
+            <view class="m-success-text">支付成功</view>
+          </view>
+          <image class="m-code"></image>
+          <view>
+            二维码<span class="m-grey">可以在</span>
+            个人中心- 电子二维码管理<span class="m-grey">中查看</span>
+          </view>
+          <view class="m-btn" @tap.stop="changeModal('show_result',false)">我知道了</view>
+        </view>
+      </view>
+      <view class="m-modal" wx:if="{{show_rule}}" @tap.stop="changeModal('show_rule',false)">
+        <view class="m-modal-state">{{rule}}</view>
+      </view>
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import api from '../../api/api';
+  export default class freeDetail extends wepy.page {
+    config = {
+      navigationBarTitleText: '领取免费门票'
+    };
+    components = {};
+    data = {
+      img_src:api.img_src,
+      show_result:false,
+      show_rule:false,
+      rule:'规则'
+    };
+
+    onLoad(options) {
+
+    }
+
+    methods = {
+      submitTap(){
+        this.show_result = true;
+        this.$apply();
+      },
+      changeModal(name,bool){
+        if(bool == 'false'){
+          this[name] = false;
+        }else{
+          this[name] = true;
+        }
+        this.$apply();
+      }
+    };
+  }
+</script>
