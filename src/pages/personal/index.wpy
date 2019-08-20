@@ -137,12 +137,12 @@
                         <span>历史团队</span>
                     </view>
                 </li>
-              <li @tap="changeRoute('/pages/personal/codeList','phone')">
-                <view class="m-flex-start">
-                  <image src="{{img_src}}personal/icon-code-manage.png" wx:if="{{img_src}}" class="m-icon"></image>
-                  <span>电子二维码管理</span>
-                </view>
-              </li>
+<!--              <li @tap="changeRoute('/pages/personal/codeList','phone')">-->
+<!--                <view class="m-flex-start">-->
+<!--                  <image src="{{img_src}}personal/icon-code-manage.png" wx:if="{{img_src}}" class="m-icon"></image>-->
+<!--                  <span>电子二维码管理</span>-->
+<!--                </view>-->
+<!--              </li>-->
             </ul>
         </view>
         <view class="m-personal-item">

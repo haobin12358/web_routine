@@ -341,7 +341,7 @@
       <view class="m-btn" wx:if="{{detail.plstatus == 5 && !detail.playtype}}"><span @tap="pay">确认并支付</span></view>
       <view class="m-img-box">
         <image src="{{detail.plimg}}"   @tap="previewImg({{detail.plimg}})" class="m-scheduling-img"></image>
-        <image src="{{img_src}}index/icon-share.png" class="m-icon-share" @tap="changeModal('show_share',true)"></image>
+<!--        <image src="{{img_src}}index/icon-share.png" class="m-icon-share" @tap="changeModal('show_share',true)"></image>-->
       </view>
 
         <view class="m-scheduling-info">
