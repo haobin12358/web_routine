@@ -1,0 +1,138 @@
+<style scoped lang="less" rel="stylesheet/less">
+@import "../../styles/common";
+  .m-share-modal{
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.16);
+    position: fixed;
+    top:0;
+    left: 0;
+    z-index: 100;
+    .m-share-modal-state{
+      width: 100%;
+      /*height: 400rpx;*/
+      background-color: #fff;
+      position: fixed;
+      bottom:0;
+      left: 0;
+      box-sizing: border-box;
+      .m-state-content{
+        padding: 20rpx 30rpx;
+        border-bottom: 10rpx solid #F4F4F4;
+        .m-title{
+          font-size: 36rpx;
+          font-weight: 500;
+        }
+      }
+      .m-icon-list{
+        .flex-row(space-around);
+        margin-top: 20rpx;
+        text-align: center;
+        .m-one-icon{
+          width: 100rpx;
+          font-size: 20rpx;
+          .m-icon{
+            width: 90rpx;
+            height: 90rpx;
+            margin-bottom: 10rpx;
+          }
+        }
+      }
+      .m-btn{
+        padding: 20rpx 0;
+        text-align: center;
+      }
+    }
+    .m-pic-modal{
+      width: 100%;
+      height: 100vh;
+      background-color: rgba(0,0,0,0.16);
+      position: fixed;
+      top:0;
+      left: 0;
+      z-index: 200;
+      .m-modal-state{
+        width: 611rpx;
+        height: 823rpx;
+        /*background-color: #fff;*/
+        position: fixed;
+        bottom:0;
+        left: 0;
+        right: 0;
+        top: 0;
+        margin: auto;
+        .m-share-img{
+          width: 611rpx;
+          height: 810rpx;
+        }
+      }
+    }
+  }
+</style>
+<template>
+  <view class="m-share-modal" wx:if="{{show}}">
+    <view class="m-share-modal-state">
+      <view class="m-state-content">
+        <view class="m-title">分享到</view>
+        <view class="m-icon-list">
+          <view class="m-one-icon" @tap="drawImg">
+            <image src="{{img_src}}common/share-picture.png" class="m-icon"></image>
+            <view>生成分享图</view>
+          </view>
+          <view class="m-one-icon">
+            <image src="{{img_src}}common/share-wei.png" class="m-icon"></image>
+            <view>微信好友</view>
+          </view>
+          <view class="m-one-icon">
+            <image src="{{img_src}}common/share-peng.png" class="m-icon"></image>
+            <view>微信朋友圈</view>
+          </view>
+        </view>
+      </view>
+      <view class="m-btn" @tap.stop="changeModal">取消</view>
+    </view>
+    <view class="m-pic-modal" wx:if="{{show_pic}}" @tap="closePic">
+      <view class="m-modal-state">
+        <image src="" class="m-share-img"></image>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import api from '../../api/api';
+
+  export default class share extends wepy.component {
+    components = {};
+    data = {
+      img_src:api.img_src,
+      show_pic:false
+    };
+    props ={
+      show:{
+        type:Boolean,
+        twoWay:true,
+        default:false
+      }
+    }
+
+    onLoad(options) {
+
+    }
+
+    methods = {
+      changeModal(){
+        this.$emit('changeModal','show_share','false')
+      },
+      closePic(){
+        this.show_pic = false;
+        this.$apply();
+      },
+      drawImg(){
+        this.show_pic = true;
+        this.$apply();
+      }
+    };
+  }
+</script>

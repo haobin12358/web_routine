@@ -2,6 +2,7 @@
   @import "../../styles/common";
   .m-editEssay{
     font-size: 28rpx;
+    padding-bottom: 20rpx;
     .m-row{
       padding: 20rpx 30rpx;
       border: 1px solid @border-color;
@@ -18,6 +19,15 @@
         width: 40rpx;
         height: 40rpx;
         margin-right: 10rpx;
+      }
+      .m-upload{
+        width: 88rpx;
+        height: 88rpx;
+        .flex-row(center);
+        border: 1px dashed @border-color;
+        font-size: 20rpx;
+        box-sizing: border-box;
+        padding: 0 20rpx;
       }
       &.m-no-flex{
         display: block;
@@ -48,6 +58,11 @@
           margin-bottom: 20rpx;
         }
       }
+      .m-input{
+        text-align: right;
+        /*height: 88rpx;*/
+        width: 600rpx;
+      }
     }
     .m-modal{
       position: fixed;
@@ -67,6 +82,32 @@
         .m-line{
           border-bottom: 1px solid @border-color;
           padding: 20rpx;
+        }
+      }
+    }
+    .m-popup{
+      position: fixed;
+      top:0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background-color: rgba(0,0,0,0.16);
+      .m-popup-state {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width:100%;
+        height: 500rpx;
+        padding: 30rpx;
+        box-sizing: border-box;
+        background-color: #fff;
+        /*text-align: center;*/
+        .m-select-ul{
+          height: 400rpx;
+          .flex-col(space-around);
+        }
+        .m-one{
+          padding: 5rpx 0 5rpx ;
         }
       }
     }
@@ -106,11 +147,29 @@
         <span>联动平台</span>
       </view>
 
-      <view class="m-flex-end">
+      <view class="m-flex-end" @tap="changeModal('show_prop',true)">
         <span>可多选</span>
         <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>
       </view>
     </view>
+    <block wx:for="{{items}}" wx:key="{{index}}">
+      <view class="m-row m-up" wx:if="{{item.checked}}">
+        <view class="m-flex-start">
+          <image src="{{img_src}}common/{{item.icon}}.png" class="m-icon-share"></image>
+          <span>{{item.value}}</span>
+        </view>
+        <view class="m-grey m-upload">
+          上传截图
+        </view>
+      </view>
+      <view class="m-row m-up" wx:if="{{item.checked && item.link}}">
+        <view class="m-flex-start">
+          <image src="{{img_src}}index/icon-url.png" class="m-icon-share"></image>
+        </view>
+        <textarea  placeholder="请输入链接" auto-height class="m-input"/>
+      </view>
+    </block>
+
     <view class="m-modal" wx:if="{{show_select}}" @tap="cancelSelect">
       <view class="m-modal-state">
         <view class="m-grey">二选一</view>
@@ -118,6 +177,19 @@
         <view class="m-line" @tap.stop="chooseVideo" wx:if="{{image.length == 0}}">视频</view>
       </view>
     </view>
+    <cover-view class="m-popup" wx:if="{{show_prop}}">
+      <cover-view class="m-popup-state">
+        <cover-view class="m-flex-between">
+          <cover-view class="m-grey" @tap="changeModal('show_prop',false)">取消</cover-view>
+          <cover-view @tap="changeModal('show_prop',false)">确定</cover-view>
+        </cover-view>
+        <cover-view class="m-select-ul">
+          <checkbox-group bindchange="checkboxChange">
+            <cover-view class="m-one" wx:for="{{items}}" wx:key="{{index}}"><checkbox value="{{item.value}}" color="#FFCE00" checked="{{item.checked}}"/>{{item.value}}</cover-view>
+          </checkbox-group>
+        </cover-view>
+      </cover-view>
+    </cover-view>
   </view>
 </template>
 
@@ -141,7 +213,15 @@
       image:[],
       video:null,
       type:'essay',
-      plid:''
+      plid:'',
+      items: [
+        {name: 'USA', value: '微 博',icon:'logo-weibo',link:true},
+        {name: 'CHN', value: '朋友圈', icon:'logo-peng',link:false},
+        {name: 'BRA', value: 'qq空间',icon:'logo-qq',link:false},
+        {name: 'USA', value: '小红书',icon:'logo-red',link:true},
+        {name: 'CHN', value: '抖 音',icon:'logo-dou',link:true},
+      ],
+      show_prop:false
     };
     postData(status){
       let that = this;
@@ -312,6 +392,27 @@
           }
         })
 
+      },
+      changeModal(name,bool){
+        if(bool == 'false'){
+          this[name] = false;
+        }else{
+          this[name] = true;
+        }
+        this.$apply();
+      },
+      checkboxChange: function(e) {
+        console.log('checkbox发生change事件，携带value值为：', e.detail.value)
+        let select = e.detail.value;
+        for(let i =0;i<this.items.length;i++){
+          this.items[i].checked = false;
+          for(let j=0;j<select.length;j++){
+            if(this.items[i].value == select[j]){
+              this.items[i].checked = true;
+            }
+          }
+        }
+        this.$apply();
       }
     };
   }

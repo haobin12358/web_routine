@@ -171,7 +171,7 @@
           <image src="{{img_src}}index/icon-return.png" class="m-icon-more"></image>
           <span>查看更多</span>
         </view>
-        <image src="{{img_src}}index/icon-share.png" class="m-icon-share"></image>
+        <image src="{{img_src}}index/icon-share.png" class="m-icon-share" @tap="changeModal('show_share',true)"></image>
 <!--        <view class="m-time-box">-->
 <!--          <span class="m-tra"></span>-->
 <!--          <view class="m-time-text">-->
@@ -223,22 +223,27 @@
       <view class="m-modal" wx:if="{{show_rule}}" @tap.stop="changeModal('show_rule',false)">
         <view class="m-modal-state">{{rule}}</view>
       </view>
+
+
+      <share :show.sync="show_share" @changeModal.user="changeModal"></share>
     </view>
 </template>
 
 <script>
   import wepy from 'wepy';
   import api from '../../api/api';
+  import share from '../../components/common/share';
   export default class freeDetail extends wepy.page {
     config = {
       navigationBarTitleText: '领取免费门票'
     };
-    components = {};
+    components = {share:share};
     data = {
       img_src:api.img_src,
       show_result:false,
       show_rule:false,
-      rule:'规则'
+      rule:'规则',
+      show_share:false
     };
 
     onLoad(options) {

@@ -18,6 +18,7 @@
       }
       .m-scheduling-info{
           padding: 30rpx;
+        border-bottom: 1px solid @border-color;
           .m-scheduling-name{
               font-weight: 600;
               width: 560rpx;
@@ -39,6 +40,18 @@
               text-overflow:ellipsis;
               white-space: nowrap;
           }
+      }
+      .m-img-box{
+        width: 100%;
+        height: 420rpx;
+        position: relative;
+        .m-icon-share{
+          position: absolute;
+          top: 20rpx;
+          right: 20rpx;
+          width: 60rpx;
+          height: 60rpx;
+        }
       }
       .m-scheduling-img{
           display: block;
@@ -318,6 +331,7 @@
           height: 80rpx;
         }
       }
+
     }
 
 </style>
@@ -325,6 +339,11 @@
     <view class="m-activityDetail" wx:if="{{detail}}">
       <view class="m-btn" wx:if="{{detail.plstatus == 4 && detail.playtype}}"><span @tap="acceptTap">确认承接</span></view>
       <view class="m-btn" wx:if="{{detail.plstatus == 5 && !detail.playtype}}"><span @tap="pay">确认并支付</span></view>
+      <view class="m-img-box">
+        <image src="{{detail.plimg}}"   @tap="previewImg({{detail.plimg}})" class="m-scheduling-img"></image>
+        <image src="{{img_src}}index/icon-share.png" class="m-icon-share" @tap="changeModal('show_share',true)"></image>
+      </view>
+
         <view class="m-scheduling-info">
             <view class="m-flex-between m-name-title">
                 <span class="m-scheduling-name">{{detail.plname}}</span>
@@ -335,7 +354,7 @@
                 <span class="m-name">组织者：{{detail.plcreate}}</span>
             </view>
         </view>
-        <image src="{{detail.plimg}}"   @tap="previewImg({{detail.plimg}})" class="m-scheduling-img"></image>
+
         <ul class="m-activityDetail-info">
             <li>
                 <view class="m-label">
@@ -514,6 +533,8 @@
         <view>分享团队</view>
         <view>精彩内容</view>
       </view>
+
+     <share :show.sync="show_share" @changeModal.user="changeModal"></share>
     </view>
 </template>
 
@@ -524,12 +545,13 @@
     import api from '../../api/api';
     import htmlParser from '../../components/common/htmlParser';
     import WxParse from '../../wxParse/wxParse';
+    import share from '../../components/common/share';
     export default class lookActivity extends wepy.page {
         config = {
             navigationBarTitleText: '',
             enablePullDownRefresh: true
         }
-        components = {circle:circle,    htmlParser:htmlParser}
+        components = {circle:circle,    htmlParser:htmlParser,share:share}
         data = {
             img_src:null,
             detail:null,
@@ -557,7 +579,8 @@
           },
           total_count:0,
           video_url:'',
-          show_video:false
+          show_video:false,
+          show_share:false
         }
       getPhoto(id){
         let that = this;
