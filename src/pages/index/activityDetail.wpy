@@ -227,7 +227,7 @@
         </view>
         <view class="m-img-box">
           <image src="{{detail.plimg}}"   @tap="previewImg({{detail.plimg}})" class="m-scheduling-img"></image>
-<!--          <image src="{{img_src}}index/icon-share.png" class="m-icon-share" @tap="changeModal('show_share',true)"></image>-->
+          <image src="{{img_src}}index/icon-share.png" class="m-icon-share" @tap="changeModal('show_share',true)"></image>
         </view>
         <view class="m-scheduling-info">
           <view class="m-flex-between m-name-title">
@@ -313,7 +313,7 @@
       </scroll-view>
       <view class="m-scheduling-foot">
 <!--        <view class="m-btn" wx:if="{{detail.plstatus < 2 && !detail.playtype}}"><span @tap="changeActivity">转让活动</span></view>-->
-<!--        <view class="m-scheduling-btn" wx:if="{{detail.joinstatus}}" @tap="toEnter('/pages/index/enterPage')">我要报名</view>-->
+        <view class="m-scheduling-btn" wx:if="{{detail.joinstatus}}" @tap="toEnter('/pages/index/enterPage')">我要报名</view>
         <view class="m-scheduling-btn" wx:if="{{detail.repaystatus}}" @tap="postReplay">继续支付</view>
 <!--        <view class="m-scheduling-btn"  >已报名</view>-->
       </view>
@@ -323,7 +323,7 @@
         </view>
         <video src="{{video_url}}" autoplay="true"></video>
       </view>
-      <share :show.sync="show_share" @changeModal.user="changeModal"></share>
+      <share :show.sync="show_share" @changeModal.user="changeModal" :params.sync="params" :plid.sync="plid"></share>
     </view>
 </template>
 
@@ -337,7 +337,7 @@
     import share from '../../components/common/share';
     export default class ActivityDetail extends wepy.page {
         config = {
-            navigationBarTitleText: '我报名的',
+            navigationBarTitleText: '活动详情',
             enablePullDownRefresh: true
         }
         components = {circle:Circle,    htmlParser:htmlParser,share:share}
@@ -359,7 +359,8 @@
           video_url:'',
           show_video:false,
           secret_usid:'',
-          show_share:false
+          show_share:false,
+          params : 'page=/pages/index/activityDetail'
         }
         getDetail(id){
             let that = this;
@@ -368,7 +369,7 @@
                 url: api.get_play + '?token=' +wx.getStorageSync('token'),
                 data: {
                     plid:id || that.plid,
-                  secret_usid:that.secret_usid
+                  secret_usid: wx.getStorageSync('secret_usid')
                 },
                 header: {
                     'content-type': 'application/json' // 默认值
@@ -385,9 +386,9 @@
                 that.content1 = that.content1.replace(/&quot;/g,'');
                 that.content1 = that.content1.replace(/&nbsp;/g, '\xa0');
                 that.detail = data;
-                if(!that.detail.playtype){
+                if(that.detail.playtype){
                   wx.setNavigationBarTitle({
-                    title: '活动详情'
+                    title: '我报名的'
                   })
                 }
                 // WxParse.wxParse('htmlParserName2','html',res.data.data.plcontent,that,0);
@@ -423,7 +424,7 @@
             plid:id  || that.plid,
             page_num:that.page_info.page_num,
             page_size: that.page_info.page_size,
-            secret_usid:that.secret_usid
+            secret_usid:wx.getStorageSync('secret_usid')
           },
           header: {
             'content-type': 'application/json' // 默认值
@@ -472,7 +473,7 @@
           url: api.get_team_album + '?token=' +wx.getStorageSync('token'),
           data: {
             plid:id || that.plid,
-            secret_usid:that.secret_usid
+            secret_usid:wx.getStorageSync('secret_usid')
           }
         }).then(res => {
           if(res.data.status == 200){
@@ -513,15 +514,44 @@
           }
         })
       }
+      getId(){
+        let that = this;
+        wepy.request({
+          url:api.secret_usid + '?token=' +wx.getStorageSync('token'),
+          method:"get",
+          data:{}
+        }).then(resule => {
+          if(resule.data.status == 200){
+            that.secret_usid = resule.data.data.secret_usid;
+            that.params = `page=/pages/index/activityDetail&plid=${that.plid}&secret_usid=${that.secret_usid}`;
+            that.$apply();
+          }
+        })
+      }
+      onShareAppMessage(res) {
+        if (res.from === 'button') {
+
+        }
+        let that = this;
+        let params = `?page=/pages/index/activityDetail&plid=${that.plid}&secret_usid=${that.secret_usid}`
+        // let params = '?scene=params=16'
+        return {
+          title: this.detail.plname,
+          path: '/pages/index/index'+params,
+          success: function (res) {
+            console.log('成功', res)
+          }
+        }
+      }
         onLoad(options) {
             if(options.plid){
                 this.plid = options.plid;
                 this.$apply();
             }
-            if(options.secret_usid){
-              this.secret_usid = options.secret_usid;
-              this.$apply();
-            }
+          if(wx.getStorageSync('token')){
+            this.getId();
+            this.$apply();
+          }
 
         }
         onShow(){
@@ -602,6 +632,14 @@
             this.show_video = true;
             this.video_url = v.url;
             this.$apply();
+          },
+          //报名
+          toEnter(v){
+            let that = this;
+            // console.log(that.plid)
+            wx.navigateTo({
+              url: v + '?plid=' +that.plid
+            });
           },
           changeModal(name,bool){
 

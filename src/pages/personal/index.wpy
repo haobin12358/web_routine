@@ -90,7 +90,7 @@
                         <image src="{{img_src}}personal/icon-women.png" wx:if="{{user_info.usgender == 1}}" class="m-icon"></image>
                       <image src="{{img_src}}personal/icon-men.png" wx:if="{{user_info.usgender == 0}}" class="m-icon"></image>
                     </view>
-<!--                   <image src="{{img_src}}personal/icon-code.png" class="m-icon"></image>-->
+                   <image src="{{img_src}}personal/icon-code.png" class="m-icon" @tap="changeRoute('/pages/personal/myCode')"></image>
                 </view>
                 <view>
                     <span class="m-user-label">{{user_info.usminilevel}}</span>
@@ -105,7 +105,7 @@
               <view class="m-flex-start">
                 <span class="m-login-btn" @tap="toLogin">登录/注册</span>
               </view>
-              <!--                   <image src="{{img_src}}personal/icon-code.png" class="m-icon"></image>-->
+<!--                                 <image src="{{img_src}}personal/icon-code.png" class="m-icon"></image>-->
             </view>
           </view>
         </view>

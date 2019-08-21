@@ -75,6 +75,7 @@
 
         getLogin(code){
             let that = this;
+            console.log(wx.getStorageSync('secret_usid'),'lof')
             wx.getUserInfo({
                 success: function(resData) {
                     wx.request({
@@ -82,7 +83,8 @@
                         method:"post",
                         data:{
                             code:code,
-                            info:resData
+                            info:resData,
+                            secret_usid: wx.getStorageSync('secret_usid')
                         },
                         success: function (resule){
                           if(resule.data.status == 200){

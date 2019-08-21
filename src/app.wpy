@@ -33,7 +33,9 @@
 
     config = {
       pages: [
+
         'pages/index/index',
+        'pages/personal/myCode',
         'pages/personal/editRecord',
         'pages/personal/codeDetail',
         'pages/personal/codeList',

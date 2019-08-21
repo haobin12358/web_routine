@@ -320,9 +320,52 @@
       this.getImg();
     }
     onLoad(options){
+     console.log(options,'share');
+      if(options.scene){
+        console.log("has scene");
+        var scene = decodeURIComponent(options.scene);
+        console.log("scene is ", scene);
+        var arrPara = scene.split("&");
+        var arr = [];
+          arr = arrPara[0].split("=");
+          wepy.request({
+            url: api.get_params + '?token=' +wx.getStorageSync('token'),
+            data: {
+              key: arr[0],
+              value: arr[1]
+            },
+            header: {
+              'content-type': 'application/json' // 默认值
+            }
+          }).then(res => {
+            let data = res.data.data;
+            let url = '';
+            let arr = data.split('&');
+            let params_arr = [];
+            for(let i in arr){
 
-      //分享重定向
-      if(options.page){
+              let _arr = arr[i].split('=');
+              if(_arr[0] == 'page'){
+                url = _arr[1];
+              }else if(_arr[0] == 'secret_usid'){
+                wx.setStorageSync('secret_usid',_arr[1]);
+                console.log(wx.getStorageSync('secret_usid'));
+                // params_arr.push(arr[i]);
+              }else{
+                params_arr.push(arr[i]);
+              }
+            }
+            if(arr.length >0){
+              url = url + '?' + params_arr.join('&');
+            }
+            if(url != ''){
+              wx.navigateTo({
+                url: url
+              });
+            }
+
+          });
+      }else if(options.page){
         let url = options.page;
         let arr = [];
         for(let i in options){

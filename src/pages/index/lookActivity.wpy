@@ -337,11 +337,15 @@
 </style>
 <template>
     <view class="m-activityDetail" wx:if="{{detail}}">
-      <view class="m-btn" wx:if="{{detail.plstatus == 4 && detail.playtype}}"><span @tap="acceptTap">确认承接</span></view>
-      <view class="m-btn" wx:if="{{detail.plstatus == 5 && !detail.playtype}}"><span @tap="pay">确认并支付</span></view>
+<!--      <view class="m-alert-text" wx:if="{{detail.is_join}}">-->
+<!--        <span>报名成功！</span>-->
+<!--        <span class="m-alert-btn" @tap="changeRoute('/pages/index/enterTeam')">进入团队</span>-->
+<!--      </view>-->
+      <view class="m-btn" wx:if="{{detail.plstatus == 4 && detail.playtype && !no_token}}"><span @tap="acceptTap">确认承接</span></view>
+      <view class="m-btn" wx:if="{{detail.plstatus == 5 && !detail.playtype && !no_token}}"><span @tap="pay">确认并支付</span></view>
       <view class="m-img-box">
         <image src="{{detail.plimg}}"   @tap="previewImg({{detail.plimg}})" class="m-scheduling-img"></image>
-<!--        <image src="{{img_src}}index/icon-share.png" class="m-icon-share" @tap="changeModal('show_share',true)"></image>-->
+        <image src="{{img_src}}index/icon-share.png" class="m-icon-share" @tap="changeModal('show_share',true)"></image>
       </view>
 
         <view class="m-scheduling-info">
@@ -440,11 +444,11 @@
         <view class="m-no-data" wx:if="{{list_data.length == 0}}">暂无动态</view>
         <circle :list.sync="list_data"></circle>
       </view>
-       <view class="m-scheduling-foot">
+       <view class="m-scheduling-foot" wx:if="{{!no_token}}">
             <view class="m-btn" wx:if="{{detail.plstatus < 2 && !detail.playtype}}"><span @tap="changeActivity">转让活动</span></view>
-           <view class="m-scheduling-btn" wx:if="{{detail.joinstatus}}" @tap="toEnter('/pages/index/enterPage')">我要报名</view>
+           <view class="m-scheduling-btn" wx:if="{{detail.joinstatus && !detail.playtype}}" @tap="toEnter('/pages/index/enterPage')">我要报名</view>
          <view class="m-scheduling-btn active" wx:if="{{detail.repaystatus}}" @tap="postReplay">继续支付</view>
-         <view class="m-scheduling-btn" wx:if="{{detail.is_join}}" >已报名</view>
+<!--         <view class="m-scheduling-btn" wx:if="{{detail.is_join}}" >已报名</view>-->
            <ul class="m-icon-list" wx:if="{{!detail.playtype}}">
                <li wx:if="{{detail.plstatus > 1}}" @tap="changeRoute('/pages/index/signIn')">
                    <image src="{{img_src}}index/icon-sign-in-active.png" class="m-icon-img"></image>
@@ -528,13 +532,13 @@
         <video src="{{video_url}}" autoplay="true"></video>
       </view>
 
-      <view class="m-share-fixed" @tap.stop="changeRoute('/pages/index/shareEdit')">
+      <view class="m-share-fixed" @tap.stop="changeRoute('/pages/index/shareEdit')" wx:if="{{!detail.playtype}}">
         <image class="m-logo" src="{{img_src}}common/logo.png"></image>
         <view>分享团队</view>
         <view>精彩内容</view>
       </view>
 
-     <share :show.sync="show_share" @changeModal.user="changeModal"></share>
+     <share :show.sync="show_share" @changeModal.user="changeModal" :params.sync="params" :plid.sync="plid"></share>
     </view>
 </template>
 
@@ -580,7 +584,10 @@
           total_count:0,
           video_url:'',
           show_video:false,
-          show_share:false
+          show_share:false,
+          params:'page=/pages/index/lookActivity',
+          secret_usid:'',
+          no_token:true
         }
       getPhoto(id){
         let that = this;
@@ -601,12 +608,14 @@
       }
         //获取活动详情
         getDetail(id){
+          console.log(wx.getStorageSync('secret_usid'),'lod')
             let that = this;
             tip.loading();
             wepy.request({
                 url: api.get_play + '?token=' +wx.getStorageSync('token'),
                 data: {
-                    plid:id || that.plid
+                    plid:id || that.plid,
+                  secret_usid:wx.getStorageSync('secret_usid')
                 },
                 header: {
                     'content-type': 'application/json' // 默认值
@@ -615,7 +624,6 @@
               if(res.data.status == 200){
                 let data = res.data.data;
                 that.detail_info = data;
-
                 if(data.joinstatus){
                   wx.setNavigationBarTitle({
                     title: '活动报名'
@@ -812,6 +820,20 @@
           }
         })
       }
+      getId(){
+        let that = this;
+        wepy.request({
+          url:api.secret_usid + '?token=' +wx.getStorageSync('token'),
+          method:"get",
+          data:{}
+        }).then(resule => {
+          if(resule.data.status == 200){
+            that.secret_usid = resule.data.data.secret_usid;
+            this.params = `page=/pages/index/lookActivity&plid=${that.plid}&secret_usid=${that.secret_usid}`;
+            that.$apply();
+          }
+        })
+      }
       onReachBottom() {
         // 下拉触底，先判断是否有请求正在进行中
         // 以及检查当前请求页数是不是小于数据总页数，如符合条件，则发送请求
@@ -827,7 +849,8 @@
 
         }
         let that = this;
-        let params = `?page=/pages/index/lookActivity&plid=${that.plid}`
+        let params = `?page=/pages/index/lookActivity&plid=${that.plid}&secret_usid=${that.secret_usid}`
+        // let params = '?scene=params=12'
         return {
           title: this.detail.plname,
           path: '/pages/index/index'+params,
@@ -837,10 +860,16 @@
         }
       }
         onLoad(options) {
+
             if(options.plid){
                 this.plid = options.plid;
                 this.img_src = api.img_src;
                 this.$apply();
+            }
+            if(wx.getStorageSync('token')){
+              this.getId();
+              this.no_token = false;
+              this.$apply();
             }
             wx.showShareMenu({
                 withShareTicket: true

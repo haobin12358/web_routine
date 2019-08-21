@@ -1,13 +1,13 @@
 
 
-// const api2 = 'https://play.bigxingxing.com/api/v2/' ;
+const api2 = 'https://play.bigxingxing.com/api/v2/' ;
 // const api2 = 'https://pre2.bigxingxing.com/api/v2/';
-const api2 = 'https://www.bigxingxing.com/api/v2/';
+// const api2 = 'https://www.bigxingxing.com/api/v2/';
 
 
-// const api = 'https://play.bigxingxing.com' ;
+const api = 'https://play.bigxingxing.com' ;
 // const api = 'https://pre2.bigxingxing.com';
-const api = 'https://www.bigxingxing.com';
+// const api = 'https://www.bigxingxing.com';
 //登录 注册
 
 const login = api2+'user/mp_login';//登录
@@ -82,11 +82,13 @@ const get_team_album = api2 +'scenicspot/get_team_album';//获取团队相册
 const secret_usid = api2 + 'user/secret_usid';//获取分享id
 const share_content = api2 +'scenicspot/share_content';//分享
 const get_linkcontent = api2 + 'index/get_linkcontent';//富文本详情
+const get_promotion = api2 +'play/get_promotion';//获取活动推广图
+const get_params = api2 +'play/get_params';//获取参数
 
 
 
-// const img_src = 'https://play.bigxingxing.com/icon/';
-const img_src = 'https://www.bigxingxing.com/icon/';
+const img_src = 'https://play.bigxingxing.com/icon/';
+// const img_src = 'https://www.bigxingxing.com/icon/';
 // const img_src = '../../images/';
 //评价
 module.exports = {
@@ -96,6 +98,6 @@ module.exports = {
   travelrecord_list,get_travelrecord,collection_show,raiders_list,get_team_travelrecord,set_discount,get_discount,list_mp_banner,get_play_history,
   cancel_play,make_over,my_wallet,undertake,apply_cash,payment,get_make_over_list,get_make_over,get_home,guide_certification,guide,
   add_toilet,toilet_list,get_toilet,get_room_list,data_statistics,update_usinfo,download_team,get_team_album,secret_usid,share_content,
-  get_linkcontent
+  get_linkcontent,get_promotion,get_params
 
 }
