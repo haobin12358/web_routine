@@ -323,16 +323,16 @@
      console.log(options,'share');
       if(options.scene){
         console.log("has scene");
-        var scene = decodeURIComponent(options.scene);
+        let scene = decodeURIComponent(options.scene);
         console.log("scene is ", scene);
-        var arrPara = scene.split("&");
-        var arr = [];
-          arr = arrPara[0].split("=");
+        let arrPara = scene.split("&");
+        let arr_params = [];
+        arr_params = arrPara[0].split("=");
           wepy.request({
             url: api.get_params + '?token=' +wx.getStorageSync('token'),
             data: {
-              key: arr[0],
-              value: arr[1]
+              key: arr_params[0],
+              value: arr_params[1]
             },
             header: {
               'content-type': 'application/json' // 默认值
@@ -355,7 +355,7 @@
                 params_arr.push(arr[i]);
               }
             }
-            if(arr.length >0){
+            if(params_arr.length >0 && url != '' ){
               url = url + '?' + params_arr.join('&');
             }
             if(url != ''){
