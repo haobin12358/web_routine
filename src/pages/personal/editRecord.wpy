@@ -7,6 +7,9 @@
       padding: 20rpx 30rpx;
       border: 1px solid @border-color;
       .flex-row(space-between);
+      .m-black{
+        color: #000;
+      }
       .m-btn{
         display: inline-block;
         width: 160rpx;
@@ -28,6 +31,10 @@
         font-size: 20rpx;
         box-sizing: border-box;
         padding: 0 20rpx;
+      }
+      .m-upload-img{
+        width: 88rpx;
+        height: 88rpx;
       }
       &.m-no-flex{
         display: block;
@@ -137,9 +144,10 @@
     <view class="m-row m-grey">
       <view class="m-flex-start">
         <image src="{{img_src}}common/icon-loc-grey.png" class="m-icon-share"></image>
-        <span>景区</span>
+        <span>所在位置</span>
       </view>
-      <scenic :scenic_name.sync="trlocation" @sureTap.user="sureTap"></scenic>
+<!--      <scenic :scenic_name.sync="umlocation" @sureTap.user="sureTap"></scenic>-->
+      <view @tap="getLoc" class="{{umlocation?'m-black':''}}}">{{umlocation || '获取定位'}}</view>
     </view>
     <view class="m-row m-grey">
       <view class="m-flex-start">
@@ -152,21 +160,23 @@
         <image src="{{img_src}}common/icon-more.png" class="m-icon-more"></image>
       </view>
     </view>
-    <block wx:for="{{items}}" wx:key="{{index}}">
+    <block wx:for="{{items}}" wx:key="{{index}}" wx:if="{{!show_prop}}">
       <view class="m-row m-up" wx:if="{{item.checked}}">
         <view class="m-flex-start">
-          <image src="{{img_src}}common/{{item.icon}}.png" class="m-icon-share"></image>
+          <image src="{{item.icon}}" class="m-icon-share"></image>
           <span>{{item.value}}</span>
         </view>
-        <view class="m-grey m-upload">
+        <view class="m-grey m-upload" wx:if="{{!item.mflimg}}" @tap="itemChooseImg({{index}})">
           上传截图
         </view>
+        <image class="m-upload-img" src="{{item.mflimg}}" wx:else @tap="itemChooseImg({{index}})"></image>
+
       </view>
       <view class="m-row m-up" wx:if="{{item.checked && item.link}}">
         <view class="m-flex-start">
           <image src="{{img_src}}index/icon-url.png" class="m-icon-share"></image>
         </view>
-        <textarea  placeholder="请输入链接" auto-height class="m-input"/>
+        <textarea  placeholder="请输入链接" value="{{item.mfllink}}" bindinput="bindIteminput" data-name="{{index}}" disabled="{{show_prop}}" auto-height class="m-input"/>
       </view>
     </block>
 
@@ -177,19 +187,19 @@
         <view class="m-line" @tap.stop="chooseVideo" wx:if="{{image.length == 0}}">视频</view>
       </view>
     </view>
-    <cover-view class="m-popup" wx:if="{{show_prop}}">
-      <cover-view class="m-popup-state">
-        <cover-view class="m-flex-between">
-          <cover-view class="m-grey" @tap="changeModal('show_prop',false)">取消</cover-view>
-          <cover-view @tap="changeModal('show_prop',false)">确定</cover-view>
-        </cover-view>
-        <cover-view class="m-select-ul">
+    <view class="m-popup" wx:if="{{show_prop}}">
+      <view class="m-popup-state">
+        <view class="m-flex-between">
+          <view class="m-grey" @tap="changeModal('show_prop',false)">取消</view>
+          <view @tap="changeModal('show_prop',false)">确定</view>
+        </view>
+        <view class="m-select-ul">
           <checkbox-group bindchange="checkboxChange">
-            <cover-view class="m-one" wx:for="{{items}}" wx:key="{{index}}"><checkbox value="{{item.value}}" color="#FFCE00" checked="{{item.checked}}"/>{{item.value}}</cover-view>
+            <view class="m-one" wx:for="{{items}}" wx:key="{{index}}"><checkbox value="{{item.value}}" color="#FFCE00" checked="{{item.checked}}"/>{{item.value}}</view>
           </checkbox-group>
-        </cover-view>
-      </cover-view>
-    </cover-view>
+        </view>
+      </view>
+    </view>
   </view>
 </template>
 
@@ -207,65 +217,136 @@
     };
     data = {
       img_src:api.img_src,
-      trlocation:'',
+      umlocation:'',
       text:'',
       show_select:false,
       image:[],
       video:null,
-      type:'essay',
-      plid:'',
+      type:'feedback',
+      tiid:'tiid1',
       items: [
-        {name: 'USA', value: '微 博',icon:'logo-weibo',link:true},
-        {name: 'CHN', value: '朋友圈', icon:'logo-peng',link:false},
-        {name: 'BRA', value: 'qq空间',icon:'logo-qq',link:false},
-        {name: 'USA', value: '小红书',icon:'logo-red',link:true},
-        {name: 'CHN', value: '抖 音',icon:'logo-dou',link:true},
+        {name: '1', value: '微 博',icon:'logo-weibo',link:true,mfllink:'',mflimg:''},
+        {name: '2', value: '朋友圈', icon:'logo-peng',link:false,mflimg:''},
+        {name: '3', value: 'qq空间',icon:'logo-qq',link:false,mflimg:''},
+        {name: '4', value: '小红书',icon:'logo-red',link:true,mfllink:'',mflimg:''},
+        {name: '5', value: '抖 音',icon:'logo-dou',link:true,mfllink:'',mflimg:''},
       ],
       show_prop:false
     };
-    postData(status){
+    //获取联动平台
+    getItem(){
       let that = this;
+      wepy.request({
+        url: api.get_ticket_linkage + '?token=' +wx.getStorageSync('token'),
+        method:"get",
+        data:{
+          tiid:that.tiid
+        }
+      }).then(resule => {
+        if(resule.data.status == 200){
+          let data = resule.data.data;
+          let arr = [];
+          for(let i=0;i<data.length;i++){
+            arr.push({
+              liid:data[i].linkage.liid,
+              value:data[i].linkage.liname,
+              icon:data[i].linkage.liicon,
+              link:data[i].linkage.lisharetype == 0? false:true,
+              mfllink:'',
+              mflimg:''
+            })
+          }
+          that.items = arr;
+          that.$apply();
+        }
+      })
+    }
+    postData(){
+      let that = this;
+      let arr = [].concat(that.items);
+      let mfls = [];
+      for(let i=0;i<arr.length;i++){
+        if(arr[i].checked){
+          if(arr[i].link && arr[i].mfllink == ''){
+            tip.error(`请输入${arr[i].value}链接`);
+            return false;
+          }
+          if(arr[i].mflimg == ''){
+            tip.error(`请输入${arr[i].value}截图`);
+            return false;
+          }
+          mfls.push({
+            liid:arr[i].liid,
+            mflimg:arr[i].mflimg,
+            mfllink:arr[i].mfllink ||''
+          })
+        }
+      }
       tip.loading();
       wepy.request({
-        url: api.add_travelrecord + '?token=' +wx.getStorageSync('token'),
+        url: api.feedback_create + '?token=' +wx.getStorageSync('token'),
         method:"post",
         data:{
-          trlocation:that.trlocation,
+          umlocation:that.umlocation,
           text:that.text,
-          trstatus:status || 1,
-          trtype:2,
           image:that.image,
           video:that.video,
-          plid:that.plid
+          tiid:that.tiid,
+          mfls:mfls
         }
       }).then(resule => {
         if(resule.data.status == 200){
           tip.success('发布成功');
-          if(that.plid){
-            wx.redirectTo({
-              url: '/pages/index/enterTeam?plid=' +that.plid
-            });
-          }else{
-            wx.navigateTo({
-              url: '/pages/personal/mainIndex'
-            });
-          }
+          // if(that.tiid){
+          //   wx.redirectTo({
+          //     url: '/pages/index/enterTeam?tiid=' +that.tiid
+          //   });
+          // }else{
+          //   wx.navigateTo({
+          //     url: '/pages/personal/mainIndex'
+          //   });
+          // }
 
         }
       })
     }
     onLoad(options) {
-      if(options.plid){
-        this.plid = options.plid;
+      if(options.tiid){
+        this.tiid = options.tiid;
         this.$apply();
       }
+      this.getItem();
     }
 
     methods = {
       //景区点击确定
       sureTap(e){
-        this.trlocation = e;
+        this.umlocation = e;
         this.$apply();
+      },
+      getLoc(){
+        let that = this;
+        wx.getLocation({
+          type: 'wgs84',
+          success (res) {
+            wepy.request({
+              url: api.news_location + '?token=' +wx.getStorageSync('token'),
+              method:"get",
+              data:{
+                latitude : res.latitude,
+                longitude : res.longitude
+              }
+            }).then(resule => {
+              if(resule.data.status == 200){
+                that.umlocation = resule.data.data.nelocation;
+                that.$apply();
+
+              }
+            })
+
+            that.$apply();
+          }
+        })
       },
       //文本框内容变化，绑定数据
       bindinput(e){
@@ -273,18 +354,56 @@
         this[name] = e.detail.value;
         this.$apply();
       },
+      //链接
+      bindIteminput(e){
+        let index = e.currentTarget.dataset.name;
+        this.items[index].mfllink = e.detail.value;
+        this.$apply();
+      },
       //发布
       submitNote(){
         if(!this.text){
-          tip.error('请输入随笔内容');
+          tip.error('请输入活动记录内容');
           return false;
         }
         this.postData(1);
+        // console.log(this.items);
       },
       //+点击
       uploadTap(){
         this.show_select = true;
         this.$apply();
+      },
+      itemChooseImg(name){
+        let that = this;
+        wx.chooseImage({
+          count: 1,
+          sizeType: ['original', 'compressed'],
+          sourceType: ['album', 'camera'],
+          success (res) {
+            // tempFilePath可以作为img标签的src属性显示图片
+            const tempFilePaths = res.tempFilePaths;
+
+            wx.uploadFile({
+                url: api.upload, //仅为示例，非真实的接口地址
+                filePath: tempFilePaths[0],
+                name: 'file',
+                formData: {
+                  token:wx.getStorageSync('token'),
+                  type:that.type
+                },
+                success (res1){
+                  // const data = res.data
+                  let data = JSON.parse(res1.data);
+                  //do something
+                  that.items[name].mflimg = api.api + data.data;
+                  that.$apply();
+                }
+              })
+
+
+          }
+        })
       },
       //上传图片
       chooseImg(){
@@ -365,7 +484,7 @@
       },
       //点击取消，页面数据init
       cancelContent(){
-        this.trlocation = '';
+        this.umlocation = '';
         this.text = '';
         this.show_select = false;
         this.image = [];

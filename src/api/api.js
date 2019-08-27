@@ -84,7 +84,9 @@ const share_content = api2 +'scenicspot/share_content';//分享
 const get_linkcontent = api2 + 'index/get_linkcontent';//富文本详情
 const get_promotion = api2 +'play/get_promotion';//获取活动推广图
 const get_params = api2 +'play/get_params';//获取参数
-
+const feedback_create = api2 +'feedback/create';//创建素材
+const news_location = api2 + 'news/location'; //获取当前位置名称
+const get_ticket_linkage = api2 +'feedback/get_ticket_linkage';
 
 
 const img_src = 'https://play.bigxingxing.com/icon/';
@@ -98,6 +100,6 @@ module.exports = {
   travelrecord_list,get_travelrecord,collection_show,raiders_list,get_team_travelrecord,set_discount,get_discount,list_mp_banner,get_play_history,
   cancel_play,make_over,my_wallet,undertake,apply_cash,payment,get_make_over_list,get_make_over,get_home,guide_certification,guide,
   add_toilet,toilet_list,get_toilet,get_room_list,data_statistics,update_usinfo,download_team,get_team_album,secret_usid,share_content,
-  get_linkcontent,get_promotion,get_params
+  get_linkcontent,get_promotion,get_params,feedback_create,news_location,get_ticket_linkage
 
 }
