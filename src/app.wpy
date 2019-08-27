@@ -70,7 +70,6 @@
         'pages/index/editEssay',
         'pages/index/timeIndex',
         'pages/personal/mainIndex',
-
         'pages/brand/brandDetail',
         'pages/brand/brandMain',
         'pages/brand/brandList',
