@@ -33,14 +33,15 @@
 
     config = {
       pages: [
-        'pages/personal/editRecord',
+
+
         'pages/index/index',
         'pages/personal/myCode',
-
+        'pages/personal/editRecord',
         'pages/personal/codeDetail',
         'pages/personal/codeList',
-        'pages/index/freeList',
         'pages/index/freeDetail',
+        'pages/index/freeList',
         'pages/index/scrollCircle',
         'pages/index/shareEdit',
         'pages/index/shareView',

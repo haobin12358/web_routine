@@ -1,6 +1,6 @@
 <style scoped lang="less" rel="stylesheet/less">
   @import "../../styles/common";
-  .m-codeList{
+  .m-freeList{
     padding: 25rpx;
     .m-freeList-content{
       padding: 20rpx 0;
@@ -16,14 +16,6 @@
           width:700rpx;
           height: 350rpx;
           background-color: #FFCE00;
-        }
-        .m-code{
-          position: absolute;
-          bottom: 10rpx;
-          right: 10rpx;
-          width: 82rpx;
-          height: 83rpx;
-          background-color: #C1C1C1;
         }
         .m-free-content{
           position: absolute;
@@ -67,6 +59,7 @@
           }
           .m-label-list{
             .flex-row(flex-start);
+            flex-wrap: wrap;
             span{
               display: block;
               padding: 0 7rpx;
@@ -78,76 +71,133 @@
             }
           }
         }
+        .m-code{
+          position: absolute;
+          bottom: 20rpx;
+          right: 0;
+          padding: 0 17rpx;
+          height: 50rpx;
+          line-height: 50rpx;
+          background-color: #FFFFFF;
+          border-radius:30rpx 0 0 30rpx;
+          .m-bold{
+            font-size: 36rpx;
+            font-weight: 600;
+          }
+        }
       }
+
     }
 
   }
 
 </style>
 <template>
-  <view class="m-codeList">
-    <view class="m-freeList-content">
-      <view class="m-one-free" @tap="changeRoute('/pages/personal/codeDetail')">
-        <image class="m-back"></image>
-        <view class="m-free-content">
-          <span class="m-label">推荐</span>
-          <view class="m-name">免费!! 打卡杭州富阳野生
-            动物园</view>
-          <view class="m-info">
-            <span>9.20抢票开启</span>
-            <span class="m-line"></span>
-            <span>亲子游必选</span>
-          </view>
-          <view class="m-label-list">
-            <span>自然</span>
-            <span>自然</span>
-          </view>
-        </view>
-        <image src="" class="m-code"></image>
-      </view>
-      <view class="m-one-free" @tap="changeRoute('/pages/personal/codeDetail')">
-        <image class="m-back"></image>
-        <view class="m-free-content">
-          <span class="m-label">推荐</span>
-          <view class="m-name">免费!! 打卡杭州富阳野生
-            动物园</view>
-          <view class="m-info">
-            <span>9.20抢票开启</span>
-            <span class="m-line"></span>
-            <span>亲子游必选</span>
-          </view>
-          <view class="m-label-list">
-            <span>自然</span>
-            <span>自然</span>
-          </view>
-        </view>
-        <image src="" class="m-code"></image>
-      </view>
+  <view class="m-freeList">
+    <view>
+      <span class="m-border-back">免费领取</span>
     </view>
-<!--    <bottom></bottom>-->
+    <view class="m-freeList-content">
+      <view class="m-one-free" wx:for="{{data_list}}" wx:key="{{index}}" @tap="changeRoute({{item}})">
+        <image class="m-back" src="{{item.tiimg}}"></image>
+        <view class="m-free-content">
+          <span class="m-label">推荐</span>
+          <view class="m-name">{{item.tiname}}</view>
+          <view class="m-info">
+            {{item.short_str}}
+          </view>
+          <view class="m-label-list">
+            <span wx:for="{{item.ticategory}}" wx:key="{{i}}" wx:for-index='i' wx:for-item='key'>{{key}}</span>
+          </view>
+        </view>
+        <view class="m-code">
+          取票码 <span class="m-bold">{{item.tsocode}}</span>
+        </view>
+      </view>
+
+    </view>
+    <bottom wx:if="{{data_list.length == total_count}}"></bottom>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy';
   import bottom from '../../components/common/bottom';
+  import api from '../../api/api';
   export default class codeList extends wepy.page {
     config = {
-      navigationBarTitleText: '电子二维码管理'
+      navigationBarTitleText: '免费领取门票',
+      enablePullDownRefresh: true
     };
     components = {bottom};
-    data = {};
-
+    data = {
+      data_list:[],
+      page_info:{
+        page_num: 1,
+        page_size: 10
+      },
+      total_count:0,
+      loading:false
+    };
+    getData(){
+      let that = this;
+      that.loading = true;
+      wepy.request({
+        url: api.ticket_list + '?token=' +wx.getStorageSync('token'),
+        method:"get",
+        data:{
+          page_num: that.page_info.page_num,
+          page_size:that.page_info.page_size,
+          option:'my'
+        }
+      }).then(res => {
+        if(res.data.status == 200){
+          if(that.page_info.page_num > 1){
+            that.data_list = that.data_list.concat(res.data.data);
+          }else{
+            that.data_list = res.data.data;
+          }
+          that.total_count = res.data.total_count;
+          that.loading = false;
+          that.$apply();
+          wx.stopPullDownRefresh();
+        }
+      })
+    }
+    onPullDownRefresh() {
+      // 上拉刷新
+      if (!this.loading) {
+        this. getData();
+        // 处理完成后，终止下拉刷新
+      }
+    }
+    onReachBottom() {
+      // 下拉触底，先判断是否有请求正在进行中
+      // 以及检查当前请求页数是不是小于数据总页数，如符合条件，则发送请求
+      if(!this.loading && this.total_count > this.data_list.length) {
+        this.page_info.page_num += 1;
+        this.$apply();
+        this.getData();
+      }
+    }
     onLoad(options) {
-
+      this.getData();
     }
 
     methods = {
-      changeRoute(v){
+      changeRoute(item){
         let that = this;
-        wx.navigateTo({
-          url: v
-        });
+        console.log(item);
+        if(item.tsostatus == 2){
+          wx.navigateTo({
+            url: '/pages/personal/codeDetail?tiid=' + item.tiid+ '&tsoid=' +item.tsoid
+          });
+        }else{
+          wx.navigateTo({
+            url: '/pages/index/freeDetail?tiid=' + item.tiid + '&tsoid=' +item.tsoid
+          });
+        }
+
       }
     };
   }

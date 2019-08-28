@@ -187,11 +187,11 @@
 <!--          <p><image src="{{img_src}}index/index-brand.png" wx:if="{{img_src}}" class="m-index-icon" alt="" /></p>-->
 <!--          <p>品牌馆</p>-->
 <!--        </li>-->
-<!--        <li @tap="changeRoute('/pages/index/freeList','no')">-->
-<!--          <p><image src="{{img_src}}index/index-free.png" wx:if="{{img_src}}" class="m-index-icon" alt="" /></p>-->
-<!--          <p>免费门票</p>-->
-<!--        </li>-->
-        <li></li>
+        <li @tap="changeRoute('/pages/index/freeList','no')">
+          <p><image src="{{img_src}}index/index-free.png" wx:if="{{img_src}}" class="m-index-icon" alt="" /></p>
+          <p>免费门票</p>
+        </li>
+<!--        <li></li>-->
         <li></li>
         <li></li>
       </ul>
