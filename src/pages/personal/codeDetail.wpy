@@ -1,11 +1,50 @@
 <style scoped lang="less" rel="stylesheet/less">
 
 .m-codeDetail{
-  padding: 183rpx 65rpx;
+  padding: 20rpx 35rpx 100rpx;
   .m-code{
     width: 616rpx;
     height: 616rpx;
     background-color: #C1C1C1;
+  }
+  .m-code-content{
+    position: relative;
+    width: 680rpx;
+    height: 180rpx;
+    .m-code-bg{
+      position: absolute;
+      top:0;
+      left:0;
+      width: 680rpx;
+      height: 180rpx;
+    }
+    .m-code-text{
+      line-height: 170rpx;
+      position: absolute;
+      top:0;
+      left:145rpx;
+      font-size: 40rpx;
+      .m-bold{
+        font-weight: 600;
+        font-size: 60rpx;
+      }
+    }
+  }
+  .m-free-content{
+    padding: 20rpx 10rpx;
+    .m-free-img{
+      width: 658rpx;
+      height: 658rpx;
+    }
+    .m-free-title{
+      font-size: 40rpx;
+      font-weight: 500;
+      text-shadow:0 3rpx 6rpx rgba(0,0,0,0.16);
+      margin: 10rpx 0 20rpx;
+    }
+    .m-time{
+      font-size: 30rpx;
+    }
   }
   .m-foot-btn{
     &.m-one{
@@ -18,8 +57,17 @@
 }
 </style>
 <template>
-    <view class="m-codeDetail ">
-      <image class="m-code"></image>
+    <view class="m-codeDetail " wx:if="{{detail}}">
+<!--      <image class="m-code"></image>-->
+      <view class="m-code-content">
+        <image src="{{img_src}}personal/free-code-bg.png" class="m-code-bg"></image>
+        <view class="m-code-text">取票码：<span class="m-bold">{{detail.tsocode}}</span></view>
+      </view>
+      <view class="m-free-content">
+        <image src="{{detail.tiimg}}" class="m-free-img"></image>
+        <view class="m-free-title">{{detail.tiname}}</view>
+<!--        <view class="m-time">出游时间：2019/6/10-6/12</view>-->
+      </view>
       <view class="m-foot-btn m-one" @tap="changeRoute('/pages/personal/editRecord')">提交活动记录</view>
 <!--      <view class="m-foot-btn m-one disable">已提交待审核</view>-->
     </view>
@@ -27,23 +75,54 @@
 
 <script>
   import wepy from 'wepy';
+  import api from '../../api/api';
 
   export default class codeDetail extends wepy.page {
     config = {
       navigationBarTitleText: '二维码'
     };
     components = {};
-    data = {};
-
+    data = {
+      img_src: api.img_src,
+      tiid:'',
+      tsoid:'',
+      detail:null
+    };
+    getData(){
+      let that = this;
+      that.loading = true;
+      that.$apply();
+      wepy.request({
+        url: api.ticket_get + '?token=' +wx.getStorageSync('token'),
+        method:"get",
+        data:{
+          tiid:that.tiid,
+          tsoid:that.tsoid
+        }
+      }).then(res => {
+        if(res.data.status == 200){
+          that.detail = res.data.data;
+          that.$apply();
+        }
+      })
+    }
     onLoad(options) {
-
+      if(options.tiid){
+        this.tiid = options.tiid;
+        this.$apply();
+      }
+      if(options.tsoid){
+        this.tsoid = options.tsoid;
+        this.$apply();
+      }
+      this.getData();
     }
 
     methods = {
       changeRoute(v){
         let that = this;
         wx.navigateTo({
-          url: v
+          url: v + '?tiid=' + that.tiid + '&tsoid=' +that.tsoid
         });
       }
     };

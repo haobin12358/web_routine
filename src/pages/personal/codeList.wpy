@@ -111,7 +111,7 @@
           </view>
         </view>
         <view class="m-code">
-          取票码 <span class="m-bold">{{item.tsocode}}</span>
+          {{item.tsostatus != 2?'抢票码':'取票码'}} <span class="m-bold">{{item.tsocode}}</span>
         </view>
       </view>
 

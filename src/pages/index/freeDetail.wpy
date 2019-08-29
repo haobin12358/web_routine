@@ -186,16 +186,20 @@
             font-weight: 500;
           }
           .m-code{
-            width: 313rpx;
-            height: 313rpx;
+            width: 323rpx;
+            height: 323rpx;
             margin: 40rpx 0 20rpx;
             &.m-num{
               height: 200rpx;
               .flex-col(space-around);
-              font-size: 40rpx;
+              font-size: 38rpx;
               .m-num-text{
-                font-size: 60rpx;
+                font-size: 50rpx;
                 font-weight: 600;
+                span{
+                  display: inline-block;
+                  padding: 0 4rpx;
+                }
               }
             }
           }
@@ -285,7 +289,7 @@
         </view>
       </view>
       <view class="m-foot-btn m-one" @tap="submitTap" wx:if="{{detail.tistatus < 2 && !detail.tsoid }}">支付押金</view>
-
+      <view class="m-foot-btn m-one" @tap="submitTap" wx:if="{{detail.tsostatus == 1  && detail.tsoid }}">支付剩余押金 ¥{{detail.residual_deposit}}</view>
 <!--      支付成功-->
 <!--      <view class="m-modal m-result" wx:if="{{show_result}}" >-->
 <!--        <view class="m-modal-state">-->
@@ -307,16 +311,24 @@
             <image src="{{img_src}}index/icon-success.png" class="m-icon-success"></image>
             <view class="m-success-text">支付成功</view>
           </view>
-          <view class="m-code m-num">
-            <view wx:if="{{detail.tsostatus == 0}}">抢票码</view>
+          <view class="m-code m-num" >
+            <view wx:if="{{detail.tsostatus != 1 ||  pay_done}}">抢票码</view>
             <view wx:if="{{detail.tsostatus == 2}}">取票码</view>
-            <view class="m-num-text">{{detail.tsocode}}</view>
+            <view class="m-num-text" wx:if="{{pay_done}}">
+              <span wx:for="{{tscode}}" wx:key="{{index}}">{{item}}</span>
+            </view>
+            <view class="m-num-text" wx:else>{{detail.tsocode}}</view>
           </view>
          <image src="{{img_src}}index/icon-alert.png" class="m-alert" ></image>
           <view >提示</view>
-          <view class="m-ft-24" wx:if="{{detail.tsostatus == 0}}">抢票时间截止后平台将公布
+          <view class="m-ft-24" wx:if="{{detail.tsostatus == 0 || pay_done}}">抢票时间截止后平台将公布
             获得门票的抢票码
             对应号码用户交剩余的押金</view>
+          <view class="m-ft-24" wx:if="{{detail.tsostatus == 2}}">抢票时间截止后平台将公布
+            获得门票的抢票码
+            对应号码用户交剩余的押金</view>
+          <view class="m-ft-24" wx:if="{{detail.tsostatus == 1}}">恭喜您已中奖！请在规定时间内支付剩余的押金。</view>
+          <view class="m-ft-24" wx:if="{{detail.tsostatus == -1}}">很遗憾！您未中奖。押金已经退回您的账户，请期待下一次的活动。</view>
           <view class="m-btn" @tap.stop="changeModal('show_result',false)">我知道了</view>
         </view>
       </view>
@@ -337,7 +349,8 @@
   import tip from '../../utils/tip';
   export default class freeDetail extends wepy.page {
     config = {
-      navigationBarTitleText: '领取免费门票'
+      navigationBarTitleText: '领取免费门票',
+      enablePullDownRefresh: true
     };
     components = {share:share,htmlParser:htmlParser};
     data = {
@@ -355,9 +368,15 @@
       minute:'',
       second:'',
       tsoid:'',
+      time:'',
+      loading:false,
+      pay_done:false,
+      tscode:[]
     };
     getData(){
       let that = this;
+      that.loading = true;
+      that.$apply();
       wepy.request({
         url: api.ticket_get + '?token=' +wx.getStorageSync('token'),
         method:"get",
@@ -372,12 +391,15 @@
           that.content1 = res.data.data.tidetails;
           that.content1 = that.content1.replace(/&quot;/g,'');
           that.content1 = that.content1.replace(/&nbsp;/g, '\xa0');
-          if(that.detail.tsoid){
+          if(that.detail.tsoid  ){
             that.show_result = true;
           }
+          that.loading = false;
           that.$apply();
           that.$invoke('htmlParser', 'htmlParserNotice');
-          that.dealTime();
+          if(that.detail.tistatus <2 && !that.detail.tsoid){
+            that.dealTime();
+          }
         }
       })
     }
@@ -387,7 +409,6 @@
         var date = new Date();
         var now = date.getTime();
         let endDate;
-        console.log(that.detail.tiendtime)
         if(that.detail.tistatus == 0){
           endDate = new Date(that.detail.tistarttime.replace(/-/g, "/"));//设置截止时间
         }else if(that.detail.tistatus == 1){
@@ -427,13 +448,75 @@
         // that.millisecond = ms;
         that.$apply();
         //递归每秒调用countTime方法，显示动态时间效果
-        let time =  setTimeout(function() {
+        that.time =  setTimeout(function() {
           countTime();
         }, 1000);
       }
       countTime();
     }
+//支付
+    pay(params){
+      let that = this;
+      wx.requestPayment({
+        timeStamp: params.timeStamp,
+        nonceStr: params.nonceStr,
+        package: params.package,
+        signType: params.signType,
+        paySign: params.sign,
+        success (res) {
+           that.pay_done = true;
+           that.show_result = true;
+           that.$apply();
+        },
+        fail (res) {
+          wx.showToast({
+            title: '支付失败，请稍后再试',
+            icon: 'none',
+            duration: 2000
+          })
+        }
+      })
+    }
+    postData(){
+      let that = this;
+      tip.loading();
+      let params = {};
+      if(that.detail.tsoid){
+        params = {
+          tsoid : that.detail.tsoid
+        }
+      }else{
+        params = {
+          num : that.num,
+          tiid: that.detail.tiid
+        }
+      }
+      wepy.request({
+        url: api.ticket_pay + '?token=' +wx.getStorageSync('token'),
+        method:"post",
+        data:params
+      }).then(resule => {
+        if(resule.data.status == 200){
+          // if(resule.data.data.redirect){
+          //   wx.showToast({
+          //     title: '报名成功',
+          //     icon: 'none',
+          //     duration: 2000
+          //   });
+          //   wx.redirectTo({
+          //     url: '/pages/index/manageActivity'
+          //   });
+          // }else{
+            let params = resule.data.data.args;
+            that.tscode = [].concat(resule.data.data.tscode);
+          that.$apply();
+            // that.$apply();
+            that.pay(params);
+          // }
 
+        }
+      })
+    }
     onLoad(options) {
       if(options.tiid){
         this.tiid = options.tiid;
@@ -445,12 +528,25 @@
       }
       this.getData();
     }
+    onUnload(){
+      let that = this;
+     clearTimeout(that.time);
 
+    }
+    onPullDownRefresh() {
+      // 上拉刷新
+      if (!this.loading) {
+        this. getData();
+        // 处理完成后，终止下拉刷新
+      }
+    }
     methods = {
 
       submitTap(){
-        this.show_result = true;
-        this.$apply();
+        // this.show_result = true;
+        // this.$apply();
+        this.postData();
+
       },
       changeModal(name,bool){
         if(bool == 'false'){

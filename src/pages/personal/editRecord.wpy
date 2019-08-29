@@ -224,6 +224,7 @@
       video:null,
       type:'feedback',
       tiid:'tiid1',
+      tsoid:'',
       items: [
         {name: '1', value: '微 博',icon:'logo-weibo',link:true,mfllink:'',mflimg:''},
         {name: '2', value: '朋友圈', icon:'logo-peng',link:false,mflimg:''},
@@ -292,15 +293,16 @@
           image:that.image,
           video:that.video,
           tiid:that.tiid,
+          tsoid:that.tsoid,
           mfls:mfls
         }
       }).then(resule => {
         if(resule.data.status == 200){
-          tip.success('发布成功');
+          tip.success(resule.data.message);
           // if(that.tiid){
-          //   wx.redirectTo({
-          //     url: '/pages/index/enterTeam?tiid=' +that.tiid
-          //   });
+            wx.redirectTo({
+              url: '/pages/personal/codeDetail?tiid=' +that.tiid + '&tsoid=' +that.tsoid
+            });
           // }else{
           //   wx.navigateTo({
           //     url: '/pages/personal/mainIndex'
@@ -313,6 +315,10 @@
     onLoad(options) {
       if(options.tiid){
         this.tiid = options.tiid;
+        this.$apply();
+      }
+      if(options.tsoid){
+        this.tsoid = options.tsoid;
         this.$apply();
       }
       this.getItem();
