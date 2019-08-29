@@ -91,9 +91,9 @@ const ticket_list= api2 +'ticket/list';//获取门票列表
 const ticket_get = api2 +'ticket/get';//获取门票详情
 const  ticket_pay = api2 +'ticket/pay';//支付押金
 
-// const img_src = 'https://play.bigxingxing.com/icon/';
+const img_src = 'https://play.bigxingxing.com/icon/';
 // const img_src = 'https://www.bigxingxing.com/icon/';
-const img_src = '../../images/';
+// const img_src = '../../images/';
 //评价
 module.exports = {
   api,img_src,login,bind_phone,set_cost,set_insurance,scenicspot_list,scenicspot_get,set_play,get_cost,get_insurance,get_play,

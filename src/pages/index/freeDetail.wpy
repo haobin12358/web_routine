@@ -129,6 +129,11 @@
       padding: 20rpx;
       border-bottom: 1px solid @border-color;
     }
+    .m-code{
+      align-items: flex-start;
+      padding: 20rpx;
+      border-bottom: 1px solid @border-color;
+    }
     .m-rule-text{
       width: 577rpx;
       margin-left: 20rpx;
@@ -136,6 +141,15 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+    .m-code-text{
+      width: 477rpx;
+      margin-left: 20rpx;
+      max-height: 164rpx;
+      span{
+        display: inline-block;
+        margin-right: 10rpx;
+      }
     }
     .m-image-box{
       .m-img{
@@ -280,6 +294,15 @@
           <image src="{{img_src}}index/icon-alert.png" class="m-alert" ></image>
           <view>规则</view>
           <view class="m-rule-text">{{detail.tirules}}</view>
+        </view>
+        <view class="m-flex-start m-code" wx:if="{{detail.tirewardnum}}" @tap.stop="changeModal('show_rule',true)">
+          <image src="{{img_src}}index/icon-alert.png" class="m-alert" ></image>
+          <view>中奖号码</view>
+          <view class="m-code-text m-grey">
+<!--            <view wx:for="{{detail.tirewardnum}}" wx:key="{{index}}">{{item}}</view>-->
+            <span wx:for="{{detail.tirewardnum}}" wx:key="{{index}}">{{item}}{{index != detail.tirewardnum.length-1 ? ',':''}}</span>
+
+          </view>
         </view>
         <view class="m-image-box" wx:if="{{detail.ticertificate}}">
           <image src="{{detail.ticertificate}}" class="m-img"></image>

@@ -68,8 +68,9 @@
         <view class="m-free-title">{{detail.tiname}}</view>
 <!--        <view class="m-time">出游时间：2019/6/10-6/12</view>-->
       </view>
-      <view class="m-foot-btn m-one" @tap="changeRoute('/pages/personal/editRecord')">提交活动记录</view>
-<!--      <view class="m-foot-btn m-one disable">已提交待审核</view>-->
+      <view class="m-foot-btn m-one" wx:if="{{detail.umfstatus == -1}}" @tap="changeRoute('/pages/personal/editRecord')">提交活动记录</view>
+      <view class="m-foot-btn m-one disable" wx:if="{{detail.umfstatus == 0}}">已提交,待审核</view>
+      <view class="m-foot-btn m-one disable" wx:if="{{detail.umfstatus == 1}}">审核通过已退款</view>
     </view>
 </template>
 
