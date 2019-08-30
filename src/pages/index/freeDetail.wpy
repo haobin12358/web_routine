@@ -68,7 +68,8 @@
       background-color: #FFCE00;
       .m-time{
         display: inline-block;
-        width: 50rpx;
+        min-width: 50rpx;
+        padding: 0 10rpx;
         height: 50rpx;
         line-height: 50rpx;
         border-radius: 5rpx;
@@ -311,7 +312,8 @@
           <htmlParser :parserName.sync="name1" :parserContent.sync="content1" />
         </view>
       </view>
-      <view class="m-foot-btn m-one" @tap="submitTap" wx:if="{{detail.tistatus < 2 && !detail.tsoid }}">支付押金</view>
+      <view class="m-foot-btn m-one cancel" wx:if="{{detail.tistatus == 0 }}">等待抢票</view>
+      <view class="m-foot-btn m-one" @tap="submitTap" wx:if="{{detail.tistatus == 1 && !detail.tsoid }}">支付押金</view>
       <view class="m-foot-btn m-one" @tap="submitTap" wx:if="{{detail.tsostatus == 1  && detail.tsoid }}">支付剩余押金 ¥{{detail.residual_deposit}}</view>
 <!--      支付成功-->
 <!--      <view class="m-modal m-result" wx:if="{{show_result}}" >-->
