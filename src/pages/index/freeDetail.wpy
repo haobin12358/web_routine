@@ -155,7 +155,7 @@
     .m-image-box{
       .m-img{
         width: 750rpx;
-        height: auto;
+        /*height: auto;*/
       }
     }
     .m-info{
