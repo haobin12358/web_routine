@@ -133,7 +133,12 @@
         type:String,
         twoWay:true,
         default:''
-      }
+      },
+      tiid:{
+        type:String,
+        twoWay:true,
+        default:''
+      },
     }
     getPhoto(){
       let that = this;
@@ -143,6 +148,26 @@
         url: api.get_promotion + '?token=' +wx.getStorageSync('token'),
         data: {
           plid: that.plid,
+          params:that.params
+        }
+      }).then(res => {
+        if(res.data.status == 200){
+          let data = res.data.data;
+          that.photo = api.api + data.promotion_path;
+          that.show_pic = true;
+          that.$apply();
+
+        }
+      })
+    }
+    getTicketPhoto(){
+      let that = this;
+      tip.loading();
+      that.photo = '';
+      wepy.request({
+        url: api.ticket_get_promotion + '?token=' +wx.getStorageSync('token'),
+        data: {
+          tiid: that.tiid,
           params:that.params
         }
       }).then(res => {
@@ -184,7 +209,12 @@
         this.$apply();
       },
       drawImg(){
-        this.getPhoto();
+        if(this.plid){
+          this.getPhoto();
+        }else if(this.tiid){
+          this.getTicketPhoto();
+        }
+
       },
       previewImg(item){
         let that = this;

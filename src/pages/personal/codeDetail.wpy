@@ -3,9 +3,9 @@
 .m-codeDetail{
   padding: 20rpx 35rpx 100rpx;
   .m-code{
-    width: 616rpx;
-    height: 616rpx;
-    background-color: #C1C1C1;
+    width: 150rpx;
+    height: 150rpx;
+    /*background-color: #C1C1C1;*/
   }
   .m-code-content{
     position: relative;
@@ -24,6 +24,10 @@
       top:0;
       left:145rpx;
       font-size: 40rpx;
+      display: flex;
+      flex-flow: row;
+      align-items: center;
+      justify-content: flex-start;
       .m-bold{
         font-weight: 600;
         font-size: 60rpx;
@@ -58,13 +62,17 @@
 </style>
 <template>
     <view class="m-codeDetail " wx:if="{{detail}}">
-<!--      <image class="m-code"></image>-->
-      <view class="m-code-content">
-        <image src="{{img_src}}personal/free-code-bg.png" class="m-code-bg"></image>
-        <view class="m-code-text">取票码：<span class="m-bold">{{detail.tsocode}}</span></view>
-      </view>
+            <view class="m-code-content">
+              <image src="{{img_src}}personal/free-code-bg.png" class="m-code-bg"></image>
+              <view class="m-code-text">取票码： <image src="{{detail.tsoqrcode}}" @tap="previewImg({{detail.tsoqrcode}})" class="m-code"></image></view>
+            </view>
+
+<!--      <view class="m-code-content">-->
+<!--        <image src="{{img_src}}personal/free-code-bg.png" class="m-code-bg"></image>-->
+<!--        <view class="m-code-text">取票码：<span class="m-bold">{{detail.tsocode}}</span></view>-->
+<!--      </view>-->
       <view class="m-free-content">
-        <image src="{{detail.tiimg}}" class="m-free-img"></image>
+        <image src="{{detail.tiimg}}" class="m-free-img" @tap="previewImg({{detail.tiimg}})"></image>
         <view class="m-free-title">{{detail.tiname}}</view>
 <!--        <view class="m-time">出游时间：2019/6/10-6/12</view>-->
       </view>
@@ -125,7 +133,15 @@
         wx.navigateTo({
           url: v + '?tiid=' + that.tiid + '&tsoid=' +that.tsoid
         });
-      }
+      },
+      previewImg(item){
+        let that = this;
+        console.log(item)
+        wx.previewImage({
+          current: item, // 当前显示图片的http链接
+          urls: [item] // 需要预览的图片http链接列表
+        })
+      },
     };
   }
 </script>

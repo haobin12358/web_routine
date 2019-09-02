@@ -85,6 +85,13 @@
             font-weight: 600;
           }
         }
+        image.m-code-img{
+          width: 82rpx;
+          height: 82rpx;
+          position: absolute;
+          bottom: 20rpx;
+          right: 10rpx;
+        }
       }
 
     }
@@ -110,8 +117,12 @@
             <span wx:for="{{item.ticategory}}" wx:key="{{i}}" wx:for-index='i' wx:for-item='key'>{{key}}</span>
           </view>
         </view>
-        <view class="m-code">
-          {{item.tsostatus != 2?'抢票码':'取票码'}} <span class="m-bold">{{item.tsocode}}</span>
+<!--        <view class="m-code">-->
+<!--          {{item.tsostatus == 2?'取票码':'取票码'}} <span class="m-bold">{{item.tsocode}}</span>-->
+<!--        </view>-->
+        <image src="{{item.tsoqrcode}}" class="m-code-img" wx:if="{{item.tsostatus == 2}}"></image>
+        <view class="m-code" wx:else>
+          {{item.tsostatus_zh}}
         </view>
       </view>
 
