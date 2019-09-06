@@ -1,0 +1,313 @@
+<style scoped lang="less" rel="stylesheet/less">
+    @import "../../styles/common.less";
+    .m-personal{
+        .m-icon{
+            display: inline-block;
+            width: 30rpx;
+            height: 30rpx;
+        }
+        .m-personal-top{
+            padding: 30rpx 70rpx 40rpx;
+            .flex-row(flex-start);
+            /*border-bottom: 10rpx solid #f4f4f4;*/
+            .m-user-avator{
+                display: inline-block;
+                width: 150rpx;
+                height: 150rpx;
+                border-radius: 50%;
+                margin-right: 30rpx;
+            }
+            .m-user-info{
+                width: 430rpx;
+                .m-user-name{
+                    font-size: 36rpx;
+                    font-weight: 500;
+                    margin-right: 20rpx;
+                    margin-left: 0;
+                }
+                .m-login-btn{
+                    padding: 2rpx 10rpx;
+                    background-color: @common-color;
+                    font-size: 22rpx;
+                    border-radius: 30rpx;
+                }
+            }
+        }
+        .m-personal-item{
+            border-top: 10rpx solid #f4f4f4;
+            li{
+                padding: 30rpx 65rpx;
+                border-bottom: 1px solid @border-color;
+                .flex-row(space-between);
+                .m-icon{
+                    margin-right: 20rpx;
+                }
+            }
+        }
+        .m-tel-modal{
+            position: fixed;
+            top:0;
+            bottom:0;
+            left:0;
+            right:0;
+            width: 100%;
+            height:100vh;
+            background-color: rgba(0,0,0,0.2);
+            z-index: 1001;
+            .m-modal-state{
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                text-align: center;
+                .m-tel-content{
+                    width: 100%;
+                    background-color: #fff;
+                    margin-bottom: 20rpx;
+                    .m-tel{
+                        padding: 20rpx 0;
+                        border-bottom: 1px solid #D9D9D9;
+                    }
+                }
+                .m-btn{
+                    padding: 20rpx 0;
+                    background-color: #fff;
+                }
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class="m-personal" wx:if="{{img_src}}">
+        <view class="m-personal-top">
+            <image src="{{user_info.usheader}}" wx:if="{{!no_login}}" class="m-user-avator"></image>
+            <image src="{{img_src}}common/logo.png" wx:if="{{no_login}}" class="m-user-avator"></image>
+            <view class="m-user-info" wx:if="{{!no_login}}">
+                <view class="m-flex-between">
+                    <view class="m-flex-start">
+                        <span class="m-user-name">{{user_info.usname}}</span>
+                        <image src="{{img_src}}personal/icon-women.png" wx:if="{{user_info.usgender == 1}}" class="m-icon"></image>
+                        <image src="{{img_src}}personal/icon-men.png" wx:if="{{user_info.usgender == 0}}" class="m-icon"></image>
+                    </view>
+                    <image src="{{img_src}}personal/icon-code.png" class="m-icon" @tap="changeRoute('/pages/personal/myCode')"></image>
+                </view>
+                <view>
+                    <span class="m-user-label">{{user_info.usminilevel}}</span>
+                </view>
+                <view class="m-flex-end" @tap="changeRoute('/pages/personal/mainIndex')">
+                    <span class="m-grey">主页</span>
+                    <image src="{{img_src}}common/icon-more.png" wx:if="{{img_src}}"  class="m-icon-more"></image>
+                </view>
+            </view>
+            <view class="m-user-info" wx:if="{{no_login}}">
+                <view class="m-flex-between">
+                    <view class="m-flex-start">
+                        <span class="m-login-btn" @tap="toLogin">登录/注册</span>
+                    </view>
+                    <!--                                 <image src="{{img_src}}personal/icon-code.png" class="m-icon"></image>-->
+                </view>
+            </view>
+        </view>
+
+        <view class="m-personal-item">
+            <ul >
+                <li @tap="changeRoute('/pages/personal/personalInfo')">
+                    <view class="m-flex-start">
+                        <image src="{{img_src}}personal/icon-info.png" wx:if="{{img_src}}"  class="m-icon"></image>
+                        <span>个人信息</span>
+                    </view>
+                </li>
+                <li @tap="changeRoute('/pages/personal/myWallet','phone')">
+                    <view class="m-flex-start">
+                        <image src="{{img_src}}personal/icon-wallet.png" wx:if="{{img_src}}"  class="m-icon"></image>
+                        <span>我的钱包</span>
+                    </view>
+                    <span class="m-grey">¥ {{user_info.uscash || 0}}</span>
+                </li>
+                <li @tap="changeRoute('/pages/personal/history','phone')">
+                    <view class="m-flex-start">
+                        <image src="{{img_src}}personal/icon-history.png" wx:if="{{img_src}}" class="m-icon"></image>
+                        <span>历史团队</span>
+                    </view>
+                </li>
+                <li @tap="changeRoute('/pages/personal/codeList','phone')">
+                    <view class="m-flex-start">
+                        <image src="{{img_src}}personal/icon-code-manage.png" wx:if="{{img_src}}" class="m-icon"></image>
+                        <span>我的试用</span>
+                    </view>
+                </li>
+            </ul>
+        </view>
+        <view class="m-personal-item">
+            <ul >
+                <li >
+                    <view class="m-flex-start">
+                        <image src="{{img_src}}personal/icon-rule.png" wx:if="{{img_src}}"  class="m-icon"></image>
+                        <span>信息绑定</span>
+                    </view>
+                </li>
+                <li @tap="getCell">
+                    <view class="m-flex-start">
+                        <image src="{{img_src}}personal/icon-service.png" wx:if="{{img_src}}"  class="m-icon"></image>
+                        <span>客服中心</span>
+                    </view>
+                </li>
+            </ul>
+        </view>
+
+        <phone :show_tel.sync="show_tel" :url.sync="url"></phone>
+    </view>
+</template>
+<script >
+    import wepy from 'wepy';
+    import tip from '../../utils/tip';
+    import api from '../../api/api';
+    import Phone from '../../components/common/phone';
+    export default class Index extends wepy.page{
+        config = {
+            navigationBarTitleText: '我的',
+            enablePullDownRefresh:true
+        }
+        components = {
+            phone:Phone
+        }
+        data = {
+            img_src: null,
+            user_info: {},
+            all_phone:['19817444373'],
+            show_tel:false,
+            url:'',
+            new_img:null,
+            no_login:true
+        }
+        onPullDownRefresh() {
+            // 上拉刷新
+            if (!this.loading) {
+                this. getData();
+                // 处理完成后，终止下拉刷新
+            }
+        }
+        onLoad(){
+            // this.getData();
+        }
+        onShow(){
+            // if(!this.user_info.ustelphone){
+            if(wx.getStorageSync('token')){
+                this.getData();
+            }
+
+            // }
+            this.img_src = api.img_src;
+            this.show_tel = false;
+            this.$apply();
+        }
+        getData(){
+            let that = this;
+
+            wepy.request({
+                url: api.get_home + '?token=' +wx.getStorageSync('token'),
+                method:"get",
+                data:{}
+            }).then(res => {
+                if(res.data.status == 200){
+                    that.user_info = res.data.data;
+                    that.no_login = false;
+                    that.$apply();
+                    wx.stopPullDownRefresh();
+                }
+            })
+        }
+        methods = {
+            changeRoute(v,show){
+                let that = this;
+                switch (show) {
+                    case 'true':
+                        wx.showToast({
+                            title: '功能尚未开放，敬请期待',
+                            icon: "none",
+                            mask: true,
+                            duration: 1000
+                        });
+                        break;
+                    case 'info':
+                        if(wx.getStorageSync('bind_phone') == 'false'){
+                            this.show_tel = true;
+                            this.url = v;
+                            this.$apply();
+                            return;
+                        }
+                        wx.navigateTo({
+                            url: v + '?tel=' + that.user_info.ustelphone
+                        });
+                        break;
+                    case 'phone':
+                        if(wx.getStorageSync('bind_phone') == 'false'){
+                            this.show_tel = true;
+                            this.url = v;
+                            this.$apply();
+                            return;
+                        }
+                        wx.navigateTo({
+                            url: v
+                        });
+                        break;
+                    default:
+                        wx.navigateTo({
+                            url: v
+                        });
+                        break;
+                }
+
+            },
+            toLogin(){
+                wx.navigateTo({
+                    url: '/pages/personal/login'
+                });
+            },
+            getCell(){
+                let that = this;
+                //
+                // wx.request({
+                //   url: api.help + '?token=' +wx.getStorageSync('token'),
+                //   method:"post",
+                //   data:{
+                //     latitude:res.latitude,
+                //     longitude:res.longitude
+                //   },
+                //   success: function (resule){
+                //     tip.loaded();
+                //     if(resule.data.status == 200){
+                //       that.all_phone = resule.data.data.phone;
+                wx.showActionSheet({
+                    itemList: that.all_phone,
+                    success (res) {
+                        // that.call(res.tapIndex);
+                        wx.makePhoneCall({
+                            phoneNumber: that.all_phone[res.tapIndex]
+                        })
+                    },
+                    fail (res) {
+                        console.log(res.errMsg)
+                    }
+                });
+                //       that.$apply();
+                //     }else{
+                //       wx.showToast({
+                //         title: resule.data.message,
+                //         icon: 'none',
+                //         duration: 2000
+                //       })
+                //
+                //     }
+                //   }
+                // })
+
+
+
+            },
+
+        }
+
+    }
+</script>

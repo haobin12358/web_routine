@@ -1,0 +1,330 @@
+<style scoped lang="less" rel="stylesheet/less">
+    @import "../../styles/common";
+    .m-index{
+        width: 100%;
+        background-color: #fff;
+        .m-ticket-list{
+            padding: 25rpx;
+            .flex-row(flex-start);
+            flex-wrap: wrap;
+            .m-one-ticket{
+                width: 340rpx;
+                &:nth-child(odd){
+                    margin-right: 20rpx;
+                }
+                .m-ticket-img{
+                    width: 340rpx;
+                    height: 340rpx;
+                }
+                .m-ticket-name{
+                    width: 340rpx;
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
+                    -webkit-line-clamp: 2;
+                    overflow: hidden;
+                    font-size: 28rpx;
+                    font-weight: 500;
+                    padding: 10rpx 0;
+                }
+                .m-ticket-price{
+                    font-size: 20rpx;
+                    color: @grey-color;
+                }
+                .m-ticket-num{
+                   .flex-row(space-between);
+                    padding-top: 10rpx;
+                    font-size: 24rpx;
+                    width: 340rpx;
+                    color: @grey-color;
+                    .m-bold{
+                        color: @common-color;
+                        font-weight: 500;
+                    }
+                 }
+            }
+        }
+        .m-modal{
+            width: 100%;
+            height: 100vh;
+            background-color: rgba(0,0,0,0.16);
+            position: fixed;
+            top:0;
+            left: 0;
+            z-index: 100;
+            .m-modal-state{
+                width: 600rpx;
+                background-color: #fff;
+                padding: 20rpx;
+                position: fixed;
+                top:0;
+                left:0;
+                right:0;
+                bottom:0;
+                margin: auto;
+                max-height: 500rpx;
+                .m-title{
+                    padding-bottom: 20rpx;
+                    font-size: 30rpx;
+                    font-weight: 500;
+                    width: 100%;
+                    text-align: left;
+                }
+                .m-row{
+                    padding: 20rpx;
+                    width: 100%;
+                    box-sizing: border-box;
+                    border: 1px solid @common-color;
+                    margin-bottom: 20rpx;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    &.active{
+                        background-color: @common-color;
+                    }
+                }
+                .m-row-item{
+                    height: 430rpx;
+                    .flex-col(space-around);
+                }
+            }
+        }
+    }
+</style>
+<template>
+    <view class="m-index">
+        <swiper
+                indicator-dots="{{indicatorDots}}"
+                autoplay="{{autoplay}}"
+                interval="{{interval}}"
+                duration="{{duration}}"
+                style="height: 400rpx;"
+        >
+            <block wx:for="{{scroll_data}}" wx:key="item">
+                <swiper-item >
+                    <image src="{{item.mpbpicture}}" @tap="imgTap({{item}})" class="slide-image" style="width: 750rpx;height: 400rpx;" />
+                </swiper-item>
+            </block>
+        </swiper>
+        <view class="m-ticket-list">
+            <view class="m-one-ticket" wx:for="{{data_list}}" wx:key="{{index}}" @tap="changeRoute('/pages/index/freeDetail',{{item}})">
+                <image src="{{item.tiimg}}" class="m-ticket-img"></image>
+                <view class="m-ticket-name">{{item.tiname}}</view>
+                <view class="m-ticket-price">价格：¥122</view>
+                <view class="m-ticket-num">
+                    <view >
+                        <span>数量 </span>
+                        <span class="m-bold">10</span>
+                    </view>
+                    <view >
+                        <span>申请人数 </span>
+                        <span class="m-bold">10</span>
+                    </view>
+                </view>
+            </view>
+        </view>
+        <bottom wx:if="{{data_list.length == total_count}}"></bottom>
+        <!--    <official-account bindload="official"></official-account>-->
+    </view>
+</template>
+
+<script >
+    import wepy from 'wepy';
+    import api from '../../api/api';
+    import tip from '../../utils/tip';
+    import bottom from '../../components/common/bottom';
+    export default class IndexIndex extends wepy.page {
+        config = {
+            navigationBarTitleText: '旗行',
+            enablePullDownRefresh:true
+        }
+        components = {
+            bottom
+        }
+        data = {
+            mynum:'2019-06-27 12:22',
+            img_src:null,
+            scroll_data: [],
+            indicatorDots: true,
+            autoplay: true,
+            interval: 5000,
+            duration: 1000,
+            page_info:{
+                page_size:10,
+                page_num:1
+            },
+            total_count:0,
+            data_list:[],
+            plid:'',
+            route:'',
+            route_name:''
+        }
+        //获取轮播图
+        getImg(id){
+            let that = this;
+            wepy.request({
+                url: api.list_mp_banner + '?token=' +wx.getStorageSync('token'),
+                data: {
+                    mpbposition: 0
+                },
+                header: {
+                    'content-type': 'application/json' // 默认值
+                }
+            }).then(res => {
+                that.scroll_data = res.data.data;
+                wx.stopPullDownRefresh();
+                that.$apply();
+            })
+        }
+        getData(){
+            let that = this;
+            that.loading = true;
+            wepy.request({
+                url: api.ticket_list + '?token=' +wx.getStorageSync('token'),
+                method:"get",
+                data:{
+                    page_num: that.page_info.page_num,
+                    page_size:that.page_info.page_size,
+                }
+            }).then(res => {
+                if(res.data.status == 200){
+                    if(that.page_info.page_num > 1){
+                        that.data_list = that.data_list.concat(res.data.data);
+                    }else{
+                        that.data_list = res.data.data;
+                    }
+                    that.total_count = res.data.total_count;
+                    that.loading = false;
+                    that.$apply();
+                    wx.stopPullDownRefresh();
+                }
+            })
+        }
+        onPullDownRefresh() {
+            // 上拉刷新
+            this.getImg();
+            this.getData();
+        }
+        onReachBottom() {
+            // 下拉触底，先判断是否有请求正在进行中
+            // 以及检查当前请求页数是不是小于数据总页数，如符合条件，则发送请求
+            if(!this.loading && this.total_count > this.data_list.length) {
+                this.page_info.page_num += 1;
+                this.$apply();
+                this.getData();
+            }
+        }
+        onLoad(options){
+
+            if(options.scene){
+                console.log("has scene");
+                let scene = decodeURIComponent(options.scene);
+                console.log("scene is ", scene);
+                let arrPara = scene.split("&");
+                let arr_params = [];
+                arr_params = arrPara[0].split("=");
+                wepy.request({
+                    url: api.get_params + '?token=' +wx.getStorageSync('token'),
+                    data: {
+                        key: arr_params[0],
+                        value: arr_params[1]
+                    },
+                    header: {
+                        'content-type': 'application/json' // 默认值
+                    }
+                }).then(res => {
+                    let data = res.data.data;
+                    let url = '';
+                    let arr = data.split('&');
+                    let params_arr = [];
+                    for(let i in arr){
+
+                        let _arr = arr[i].split('=');
+                        if(_arr[0] == 'page'){
+                            url = _arr[1];
+                        }else if(_arr[0] == 'secret_usid'){
+                            wx.setStorageSync('secret_usid',_arr[1]);
+                            console.log(wx.getStorageSync('secret_usid'));
+                            // params_arr.push(arr[i]);
+                        }else{
+                            params_arr.push(arr[i]);
+                        }
+                    }
+                    if(params_arr.length >0 && url != '' ){
+                        url = url + '?' + params_arr.join('&');
+                    }
+                    if(url != ''){
+                        wx.navigateTo({
+                            url: url
+                        });
+                    }
+
+                });
+            }else if(options.page){
+                let url = options.page;
+                let arr = [];
+                for(let i in options){
+                    if(i != 'page'){
+                        arr.push(i + '=' +options[i])
+                    }
+                }
+                if(arr.length >0){
+                    url = url + '?' + arr.join('&');
+                }
+                wx.navigateTo({
+                    url: url
+                });
+            }
+            this.getImg();
+            this.getData();
+
+            this.img_src = api.img_src;
+            this.$apply();
+        }
+        //改变路由
+        goRoute(v,name) {
+
+            let that = this;
+            switch (name) {
+                default:
+                    wx.navigateTo({
+                        url: v+'?plid='+that.plid
+                    });
+                    break;
+            }
+
+        }
+        onShow(){
+            // if(wx.getStorageSync('token')){
+            //   this.getId();
+            // }
+            this.show_tel = false;
+            this.$apply();
+        }
+        methods = {
+            //轮播图点击
+            imgTap(item){
+                wx.navigateTo({
+                    url: item.contentlink
+                });
+            },
+            //改变路由
+            changeRoute(v,item) {
+                let that = this;
+                wx.navigateTo({
+                    url: v + '?tiid=' + item.tiid
+                });
+
+            },
+
+            lower(){
+                if(this.total_count > this.id_list.length) {
+                    this.page_info.page_num += 1;
+                    this.$apply();
+                    this.getId();
+                }
+            },
+
+
+        }
+    }
+</script>
