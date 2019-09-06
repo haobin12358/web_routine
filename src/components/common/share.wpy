@@ -144,6 +144,7 @@
       let that = this;
       tip.loading();
       that.photo = '';
+      that.$apply();
       wepy.request({
         url: api.get_promotion + '?token=' +wx.getStorageSync('token'),
         data: {
@@ -164,6 +165,7 @@
       let that = this;
       tip.loading();
       that.photo = '';
+      that.$apply();
       wepy.request({
         url: api.ticket_get_promotion + '?token=' +wx.getStorageSync('token'),
         data: {

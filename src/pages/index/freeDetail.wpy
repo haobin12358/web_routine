@@ -285,7 +285,7 @@
 <!--              <progress percent="{{detail.percent}}"  border-radius="20" backgroundColor="rgba(255,206,0,0.3)" color="#FFCE00" />-->
 <!--            </view>-->
           </view>
-          <view class="m-name">杭州富阳野生动物园门票1张杭州富阳野生动物园门票1张杭州富阳野生动物园门票1张</view>
+          <view class="m-name">{{detail.tiname}}</view>
         </view>
         <view class="m-flex-start m-num" wx:if="{{detail.tistatus < 2 && !detail.tsoid }}">
           <view>购买数量</view>
