@@ -134,14 +134,20 @@
                 <li @tap="changeRoute('/pages/personal/codeList','phone')">
                     <view class="m-flex-start">
                         <image src="{{img_src}}personal/icon-code-manage.png" wx:if="{{img_src}}" class="m-icon"></image>
-                        <span>我的试用</span>
+                        <span>我的门票</span>
                     </view>
                 </li>
             </ul>
         </view>
         <view class="m-personal-item">
             <ul >
-                <li >
+                <li @tap="getScan">
+                    <view class="m-flex-start">
+                        <image src="{{img_src}}personal/icon-scan.png" wx:if="{{img_src}}"  class="m-icon"></image>
+                        <span>门票核销</span>
+                    </view>
+                </li>
+                <li @tap="changeRoute('/pages/ticket/userInfo')">
                     <view class="m-flex-start">
                         <image src="{{img_src}}personal/icon-rule.png" wx:if="{{img_src}}"  class="m-icon"></image>
                         <span>信息绑定</span>
@@ -306,6 +312,14 @@
 
 
             },
+            getScan(){
+                // 允许从相机和相册扫码
+                wx.scanCode({
+                    success (res) {
+                        console.log(res)
+                    }
+                })
+            }
 
         }
 

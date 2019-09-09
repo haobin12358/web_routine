@@ -33,14 +33,16 @@
 
     config = {
       pages: [
+
           'pages/ticket/index',
           'pages/ticket/personal',
+          'pages/ticket/userInfo',
         'pages/index/index',
         'pages/personal/myCode',
         'pages/personal/editRecord',
         'pages/personal/codeDetail',
         'pages/personal/codeList',
-        'pages/index/freeDetail',
+          'pages/index/freeDetail',
         'pages/index/freeList',
         'pages/index/scrollCircle',
         'pages/index/shareEdit',
@@ -117,10 +119,10 @@
           "selectedIconPath": "images/bottom/bottom-index-active.png"
         },
           {
-            "pagePath": "pages/travel/index",
-            "text": "出游",
-            "iconPath": "images/bottom/bottom-travel.png",
-            "selectedIconPath": "images/bottom/bottom-travel-active.png"
+            "pagePath": "pages/index/editEssay",
+            "text": "发布",
+            "iconPath": "images/bottom/bottom-add.png",
+            "selectedIconPath": "images/bottom/bottom-add.png"
           },
           {
             "pagePath": "pages/ticket/personal",

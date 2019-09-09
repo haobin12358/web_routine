@@ -87,10 +87,13 @@ const get_params = api2 +'play/get_params';//获取参数
 const feedback_create = api2 +'feedback/create';//创建素材
 const news_location = api2 + 'news/location'; //获取当前位置名称
 const get_ticket_linkage = api2 +'feedback/get_ticket_linkage';//获取票务联动平台
+const list_linkage = api2 +'ticket/list_linkage';//获取全部联动平台
 const ticket_list= api2 +'ticket/list';//获取门票列表
 const ticket_get = api2 +'ticket/get';//获取门票详情
 const  ticket_pay = api2 +'ticket/pay';//支付押金
 const ticket_get_promotion = api2 +'ticket/get_promotion';//获取票务分享
+
+const list_activationtype = api2 +'activation/list_activationtype';//获取活跃度列表
 
 const img_src = 'https://play.bigxingxing.com/icon/';
 // const img_src = 'https://www.bigxingxing.com/icon/';
@@ -104,6 +107,6 @@ module.exports = {
   cancel_play,make_over,my_wallet,undertake,apply_cash,payment,get_make_over_list,get_make_over,get_home,guide_certification,guide,
   add_toilet,toilet_list,get_toilet,get_room_list,data_statistics,update_usinfo,download_team,get_team_album,secret_usid,share_content,
   get_linkcontent,get_promotion,get_params,feedback_create,news_location,get_ticket_linkage,ticket_list,ticket_get,ticket_pay,
-  ticket_get_promotion
+  ticket_get_promotion,list_linkage,list_activationtype
 
 }

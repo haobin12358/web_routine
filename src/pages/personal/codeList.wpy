@@ -105,27 +105,64 @@
       <span class="m-border-back">免费领取</span>
     </view>
     <view class="m-freeList-content">
-      <view class="m-one-free" wx:for="{{data_list}}" wx:key="{{index}}" @tap="changeRoute({{item}})">
-        <image class="m-back" src="{{item.tiimg}}"></image>
+<!--      <view class="m-one-free" wx:for="{{data_list}}" wx:key="{{index}}" @tap="changeRoute({{item}})">-->
+<!--        <image class="m-back" src="{{item.tiimg}}"></image>-->
+<!--        <view class="m-free-content">-->
+<!--          <span class="m-label">推荐</span>-->
+<!--          <view class="m-name">{{item.tiname}}</view>-->
+<!--          <view class="m-info">-->
+<!--            {{item.short_str}}-->
+<!--          </view>-->
+<!--          <view class="m-label-list">-->
+<!--            <span wx:for="{{item.ticategory}}" wx:key="{{i}}" wx:for-index='i' wx:for-item='key'>{{key}}</span>-->
+<!--          </view>-->
+<!--        </view>-->
+<!--&lt;!&ndash;        <view class="m-code">&ndash;&gt;-->
+<!--&lt;!&ndash;          {{item.tsostatus == 2?'取票码':'取票码'}} <span class="m-bold">{{item.tsocode}}</span>&ndash;&gt;-->
+<!--&lt;!&ndash;        </view>&ndash;&gt;-->
+<!--        <image src="{{item.tsoqrcode}}" class="m-code-img" wx:if="{{item.tsostatus == 2}}"></image>-->
+<!--        <view class="m-code" wx:else>-->
+<!--          {{item.tsostatus_zh}}-->
+<!--        </view>-->
+<!--      </view>-->
+      <view class="m-one-free"  >
+        <image class="m-back" src=""></image>
         <view class="m-free-content">
           <span class="m-label">推荐</span>
-          <view class="m-name">{{item.tiname}}</view>
+          <view class="m-name">门票名称</view>
           <view class="m-info">
-            {{item.short_str}}
+           介绍
           </view>
           <view class="m-label-list">
-            <span wx:for="{{item.ticategory}}" wx:key="{{i}}" wx:for-index='i' wx:for-item='key'>{{key}}</span>
+            <span >123</span>
           </view>
         </view>
-<!--        <view class="m-code">-->
-<!--          {{item.tsostatus == 2?'取票码':'取票码'}} <span class="m-bold">{{item.tsocode}}</span>-->
-<!--        </view>-->
-        <image src="{{item.tsoqrcode}}" class="m-code-img" wx:if="{{item.tsostatus == 2}}"></image>
-        <view class="m-code" wx:else>
-          {{item.tsostatus_zh}}
+        <!--        <view class="m-code">-->
+        <!--          {{item.tsostatus == 2?'取票码':'取票码'}} <span class="m-bold">{{item.tsocode}}</span>-->
+        <!--        </view>-->
+        <image src="" class="m-code-img" ></image>
+
+      </view>
+      <view class="m-one-free"  >
+        <image class="m-back" src=""></image>
+        <view class="m-free-content">
+          <span class="m-label">推荐</span>
+          <view class="m-name">门票名称</view>
+          <view class="m-info">
+            介绍
+          </view>
+          <view class="m-label-list">
+            <span >123</span>
+          </view>
+        </view>
+        <!--        <view class="m-code">-->
+        <!--          {{item.tsostatus == 2?'取票码':'取票码'}} <span class="m-bold">{{item.tsocode}}</span>-->
+        <!--        </view>-->
+
+        <view class="m-code" >
+          未开奖
         </view>
       </view>
-
     </view>
     <bottom wx:if="{{data_list.length == total_count}}"></bottom>
   </view>

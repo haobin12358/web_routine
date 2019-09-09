@@ -81,7 +81,7 @@
   }
   .m-freeDetail-content{
     .m-detail-info{
-      padding: 20rpx;
+      padding: 20rpx 30rpx;
       border-bottom: 1px solid @border-color;
       .m-red{
         font-size: 32rpx;
@@ -106,6 +106,11 @@
         /*padding: ;*/
       }
     }
+      .m-list-img{
+          width: 100%;
+          height: 100rpx;
+          background-color: #FFCE00;
+      }
     .m-num{
       padding: 20rpx;
       border-bottom: 1px solid @border-color;
@@ -146,11 +151,21 @@
     .m-code-text{
       width: 477rpx;
       margin-left: 20rpx;
-      max-height: 164rpx;
+      max-height: 264rpx;
       span{
         display: inline-block;
         margin-right: 10rpx;
       }
+        .m-user{
+            .flex-row(flex-start);
+            margin-bottom: 10rpx;
+            .m-user-head{
+                background-color: #FFCE00;
+                margin-right: 20rpx;
+                width: 60rpx;
+                height: 60rpx;
+            }
+        }
     }
     .m-image-box{
       .m-img{
@@ -159,9 +174,49 @@
       }
     }
     .m-info{
-      padding: 20rpx;
+      padding: 20rpx 30rpx;
     }
+
   }
+    .m-info-content{
+        width: 100%;
+        .flex-row(space-around);
+        padding: 20rpx;
+        span{
+            display: block;
+            padding: 5rpx 20rpx;
+            &.active{
+                color: @common-color;
+                border-bottom: 2px solid @common-color;
+            }
+        }
+    }
+    .m-bottom-btn-box{
+        position: fixed;
+        bottom:0;
+        left:0;
+        background-color: #fff;
+        padding: 20rpx 0;
+        width: 100%;
+        border-top: 1px solid @border-color;
+        .flex-row(space-around);
+        .m-btn{
+            width: 25%;
+            height: 80rpx;
+            line-height: 80rpx;
+            background-color: @common-color;
+            border-radius: 50rpx;
+            text-align: center;
+        }
+        .m-code-icon{
+            width: 45rpx;
+            height: 45rpx;
+        }
+        .m-icon-btn{
+            .flex-col(center);
+            font-size: 24rpx;
+        }
+    }
   .m-alert{
     width: 30rpx;
     height: 30rpx;
@@ -240,17 +295,41 @@
         }
     }
   }
+    .m-pic-modal{
+        width: 100%;
+        height: 100vh;
+        background-color: rgba(0,0,0,0.16);
+        position: fixed;
+        top:0;
+        left: 0;
+        z-index: 200;
+        .m-modal-state{
+            width: 611rpx;
+            height: 823rpx;
+            /*background-color: #fff;*/
+            position: fixed;
+            bottom:0;
+            left: 0;
+            right: 0;
+            top: 0;
+            margin: auto;
+            .m-share-img{
+                width: 611rpx;
+                height: 810rpx;
+            }
+        }
+    }
 }
 </style>
 <template>
     <view class="m-freeDetail" wx:if="{{detail}}">
       <view class="m-top-img-box">
         <image class="m-top-img" src="{{detail.tiimg}}" @tap="previewImg({{detail.tiimg}})"></image>
-        <view class="m-return m-flex-center" @tap="changeRoute('/pages/index/freeList')">
+        <view class="m-return m-flex-center" @tap="changeRoute('/pages/ticket/index','index')">
           <image src="{{img_src}}index/icon-return.png" class="m-icon-more"></image>
           <span>查看更多</span>
         </view>
-        <image src="{{img_src}}index/icon-share.png" class="m-icon-share" @tap="changeModal('show_share',true)"></image>
+<!--        <image src="{{img_src}}index/icon-share.png" class="m-icon-share" @tap="changeModal('show_share',true)"></image>-->
         <view class="m-time-box" wx:if="{{detail.tistatus < 2 && !detail.tsoid}}">
           <view class="m-price">
             票价 ¥<span class="m-bold">{{detail.tiprice}}</span>
@@ -287,38 +366,82 @@
           </view>
           <view class="m-name">{{detail.tiname}}</view>
         </view>
-        <view class="m-flex-start m-num" wx:if="{{detail.tistatus < 2 && !detail.tsoid }}">
-          <view>购买数量</view>
-          <view class="m-cut-add">
-            <span class="m-cut" @tap="changeNum(-1)">-</span>
-            <span>{{num}}</span>
-            <span class="m-cut" @tap="changeNum(1)">+</span>
+<!--        <view class="m-flex-start m-num" wx:if="{{detail.tistatus < 2 && !detail.tsoid }}">-->
+<!--          <view>购买数量</view>-->
+<!--          <view class="m-cut-add">-->
+<!--            <span class="m-cut" @tap="changeNum(-1)">-</span>-->
+<!--            <span>{{num}}</span>-->
+<!--            <span class="m-cut" @tap="changeNum(1)">+</span>-->
+<!--          </view>-->
+<!--        </view>-->
+          <view class="m-flex-start m-rule" >
+              <view>有效时间</view>
+              <view class="m-rule-text">2019/09/23 12:00:00-2019/09/30 12:00:00</view>
           </view>
-        </view>
         <view class="m-flex-start m-rule" @tap.stop="changeModal('show_rule',true)">
           <image src="{{img_src}}index/icon-alert.png" class="m-alert" ></image>
           <view>规则</view>
           <view class="m-rule-text">{{detail.tirules}}</view>
         </view>
-        <view class="m-flex-start m-code" wx:if="{{detail.tirewardnum}}">
-          <image src="{{img_src}}index/icon-alert.png" class="m-alert" ></image>
-          <view>中奖号码</view>
-          <view class="m-code-text m-grey">
-<!--            <view wx:for="{{detail.tirewardnum}}" wx:key="{{index}}">{{item}}</view>-->
-            <span wx:for="{{detail.tirewardnum}}" wx:key="{{index}}">{{item}}{{index != detail.tirewardnum.length-1 ? ',':''}}</span>
+          <image src="" class="m-list-img"></image>
+<!--        <view class="m-flex-start m-code" wx:if="{{detail.tirewardnum}}">-->
+<!--          <image src="{{img_src}}index/icon-alert.png" class="m-alert" ></image>-->
+<!--          <view>中奖号码</view>-->
+<!--          <view class="m-code-text m-grey">-->
+<!--&lt;!&ndash;            <view wx:for="{{detail.tirewardnum}}" wx:key="{{index}}">{{item}}</view>&ndash;&gt;-->
+<!--            <span wx:for="{{detail.tirewardnum}}" wx:key="{{index}}">{{item}}{{index != detail.tirewardnum.length-1 ? ',':''}}</span>-->
+
+<!--          </view>-->
+<!--        </view>-->
+          <view class="m-flex-start m-code" >
+              <view class="m-flex-start">
+                  <image src="{{img_src}}index/icon-alert.png" class="m-alert" ></image>
+                  <view>活跃积分</view>
+              </view>
+              <view class="m-code-text m-grey">
+                 <view class="m-user">
+                     <image src="" class="m-user-head"></image>
+                     <span >123积分</span>
+                 </view>
+                  <view class="m-user">
+                      <image src="" class="m-user-head"></image>
+                      <span >123积分</span>
+                  </view>
+                  <view class="m-user">
+                      <image src="" class="m-user-head"></image>
+                      <span >123积分</span>
+                  </view>
+              </view>
+          </view>
+          <view class="m-image-box" wx:if="{{detail.ticertificate}}">
+              <image src="{{detail.ticertificate}}" class="m-img"></image>
+          </view>
+          <view class="m-info-content" >
+
+              <span class="{{item.name == select_nav ? 'active':''}}" wx:for="{{nav_list}}" wx:key="{{index}}" @tap="navTap({{item}})">{{item.name}}</span>
 
           </view>
-        </view>
-        <view class="m-image-box" wx:if="{{detail.ticertificate}}">
-          <image src="{{detail.ticertificate}}" class="m-img"></image>
-        </view>
-        <view class="m-info">
+        <view class="m-info" wx:if="{{select_nav == '详情'}}">
           <htmlParser :parserName.sync="name1" :parserContent.sync="content1" />
         </view>
+          <view class="m-info" wx:else>
+              <circle :list.sync="list_data"></circle>
+              <view class="m-no-data" wx:if="{{list_data.length == 0}}">暂无信息</view>
+          </view>
       </view>
-      <view class="m-foot-btn m-one cancel" wx:if="{{detail.tistatus == 0 }}">等待抢票</view>
-      <view class="m-foot-btn m-one" @tap="submitTap" wx:if="{{detail.tistatus == 1 && !detail.tsoid }}">支付押金</view>
-      <view class="m-foot-btn m-one" @tap="submitTap" wx:if="{{detail.tsostatus == 1  && detail.tsoid }}">支付剩余押金 ¥{{detail.residual_deposit}}</view>
+<!--      <view class="m-foot-btn m-one cancel" wx:if="{{detail.tistatus == 0 }}">等待抢票</view>-->
+<!--      <view class="m-foot-btn m-one" @tap="submitTap" wx:if="{{detail.tistatus == 1 && !detail.tsoid }}">支付押金</view>-->
+<!--      <view class="m-foot-btn m-one" @tap="submitTap" wx:if="{{detail.tsostatus == 1  && detail.tsoid }}">支付剩余押金 ¥{{detail.residual_deposit}}</view>-->
+          <view class="m-bottom-btn-box">
+              <view class="m-icon-btn" @tap="drawImg">
+                  <image src="{{img_src}}personal/icon-code.png" class="m-code-icon"></image>
+                  <span>分享</span>
+              </view>
+              <view class="m-btn">支付分试用</view>
+              <view class="m-btn" @tap="submitTap">押金试用</view>
+              <view class="m-btn">购买</view>
+          </view>
+
 <!--      支付成功-->
 <!--      <view class="m-modal m-result" wx:if="{{show_result}}" >-->
 <!--        <view class="m-modal-state">-->
@@ -361,8 +484,16 @@
       <view class="m-modal" wx:if="{{show_rule}}" @tap.stop="changeModal('show_rule',false)">
         <view class="m-modal-state">{{rule}}</view>
       </view>
-
-
+        <view class="m-modal" wx:if="{{show_code}}" @tap.stop="changeModal('show_code',false)">
+            <view class="m-modal-state">
+                <view wx:for="{{code_list}}" wx:key="{{index}}">{{index}}、{{item}}</view>
+            </view>
+        </view>
+        <view class="m-pic-modal" wx:if="{{show_pic}}" @tap="changeModal('show_pic',false)">
+            <view class="m-modal-state">
+                <image src="{{photo}}" class="m-share-img" @tap="previewImg({{photo}})"></image>
+            </view>
+        </view>
       <share :show.sync="show_share" @changeModal.user="changeModal" :params.sync="params" :tiid.sync="tiid"></share>
     </view>
 </template>
@@ -373,19 +504,20 @@
   import share from '../../components/common/share';
   import htmlParser from '../../components/common/htmlParser';
   import tip from '../../utils/tip';
+  import Circle from '../../components/common/circle';
   export default class freeDetail extends wepy.page {
     config = {
       navigationBarTitleText: '领取免费门票',
       enablePullDownRefresh: true
     };
-    components = {share:share,htmlParser:htmlParser};
+    components = {share:share,htmlParser:htmlParser,circle:Circle,};
     data = {
       img_src:api.img_src,
       show_result:false,
       show_rule:false,
       rule:'规则',
       show_share:false,
-      tiid:'144e7f32-c900-11e9-a9e2-0242ac110002',
+      tiid:'efbef688-ce13-11e9-8887-0242ac110002',
       detail:{},
       name1:'htmlParserName2',
       content1:"",
@@ -399,7 +531,21 @@
       pay_done:false,
       tscode:[],
       secret_usid:'',
-      params : 'page=/pages/index/freeDetail'
+      params : 'page=/pages/index/freeDetail',
+        nav_list:[
+            {
+                name:'详情'
+            },
+            {
+                name:'动态'
+            }
+        ],
+        select_nav : '详情',
+        list_data:[],
+        show_code:false,
+        code_list:[],
+        show_pic:false,
+        photo:''
     };
     getData(){
       let that = this;
@@ -431,6 +577,24 @@
         }
       })
     }
+      getCode(){
+          let that = this;
+          that.loading = true;
+          that.$apply();
+          wepy.request({
+              url: api.list_activationtype + '?token=' +wx.getStorageSync('token'),
+              method:"get",
+              data:{
+                  page_size:100,
+                  page_num:1
+              }
+          }).then(res => {
+              if(res.data.status == 200){
+                 that.code_list = res.data.data;
+                 that.$apply();
+              }
+          })
+      }
     dealTime(){
       let that = this;
       function countTime() {
@@ -563,6 +727,27 @@
         }
       })
     }
+      getTicketPhoto(){
+          let that = this;
+          tip.loading();
+          that.photo = '';
+          that.$apply();
+          wepy.request({
+              url: api.ticket_get_promotion + '?token=' +wx.getStorageSync('token'),
+              data: {
+                  tiid: that.tiid,
+                  params:that.params
+              }
+          }).then(res => {
+              if(res.data.status == 200){
+                  let data = res.data.data;
+                  that.photo = api.api + data.promotion_path;
+                  that.show_pic = true;
+                  that.$apply();
+
+              }
+          })
+      }
     onShareAppMessage(res) {
       if (res.from === 'button') {
 
@@ -589,6 +774,7 @@
       }
       this.getId();
       this.getData();
+      // this.getCode();
     }
     onUnload(){
       let that = this;
@@ -618,11 +804,18 @@
         }
         this.$apply();
       },
-      changeRoute(v){
+      changeRoute(v,page){
         let that = this;
-        wx.redirectTo({
-          url: v
-        });
+        if(page == 'index'){
+            wx.switchTab({
+                url: v
+            })
+        }else{
+            wx.redirectTo({
+                url: v
+            });
+        }
+
       },
       changeNum(item){
         if(item == '1'){
@@ -648,6 +841,16 @@
           urls: [item] // 需要预览的图片http链接列表
         })
       },
+        navTap(item){
+          this.select_nav = item.name;
+          this.$apply();
+        },
+        drawImg(){
+            if(this.tiid){
+                this.getTicketPhoto();
+            }
+
+        },
     };
   }
 </script>

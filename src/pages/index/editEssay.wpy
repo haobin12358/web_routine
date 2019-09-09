@@ -80,7 +80,7 @@
       </view>
 
       <view class="m-row m-no-flex">
-        <textarea bindinput="bindinput" value="{{text}}" data-name="text" auto-height style="min-height: 300rpx;" placeholder="这一刻的旅游心情…" />
+        <textarea bindinput="bindinput" value="{{text}}" maxlength="500" data-name="text" auto-height style="min-height: 300rpx;" placeholder="这一刻的旅游心情…" />
         <view class="m-img-box">
           <image src="{{item}}" class="m-img"
                  @longpress="handleLongPress({{index}})" mode="aspectFill" wx:for="{{image}}" wx:key="{{index}}" @tap="previewImage({{item}})"></image>
@@ -88,10 +88,14 @@
           <span class="m-upload-img" @tap="uploadTap">+</span>
         </view>
       </view>
-      <view class="m-row">
-        <span>景区</span>
-        <scenic :scenic_name.sync="trlocation" @sureTap.user="sureTap"></scenic>
-      </view>
+<!--      <view class="m-row">-->
+<!--        <span>景区</span>-->
+<!--        <scenic :scenic_name.sync="trlocation" @sureTap.user="sureTap"></scenic>-->
+<!--      </view>-->
+        <view class="m-row">
+            <span>定位</span>
+            <span @tap="selectLoc">{{select_name || '请选择定位'}}</span>
+        </view>
       <view class="m-modal" wx:if="{{show_select}}" @tap="cancelSelect">
         <view class="m-modal-state">
           <view class="m-grey">二选一</view>
@@ -121,7 +125,9 @@
       image:[],
       video:null,
       type:'essay',
-      plid:''
+      plid:'',
+        select_loc:{},
+        select_name:''
     };
     postData(status){
       let that = this;
@@ -292,7 +298,50 @@
           }
         })
 
-      }
+      },
+        selectLoc(){
+            let that  = this;
+            wx.chooseLocation({
+                success:function (res) {
+                    that.select_loc = res;
+                    that.latitude = res.latitude;
+                    that.longitude = res.longitude;
+                    wepy.request({
+                        url: api.news_location + '?token=' +wx.getStorageSync('token'),
+                        method:"get",
+                        data:{
+                            longitude:that.select_loc.longitude,
+                            latitude: that.select_loc.latitude
+                        }
+                    }).then(resule => {
+                        if(resule.data.status == 200){
+                            that.select_name = resule.data.data.nelocation;
+                            that.$apply();
+                        }
+                    })
+                    // that.markers = [
+                    //     {
+                    //         iconPath: "/images/index/icon-point.png",
+                    //         id: 0,
+                    //         latitude: res.latitude,
+                    //         longitude: res.longitude,
+                    //         width: 45,
+                    //         height: 45,
+                    //         callout:{
+                    //             content:that.time,
+                    //             display:'ALWAYS',
+                    //             padding:10
+                    //         }
+                    //     }
+                    // ]
+                    // that.can_post = true;
+                    that.$apply();
+                },
+                error:function (res) {
+                    console.log(res,'error')
+                }
+            })
+        }
     };
   }
 </script>
