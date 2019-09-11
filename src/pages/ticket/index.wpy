@@ -200,6 +200,8 @@
             })
         }
         onPullDownRefresh() {
+            this.page_info.page_num = 1;
+            this.$apply();
             // 上拉刷新
             this.getImg();
             this.getData();

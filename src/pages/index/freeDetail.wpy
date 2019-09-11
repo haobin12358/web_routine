@@ -324,7 +324,20 @@
 <template>
     <view class="m-freeDetail" wx:if="{{detail}}">
       <view class="m-top-img-box">
-        <image class="m-top-img" src="{{detail.tiimg}}" @tap="previewImg({{detail.tiimg}})"></image>
+<!--        <image class="m-top-img" src="{{detail.tiimg}}" @tap="previewImg({{detail.tiimg}})"></image>-->
+          <swiper
+                  indicator-dots="{{indicatorDots}}"
+                  autoplay="{{autoplay}}"
+                  interval="{{interval}}"
+                  duration="{{duration}}"
+                  style="height: 750rpx;"
+          >
+              <block wx:for="{{detail.tibanner}}" wx:key="item">
+                  <swiper-item >
+                      <image src="{{item}}"  @tap="previewImg({{item}})" class="slide-image" style="width: 750rpx;height: 750rpx;" />
+                  </swiper-item>
+              </block>
+          </swiper>
         <view class="m-return m-flex-center" @tap="changeRoute('/pages/ticket/index','index')">
           <image src="{{img_src}}index/icon-return.png" class="m-icon-more"></image>
           <span>查看更多</span>
@@ -351,7 +364,7 @@
               <span class="m-price">{{detail.residual_deposit}}</span>
             </view>
             <view class="m-red" wx:else>
-              <span>最低押金 ¥ </span>
+              <span>试用押金 ¥ </span>
               <span class="m-price">{{detail.tideposit}}</span>
             </view>
 
@@ -512,6 +525,10 @@
     };
     components = {share:share,htmlParser:htmlParser,circle:Circle,};
     data = {
+        indicatorDots: true,
+        autoplay: true,
+        interval: 5000,
+        duration: 1000,
       img_src:api.img_src,
       show_result:false,
       show_rule:false,
