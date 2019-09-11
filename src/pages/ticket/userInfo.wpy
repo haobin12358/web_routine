@@ -53,17 +53,17 @@
 </style>
 <template>
     <view class="m-userInfo">
-        <view class="m-one-info" wx:for="{{data_list}}" wx:key="{{index}}" wx:if="{{item.lisharetype == 1}}" >
+        <view class="m-one-info" wx:for="{{data_list}}" wx:key="{{index}}">
             <view class="m-info-title">
                 <view class="m-flex-start">
-                    <image src="{{item.liicon}}" class="m-icon"></image>
-                    <view>{{item.liname}}平台账号</view>
+                    <image src="{{img_url}}{{item.atticon}}" class="m-icon"></image>
+                    <view>{{item.attname}}平台账号</view>
                 </view>
                 <image src="{{img_src}}common/icon-down.png" class="m-icon-down" @tap="openClose({{index}})" wx:if="{{item.active}}"></image>
                 <image src="{{img_src}}common/icon-up.png" class="m-icon-down" @tap="openClose({{index}})" wx:else></image>
             </view>
             <view wx:if="{{item.active}}">
-                <input type="text" class="m-input" placeholder="请输入平台个人主页链接">
+                <input type="text" class="m-input" disabled="{{item.disabled}}" value="{{item.ulaaccount}}" bindinput="bindinput" data-name="{{index}}" placeholder="请输入平台个人主页链接/账号">
 <!--                <view class="m-img">-->
 <!--                    <span class="m-upload-img">+</span>-->
 <!--                    &lt;!&ndash;                <image src="" class="m-img-one"></image>&ndash;&gt;-->
@@ -73,14 +73,17 @@
             </view>
         </view>
 
-        <view class="m-foot-btn m-one">提交</view>
+        <view class="m-foot-btn m-two">
+            <view class="m-btn"  @tap="getCall">联系客服</view>
+            <view class="m-btn active"  @tap="submitTap">提交</view>
+        </view>
     </view>
 </template>
 
 <script>
     import wepy from 'wepy';
     import api from '../../api/api';
-
+   import tip from '../../utils/tip';
     export default class userInfo extends wepy.page {
         config = {
             navigationBarTitleText: '信息绑定'
@@ -88,17 +91,15 @@
         components = {}
         data = {
             img_src:api.img_src,
-            data_list:[
-                {
-
-                }
-            ]
+            data_list:[],
+            img_url:api.api,
+            all_phone:['19817444373'],
         }
         //获取联动平台
         getItem(){
             let that = this;
             wepy.request({
-                url: api.list_linkage + '?token=' +wx.getStorageSync('token'),
+                url: api.get_userlinkage + '?token=' +wx.getStorageSync('token'),
                 method:"get",
                 data:{
                 }
@@ -108,8 +109,24 @@
                     that.data_list = data;
                     for(let i = 0;i<that.data_list.length;i++){
                         that.data_list[i].active = true;
+                        that.data_list[i].disabled = that.data_list[i].ulaaccount ? true : false;
                     }
                     that.$apply();
+                }
+            })
+        }
+        //绑定联动平台
+        postData(){
+            let that = this;
+            wepy.request({
+                url: api.bind_linkage + '?token=' +wx.getStorageSync('token'),
+                method:"post",
+                data:{
+                    userlinkages:that.data_list
+                }
+            }).then(resule => {
+                if(resule.data.status == 200){
+                    tip.success(resule.data.message);
                 }
             })
         }
@@ -121,6 +138,32 @@
             openClose(i){
                 this.data_list[i].active = !this.data_list[i].active;
                 this.$apply();
+            },
+            //文本框内容变化，绑定数据
+            bindinput(e){
+                let name = e.currentTarget.dataset.name;
+                this.data_list[name].ulaaccount = e.detail.value;
+                this.$apply();
+            },
+            submitTap(){
+                this.postData();
+            },
+            getCall(){
+                let that = this;
+                wx.showActionSheet({
+                    itemList: that.all_phone,
+                    success (res) {
+                        // that.call(res.tapIndex);
+                        wx.makePhoneCall({
+                            phoneNumber: that.all_phone[res.tapIndex]
+                        })
+                    },
+                    fail (res) {
+                        console.log(res.errMsg)
+                    }
+                });
+
+
             }
         }
     }
