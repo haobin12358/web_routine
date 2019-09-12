@@ -119,7 +119,6 @@
       scenic:Scenic
     };
     data = {
-      trlocation:'',
       text:'',
       show_select:false,
       image:[],
@@ -136,7 +135,7 @@
         url: api.add_travelrecord + '?token=' +wx.getStorageSync('token'),
         method:"post",
         data:{
-          trlocation:that.trlocation,
+          trlocation:that.select_name,
           text:that.text,
           trstatus:status || 1,
           trtype:2,
@@ -147,6 +146,14 @@
       }).then(resule => {
         if(resule.data.status == 200){
           tip.success('发布成功');
+          that.text = '';
+            that.show_select = false;
+            that.image = [];
+            that.video = null;
+            that.type = 'essay';
+            that.plid = '';
+            that.select_loc = {};
+            that.select_name = '';
           if(that.plid){
             wx.redirectTo({
               url: '/pages/index/enterTeam?plid=' +that.plid
