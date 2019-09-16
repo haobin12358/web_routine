@@ -203,7 +203,7 @@
         border-top: 1px solid @border-color;
         .flex-row(space-around);
         .m-btn{
-            width: 19%;
+            width: 25%;
             /*padding: 0 20rpx;*/
             height: 60rpx;
             line-height: 60rpx;
@@ -300,6 +300,28 @@
           }
         }
     }
+      &.m-sure{
+          .m-modal-state{
+              padding: 30rpx 64rpx;
+              text-align: center;
+              font-size: 32rpx;
+              height: 360rpx;
+              .m-btn-box{
+                  margin-top: 40rpx;
+                  span{
+                      width: 48%;
+                      height: 80rpx;
+                      line-height: 80rpx;
+                      display: inline-block;
+                      text-align: center;
+                      border: 1px solid @common-color;
+                      &.active{
+                         background-color: @common-color;
+                      }
+                  }
+              }
+          }
+      }
   }
     .m-pic-modal{
         width: 100%;
@@ -462,7 +484,7 @@
                   <image src="{{img_src}}personal/icon-code.png" class="m-code-icon"></image>
                   <span>分享</span>
               </view>
-          <view class="m-btn " wx:if="{{!detail.traded &&   !detail.verified}}" @tap="changeRoute('/pages/personal/identification','info')">实名认证</view>
+<!--          <view class="m-btn " wx:if="{{!detail.traded &&   !detail.verified}}" @tap="changeRoute('/pages/personal/identification','info')">实名认证</view>-->
               <view class="m-btn {{(detail.tistatus !=1 || detail.tsoid) ?'cancel':''}}" wx:if="{{!detail.traded}}" @tap="scoreTap">支付分试用</view>
               <view class="m-btn {{(detail.tistatus !=1 || detail.tsoid)  ?'cancel':''}}" wx:if="{{!detail.traded}}" @tap="submitTap(1)">押金试用</view>
               <view class="m-btn {{(detail.tistatus !=1 || detail.tsoid)  ?'cancel':''}}" wx:if="{{!detail.traded}}" @tap="submitTap(2)">购买</view>
@@ -470,20 +492,17 @@
           </view>
 
 <!--      支付成功-->
-<!--      <view class="m-modal m-result" wx:if="{{show_result}}" >-->
-<!--        <view class="m-modal-state">-->
-<!--          <view class="m-flex-center">-->
-<!--            <image src="{{img_src}}index/icon-success.png" class="m-icon-success"></image>-->
-<!--            <view class="m-success-text">支付成功</view>-->
-<!--          </view>-->
-<!--          <image class="m-code"></image>-->
-<!--          <view>-->
-<!--            二维码<span class="m-grey">可以在</span>-->
-<!--            个人中心- 电子二维码管理<span class="m-grey">中查看</span>-->
-<!--          </view>-->
-<!--          <view class="m-btn" @tap.stop="changeModal('show_result',false)">我知道了</view>-->
-<!--        </view>-->
-<!--      </view>-->
+      <view class="m-modal m-sure" wx:if="{{show_ident}}" @tap.stop="changeModal('show_ident',false)">
+        <view class="m-modal-state">
+          <view>
+              已实名认证的用户可享受免押金试用服务，系统将根据您目前的支付信用，判断是否可使用该服务。<span class="m-common" wx:if="{{!detail.verified}}" @tap.stop="changeRoute('/pages/personal/identification','info')">去实名认证</span>
+          </view>
+          <view class="m-btn-box">
+              <span @tap.stop="changeModal('show_ident',false)">取消</span>
+              <span class="active" @tap.stop="submitTap(3)">确定</span>
+          </view>
+        </view>
+      </view>
       <view class="m-modal m-result" wx:if="{{show_result}}" >
         <view class="m-modal-state">
           <view class="m-flex-center">
@@ -589,6 +608,7 @@
             page_size: 10
         },
         total_count:0,
+        show_ident:false
     };
     getData(){
       let that = this;
@@ -776,6 +796,7 @@
             that.tscode = [].concat(resule.data.data.tscode);
           that.$apply();
             // that.$apply();
+            that.show_ident = false;
             if(resule.data.data.redirect){
                 that.pay_done = true;
                 that.show_result = true;
@@ -958,18 +979,8 @@
             if(this.detail.tistatus !=1 ||this.detail.tsoid ){
                 return;
             }
-          let that = this;
-            wx.showModal({
-                title: '提示',
-                content: '已实名认证的用户可享受免押金试用服务，系统将根据您目前的支付信用，判断是否可使用该服务。',
-                success (res) {
-                    if (res.confirm) {
-                        that.postData(3);
-                    } else if (res.cancel) {
-                        console.log('用户点击取消')
-                    }
-                }
-            })
+            this.show_ident = true;
+            this.$apply();
         }
     };
   }
