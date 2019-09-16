@@ -203,11 +203,12 @@
         border-top: 1px solid @border-color;
         .flex-row(space-around);
         .m-btn{
-            width: 25%;
-            height: 80rpx;
-            line-height: 80rpx;
+            width: 19%;
+            /*padding: 0 20rpx;*/
+            height: 60rpx;
+            line-height: 60rpx;
             background-color: @common-color;
-            border-radius: 50rpx;
+            border-radius: 30rpx;
             text-align: center;
             &.cancel{
                 background-color: #EBEBEB;
@@ -385,9 +386,9 @@
               <span class="m-price">{{detail.tideposit}}</span>
             </view>
 
-            <view  class="m-red m-black" wx:if="{{detail.tistatus >=  2}}">
-              <span>票价 ¥ </span>
-              <span class="m-price">{{detail.tiprice}}</span>
+            <view  class="m-red m-black" wx:if="{{detail.apply_num}}">
+              <span>申请数: </span>
+              <span class="m-common"> {{detail.apply_num || 0}}</span>
             </view>
 <!--            <view class="m-progress-box">-->
 <!--              <view>剩余数量 <span class="m-bold"> {{detail.residual}} </span> 张</view>-->
@@ -461,9 +462,11 @@
                   <image src="{{img_src}}personal/icon-code.png" class="m-code-icon"></image>
                   <span>分享</span>
               </view>
-              <view class="m-btn {{(detail.tistatus !=1 || detail.tsoid) ?'cancel':''}}" @tap="submitTap(3)">支付分试用</view>
-              <view class="m-btn {{(detail.tistatus !=1 || detail.tsoid)  ?'cancel':''}}" @tap="submitTap(1)">押金试用</view>
-              <view class="m-btn {{(detail.tistatus !=1 || detail.tsoid)  ?'cancel':''}}" @tap="submitTap(2)">购买</view>
+          <view class="m-btn " wx:if="{{!detail.traded &&   !detail.verified}}" @tap="changeRoute('/pages/personal/identification','info')">实名认证</view>
+              <view class="m-btn {{(detail.tistatus !=1 || detail.tsoid) ?'cancel':''}}" wx:if="{{!detail.traded}}" @tap="scoreTap">支付分试用</view>
+              <view class="m-btn {{(detail.tistatus !=1 || detail.tsoid)  ?'cancel':''}}" wx:if="{{!detail.traded}}" @tap="submitTap(1)">押金试用</view>
+              <view class="m-btn {{(detail.tistatus !=1 || detail.tsoid)  ?'cancel':''}}" wx:if="{{!detail.traded}}" @tap="submitTap(2)">购买</view>
+              <view wx:if="{{detail.traded}}">已报名，积分：<span class="m-common">{{detail.tsoactivation}}</span> ，当前排名：<span class="m-common">{{detail.rank}}</span></view>
           </view>
 
 <!--      支付成功-->
@@ -501,7 +504,7 @@
 <!--          <view class="m-ft-24" wx:if="{{pay_done}}">抢票时间截止后平台将公布获得门票的用户，该部分用户需交剩余押金获取门票</view>-->
             <view wx:if="{{pay_done}}">
                             结果<span class="m-grey">可以在</span>
-                            个人中心- 我的门票<span class="m-grey">中查看</span>
+                            我的- 我的门票<span class="m-grey">中查看</span>
                           </view>
           <view class="m-btn" @tap.stop="changeModal('show_result',false)">我知道了</view>
         </view>
@@ -773,7 +776,14 @@
             that.tscode = [].concat(resule.data.data.tscode);
           that.$apply();
             // that.$apply();
-            that.pay(params);
+            if(resule.data.data.redirect){
+                that.pay_done = true;
+                that.show_result = true;
+                that.$apply();
+            }else{
+                that.pay(params);
+            }
+
           // }
 
         }
@@ -899,6 +909,10 @@
             wx.switchTab({
                 url: v
             })
+        }else if(page == 'info'){
+            wx.navigateTo({
+                url: v
+            });
         }else{
             wx.redirectTo({
                 url: v
@@ -940,6 +954,23 @@
             }
 
         },
+        scoreTap(){
+            if(this.detail.tistatus !=1 ||this.detail.tsoid ){
+                return;
+            }
+          let that = this;
+            wx.showModal({
+                title: '提示',
+                content: '已实名认证的用户可享受免押金试用服务，系统将根据您目前的支付信用，判断是否可使用该服务。',
+                success (res) {
+                    if (res.confirm) {
+                        that.postData(3);
+                    } else if (res.cancel) {
+                        console.log('用户点击取消')
+                    }
+                }
+            })
+        }
     };
   }
 </script>

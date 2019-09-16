@@ -153,6 +153,12 @@
                         <span>信息绑定</span>
                     </view>
                 </li>
+                <li  @tap="changeRoute('/pages/personal/identification','info')">
+                    <view class="m-flex-start">
+                        <image src="{{img_src}}personal/icon-guide.png" wx:if="{{img_src}}"  class="m-icon"></image>
+                        <span>实名认证</span>
+                    </view>
+                </li>
                 <li @tap="getCell">
                     <view class="m-flex-start">
                         <image src="{{img_src}}personal/icon-service.png" wx:if="{{img_src}}"  class="m-icon"></image>

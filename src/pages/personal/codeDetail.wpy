@@ -96,7 +96,7 @@
             <view >报名时间：</view>
         </view>
 
-          <view class="m-flex-center"><image src="{{detail.tsoqrcode}}" @tap="previewImg({{detail.tsoqrcode}})" class="m-code"></image></view>
+          <view class="m-flex-center"  wx:if="{{detail.tsoqrcode}}"><image src="{{detail.tsoqrcode}}" @tap="previewImg({{detail.tsoqrcode}})" class="m-code"></image></view>
 
       </view>
       <view class="m-foot-btn m-one" wx:if="{{detail.umfstatus == -1 || detail.tsostatus == 2}}" @tap="changeRoute('/pages/personal/editRecord')">提交活动记录</view>

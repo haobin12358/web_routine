@@ -49,12 +49,12 @@
       </view>
       <view class="m-row m-no-flex">
         <view class="m-flex-between">
-          <span>导游证明</span>
+          <span>身份证照片</span>
           <span class="m-grey">选填</span>
         </view>
         <view class="m-img-box">
           <image src="{{form_data.guimg}}" alt="" wx:if="{{form_data.guimg}}" class="m-img"> </image>
-          <image src="{{img_src}}common/icon-img-up.png" class="m-img"  wx:if="{{!disabled}}" @tap="uploadImg"></image>
+          <image src="{{img_src}}common/icon-img-up.png" class="m-img"   @tap="uploadImg"></image>
         </view>
       </view>
       <view class="m-foot-btn m-one" wx:if="{{!disabled}}" @tap="sureSubmit">提交审核</view>
@@ -68,7 +68,7 @@
   import Login from '../../components/common/noLogin';
   export default class identification extends wepy.page {
     config = {
-      navigationBarTitleText: '导游认证'
+      navigationBarTitleText: '实名认证'
     };
     components = {login:Login};
     data = {
