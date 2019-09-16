@@ -407,11 +407,17 @@
               <span>试用押金 ¥ </span>
               <span class="m-price">{{detail.tideposit}}</span>
             </view>
-
-            <view  class="m-red m-black" wx:if="{{detail.apply_num}}">
-              <span>申请数: </span>
-              <span class="m-common"> {{detail.apply_num || 0}}</span>
+            <view>
+                <view  class=" m-black" wx:if="{{detail.apply_num}}">
+                    <span>申请数: </span>
+                    <span class="m-common"> {{detail.apply_num || 0}}</span>
+                </view>
+                <view  class=" m-black" wx:if="{{detail.tinum}}">
+                    <span>总票数: </span>
+                    <span class="m-common"> {{detail.tinum || 0}}</span>
+                </view>
             </view>
+
 <!--            <view class="m-progress-box">-->
 <!--              <view>剩余数量 <span class="m-bold"> {{detail.residual}} </span> 张</view>-->
 <!--              <progress percent="{{detail.percent}}"  border-radius="20" backgroundColor="rgba(255,206,0,0.3)" color="#FFCE00" />-->
@@ -488,7 +494,8 @@
               <view class="m-btn {{(detail.tistatus !=1 || detail.tsoid) ?'cancel':''}}" wx:if="{{!detail.traded}}" @tap="scoreTap">支付分试用</view>
               <view class="m-btn {{(detail.tistatus !=1 || detail.tsoid)  ?'cancel':''}}" wx:if="{{!detail.traded}}" @tap="submitTap(1)">押金试用</view>
               <view class="m-btn {{(detail.tistatus !=1 || detail.tsoid)  ?'cancel':''}}" wx:if="{{!detail.traded}}" @tap="submitTap(2)">购买</view>
-              <view wx:if="{{detail.traded}}">已报名，积分：<span class="m-common">{{detail.tsoactivation}}</span> ，当前排名：<span class="m-common">{{detail.rank}}</span></view>
+              <view wx:if="{{detail.tsostatus == 0}}">已报名，积分：<span class="m-common">{{detail.tsoactivation || 0}}</span> ，当前排名：<span class="m-common">{{detail.rank || 1}}</span></view>
+              <view wx:if="{{detail.tsostatus >= 1}}">已购买</view>
           </view>
 
 <!--      支付成功-->
@@ -749,11 +756,12 @@
         paySign: params.sign,
         success (res) {
            if(that.detail.tsoid){
-             that.getData();
+             // that.getData();
            }else{
              that.pay_done = true;
              that.show_result = true;
            }
+            that.getData();
            that.$apply();
         },
         fail (res) {
@@ -801,6 +809,7 @@
                 that.pay_done = true;
                 that.show_result = true;
                 that.$apply();
+                that.getData();
             }else{
                 that.pay(params);
             }
@@ -914,11 +923,16 @@
           this[name] = true;
             if(name == 'show_rule'){
                 this.content3 = this.detail[key];
-                this.content3 = this.content3.replace(/&quot;/g,'');
-                this.content3 = this.content3.replace(/&nbsp;/g, '\xa0');
-                this.loading = false;
-                this.$apply();
-                this.$invoke('htmlParser2', 'htmlParserNotice');
+                if(this.content3){
+                    this.content3 = this.content3.replace(/&quot;/g,'');
+                    this.content3 = this.content3.replace(/&nbsp;/g, '\xa0');
+                    this.loading = false;
+                    this.$apply();
+                    this.$invoke('htmlParser2', 'htmlParserNotice');
+                }else{
+                    this[name] = false;
+                }
+
             }
         }
 

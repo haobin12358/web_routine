@@ -37,16 +37,16 @@
     }
   }
   .m-free-content{
-    padding: 20rpx 45rpx 100rpx;
+    padding: 20rpx 35rpx 100rpx;
       background-color: #fff;
     .m-free-img{
-      width: 600rpx;
-      height: 600rpx;
+      width: 610rpx;
+      height: 610rpx;
         border-radius: 30rpx;
     }
       .m-ticket-img-box{
-          width: 610rpx;
-          height: 610rpx;
+          width: 620rpx;
+          height: 620rpx;
           position: relative;
       }
     .m-free-title{
@@ -93,7 +93,7 @@
           </view>
         <view class="m-time">
             <view>出游时间:{{detail.triptime}}</view>
-            <view >报名时间：</view>
+            <view >报名时间:{{detail.tsocreatetime}}</view>
         </view>
 
           <view class="m-flex-center"  wx:if="{{detail.tsoqrcode}}"><image src="{{detail.tsoqrcode}}" @tap="previewImg({{detail.tsoqrcode}})" class="m-code"></image></view>

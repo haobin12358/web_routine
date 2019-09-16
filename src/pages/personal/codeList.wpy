@@ -88,6 +88,7 @@
 
       </view>
     </view>
+      <view class="m-no-data m-flex-center" wx:if="{{data_list.length == 0}}">暂无数据</view>
     <bottom wx:if="{{data_list.length == total_count && data_list.length > 4}}"></bottom>
   </view>
 </template>
