@@ -1,96 +1,60 @@
 <style scoped lang="less" rel="stylesheet/less">
   @import "../../styles/common";
   .m-freeList{
-    padding: 25rpx;
+    /*padding: 25rpx;*/
+    .m-nav{
+      width: 100%;
+      .flex-row(space-around);
+      padding: 20rpx 0;
+      span{
+        display: block;
+        padding: 5rpx 20rpx;
+        &.active{
+          color: @common-color;
+          border-bottom: 2px solid @common-color;
+        }
+      }
+    }
     .m-freeList-content{
       padding: 20rpx 0;
+      .flex-row(flex-start);
+      flex-wrap: wrap;
       .m-one-free{
-        position: relative;
-        width: 700rpx;
-        height: 350rpx;
-        margin-bottom: 30rpx;
-        .m-back{
-          position: absolute;
-          top:0;
-          left: 0;
-          width:700rpx;
-          height: 350rpx;
-          background-color: #FFCE00;
+        width: 750rpx;
+        padding: 20rpx;
+        border-bottom: 1px solid @border-color;
+        .m-top{
+          display: flex;
+          flex-flow: row;
+          align-items: flex-start;
+          justify-content: flex-start;
+        }
+        .m-img{
+          width: 150rpx;
+          height: 150rpx;
+          margin-right: 20rpx;
         }
         .m-free-content{
-          position: absolute;
-          top:0;
-          left: 0;
-          z-index: 10;
-          width:700rpx;
-          height: 350rpx;
-          padding: 30rpx 40rpx;
-          box-sizing: border-box;
-          background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%,rgba(0,0,0,0.05) 100%);
-          .m-label{
-            position: absolute;
-            top:0;
-            right: 10rpx;
-            width: 74rpx;
-            height: 60rpx;
-            background-color: @common-color;
-            font-size: 24rpx;
-            text-align: center;
-            line-height: 45rpx;
-            border-radius:0 0 50rpx 50rpx;
-          }
           .m-name{
-            font-size: 40rpx;
-            line-height: 56rpx;
-            font-weight: 600;
-            color: #fff;
-            width: 440rpx;
+            width: 500rpx;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+            font-size: 28rpx;
+            font-weight: 500;
+            padding: 10rpx 0;
           }
-          .m-info{
-            .flex-row(flex-start);
-            color: #fff;
-            .m-line{
-              display: block;
-              width: 1px;
-              height: 24rpx;
-              background-color: #fff;
-              margin: 0 15rpx;
-            }
+          .m-grey{
+            font-size: 20rpx;
           }
-          .m-label-list{
-            .flex-row(flex-start);
-            flex-wrap: wrap;
-            span{
-              display: block;
-              padding: 0 7rpx;
-              font-size: 18rpx;
-              background-color: #fff;
-              border-radius: 3rpx;
-              margin-right: 17rpx;
-              color: #333;
-            }
-          }
+        }
+        .m-code-img{
+          width: 40rpx;
+          height: 40rpx;
         }
         .m-code{
-          position: absolute;
-          bottom: 20rpx;
-          right: 0;
-          padding: 0 17rpx;
-          height: 50rpx;
-          line-height: 50rpx;
-          background-color: #FFFFFF;
-          border-radius:30rpx 0 0 30rpx;
-          .m-bold{
-            font-size: 36rpx;
-            font-weight: 600;
-          }
-        }
-        image.m-code-img{
-          width: 82rpx;
-          height: 82rpx;
-          position: absolute;
-          bottom: 20rpx;
-          right: 10rpx;
+          color: @common-color;
         }
       }
 
@@ -101,70 +65,30 @@
 </style>
 <template>
   <view class="m-freeList">
-    <view>
-      <span class="m-border-back">免费领取</span>
+    <view class="m-nav">
+      <span class="{{item.tsostatus_zh == select_nav.tsostatus_zh ? 'active':''}}" wx:for="{{nav_list}}" wx:key="{{index}}" @tap="navTap({{item}})">{{item.tsostatus_zh}}</span>
     </view>
     <view class="m-freeList-content">
-<!--      <view class="m-one-free" wx:for="{{data_list}}" wx:key="{{index}}" @tap="changeRoute({{item}})">-->
-<!--        <image class="m-back" src="{{item.tiimg}}"></image>-->
-<!--        <view class="m-free-content">-->
-<!--          <span class="m-label">推荐</span>-->
-<!--          <view class="m-name">{{item.tiname}}</view>-->
-<!--          <view class="m-info">-->
-<!--            {{item.short_str}}-->
-<!--          </view>-->
-<!--          <view class="m-label-list">-->
-<!--            <span wx:for="{{item.ticategory}}" wx:key="{{i}}" wx:for-index='i' wx:for-item='key'>{{key}}</span>-->
-<!--          </view>-->
-<!--        </view>-->
-<!--&lt;!&ndash;        <view class="m-code">&ndash;&gt;-->
-<!--&lt;!&ndash;          {{item.tsostatus == 2?'取票码':'取票码'}} <span class="m-bold">{{item.tsocode}}</span>&ndash;&gt;-->
-<!--&lt;!&ndash;        </view>&ndash;&gt;-->
-<!--        <image src="{{item.tsoqrcode}}" class="m-code-img" wx:if="{{item.tsostatus == 2}}"></image>-->
-<!--        <view class="m-code" wx:else>-->
-<!--          {{item.tsostatus_zh}}-->
-<!--        </view>-->
-<!--      </view>-->
-      <view class="m-one-free"  >
-        <image class="m-back" src=""></image>
-        <view class="m-free-content">
-          <span class="m-label">推荐</span>
-          <view class="m-name">门票名称</view>
-          <view class="m-info">
-           介绍
-          </view>
-          <view class="m-label-list">
-            <span >123</span>
+      <view class="m-one-free" wx:for="{{data_list}}" wx:key="{{index}}" @tap="changeRoute({{item}})">
+        <view class="m-top">
+          <image class="m-img" src="{{item.tiimg}}"></image>
+          <view class="m-free-content">
+            <view class="m-name">{{item.tiname}}</view>
+            <view class="m-grey">抢票时间：{{item.tistarttime}} - {{item.tiendtime}}</view>
           </view>
         </view>
-        <!--        <view class="m-code">-->
-        <!--          {{item.tsostatus == 2?'取票码':'取票码'}} <span class="m-bold">{{item.tsocode}}</span>-->
-        <!--        </view>-->
-        <image src="" class="m-code-img" ></image>
 
-      </view>
-      <view class="m-one-free"  >
-        <image class="m-back" src=""></image>
-        <view class="m-free-content">
-          <span class="m-label">推荐</span>
-          <view class="m-name">门票名称</view>
-          <view class="m-info">
-            介绍
-          </view>
-          <view class="m-label-list">
-            <span >123</span>
-          </view>
+<!--        <view class="m-code">-->
+<!--          {{item.tsostatus == 2?'取票码':'取票码'}} <span class="m-bold">{{item.tsocode}}</span>-->
+<!--        </view>-->
+        <view class="m-flex-end">
+<!--          <image src="{{item.tsoqrcode}}" class="m-code-img" wx:if="{{item.tsostatus == 2}}"></image>-->
+          <view class="m-code" >{{item.tsostatus_zh}}</view>
         </view>
-        <!--        <view class="m-code">-->
-        <!--          {{item.tsostatus == 2?'取票码':'取票码'}} <span class="m-bold">{{item.tsocode}}</span>-->
-        <!--        </view>-->
 
-        <view class="m-code" >
-          未开奖
-        </view>
       </view>
     </view>
-    <bottom wx:if="{{data_list.length == total_count}}"></bottom>
+    <bottom wx:if="{{data_list.length == total_count && data_list.length > 4}}"></bottom>
   </view>
 </template>
 
@@ -174,7 +98,7 @@
   import api from '../../api/api';
   export default class codeList extends wepy.page {
     config = {
-      navigationBarTitleText: '免费领取门票',
+      navigationBarTitleText: '门票领取记录',
       enablePullDownRefresh: true
     };
     components = {bottom};
@@ -185,8 +109,28 @@
         page_size: 10
       },
       total_count:0,
-      loading:false
+      loading:false,
+      nav_list:[],
+      select_nav : '',
     };
+    getNav(){
+      let that = this;
+      that.loading = true;
+      wepy.request({
+        url: api.ticket_tsostatus + '?token=' +wx.getStorageSync('token'),
+        method:"get",
+        data:{
+
+        }
+      }).then(res => {
+        if(res.data.status == 200){
+          that.nav_list = res.data.data;
+          that.select_nav = res.data.data[0];
+          that.$apply();
+          that.getData();
+        }
+      })
+    }
     getData(){
       let that = this;
       that.loading = true;
@@ -196,7 +140,8 @@
         data:{
           page_num: that.page_info.page_num,
           page_size:that.page_info.page_size,
-          option:'my'
+          option:'my',
+          tsostatus: that.select_nav.tsostatus
         }
       }).then(res => {
         if(res.data.status == 200){
@@ -215,6 +160,8 @@
     onPullDownRefresh() {
       // 上拉刷新
       if (!this.loading) {
+        this.page_info.page_num = 1;
+        this.$apply();
         this. getData();
         // 处理完成后，终止下拉刷新
       }
@@ -229,23 +176,22 @@
       }
     }
     onLoad(options) {
-      this.getData();
+      this.getNav();
     }
 
     methods = {
       changeRoute(item){
         let that = this;
-        console.log(item);
-        if(item.tsostatus == 2){
           wx.navigateTo({
             url: '/pages/personal/codeDetail?tiid=' + item.tiid+ '&tsoid=' +item.tsoid
           });
-        }else{
-          wx.navigateTo({
-            url: '/pages/index/freeDetail?tiid=' + item.tiid + '&tsoid=' +item.tsoid
-          });
-        }
 
+      },
+      navTap(item){
+        this.select_nav = item;
+        this.page_info.page_num = 1;
+        this.$apply();
+        this.getData();
       }
     };
   }

@@ -125,12 +125,12 @@
                     </view>
                     <span class="m-grey">¥ {{user_info.uscash || 0}}</span>
                 </li>
-                <li @tap="changeRoute('/pages/personal/history','phone')">
-                    <view class="m-flex-start">
-                        <image src="{{img_src}}personal/icon-history.png" wx:if="{{img_src}}" class="m-icon"></image>
-                        <span>历史团队</span>
-                    </view>
-                </li>
+<!--                <li @tap="changeRoute('/pages/personal/history','phone')">-->
+<!--                    <view class="m-flex-start">-->
+<!--                        <image src="{{img_src}}personal/icon-history.png" wx:if="{{img_src}}" class="m-icon"></image>-->
+<!--                        <span>历史团队</span>-->
+<!--                    </view>-->
+<!--                </li>-->
                 <li @tap="changeRoute('/pages/personal/codeList','phone')">
                     <view class="m-flex-start">
                         <image src="{{img_src}}personal/icon-code-manage.png" wx:if="{{img_src}}" class="m-icon"></image>

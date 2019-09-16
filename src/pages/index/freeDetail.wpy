@@ -1,7 +1,7 @@
 <style scoped lang="less" rel="stylesheet/less">
 @import "../../styles/common";
 .m-freeDetail{
-  padding-bottom: 100rpx;
+  padding-bottom: 120rpx;
   /*.m-top-img-box{*/
     position: relative;
     /*width: 100%;*/
@@ -142,6 +142,7 @@
     }
     .m-rule-text{
       width: 577rpx;
+        max-height: 36rpx;
       margin-left: 20rpx;
       color: @grey-color;
       overflow: hidden;
@@ -182,6 +183,7 @@
         width: 100%;
         .flex-row(space-around);
         padding: 20rpx;
+        box-sizing: border-box;
         span{
             display: block;
             padding: 5rpx 20rpx;
@@ -207,6 +209,9 @@
             background-color: @common-color;
             border-radius: 50rpx;
             text-align: center;
+            &.cancel{
+                background-color: #EBEBEB;
+            }
         }
         .m-code-icon{
             width: 45rpx;
@@ -343,7 +348,7 @@
           <span>查看更多</span>
         </view>
 <!--        <image src="{{img_src}}index/icon-share.png" class="m-icon-share" @tap="changeModal('show_share',true)"></image>-->
-        <view class="m-time-box" wx:if="{{detail.tistatus < 2 && !detail.tsoid}}">
+        <view class="m-time-box" wx:if="{{detail.tistatus < 2}}">
           <view class="m-price">
             票价 ¥<span class="m-bold">{{detail.tiprice}}</span>
           </view>
@@ -355,15 +360,27 @@
           </view>
 
         </view>
+          <view class="m-time-box" wx:if="{{detail.tistatus >= 2}}">
+              <view class="m-price">
+                  票价 ¥<span class="m-bold">{{detail.tiprice}}</span>
+              </view>
+              <view class="m-flex-end">
+                  <span class="m-tra"></span>
+                  <view class="m-time-text">
+                     活动{{detail.tistatus_zh}}
+                  </view>
+              </view>
+
+          </view>
       </view>
       <view class="m-freeDetail-content">
         <view class="m-detail-info">
           <view class="m-flex-between">
-            <view class="m-red" wx:if="{{detail.tsostatus == 1}}">
-              <span>剩余押金 ¥ </span>
-              <span class="m-price">{{detail.residual_deposit}}</span>
-            </view>
-            <view class="m-red" wx:else>
+<!--            <view class="m-red" wx:if="{{detail.tsostatus == 1}}">-->
+<!--              <span>剩余押金 ¥ </span>-->
+<!--              <span class="m-price">{{detail.residual_deposit}}</span>-->
+<!--            </view>-->
+            <view class="m-red">
               <span>试用押金 ¥ </span>
               <span class="m-price">{{detail.tideposit}}</span>
             </view>
@@ -391,10 +408,12 @@
               <view>有效时间</view>
               <view class="m-rule-text">2019/09/23 12:00:00-2019/09/30 12:00:00</view>
           </view>
-        <view class="m-flex-start m-rule" @tap.stop="changeModal('show_rule',true)">
+        <view class="m-flex-start m-rule" @tap.stop="changeModal('show_rule',true,'tirules')">
           <image src="{{img_src}}index/icon-alert.png" class="m-alert" ></image>
           <view>规则</view>
-          <view class="m-rule-text">{{detail.tirules}}</view>
+          <view class="m-rule-text">
+              <htmlParser1 :parserName.sync="name2" :parserContent.sync="content2" />
+          </view>
         </view>
           <image src="" class="m-list-img"></image>
 <!--        <view class="m-flex-start m-code" wx:if="{{detail.tirewardnum}}">-->
@@ -407,29 +426,21 @@
 <!--          </view>-->
 <!--        </view>-->
           <view class="m-flex-start m-code" >
-              <view class="m-flex-start">
+              <view class="m-flex-start"  @tap.stop="changeModal('show_rule',true,'scorerule')">
                   <image src="{{img_src}}index/icon-alert.png" class="m-alert" ></image>
                   <view>活跃积分</view>
               </view>
               <view class="m-code-text m-grey">
-                 <view class="m-user">
-                     <image src="" class="m-user-head"></image>
-                     <span >123积分</span>
+                 <view class="m-user" wx:for="{{detail.scorerank}}" wx:key="{{index}}">
+                     <image src="{{item.usheader}}" class="m-user-head"></image>
+                     <span >{{item.tsoactivation}}积分</span>
                  </view>
-                  <view class="m-user">
-                      <image src="" class="m-user-head"></image>
-                      <span >123积分</span>
-                  </view>
-                  <view class="m-user">
-                      <image src="" class="m-user-head"></image>
-                      <span >123积分</span>
-                  </view>
               </view>
           </view>
           <view class="m-image-box" wx:if="{{detail.ticertificate}}">
               <image src="{{detail.ticertificate}}" class="m-img"></image>
           </view>
-          <view class="m-info-content" >
+          <view class="m-info-content" wx:if="{{detail.show_record}}">
 
               <span class="{{item.name == select_nav ? 'active':''}}" wx:for="{{nav_list}}" wx:key="{{index}}" @tap="navTap({{item}})">{{item.name}}</span>
 
@@ -437,7 +448,7 @@
         <view class="m-info" wx:if="{{select_nav == '详情'}}">
           <htmlParser :parserName.sync="name1" :parserContent.sync="content1" />
         </view>
-          <view class="m-info" wx:else>
+          <view wx:else>
               <circle :list.sync="list_data"></circle>
               <view class="m-no-data" wx:if="{{list_data.length == 0}}">暂无信息</view>
           </view>
@@ -445,14 +456,14 @@
 <!--      <view class="m-foot-btn m-one cancel" wx:if="{{detail.tistatus == 0 }}">等待抢票</view>-->
 <!--      <view class="m-foot-btn m-one" @tap="submitTap" wx:if="{{detail.tistatus == 1 && !detail.tsoid }}">支付押金</view>-->
 <!--      <view class="m-foot-btn m-one" @tap="submitTap" wx:if="{{detail.tsostatus == 1  && detail.tsoid }}">支付剩余押金 ¥{{detail.residual_deposit}}</view>-->
-          <view class="m-bottom-btn-box">
+          <view class="m-bottom-btn-box" >
               <view class="m-icon-btn" @tap="drawImg">
                   <image src="{{img_src}}personal/icon-code.png" class="m-code-icon"></image>
                   <span>分享</span>
               </view>
-              <view class="m-btn">支付分试用</view>
-              <view class="m-btn" @tap="submitTap">押金试用</view>
-              <view class="m-btn">购买</view>
+              <view class="m-btn {{(detail.tistatus !=1 || detail.tsoid) ?'cancel':''}}" @tap="submitTap(3)">支付分试用</view>
+              <view class="m-btn {{(detail.tistatus !=1 || detail.tsoid)  ?'cancel':''}}" @tap="submitTap(1)">押金试用</view>
+              <view class="m-btn {{(detail.tistatus !=1 || detail.tsoid)  ?'cancel':''}}" @tap="submitTap(2)">购买</view>
           </view>
 
 <!--      支付成功-->
@@ -487,15 +498,18 @@
           </view>
          <image src="{{img_src}}index/icon-alert.png" class="m-alert" ></image>
           <view >提示</view>
-          <view class="m-ft-24" wx:if="{{detail.tsostatus == 0 || pay_done}}">抢票时间截止后平台将公布获得门票的用户，该部分用户需交剩余押金获取门票</view>
-          <view class="m-ft-24" wx:if="{{detail.tsostatus == 2}}">抢票时间截止后平台将公布获得门票的用户，该部分用户需交剩余押金获取门票</view>
-          <view class="m-ft-24" wx:if="{{detail.tsostatus == 1}}">恭喜您已中奖！请在规定时间内支付剩余的押金。</view>
-          <view class="m-ft-24" wx:if="{{detail.tsostatus == -1}}">很遗憾！您未中奖。押金已经退回您的账户，请期待下一次的活动。</view>
+<!--          <view class="m-ft-24" wx:if="{{pay_done}}">抢票时间截止后平台将公布获得门票的用户，该部分用户需交剩余押金获取门票</view>-->
+            <view wx:if="{{pay_done}}">
+                            结果<span class="m-grey">可以在</span>
+                            个人中心- 我的门票<span class="m-grey">中查看</span>
+                          </view>
           <view class="m-btn" @tap.stop="changeModal('show_result',false)">我知道了</view>
         </view>
       </view>
       <view class="m-modal" wx:if="{{show_rule}}" @tap.stop="changeModal('show_rule',false)">
-        <view class="m-modal-state">{{rule}}</view>
+        <view class="m-modal-state">
+            <htmlParser2 :parserName.sync="name3" :parserContent.sync="content3" />
+        </view>
       </view>
         <view class="m-modal" wx:if="{{show_code}}" @tap.stop="changeModal('show_code',false)">
             <view class="m-modal-state">
@@ -523,7 +537,7 @@
       navigationBarTitleText: '领取免费门票',
       enablePullDownRefresh: true
     };
-    components = {share:share,htmlParser:htmlParser,circle:Circle,};
+    components = {share:share,htmlParser:htmlParser,htmlParser1:htmlParser,htmlParser2:htmlParser,circle:Circle,};
     data = {
         indicatorDots: true,
         autoplay: true,
@@ -536,8 +550,12 @@
       show_share:false,
       tiid:'efbef688-ce13-11e9-8887-0242ac110002',
       detail:{},
-      name1:'htmlParserName2',
+      name1:'htmlParserName1',
       content1:"",
+        name2:'htmlParserName2',
+        content2:"",
+        name3:'htmlParserName3',
+        content3:"",
       num:1,
       hour:'',
       minute:'',
@@ -562,7 +580,12 @@
         show_code:false,
         code_list:[],
         show_pic:false,
-        photo:''
+        photo:'',
+        page_info:{
+            page_num: 1,
+            page_size: 10
+        },
+        total_count:0,
     };
     getData(){
       let that = this;
@@ -578,22 +601,51 @@
       }).then(res => {
         if(res.data.status == 200){
           that.detail = res.data.data;
-          that.rule = that.detail.tirules;
+
+            that.content2 = res.data.data.tirules;
+            that.content2 = that.content2.replace(/&quot;/g,'');
+            that.content2 = that.content2.replace(/&nbsp;/g, '\xa0');
           that.content1 = res.data.data.tidetails;
           that.content1 = that.content1.replace(/&quot;/g,'');
           that.content1 = that.content1.replace(/&nbsp;/g, '\xa0');
-          if(that.detail.tsoid  ){
-            that.show_result = true;
-          }
           that.loading = false;
           that.$apply();
-          that.$invoke('htmlParser', 'htmlParserNotice');
-          if(that.detail.tistatus <2 && !that.detail.tsoid){
+            that.$invoke('htmlParser', 'htmlParserNotice');
+            that.$invoke('htmlParser1', 'htmlParserNotice');
+
+          if(that.detail.tistatus <2 ){
             that.dealTime();
+          }
+          if(that.detail.show_record){
+              that.getCircle();
           }
         }
       })
     }
+      getCircle(){
+          let that = this;
+          tip.loading();
+          wepy.request({
+              url: api.travelrecord_list +'?token='+wx.getStorageSync('token') ,
+              data: {
+                  tiid:that.tiid,
+                  page_num:that.page_info.page_num,
+                  page_size: that.page_info.page_size,
+              }
+          }).then(res => {
+              if(res.data.status == 200){
+                  let data = res.data.data.travelrecord;
+                  if(that.page_info.page_num >1){
+                      that.list_data = that.list_data.concat(data);
+                  }else{
+                      that.list_data = data;
+                  }
+                  that.total_count = res.data.total_count;
+                  that.$apply();
+                  tip.loaded();
+              }
+          })
+      }
       getCode(){
           let that = this;
           that.loading = true;
@@ -690,20 +742,17 @@
         }
       })
     }
-    postData(){
+    postData(num){
       let that = this;
       tip.loading();
       let params = {};
-      if(that.detail.tsoid){
-        params = {
-          tsoid : that.detail.tsoid
-        }
-      }else{
+
         params = {
           num : that.num,
-          tiid: that.detail.tiid
+          tiid: that.detail.tiid,
+            tsotype:Number(num)
         }
-      }
+
       wepy.request({
         url: api.ticket_pay + '?token=' +wx.getStorageSync('token'),
         method:"post",
@@ -801,24 +850,47 @@
     onPullDownRefresh() {
       // 上拉刷新
       if (!this.loading) {
+          this.page_info.page_num = 1;
+          this.$apply();
         this. getData();
         // 处理完成后，终止下拉刷新
       }
     }
+      onReachBottom() {
+          // 下拉触底，先判断是否有请求正在进行中
+          // 以及检查当前请求页数是不是小于数据总页数，如符合条件，则发送请求
+          if(!this.loading && this.total_count > this.list_data.length) {
+              this.page_info.page_num += 1;
+              this.$apply();
+              this.getCircle();
+          }
+      }
     methods = {
 
-      submitTap(){
+      submitTap(num){
+          if(this.detail.tistatus !=1 ||this.detail.tsoid ){
+              return;
+          }
         // this.show_result = true;
         // this.$apply();
-        this.postData();
+        this.postData(num);
 
       },
-      changeModal(name,bool){
+      changeModal(name,bool,key){
         if(bool == 'false'){
           this[name] = false;
         }else{
           this[name] = true;
+            if(name == 'show_rule'){
+                this.content3 = this.detail[key];
+                this.content3 = this.content3.replace(/&quot;/g,'');
+                this.content3 = this.content3.replace(/&nbsp;/g, '\xa0');
+                this.loading = false;
+                this.$apply();
+                this.$invoke('htmlParser2', 'htmlParserNotice');
+            }
         }
+
         this.$apply();
       },
       changeRoute(v,page){

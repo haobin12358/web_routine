@@ -9,6 +9,7 @@
             flex-wrap: wrap;
             .m-one-ticket{
                 width: 340rpx;
+                padding-bottom: 10rpx;
                 &:nth-child(odd){
                     margin-right: 20rpx;
                 }
@@ -312,9 +313,16 @@
             //改变路由
             changeRoute(v,item) {
                 let that = this;
-                wx.navigateTo({
-                    url: v + '?tiid=' + item.tiid
-                });
+                if(item.traded){
+                    wx.navigateTo({
+                        url: v + '?tiid=' + item.tiid + '&tsoid=' + item.tsoid
+                    });
+                }else{
+                    wx.navigateTo({
+                        url: v + '?tiid=' + item.tiid
+                    });
+                }
+
 
             },
 

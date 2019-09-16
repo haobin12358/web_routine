@@ -41,7 +41,7 @@
         'pages/personal/myCode',
         'pages/personal/editRecord',
         'pages/personal/codeDetail',
-        'pages/personal/codeList',
+          'pages/personal/codeList',
           'pages/index/freeDetail',
         'pages/index/freeList',
         'pages/index/scrollCircle',
