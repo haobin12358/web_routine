@@ -13,6 +13,17 @@
                 &:nth-child(odd){
                     margin-right: 20rpx;
                 }
+                .m-img-box{
+                    position: relative;
+                    .m-end-img{
+                        position: absolute;
+                        top:0;
+                        left:0;
+                        background-color: rgba(0,0,0,0.2);
+                        width: 340rpx;
+                        height: 340rpx;
+                    }
+                }
                 .m-ticket-img{
                     width: 340rpx;
                     height: 340rpx;
@@ -108,7 +119,10 @@
         </swiper>
         <view class="m-ticket-list">
             <view class="m-one-ticket" wx:for="{{data_list}}" wx:key="{{index}}" @tap="changeRoute('/pages/index/freeDetail',{{item}})">
-                <image src="{{item.tiimg}}" class="m-ticket-img"></image>
+                <view class="m-img-box">
+                    <image src="{{item.tiimg}}" class="m-ticket-img"></image>
+                    <image src="{{img_src}}personal/img-end.png" class="m-end-img" wx:if="{{item.tistatus > 1}}"></image>
+                </view>
                 <view class="m-ticket-name">{{item.tiname}}</view>
                 <view class="m-ticket-price">价值：¥{{item.tiprice}}</view>
                 <view class="m-ticket-num">

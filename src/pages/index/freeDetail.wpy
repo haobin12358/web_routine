@@ -108,8 +108,8 @@
     }
       .m-list-img{
           width: 100%;
-          height: 100rpx;
-          background-color: #FFCE00;
+          height: 140rpx;
+          /*background-color: #FFCE00;*/
       }
     .m-num{
       padding: 20rpx;
@@ -415,7 +415,7 @@
               <htmlParser1 :parserName.sync="name2" :parserContent.sync="content2" />
           </view>
         </view>
-          <image src="" class="m-list-img"></image>
+          <image src="{{img_src}}personal/ticket-liu.png" class="m-list-img"></image>
 <!--        <view class="m-flex-start m-code" wx:if="{{detail.tirewardnum}}">-->
 <!--          <image src="{{img_src}}index/icon-alert.png" class="m-alert" ></image>-->
 <!--          <view>中奖号码</view>-->
