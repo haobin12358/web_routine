@@ -122,6 +122,7 @@
                 <view class="m-img-box">
                     <image src="{{item.tiimg}}" class="m-ticket-img"></image>
                     <image src="{{img_src}}personal/img-end.png" class="m-end-img" wx:if="{{item.tistatus > 1}}"></image>
+                    <image src="{{img_src}}personal/img-start.png" class="m-end-img" wx:if="{{item.tistatus == 0}}"></image>
                 </view>
                 <view class="m-ticket-name">{{item.tiname}}</view>
                 <view class="m-ticket-price">价值：¥{{item.tiprice}}</view>

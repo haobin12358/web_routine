@@ -203,7 +203,7 @@
         border-top: 1px solid @border-color;
         .flex-row(space-around);
         .m-btn{
-            width: 25%;
+            width: 21%;
             /*padding: 0 20rpx;*/
             height: 60rpx;
             line-height: 60rpx;
@@ -457,12 +457,12 @@
           <view class="m-flex-start m-code" >
               <view class="m-flex-start"  @tap.stop="changeModal('show_rule',true,'scorerule')">
                   <image src="{{img_src}}index/icon-alert.png" class="m-alert" ></image>
-                  <view>活跃积分</view>
+                  <view>活跃度</view>
               </view>
               <view class="m-code-text m-grey">
                  <view class="m-user" wx:for="{{detail.scorerank}}" wx:key="{{index}}">
                      <image src="{{item.usheader}}" class="m-user-head"></image>
-                     <span >{{item.tsoactivation}}积分</span>
+                     <span >{{item.tsoactivation}}活跃度</span>
                  </view>
               </view>
           </view>
@@ -493,8 +493,8 @@
 <!--          <view class="m-btn " wx:if="{{!detail.traded &&   !detail.verified}}" @tap="changeRoute('/pages/personal/identification','info')">实名认证</view>-->
               <view class="m-btn {{(detail.tistatus !=1 || detail.tsoid) ?'cancel':''}}" wx:if="{{!detail.traded}}" @tap="scoreTap">支付分试用</view>
               <view class="m-btn {{(detail.tistatus !=1 || detail.tsoid)  ?'cancel':''}}" wx:if="{{!detail.traded}}" @tap="submitTap(1)">押金试用</view>
-              <view class="m-btn {{(detail.tistatus !=1 || detail.tsoid)  ?'cancel':''}}" wx:if="{{!detail.traded}}" @tap="submitTap(2)">购买</view>
-              <view wx:if="{{detail.tsostatus == 0}}">已报名，积分：<span class="m-common">{{detail.tsoactivation || 0}}</span> ，当前排名：<span class="m-common">{{detail.rank || 1}}</span></view>
+              <view class="m-btn "  @tap="submitTap(2)">购买</view>
+              <view wx:if="{{detail.tsostatus == 0}}">已报名，活跃度：<span class="m-common">{{detail.tsoactivation || 0}}</span> ，当前排名：<span class="m-common">{{detail.rank || 1}}</span></view>
               <view wx:if="{{detail.tsostatus >= 1}}">已购买</view>
           </view>
 
@@ -908,9 +908,14 @@
     methods = {
 
       submitTap(num){
-          if(this.detail.tistatus !=1 ||this.detail.tsoid ){
-              return;
+          if(num == 2){
+
+          }else{
+              if(this.detail.tistatus !=1 ||this.detail.tsoid ){
+                  return;
+              }
           }
+
         // this.show_result = true;
         // this.$apply();
         this.postData(num);
