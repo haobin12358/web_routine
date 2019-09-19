@@ -434,6 +434,10 @@
 <!--          </view>-->
 <!--        </view>-->
           <view class="m-flex-start m-rule" >
+              <view>定位</view>
+              <view class="m-rule-text" @tap="showLine">{{detail.position.tiaddress}}</view>
+          </view>
+          <view class="m-flex-start m-rule" >
               <view>抢票时间</view>
               <view class="m-rule-text">{{detail.tistarttime}}-{{detail.tiendtime}}</view>
           </view>
@@ -1006,7 +1010,22 @@
             }
             this.show_ident = true;
             this.$apply();
-        }
+        },
+        //调起导航
+        showLine(){
+            let that = this;
+            wx.openLocation({ // 打开微信内置地图，实现导航功能（在内置地图里面打开地图软件）
+                latitude: Number(that.detail.position.latitude),
+                longitude: Number(that.detail.position.longitude),
+                name:that.detail.position.tiaddress,
+                success:function(res){
+                    console.log(res);
+                },
+                fail:function(res){
+                    console.log(res);
+                }
+            })
+        },
     };
   }
 </script>
