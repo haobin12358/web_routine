@@ -134,7 +134,7 @@
                 <li @tap="changeRoute('/pages/personal/codeList','phone')">
                     <view class="m-flex-start">
                         <image src="{{img_src}}personal/icon-code-manage.png" wx:if="{{img_src}}" class="m-icon"></image>
-                        <span>我的门票</span>
+                        <span>我的试用</span>
                     </view>
                 </li>
             </ul>
@@ -144,25 +144,25 @@
                 <li @tap="getScan">
                     <view class="m-flex-start">
                         <image src="{{img_src}}personal/icon-scan.png" wx:if="{{img_src}}"  class="m-icon"></image>
-                        <span>门票核销</span>
+                        <span>试用核销</span>
                     </view>
                 </li>
                 <li @tap="changeRoute('/pages/ticket/userInfo')">
                     <view class="m-flex-start">
                         <image src="{{img_src}}personal/icon-rule.png" wx:if="{{img_src}}"  class="m-icon"></image>
-                        <span>信息绑定</span>
+                        <span>账号绑定</span>
                     </view>
                 </li>
                 <li  @tap="changeRoute('/pages/personal/identification','info')">
                     <view class="m-flex-start">
                         <image src="{{img_src}}personal/icon-guide.png" wx:if="{{img_src}}"  class="m-icon"></image>
-                        <span>实名认证</span>
+                        <span>信用认证</span>
                     </view>
                 </li>
                 <li @tap="getCell">
                     <view class="m-flex-start">
                         <image src="{{img_src}}personal/icon-service.png" wx:if="{{img_src}}"  class="m-icon"></image>
-                        <span>客服中心</span>
+                        <span>联系客服</span>
                     </view>
                 </li>
             </ul>

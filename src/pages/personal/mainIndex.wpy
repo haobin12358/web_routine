@@ -352,7 +352,7 @@
       this.usid = '';
       this.$apply();
       if(this.from == ''){
-        this.gotoHomePage();
+        // this.gotoHomePage();
       }
 
     }

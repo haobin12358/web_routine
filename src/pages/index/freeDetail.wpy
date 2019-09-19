@@ -434,8 +434,12 @@
 <!--          </view>-->
 <!--        </view>-->
           <view class="m-flex-start m-rule" >
-              <view>有效时间</view>
-              <view class="m-rule-text">2019/09/23 12:00:00-2019/09/30 12:00:00</view>
+              <view>抢票时间</view>
+              <view class="m-rule-text">{{detail.tistarttime}}-{{detail.tiendtime}}</view>
+          </view>
+          <view class="m-flex-start m-rule" >
+              <view>使用时间</view>
+              <view class="m-rule-text">{{detail.titripstarttime}}-{{detail.titripendtime}}</view>
           </view>
         <view class="m-flex-start m-rule" @tap.stop="changeModal('show_rule',true,'tirules')">
           <image src="{{img_src}}index/icon-alert.png" class="m-alert" ></image>
@@ -502,7 +506,7 @@
       <view class="m-modal m-sure" wx:if="{{show_ident}}" @tap.stop="changeModal('show_ident',false)">
         <view class="m-modal-state">
           <view>
-              已实名认证的用户可享受免押金试用服务，系统将根据您目前的支付信用，判断是否可使用该服务。<span class="m-common" wx:if="{{!detail.verified}}" @tap.stop="changeRoute('/pages/personal/identification','info')">去实名认证</span>
+              已信用认证的用户可享受免押金试用服务，系统将根据您目前的支付信用，判断是否可使用该服务。<span class="m-common" wx:if="{{!detail.verified}}" @tap.stop="changeRoute('/pages/personal/identification','info')">去信用认证</span>
           </view>
           <view class="m-btn-box">
               <span @tap.stop="changeModal('show_ident',false)">取消</span>
@@ -530,7 +534,7 @@
 <!--          <view class="m-ft-24" wx:if="{{pay_done}}">抢票时间截止后平台将公布获得门票的用户，该部分用户需交剩余押金获取门票</view>-->
             <view wx:if="{{pay_done}}">
                             结果<span class="m-grey">可以在</span>
-                            我的- 我的门票<span class="m-grey">中查看</span>
+                            我的- 我的试用<span class="m-grey">中查看</span>
                           </view>
           <view class="m-btn" @tap.stop="changeModal('show_result',false)">我知道了</view>
         </view>
@@ -563,7 +567,7 @@
   import Circle from '../../components/common/circle';
   export default class freeDetail extends wepy.page {
     config = {
-      navigationBarTitleText: '领取免费门票',
+      navigationBarTitleText: '领取免费试用',
       enablePullDownRefresh: true
     };
     components = {share:share,htmlParser:htmlParser,htmlParser1:htmlParser,htmlParser2:htmlParser,circle:Circle,};
@@ -615,7 +619,8 @@
             page_size: 10
         },
         total_count:0,
-        show_ident:false
+        show_ident:false,
+        tiname:''
     };
     getData(){
       let that = this;
@@ -862,8 +867,8 @@
       let params = `?page=/pages/index/freeDetail&tiid=${that.tiid}&tsoid=${that.tsoid}&secret_usid=${that.secret_usid}`
       // let params = '?scene=params=220'
       return {
-        title: this.detail.plname,
-        path: '/pages/index/index'+params,
+        title: '邀请你免费抢'+ that.detail.tiname,
+        path: '/pages/ticket/index'+params,
         success: function (res) {
           console.log('成功', res)
         }
@@ -878,6 +883,7 @@
         this.tsoid = options.tsoid;
         this.$apply();
       }
+
       this.getId();
       this.getData();
       // this.getCode();

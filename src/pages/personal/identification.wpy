@@ -47,16 +47,16 @@
         <span>身份证号</span>
         <input type="text" placeholder="请输入身份证号" disabled="{{disabled}}"  value="{{form_data.guidentification}}" data-name="guidentification" bindinput="inputChange"/>
       </view>
-      <view class="m-row m-no-flex">
-        <view class="m-flex-between">
-          <span>身份证照片</span>
-          <span class="m-grey">选填</span>
-        </view>
-        <view class="m-img-box">
-          <image src="{{form_data.guimg}}" alt="" wx:if="{{form_data.guimg}}" class="m-img"> </image>
-          <image src="{{img_src}}common/icon-img-up.png" class="m-img"   @tap="uploadImg"></image>
-        </view>
-      </view>
+<!--      <view class="m-row m-no-flex">-->
+<!--        <view class="m-flex-between">-->
+<!--          <span>身份证照片</span>-->
+<!--          <span class="m-grey">选填</span>-->
+<!--        </view>-->
+<!--        <view class="m-img-box">-->
+<!--          <image src="{{form_data.guimg}}" alt="" wx:if="{{form_data.guimg}}" class="m-img"> </image>-->
+<!--          <image src="{{img_src}}common/icon-img-up.png" class="m-img"   @tap="uploadImg"></image>-->
+<!--        </view>-->
+<!--      </view>-->
       <view class="m-foot-btn m-one" wx:if="{{!disabled}}" @tap="sureSubmit">提交审核</view>
     </view>
 </template>

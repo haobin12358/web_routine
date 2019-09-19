@@ -102,7 +102,7 @@
                                 })
                               }else{
                                 wx.switchTab({
-                                  url: '/pages/index/index'
+                                  url: '/pages/ticket/index'
                                 });
                               }
                             }else{
@@ -183,7 +183,7 @@
                 })
             }else{
                 wx.switchTab({
-                    url: '/pages/index/index'
+                    url: '/pages/ticket/index'
                 });
             }
         }
