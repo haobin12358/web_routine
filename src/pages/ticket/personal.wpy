@@ -141,7 +141,7 @@
         </view>
         <view class="m-personal-item">
             <ul >
-                <li @tap="getScan">
+                <li @tap="getScan" wx:if="{{user_info.ticketverifier}}">
                     <view class="m-flex-start">
                         <image src="{{img_src}}personal/icon-scan.png" wx:if="{{img_src}}"  class="m-icon"></image>
                         <span>试用核销</span>
@@ -323,6 +323,22 @@
                 wx.scanCode({
                     success (res) {
                         console.log(res)
+                        wepy.request({
+                            url: api.ticket_verify + '?token=' +wx.getStorageSync('token'),
+                            method:"post",
+                            data:{
+                                param: res.result
+                            }
+                        }).then(res => {
+                            if(res.data.status == 200){
+                               // tip.toast(res.data.message);
+                                wx.showToast({
+                                    title: res.data.message,
+                                    icon: 'success',
+                                    duration: 3000
+                                })
+                            }
+                        })
                     }
                 })
             }

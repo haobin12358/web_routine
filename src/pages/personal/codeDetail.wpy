@@ -3,6 +3,7 @@
 .m-codeDetail{
   padding: 20rpx 30rpx 100rpx;
     background-color: #FAFAFA;
+    min-height: 100vh;
   .m-code{
     width: 180rpx;
     height: 180rpx;
@@ -26,6 +27,7 @@
       /*left:145rpx;*/
 
       font-size: 40rpx;
+        font-weight: 500;
       display: flex;
       flex-flow: row;
       align-items: center;
@@ -45,9 +47,12 @@
         border-radius: 30rpx;
     }
       .m-ticket-img-box{
-          width: 620rpx;
-          height: 620rpx;
+          width: 610rpx;
+          height: 610rpx;
+          overflow: hidden;
           position: relative;
+          background:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,1) 100%);
+          border-radius:30rpx;
       }
     .m-free-title{
         position: absolute;

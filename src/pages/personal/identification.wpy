@@ -68,7 +68,7 @@
   import Login from '../../components/common/noLogin';
   export default class identification extends wepy.page {
     config = {
-      navigationBarTitleText: '实名认证'
+      navigationBarTitleText: '信用认证'
     };
     components = {login:Login};
     data = {

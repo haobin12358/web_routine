@@ -134,6 +134,9 @@
     .m-rule{
       padding: 20rpx;
       border-bottom: 1px solid @border-color;
+        &.m-no-bottom{
+            border-bottom: none;
+        }
     }
     .m-code{
       align-items: flex-start;
@@ -158,7 +161,7 @@
         margin-right: 10rpx;
       }
         .m-user{
-            .flex-row(flex-start);
+            .flex-row(space-between);
             margin-bottom: 10rpx;
             .m-user-head{
                 background-color: #FFCE00;
@@ -203,7 +206,7 @@
         border-top: 1px solid @border-color;
         .flex-row(space-around);
         .m-btn{
-            width: 21%;
+            width: 23%;
             /*padding: 0 20rpx;*/
             height: 60rpx;
             line-height: 60rpx;
@@ -252,6 +255,7 @@
         .m-modal-state{
           padding: 65rpx 144rpx;
           text-align: center;
+            height: 500rpx;
           .m-icon-success{
             width: 56rpx;
             height: 56rpx;
@@ -261,6 +265,14 @@
             font-size: 40rpx;
             font-weight: 500;
           }
+            .m-result-text{
+                padding: 0 38rpx;
+                .m-bold{
+                    font-size: 28rpx;
+                    font-weight: 500;
+                }
+
+            }
           .m-code{
             width: 323rpx;
             height: 323rpx;
@@ -288,6 +300,7 @@
           }
           .m-alert{
             margin-right: 0;
+              margin-top: 20rpx;
           }
           .m-btn{
             width: 300rpx;
@@ -445,8 +458,8 @@
               <view>使用时间</view>
               <view class="m-rule-text">{{detail.titripstarttime}}-{{detail.titripendtime}}</view>
           </view>
-        <view class="m-flex-start m-rule" @tap.stop="changeModal('show_rule',true,'tirules')">
-          <image src="{{img_src}}index/icon-alert.png" class="m-alert" ></image>
+        <view class="m-flex-start m-rule m-no-bottom" @tap.stop="changeModal('show_rule',true,'tirules')">
+          <image src="{{img_src}}common/icon-question.png" class="m-alert" ></image>
           <view>规则</view>
           <view class="m-rule-text">
               <htmlParser1 :parserName.sync="name2" :parserContent.sync="content2" />
@@ -464,13 +477,17 @@
 <!--        </view>-->
           <view class="m-flex-start m-code" >
               <view class="m-flex-start"  @tap.stop="changeModal('show_rule',true,'scorerule')">
-                  <image src="{{img_src}}index/icon-alert.png" class="m-alert" ></image>
-                  <view>活跃度</view>
+                  <image src="{{img_src}}common/icon-question.png" class="m-alert" ></image>
+                  <view>活跃分</view>
               </view>
               <view class="m-code-text m-grey">
                  <view class="m-user" wx:for="{{detail.scorerank}}" wx:key="{{index}}">
-                     <image src="{{item.usheader}}" class="m-user-head"></image>
-                     <span >{{item.tsoactivation}}活跃度</span>
+                     <view class="m-flex-start">
+                         <image src="{{item.usheader}}" class="m-user-head"></image>
+                         <span >{{item.tsoactivation}}活跃分</span>
+                     </view>
+                     <view>{{item.rank_zh}}</view>
+
                  </view>
               </view>
           </view>
@@ -502,7 +519,7 @@
               <view class="m-btn {{(detail.tistatus !=1 || detail.tsoid) ?'cancel':''}}" wx:if="{{!detail.traded}}" @tap="scoreTap">支付分试用</view>
               <view class="m-btn {{(detail.tistatus !=1 || detail.tsoid)  ?'cancel':''}}" wx:if="{{!detail.traded}}" @tap="submitTap(1)">押金试用</view>
               <view class="m-btn "  @tap="submitTap(2)">购买</view>
-              <view wx:if="{{detail.tsostatus == 0}}">已报名，活跃度：<span class="m-common">{{detail.tsoactivation || 0}}</span> ，当前排名：<span class="m-common">{{detail.rank || 1}}</span></view>
+              <view wx:if="{{detail.tsostatus == 0}}">已报名，活跃分：<span class="m-common">{{detail.tsoactivation || 0}}</span> ，当前排名：<span class="m-common">{{detail.rank || 1}}</span></view>
               <view wx:if="{{detail.tsostatus >= 1}}">已购买</view>
           </view>
 
@@ -524,21 +541,21 @@
             <image src="{{img_src}}index/icon-success.png" class="m-icon-success"></image>
             <view class="m-success-text">支付成功</view>
           </view>
-          <view class="m-code m-num" >
-<!--            <view wx:if="{{detail.tsostatus != 1 ||  pay_done}}">抢票码</view>-->
-<!--            <view wx:if="{{detail.tsostatus == 2}}">取票码</view>-->
-<!--            <view class="m-num-text" wx:if="{{pay_done}}">-->
-<!--              <span wx:for="{{tscode}}" wx:key="{{index}}">{{item}}</span>-->
-<!--            </view>-->
-<!--            <view class="m-num-text" wx:else>{{detail.tsocode}}</view>-->
-            <image src="{{detail.tsoqrcode}}" @tap="previewImg({{detail.tsoqrcode}})" wx:if="{{detail.tsostatus == 2}}" class="m-code-img"></image>
-          </view>
+<!--          <view class="m-code m-num" >-->
+<!--&lt;!&ndash;            <view wx:if="{{detail.tsostatus != 1 ||  pay_done}}">抢票码</view>&ndash;&gt;-->
+<!--&lt;!&ndash;            <view wx:if="{{detail.tsostatus == 2}}">取票码</view>&ndash;&gt;-->
+<!--&lt;!&ndash;            <view class="m-num-text" wx:if="{{pay_done}}">&ndash;&gt;-->
+<!--&lt;!&ndash;              <span wx:for="{{tscode}}" wx:key="{{index}}">{{item}}</span>&ndash;&gt;-->
+<!--&lt;!&ndash;            </view>&ndash;&gt;-->
+<!--&lt;!&ndash;            <view class="m-num-text" wx:else>{{detail.tsocode}}</view>&ndash;&gt;-->
+<!--            <image src="{{detail.tsoqrcode}}" @tap="previewImg({{detail.tsoqrcode}})" wx:if="{{detail.tsostatus == 2}}" class="m-code-img"></image>-->
+<!--          </view>-->
          <image src="{{img_src}}index/icon-alert.png" class="m-alert" ></image>
-          <view >提示</view>
+<!--          <view >提示</view>-->
 <!--          <view class="m-ft-24" wx:if="{{pay_done}}">抢票时间截止后平台将公布获得门票的用户，该部分用户需交剩余押金获取门票</view>-->
-            <view wx:if="{{pay_done}}">
-                            结果<span class="m-grey">可以在</span>
-                            我的- 我的试用<span class="m-grey">中查看</span>
+            <view wx:if="{{pay_done}}" class="m-result-text">
+                            <span class="m-grey">结果可以在</span>
+                            <span class="m-bold">我的- 我的试用</span><span class="m-grey">中查看</span>
                           </view>
           <view class="m-btn" @tap.stop="changeModal('show_result',false)">我知道了</view>
         </view>

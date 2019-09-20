@@ -19,7 +19,7 @@
                         position: absolute;
                         top:0;
                         left:0;
-                        background-color: rgba(0,0,0,0.2);
+                        /*background-color: rgba(0,0,0,0.2);*/
                         width: 340rpx;
                         height: 340rpx;
                     }
@@ -39,7 +39,7 @@
                     padding: 10rpx 0;
                 }
                 .m-ticket-price{
-                    font-size: 20rpx;
+                    font-size: 24rpx;
                     color: @grey-color;
                 }
                 .m-ticket-num{
@@ -121,18 +121,18 @@
             <view class="m-one-ticket" wx:for="{{data_list}}" wx:key="{{index}}" @tap="changeRoute('/pages/index/freeDetail',{{item}})">
                 <view class="m-img-box">
                     <image src="{{item.tiimg}}" class="m-ticket-img"></image>
-                    <image src="{{img_src}}personal/img-end.png" class="m-end-img" wx:if="{{item.tistatus > 1}}"></image>
-                    <image src="{{img_src}}personal/img-start.png" class="m-end-img" wx:if="{{item.tistatus == 0}}"></image>
+                    <image src="{{img_src}}personal/img-end-new.png" class="m-end-img" wx:if="{{item.tistatus > 1}}"></image>
+                    <image src="{{img_src}}personal/img-start-new.png" class="m-end-img" wx:if="{{item.tistatus == 0}}"></image>
                 </view>
                 <view class="m-ticket-name">{{item.tiname}}</view>
                 <view class="m-ticket-price">价值：¥{{item.tiprice}}</view>
                 <view class="m-ticket-num">
                     <view >
-                        <span>数量 </span>
+                        <span>数量: </span>
                         <span class="m-bold">{{item.tinum}}</span>
                     </view>
                     <view >
-                        <span>申请人数 </span>
+                        <span>申请人数: </span>
                         <span class="m-bold">{{item.apply_num}}</span>
                     </view>
                 </view>

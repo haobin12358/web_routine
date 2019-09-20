@@ -99,7 +99,7 @@
   import api from '../../api/api';
   export default class codeList extends wepy.page {
     config = {
-      navigationBarTitleText: '门票领取记录',
+      navigationBarTitleText: '试用申请记录',
       enablePullDownRefresh: true
     };
     components = {bottom};
