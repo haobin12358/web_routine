@@ -576,6 +576,7 @@
             </view>
         </view>
       <share :show.sync="show_share" @changeModal.user="changeModal" :params.sync="params" :tiid.sync="tiid"></share>
+        <phone :show_tel.sync="show_tel" :url.sync="url"></phone>
     </view>
 </template>
 
@@ -586,12 +587,13 @@
   import htmlParser from '../../components/common/htmlParser';
   import tip from '../../utils/tip';
   import Circle from '../../components/common/circle';
+  import Phone from '../../components/common/phone';
   export default class freeDetail extends wepy.page {
     config = {
       navigationBarTitleText: '领取免费试用',
       enablePullDownRefresh: true
     };
-    components = {share:share,htmlParser:htmlParser,htmlParser1:htmlParser,htmlParser2:htmlParser,circle:Circle,};
+    components = {share:share,htmlParser:htmlParser,htmlParser1:htmlParser,htmlParser2:htmlParser,circle:Circle,phone:Phone};
     data = {
         indicatorDots: true,
         autoplay: true,
@@ -641,23 +643,27 @@
         },
         total_count:0,
         show_ident:false,
-        tiname:''
+        tiname:'',
+        usid:'',
+        show_tel:false,
+        url:''
     };
     getData(){
       let that = this;
       that.loading = true;
       that.$apply();
+      console.log(that.usid,'usid')
       wepy.request({
         url: api.ticket_get + '?token=' +wx.getStorageSync('token'),
         method:"get",
         data:{
           tiid:that.tiid,
-          tsoid:that.tsoid
+          tsoid:that.tsoid,
+            secret_usid:wx.getStorageSync('secret_usid')
         }
       }).then(res => {
         if(res.data.status == 200){
           that.detail = res.data.data;
-
             that.content2 = res.data.data.tirules;
             that.content2 = that.content2.replace(/&quot;/g,'');
             that.content2 = that.content2.replace(/&nbsp;/g, '\xa0');
@@ -842,6 +848,9 @@
 
           // }
 
+        }else if(resule.data.status_code == 405014){
+            that.show_tel = true;
+            that.$apply();
         }
       })
     }
@@ -877,6 +886,9 @@
                   that.show_pic = true;
                   that.$apply();
 
+              }else if(res.data.status_code == 405014){
+                  that.show_tel = true;
+                  that.$apply();
               }
           })
       }
@@ -886,7 +898,7 @@
       }
       let that = this;
       let params = `?page=/pages/index/freeDetail&tiid=${that.tiid}&tsoid=${that.tsoid}&secret_usid=${that.secret_usid}`
-      // let params = '?scene=params=220'
+      // let params = '?scene=params=259'
       return {
         title: '邀请你免费抢'+ that.detail.tiname,
         path: '/pages/ticket/index'+params,
@@ -904,8 +916,12 @@
         this.tsoid = options.tsoid;
         this.$apply();
       }
+      this.url = `/pages/index/freeDetail?tiid=${this.tiid}&tsoid=${this.tsoid}`;
+      this.$apply();
 
-      this.getId();
+        if(wx.getStorageSync('token')){
+            this.getId();
+        }
       this.getData();
       // this.getCode();
     }

@@ -103,6 +103,7 @@
           <view class="m-line" @tap.stop="chooseVideo" wx:if="{{image.length == 0}}">视频</view>
         </view>
       </view>
+        <phone :show_tel.sync="show_tel" :url.sync="url"></phone>
     </view>
 </template>
 
@@ -111,12 +112,13 @@
   import Scenic from '../../components/common/scenic';
   import tip from '../../utils/tip';
   import api from '../../api/api';
+  import Phone from '../../components/common/phone';
   export default class editEssay extends wepy.page {
     config = {
       navigationBarTitleText: '随笔'
     };
     components = {
-      scenic:Scenic
+      scenic:Scenic,phone:Phone
     };
     data = {
       text:'',
@@ -126,7 +128,9 @@
       type:'essay',
       plid:'',
         select_loc:{},
-        select_name:''
+        select_name:'',
+        url:'',
+        show_tel:false
     };
     postData(status){
       let that = this;
@@ -164,6 +168,9 @@
             });
           }
 
+        }else if(resule.data.status_code == 405014){
+            that.show_tel = true;
+            that.$apply();
         }
       })
     }
@@ -172,6 +179,7 @@
         this.plid = options.plid;
         this.$apply();
       }
+        this.url = `/pages/index/editEssay`;
     }
 
     methods = {

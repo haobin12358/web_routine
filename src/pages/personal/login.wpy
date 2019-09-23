@@ -52,7 +52,7 @@
           </view>
 
         </view>
-       <phone :show_tel.sync="show_tel"></phone>
+       <phone :show_tel.sync="show_tel" ></phone>
     </view>
 </template>
 
@@ -75,7 +75,7 @@
 
         getLogin(code){
             let that = this;
-            console.log(wx.getStorageSync('secret_usid'),'lof')
+
             wx.getUserInfo({
                 success: function(resData) {
                     wx.request({
@@ -164,6 +164,7 @@
             this.re_login =true;
             this.$apply();
           }
+            console.log(wx.getStorageSync('secret_usid'),'lof')
             let that = this;
             if(!wx.getStorageSync('token')){
                 wx.getSetting({
@@ -172,6 +173,22 @@
                             wx.login({
                                 success: function(res){
                                     console.log(res)
+                                    //获取登录临时凭证
+                                    var code = res.code;
+                                    //调用后端接口 获取微信的session_key 和 openID
+                                    that.getLogin(code);
+                                }
+                            })
+                        }
+                    }
+                })
+            }else if(options.page){
+                wx.getSetting({
+                    success(res) {
+                        if (res.authSetting['scope.userInfo']) {
+                            wx.login({
+                                success: function(res){
+                                    // console.log(res)
                                     //获取登录临时凭证
                                     var code = res.code;
                                     //调用后端接口 获取微信的session_key 和 openID
@@ -196,7 +213,6 @@
                         if (res.authSetting['scope.userInfo']) {
                             wx.login({
                                 success: function(res){
-                                    console.log(res)
                                     //获取登录临时凭证
                                     var code = res.code;
                                     //调用后端接口 获取微信的session_key 和 openID
@@ -207,7 +223,6 @@
                         }else{
                             wx.login({
                                 success: function(res){
-                                    console.log(res)
                                     //获取登录临时凭证
                                     var code = res.code;
                                     //调用后端接口 获取微信的session_key 和 openID
@@ -223,6 +238,7 @@
                 })
 
             },
+
 
         }
     }

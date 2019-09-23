@@ -345,12 +345,13 @@
             for(let i in arr){
 
               let _arr = arr[i].split('=');
+                if(_arr[0] == 'secret_usid'){
+                    wx.setStorageSync('secret_usid',_arr[1]);
+                    console.log(wx.getStorageSync('secret_usid'));
+                    // params_arr.push(arr[i]);
+                }
               if(_arr[0] == 'page'){
                 url = _arr[1];
-              }else if(_arr[0] == 'secret_usid'){
-                wx.setStorageSync('secret_usid',_arr[1]);
-                console.log(wx.getStorageSync('secret_usid'));
-                // params_arr.push(arr[i]);
               }else{
                 params_arr.push(arr[i]);
               }
@@ -369,6 +370,11 @@
         let url = options.page;
         let arr = [];
         for(let i in options){
+            if(i == 'secret_usid'){
+                wx.setStorageSync('secret_usid',options[i]);
+                console.log(wx.getStorageSync('secret_usid'));
+                // params_arr.push(arr[i]);
+            }
           if(i != 'page'){
             arr.push(i + '=' +options[i])
           }

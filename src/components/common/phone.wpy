@@ -105,12 +105,19 @@
 
               }else{
                 if(that.url){
-                  wx.navigateTo({
-                    url: that.url
-                  });
+                  if(that.url.indexOf('editEssay') != -1){
+                    wx.switchTab({
+                      url: that.url
+                    });
+                  }else{
+                    wx.navigateTo({
+                      url: that.url
+                    });
+                  }
+
                 }else{
                   wx.switchTab({
-                    url: '/pages/index/index'
+                    url: '/pages/ticket/index'
                   });
                 }
               }
@@ -133,9 +140,10 @@
         if(this.url){
           this.show_tel = false;
           this.$apply();
+          // this.$emit('cancelTel')
         }else{
           wx.switchTab({
-            url: '/pages/index/index'
+            url: '/pages/ticket/index'
           });
         }
 
