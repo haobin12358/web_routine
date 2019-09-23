@@ -32,11 +32,11 @@
                     width: 340rpx;
                     display: -webkit-box;
                     -webkit-box-orient: vertical;
-                    -webkit-line-clamp: 2;
+                    -webkit-line-clamp: 1;
                     overflow: hidden;
                     font-size: 28rpx;
                     font-weight: 500;
-                    padding: 10rpx 0;
+                    padding: 5rpx 0;
                 }
                 .m-ticket-price{
                     font-size: 24rpx;
