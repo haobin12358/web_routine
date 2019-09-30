@@ -63,7 +63,7 @@
                 <image src="{{img_src}}common/icon-up.png" class="m-icon-down" @tap="openClose({{index}})" wx:else></image>
             </view>
             <view wx:if="{{item.active}}">
-                <input type="text" class="m-input" disabled="{{item.disabled}}" value="{{item.ulaaccount}}" bindinput="bindinput" data-name="{{index}}" placeholder="请输入平台个人主页链接/账号">
+                <input type="text" class="m-input" disabled="{{item.disabled}}" value="{{item.ulaaccount}}" bindinput="bindinput" data-name="{{index}}" placeholder="请输入平台个人主页链接/账号" />
 <!--                <view class="m-img">-->
 <!--                    <span class="m-upload-img">+</span>-->
 <!--                    &lt;!&ndash;                <image src="" class="m-img-one"></image>&ndash;&gt;-->
@@ -80,7 +80,7 @@
     </view>
 </template>
 
-<script>
+<script  >
     import wepy from 'wepy';
     import api from '../../api/api';
    import tip from '../../utils/tip';
@@ -133,7 +133,6 @@
         onLoad(options) {
             this.getItem();
         }
-
         methods = {
             openClose(i){
                 this.data_list[i].active = !this.data_list[i].active;

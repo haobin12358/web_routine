@@ -315,10 +315,11 @@
     }
       &.m-sure{
           .m-modal-state{
-              padding: 30rpx 64rpx;
+              padding: 30rpx 140rpx;
               text-align: center;
               font-size: 32rpx;
               height: 360rpx;
+              .flex-col(space-around);
               .m-btn-box{
                   margin-top: 40rpx;
                   span{
@@ -332,6 +333,13 @@
                          background-color: @common-color;
                       }
                   }
+              }
+              .m-btn{
+                  width: 200rpx;
+                  background-color: @common-color;
+                  display: inline-block;
+                  height: 50rpx;
+                  line-height: 50rpx;
               }
           }
       }
@@ -516,7 +524,7 @@
                   <span>分享</span>
               </view>
 <!--          <view class="m-btn " wx:if="{{!detail.traded &&   !detail.verified}}" @tap="changeRoute('/pages/personal/identification','info')">实名认证</view>-->
-              <view class="m-btn {{(detail.tistatus !=1 || detail.tsoid) ?'cancel':''}}" wx:if="{{!detail.traded}}" @tap="scoreTap">支付分试用</view>
+              <view class="m-btn {{(detail.tistatus !=1 || detail.tsoid) ?'cancel':''}}" wx:if="{{!detail.traded}}" @tap="scoreTap">活跃分申请</view>
               <view class="m-btn {{(detail.tistatus !=1 || detail.tsoid)  ?'cancel':''}}" wx:if="{{!detail.traded}}" @tap="submitTap(1)">押金试用</view>
               <view class="m-btn "  @tap="submitTap(2)">购买</view>
               <view wx:if="{{detail.tsostatus == 0}}">已报名，活跃分：<span class="m-common">{{detail.tsoactivation || 0}}</span> ，当前排名：<span class="m-common">{{detail.rank || 1}}</span></view>
@@ -526,13 +534,17 @@
 <!--      支付成功-->
       <view class="m-modal m-sure" wx:if="{{show_ident}}" @tap.stop="changeModal('show_ident',false)">
         <view class="m-modal-state">
-          <view>
-              已信用认证的用户可享受免押金试用服务，系统将根据您目前的支付信用，判断是否可使用该服务。<span class="m-common" wx:if="{{!detail.verified}}" @tap.stop="changeRoute('/pages/personal/identification','info')">去信用认证</span>
-          </view>
-          <view class="m-btn-box">
-              <span @tap.stop="changeModal('show_ident',false)">取消</span>
-              <span class="active" @tap.stop="submitTap(3)">确定</span>
-          </view>
+<!--          <view>-->
+<!--              已信用认证的用户可享受免押金试用服务，系统将根据您目前的支付信用，判断是否可使用该服务。<span class="m-common" wx:if="{{!detail.verified}}" @tap.stop="changeRoute('/pages/personal/identification','info')">去信用认证</span>-->
+<!--          </view>-->
+            <view>提升活跃分以增加申请成功的可能性</view>
+            <view>
+                <span class="m-btn"  @tap.stop="changeModal('show_ident',false)">知道了</span>
+            </view>
+<!--          <view class="m-btn-box">-->
+<!--              <span @tap.stop="changeModal('show_ident',false)">取消</span>-->
+<!--              <span class="active" @tap.stop="submitTap(3)">确定</span>-->
+<!--          </view>-->
         </view>
       </view>
       <view class="m-modal m-result" wx:if="{{show_result}}" >
@@ -836,7 +848,10 @@
             that.tscode = [].concat(resule.data.data.tscode);
           that.$apply();
             // that.$apply();
-            that.show_ident = false;
+
+            if(Number(num) == 0 ){
+                that.show_ident = false;
+            }
             if(resule.data.data.redirect){
                 that.pay_done = true;
                 that.show_result = true;
@@ -900,7 +915,7 @@
       let params = `?page=/pages/index/freeDetail&tiid=${that.tiid}&tsoid=${that.tsoid}&secret_usid=${that.secret_usid}`
       // let params = '?scene=params=259'
       return {
-        title: '邀请你免费抢'+ that.detail.tiname,
+        title: '邀请你免费试玩'+ that.detail.tiname,
         path: '/pages/ticket/index'+params,
         success: function (res) {
           console.log('成功', res)
@@ -1041,8 +1056,9 @@
             if(this.detail.tistatus !=1 ||this.detail.tsoid ){
                 return;
             }
-            this.show_ident = true;
-            this.$apply();
+            // this.show_ident = true;
+            // this.$apply();
+            this.postData(0);
         },
         //调起导航
         showLine(){

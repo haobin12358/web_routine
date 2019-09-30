@@ -36,7 +36,7 @@
           <image src="{{user_info.usheader}}" wx:if="{{!no_login}}" @tap="chooseImg" class="m-user-head"></image>
           <image src="{{img_src}}common/logo.png" wx:if="{{no_login}}" class="m-user-head"></image>
           <span class="m-user-name" wx:if="{{!show_edit}}">{{user_info.usname}}</span>
-          <input type="text" class="m-user-name" bindinput="inputChange" data-name="usname" wx:else value="{{user_info.usname}}">
+          <input type="text" class="m-user-name" bindinput="inputChange" data-name="usname" wx:else value="{{user_info.usname}}" />
           <image src="{{img_src}}index/icon-edit.png" @tap="changeEdit" class="m-icon-edit"></image>
         </view>
         <view class="m-row">
