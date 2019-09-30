@@ -616,7 +616,7 @@
       show_rule:false,
       rule:'规则',
       show_share:false,
-      tiid:'efbef688-ce13-11e9-8887-0242ac110002',
+      tiid:'',
       detail:{},
       name1:'htmlParserName1',
       content1:"",
@@ -878,7 +878,7 @@
       }).then(resule => {
         if(resule.data.status == 200){
           that.secret_usid = resule.data.data.secret_usid;
-          that.params = `page=/pages/index/freeDetail&tiid=${that.tiid}&tsoid=${that.tsoid}&secret_usid=${that.secret_usid}`;
+          that.params = `page=/pages/index/freeDetail&tiid=${that.tiid}&secret_usid=${that.secret_usid}`;
           that.$apply();
         }
       })
@@ -912,7 +912,7 @@
 
       }
       let that = this;
-      let params = `?page=/pages/index/freeDetail&tiid=${that.tiid}&tsoid=${that.tsoid}&secret_usid=${that.secret_usid}`
+      let params = `?page=/pages/index/freeDetail&tiid=${that.tiid}&secret_usid=${that.secret_usid}`
       // let params = '?scene=params=259'
       return {
         title: '邀请你免费试玩'+ that.detail.tiname,
