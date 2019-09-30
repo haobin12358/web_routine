@@ -849,7 +849,7 @@
           that.$apply();
             // that.$apply();
 
-            if(Number(num) == 0 ){
+            if(Number(num) == 3 ){
                 that.show_ident = false;
             }
             if(resule.data.data.redirect){
@@ -1058,7 +1058,7 @@
             }
             // this.show_ident = true;
             // this.$apply();
-            this.postData(0);
+            this.postData(3);
         },
         //调起导航
         showLine(){
