@@ -133,7 +133,7 @@
     </view>
 
     <view class="m-row m-no-flex">
-      <textarea bindinput="bindinput" value="{{text}}" data-name="text" auto-height style="min-height: 300rpx;" placeholder="这一刻的旅游心情…" />
+      <textarea bindinput="bindinput" maxlength="2000" value="{{text}}" data-name="text" auto-height style="min-height: 300rpx;" placeholder="这一刻的旅游心情…" />
       <view class="m-img-box">
         <image src="{{item}}" class="m-img"
                @longpress="handleLongPress({{index}})" mode="aspectFill" wx:for="{{image}}" wx:key="{{index}}" @tap="previewImage({{item}})"></image>
